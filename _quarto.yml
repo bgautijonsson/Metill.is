@@ -6,6 +6,7 @@ project:
 
 website:
   title: Metill
+  site-url: metill.is
   search: false
   navbar: 
     collapse: false

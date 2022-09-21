@@ -5,7 +5,7 @@ $lightblue:                     #74a9cf;
 $white:                         #ffffff;
 
 
-$primary:                       $darkblue;
+$primary:                       #484D6D;
 $secondary:                     #faf9f9;
 
 $body-bg:                       #faf9f9;
@@ -128,6 +128,11 @@ div.list.grid {
 
 .listing-date {
   font-size: $font-size-base * 0.8;
+}
+
+.btn-primary {
+  color: $secondary;
+  background-color: $primary;
 }
 
 .btn-link {

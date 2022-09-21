@@ -16,7 +16,7 @@ format:
         smooth-scroll: true
         link-external-newwindow: true
 execute: 
-  echo: true
+  echo: false
   warning: false
   cache: false
 editor: source

@@ -121,7 +121,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <link rel="stylesheet" href="../../style.css">
 <meta name="twitter:title" content="Vinnumarkaður">
 <meta name="twitter:description" content="Reglulega sjást fyrirsagnir þar sem talað er um að opinbert starfsfólk sé allt of margt og að hlutfall þess af heildarfjölda vinnandi fólks sé of hátt. Hér kryf ég reglulega nýjustu gögnin til að geta vitað hvort slíkar fullyrðingar séu teknar úr samhengi eða endurspegli raunveruleikann.">
-<meta name="twitter:image" content="hlutf_opinbert.png">
+<meta name="twitter:image" content="metill.is/posts/vinnuafl/hlutf_opinbert.png">
+<meta name="twitter:image-height" content="1937">
+<meta name="twitter:image-width" content="3120">
 <meta name="twitter:card" content="summary_large_image">
 </head>
 
@@ -1188,7 +1190,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     });
   }
     var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
-      var filterRegex = new RegExp('/' + window.location.host + '/');
+      var filterRegex = new RegExp(/metill\.is/);
     var isInternal = (href) => {
         return filterRegex.test(href) || localhostRegex.test(href);
     }

@@ -6,6 +6,8 @@
       "/posts/kosningar/index.html",
       "/posts/skattagogn/index.html",
       "/posts/vinnuafl/index.html",
+      "/posts/visitala_neysluverds/index.html",
+      "/posts/landspitali/index.html",
       "/dashboards/sveitarfelog/index.html",
       "/dashboards/skattagogn/index.html"
     ]
@@ -16,7 +18,9 @@
       "/posts/stjornmalaflokkar/index.html",
       "/posts/kosningar/index.html",
       "/posts/skattagogn/index.html",
-      "/posts/vinnuafl/index.html"
+      "/posts/vinnuafl/index.html",
+      "/posts/visitala_neysluverds/index.html",
+      "/posts/landspitali/index.html"
     ]
   }
 ]

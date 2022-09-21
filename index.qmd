@@ -26,7 +26,7 @@ listing:
 
 [Allar greinar](posts.qmd){type="button" class="btn btn-primary btn-link"}
 
-<!-- <a href="posts.qmd" type="button" class="btn btn-primary btn-link" aria-pressed="true">Eldri færslur</button> -->
+<!-- <a href="/posts.html" type="button" class="btn btn-primary btn-link">Allar greinar</button> -->
 
 ## Mælaborð
 

@@ -132,7 +132,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <link rel="stylesheet" href="../../style.css">
 <meta name="twitter:title" content="Tekjur, skattar og kaupmáttur">
 <meta name="twitter:description" content="Stundum les maður að skattakerfið ýti undir ójöfnuð, eða að það séu of háir skattar á þeim efnameiru. Hvort er það? Hér nota ég skattagögn Hagstofunnar til að skoða tekjur og skatta eftir tekjutíundum. Ég get ekki sagt hvort það sé sanngjarnt, en ég get sýnt hvernig það hefur breyst með tímanum.">
-<meta name="twitter:image" content="image.png">
+<meta name="twitter:image" content="metill.is/posts/skattagogn/image.png">
+<meta name="twitter:image-height" content="1937">
+<meta name="twitter:image-width" content="3120">
 <meta name="twitter:card" content="summary_large_image">
 </head>
 
@@ -826,7 +828,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     });
   }
     var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
-      var filterRegex = new RegExp('/' + window.location.host + '/');
+      var filterRegex = new RegExp(/metill\.is/);
     var isInternal = (href) => {
         return filterRegex.test(href) || localhostRegex.test(href);
     }
