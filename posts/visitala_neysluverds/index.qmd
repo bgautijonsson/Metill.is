@@ -25,7 +25,6 @@ categories:
     - efnahagur
     - verðlag
     - Hagstofa
-    - íslenska
 image: undirtolur.png
 twitter-card:
     image: undirtolur.png

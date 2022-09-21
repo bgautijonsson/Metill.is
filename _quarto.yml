@@ -11,7 +11,7 @@ website:
   navbar: 
     collapse: false
     right:
-      - text: "Greinar"
+      - text: "Greinasafn"
         href: posts.qmd
       - text: "Um Metil"
         href: about.qmd

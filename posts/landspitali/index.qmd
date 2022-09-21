@@ -23,7 +23,8 @@ editor: source
 title-block-banner: true
 categories:
     - landspítali
-    - íslenska
+    - efnahagur
+    - stjórnmál
 image: hjukthyngd.png
 twitter-card: 
     image: hjukthyngd.png
@@ -244,7 +245,7 @@ p <- plot_dat |>
          fill = NULL,
          title = "Hjúkrunarþyngd legudaga á Landspítala")
 
-ggsave(plot = p + theme(legend.position = "right") + labs(subtitle = "Súlur sýna dreifingu (vinstri ás) og lína sýnir meðalþyngd legudaga (hægri ás)"), filename = "hjukthyngd.png",
+ggsave(plot = p + labs(subtitle = "Súlur sýna dreifingu (vinstri ás) og lína sýnir meðalþyngd legudaga (hægri ás)"), filename = "hjukthyngd.png",
        width = 8, height = 0.621 * 8, scale = 1)
 
 ggplotly(

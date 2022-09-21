@@ -26,8 +26,6 @@ title-block-banner: true
 categories:
     - stjórnmál
     - kosningar
-    - R
-    - íslenska
 href: posts/kosningar/index.qmd
 image: Figures/thingmenn_atkvaedi_tw.png
 ---

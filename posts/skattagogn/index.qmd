@@ -24,8 +24,6 @@ title-block-banner: true
 categories:
     - skattar
     - efnahagur
-    - R
-    - íslenska
 href: posts/skattagogn/index.qmd
 image: image.png
 twitter-card: 

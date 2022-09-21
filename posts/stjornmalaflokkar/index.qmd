@@ -31,8 +31,6 @@ categories:
     - stjórnmál
     - efnahagur
     - ársreikningar
-    - R
-    - íslenska
 href: posts/stjornmalaflokkar/index.qmd
 image: Figures/eigidfe.png
 
