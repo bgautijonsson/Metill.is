@@ -1,0 +1,22 @@
+project:
+  type: website
+  output-dir: docs
+
+website:
+  title: Metill
+  search: false
+  navbar: 
+    collapse: false
+    right:
+      - text: "Færslur"
+        href: posts.qmd
+      - text: "Um Metil"
+        href: about.qmd
+        
+format:
+  html:
+    theme: [paper, theme.scss]
+    css: style.css
+
+editor: source
+

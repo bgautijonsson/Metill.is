@@ -1,0 +1,22 @@
+---
+pagetitle: "Færslur"
+title: "Færslur"
+editor: source
+listing:
+    - id: posts
+      sort: "date desc"
+      contents: posts
+      page-size: 10
+        
+---
+
+
+
+
+::: {#posts}
+
+:::
+
+
+
+

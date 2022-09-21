@@ -1,0 +1,14 @@
+{
+  "hash": "75ebc6ea4730ba2fab152434c5971c25",
+  "result": {
+    "markdown": "---\npagetitle: \"Metill\"\nsection-divs: false\ntoc: false\neditor: source\nlisting:\n    id: gallery\n    template: ejs/gallery.ejs\n    sort: \"date desc\"\n    contents: posts\n    page-size: 3\nexecute:\n    echo: false\n---\n\n\n::: {#hero-banner .column-screen-inset}\n::: {.grid .column-page}\n::: {.headline .g-col-lg-6 .g-col-12 .g-col-md-12}\n# Metill\n\nQuarto can produce a wide variety of output formats. Here are some examples:\n\n-   [Articles & Reports]()\n-   [Presentations]()\n-   [Interactive Docs]()\n-   [Websites]()\n-   [Books]()\n:::\n\n\n::: {.cell .g-col-lg-6 .g-col-12 .g-col-md-12}\n\n:::\n\n:::\n:::\n\n::: {#gallery .column-page}\n:::\n\n",
+    "supporting": [],
+    "filters": [
+      "rmarkdown/pagebreak.lua"
+    ],
+    "includes": {},
+    "engineDependencies": {},
+    "preserve": {},
+    "postProcess": true
+  }
+}

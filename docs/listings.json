@@ -1,0 +1,22 @@
+[
+  {
+    "listing": "/index.html",
+    "items": [
+      "/posts/stjornmalaflokkar/index.html",
+      "/posts/kosningar/index.html",
+      "/posts/skattagogn/index.html",
+      "/posts/vinnuafl/index.html",
+      "/dashboards/sveitarfelog/index.html",
+      "/dashboards/skattagogn/index.html"
+    ]
+  },
+  {
+    "listing": "/posts.html",
+    "items": [
+      "/posts/stjornmalaflokkar/index.html",
+      "/posts/kosningar/index.html",
+      "/posts/skattagogn/index.html",
+      "/posts/vinnuafl/index.html"
+    ]
+  }
+]

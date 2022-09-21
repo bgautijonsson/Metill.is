@@ -1,0 +1,71 @@
+{
+  "index.qmd": {
+    "index.html": "f7fbc9c6"
+  },
+  "about.qmd": {
+    "about.html": "51516bca"
+  },
+  "posts/lausstorf/index.qmd": {
+    "index.html": "5006b39a"
+  },
+  "posts/lanategundir/index.qmd": {
+    "index.html": "30c7e7eb"
+  },
+  "posts/stjornmalaflokkar/index.qmd": {
+    "index.html": "4a02cb78"
+  },
+  "posts/orkunotkun/index.qmd": {
+    "index.html": "f3b1028e"
+  },
+  "posts/visitala_neysluverds/index.qmd": {
+    "index.html": "8c5475c6"
+  },
+  "posts/landspitali/index.qmd": {
+    "index.html": "eca8e599"
+  },
+  "posts/skattagogn/index.qmd": {
+    "index.html": "c145c5a7"
+  },
+  "posts/leigaogkaupverd/index.qmd": {
+    "index.html": "13ba8667"
+  },
+  "posts/kosningarannsokn/index.qmd": {
+    "index.html": "0174e39f"
+  },
+  "posts/orkumal/index.qmd": {
+    "index.html": "fe61f68f"
+  },
+  "posts/vinnuafl/index.qmd": {
+    "index.html": "4789a17c"
+  },
+  "posts/stjornsysla_heilbr/index.qmd": {
+    "index.html": "3957e929"
+  },
+  "posts/forest-plot-table/index.qmd": {
+    "index.html": "bc0180c0"
+  },
+  "posts/kosningar/index.qmd": {
+    "index.html": "ef965c05"
+  },
+  "content/posts/stjornmalaflokkar/index.qmd": {
+    "index.html": "26c022e1"
+  },
+  "content/posts/kosningar/index.qmd": {
+    "index.html": "3ac352cb"
+  },
+  "content/posts/skattagogn/index.qmd": {
+    "index.html": "d22a80f7"
+  },
+  "content/posts/vinnuafl/index.qmd": {
+    "index.html": "39b235ba"
+  },
+  "dashboards/sveitarfelog/index.qmd": {
+    "index.html": "def0eee2"
+  },
+  "dashboards/skattagogn/index.qmd": {
+    "index.html": "e07ffa63"
+  },
+  "posts.qmd": {
+    "posts.html": "5f686fd4"
+  }
+}
