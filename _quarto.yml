@@ -10,7 +10,7 @@ website:
   search: false
   navbar: 
     collapse: false
-    right:
+    left:
       - text: "Greinasafn"
         href: posts.qmd
       - text: "Um Metil"

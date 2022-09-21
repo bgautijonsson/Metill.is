@@ -66,13 +66,7 @@ div.quarto-post .listing-categories .listing-category {
 
 
 #quarto-header {
-  display: flex;
-  flex-basis: auto;
-  justify-content: center;
-  align-items: stretch;
-  flex-wrap: wrap;
-  background-color: $primary;
-  column-gap: 1px;
+  
 }
 
 .navbar {
@@ -82,11 +76,29 @@ div.quarto-post .listing-categories .listing-category {
 
 
 .navbar-title {
-  align-self: flex-start;
+  text-align: center;
+  position: absolute;
+  top: 6%;
+  right: 0%;
+  left: 0;
+  margin-left: auto;
+  margin-right: auto;
+  font-size: $font-size-base * 1.8;
+  border-bottom: 1px solid $secondary; 
+  width: 75%;
 }
 
 .navbar-nav {
-  align-self: flex-start;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  flex-wrap: nowrap;
+  padding-top: 45px;
+  padding-right: 2.8%;
+  text-align: center;
+  margin-left: auto;
+  margin-right: auto;
+  float: left;
 }
 
 

@@ -6,6 +6,9 @@
     ],
     "posts.qmd": [
       "posts"
+    ],
+    "learn.qmd": [
+      "posts"
     ]
   }
 }

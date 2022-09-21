@@ -22,5 +22,16 @@
       "/posts/visitala_neysluverds/index.html",
       "/posts/landspitali/index.html"
     ]
+  },
+  {
+    "listing": "/learn.html",
+    "items": [
+      "/posts/stjornmalaflokkar/index.html",
+      "/posts/kosningar/index.html",
+      "/posts/skattagogn/index.html",
+      "/posts/vinnuafl/index.html",
+      "/posts/visitala_neysluverds/index.html",
+      "/posts/landspitali/index.html"
+    ]
   }
 ]
