@@ -150,7 +150,7 @@ En hvað borgar hver tekjutíund mikið í skatta og hvernig ber því saman vi�
 ```{r}
 #| fig-asp: 1
 #| out-width: "100%"
-#| cache: true
+#| cache: false
 #| column: page
 
 plot_dat <- d |>
@@ -248,7 +248,7 @@ Neðar í færslunni mun ég svo sýna hvernig skattbyrði hefur hækkað síða
 
 ```{r}
 #| fig-asp: 1
-#| cache: true
+#| cache: false
 #| column: page
 
 plot_dat <- plot_dat |> 
@@ -303,7 +303,7 @@ Kaupmáttur er einfaldlega hækkun á tekjum umfram verðbólgu *(hækkun á ver
 
 ```{r}
 #| fig-asp: 0.9
-#| cache: true
+#| cache: false
 #| column: page
 
 
@@ -372,7 +372,7 @@ Við höfum frekar áhuga á kaupmætti ráðstöfunartekna *(heildartekjur að 
 
 ```{r}
 #| fig-asp: 0.9
-#| cache: true
+#| cache: false
 #| column: page
 
 
@@ -443,7 +443,7 @@ ggplotly(
 
 ```{r}
 #| fig-asp: 0.9
-#| cache: true
+#| cache: false
 #| column: page
 
 plot_dat <- d |>
