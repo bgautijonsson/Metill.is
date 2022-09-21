@@ -8,3 +8,4 @@
 **/**.feather
 **/** [0-9]**
 **/**.Rdata
+/.quarto/
