@@ -1,7 +1,7 @@
 ---
 title: "Tekjur, skattar og kaupmáttur"
 pagetitle: "Tekjur, skattar og kaupmáttur"
-subtitle: "Greining á tekjuskattsgögnum Hagstofunnar"
+subtitle: "Greining á tekjuskattsgögnum  sem Hagstofan vinnur úr skattframtölum Íslendinga"
 description: |
     Stundum les maður að skattakerfið ýti undir ójöfnuð, eða að það séu of háir skattar á þeim efnameiru. Hvort er það? Hér nota ég skattagögn Hagstofunnar til að skoða tekjur og skatta eftir tekjutíundum. Ég get ekki sagt hvort það sé sanngjarnt, en ég get sýnt hvernig það hefur breyst með tímanum.
 author: 

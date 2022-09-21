@@ -81,11 +81,64 @@ div.quarto-post .listing-categories .listing-category {
 
 
 
-#navbar-title {
+.navbar-title {
   align-self: flex-start;
 }
 
-#navbar-nav {
-  align-self: flex-end;
+.navbar-nav {
+  align-self: flex-start;
 }
 
+
+.card {
+  background-color: #faf9f9;
+  vertical-align: middle;
+  justify-self: center;
+}
+
+.column-screen-inset-shaded {
+  background-color: #efedf5;
+  padding-bottom: 0;
+}
+
+div.list.grid {
+  display: flex;
+  justify-content: center;
+  align-items: stretch;
+  align-content: center;
+  column-gap: 10px;
+  padding-left: 10px;
+  padding-right: 10px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  
+}
+
+.listing-title {
+  font-size: $font-size-base * 1.4;
+}
+
+.listing-subtitle {
+  font-size: $font-size-base * 1;
+}
+
+.listing-description {
+  font-size: $font-size-base * 0.9;
+}
+
+.listing-date {
+  font-size: $font-size-base * 0.8;
+}
+
+.btn-link {
+  align-self: end;
+  width: 30;
+  color: $secondary;
+  text-decoration: none;
+  margin-left: 80%;
+  margin-right: 0px;
+}
+
+.btn-link:hover {
+  color: $secondary;
+}

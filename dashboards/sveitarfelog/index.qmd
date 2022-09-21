@@ -1,8 +1,10 @@
 ---
 title-block-style: none
 pagetitle: "Fjármál Sveitarfélaga"
+subtitle: "Gagnvirk samantekt á ársreikningum sveitarfélaga úr gögnum Sambands Íslenskra Sveitarfélaga"
 image: image.png
 href: dashboards/sveitarfelog/index.qmd
+date: "2022/09/18"
 ---
 
 

@@ -6,8 +6,9 @@ listing:
     - id: posts
       sort: "date desc"
       contents: posts
+      categories: true
       page-size: 10
-        
+      fields: [image, date, title, subtitle, categories]
 ---
 
 

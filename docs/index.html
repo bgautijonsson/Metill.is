@@ -88,9 +88,9 @@ ul.task-list li input[type="checkbox"] {
     }
 
     const options = {
-      valueNames: ['listing-title-block-style','listing-pagetitle','listing-image','listing-href','listing-path','listing-author','listing-description','listing-filename','listing-file-modified','listing-reading-time',{ data: ['index'] },{ data: ['categories'] },{ data: ['listing-file-modified-sort'] },{ data: ['listing-reading-time-sort'] }],
+      valueNames: ['listing-title-block-style','listing-pagetitle','listing-subtitle','listing-image','listing-href','listing-date','listing-path','listing-author','listing-description','listing-filename','listing-file-modified','listing-reading-time',{ data: ['index'] },{ data: ['categories'] },{ data: ['listing-date-sort'] },{ data: ['listing-file-modified-sort'] },{ data: ['listing-reading-time-sort'] }],
       
-      searchColumns: ["listing-title-block-style","listing-pagetitle","listing-image","listing-href","listing-path","listing-author","listing-description","listing-filename","listing-file-modified","listing-reading-time"],
+      searchColumns: ["listing-title-block-style","listing-pagetitle","listing-subtitle","listing-image","listing-href","listing-date","listing-path","listing-author","listing-description","listing-filename","listing-file-modified","listing-reading-time"],
     };
 
     window['quarto-listings'] = window['quarto-listings'] || {};
@@ -126,7 +126,7 @@ ul.task-list li input[type="checkbox"] {
   </div>
           <ul class="navbar-nav navbar-nav-scroll ms-auto">
   <li class="nav-item">
-    <a class="nav-link" href="./posts.html">Færslur</a>
+    <a class="nav-link" href="./posts.html">Greinar</a>
   </li>  
   <li class="nav-item">
     <a class="nav-link" href="./about.html">Um Metil</a>
@@ -145,69 +145,101 @@ ul.task-list li input[type="checkbox"] {
 
 
 
-<h2 id="færslur" class="anchored">Færslur</h2>
+<h2 id="nýjast" class="anchored">Nýjast</h2>
 <div id="listing-posts" class="column-screen-inset quarto-listing quarto-listing-container-custom">
 <div class="list grid">
-  <div class="card border-2 rounded-3 g-col-12 g-col-sm-6 g-col-md-4 mb-2" data-index="0" data-categories="stjórnmál,efnahagur,ársreikningar,R,íslenska" data-listing-date-sort="1663372800000" data-listing-file-modified-sort="1663777954559" data-listing-reading-time-sort="22.48">
-    <div class="card-header py-1 px-2 border-bottom border-1 bg-light">
-      <small class="card-text inline-block">
-        <a href="./posts/stjornmalaflokkar/index.html" class="listing-title">Fjármál stjórnmálaflokkanna</a><br> <span class="text-muted listing-subtitle">This is a subtitle</span>
-      </small>
-    </div>
+  <div class="card border-2 rounded-3 g-col-12 g-col-sm-6 g-col-md-4 mb-2" data-index="0" data-categories="stjórnmál,efnahagur,ársreikningar,R,íslenska" data-listing-date-sort="1663372800000" data-listing-file-modified-sort="1663789782529" data-listing-reading-time-sort="22.48">
     <a href="./posts/stjornmalaflokkar/index.html">
       <img src="./posts/stjornmalaflokkar/Figures/eigidfe.png" alt="A description
 " class="card-img-top" style="vertical-align: middle;">
     </a>
-  </div>
-  <div class="card border-2 rounded-3 g-col-12 g-col-sm-6 g-col-md-4 mb-2" data-index="1" data-categories="stjórnmál,kosningar,R,íslenska" data-listing-date-sort="1663372800000" data-listing-file-modified-sort="1663776970261" data-listing-reading-time-sort="12.58">
-    <div class="card-header py-1 px-2 border-bottom border-1 bg-light">
-      <small class="card-text inline-block">
-        <a href="./posts/kosningar/index.html" class="listing-title">Alþingiskosningar</a><br> <span class="text-muted listing-subtitle">A subtitle</span>
+    <div class="card-footer py-1 px-2 border-bottom border-1 bg-light">
+      <small class="card-text inline-block gallery-footer">
+        <a href="./posts/stjornmalaflokkar/index.html" class="listing-title">Fjármál stjórnmálaflokkanna</a>
+      </small>
+      <br>
+      <small class="card-text inline-block gallery-footer">
+        <span class="text-muted listing-subtitle">Greining á ársreikningum stjórnmálaflokka úr gögnum Ríkisendurskoðunar</span>
+        <br>
+        <span class="text-muted listing-date">Sep 17, 2022</span>
       </small>
     </div>
+  </div>
+  <div class="card border-2 rounded-3 g-col-12 g-col-sm-6 g-col-md-4 mb-2" data-index="1" data-categories="stjórnmál,kosningar,R,íslenska" data-listing-date-sort="1663372800000" data-listing-file-modified-sort="1663790087433" data-listing-reading-time-sort="12.58">
     <a href="./posts/kosningar/index.html">
       <img src="./posts/kosningar/Figures/thingmenn_atkvaedi_tw.png" alt="A description of this stuff!
 " class="card-img-top" style="vertical-align: middle;">
     </a>
-  </div>
-  <div class="card border-2 rounded-3 g-col-12 g-col-sm-6 g-col-md-4 mb-2" data-index="2" data-categories="skattar,efnahagur,R,íslenska" data-listing-date-sort="1662854400000" data-listing-file-modified-sort="1663777836769" data-listing-reading-time-sort="24.83">
-    <div class="card-header py-1 px-2 border-bottom border-1 bg-light">
-      <small class="card-text inline-block">
-        <a href="./posts/skattagogn/index.html" class="listing-title">Tekjur, skattar og kaupmáttur</a><br> <span class="text-muted listing-subtitle">Greining á tekjuskattsgögnum Hagstofunnar</span>
+    <div class="card-footer py-1 px-2 border-bottom border-1 bg-light">
+      <small class="card-text inline-block gallery-footer">
+        <a href="./posts/kosningar/index.html" class="listing-title">Hvað kostar kosningaherferð?</a>
+      </small>
+      <br>
+      <small class="card-text inline-block gallery-footer">
+        <span class="text-muted listing-subtitle">Niðurstöður alþingiskosninga tengdar við fjármál stjórnmálaflokkanna</span>
+        <br>
+        <span class="text-muted listing-date">Sep 17, 2022</span>
       </small>
     </div>
+  </div>
+  <div class="card border-2 rounded-3 g-col-12 g-col-sm-6 g-col-md-4 mb-2" data-index="2" data-categories="skattar,efnahagur,R,íslenska" data-listing-date-sort="1662854400000" data-listing-file-modified-sort="1663790018379" data-listing-reading-time-sort="24.83">
     <a href="./posts/skattagogn/index.html">
       <img src="./posts/skattagogn/image.png" alt="Stundum les maður að skattakerfið ýti undir ójöfnuð, eða að það séu of háir skattar á þeim efnameiru. Hvort er það? Hér nota ég skattagögn Hagstofunnar til að skoða tekjur og skatta eftir tekjutíundum. Ég get ekki sagt hvort það sé sanngjarnt, en ég get sýnt hvernig það hefur breyst með tímanum.
 " class="card-img-top" style="vertical-align: middle;">
     </a>
+    <div class="card-footer py-1 px-2 border-bottom border-1 bg-light">
+      <small class="card-text inline-block gallery-footer">
+        <a href="./posts/skattagogn/index.html" class="listing-title">Tekjur, skattar og kaupmáttur</a>
+      </small>
+      <br>
+      <small class="card-text inline-block gallery-footer">
+        <span class="text-muted listing-subtitle">Greining á tekjuskattsgögnum  sem Hagstofan vinnur úr skattframtölum Íslendinga</span>
+        <br>
+        <span class="text-muted listing-date">Sep 11, 2022</span>
+      </small>
+    </div>
   </div>
 </div>
 <div class="listing-no-matching d-none">
 No matching items
 </div>
 </div>
+<p><a href="./posts.html" class="btn btn-primary btn-link" type="button">Allar greinar</a></p>
+<!-- <a href="posts.qmd" type="button" class="btn btn-primary btn-link" aria-pressed="true">Eldri færslur</button> -->
 <h2 id="mælaborð" class="anchored">Mælaborð</h2>
 <div id="listing-dashboards" class="column-page quarto-listing quarto-listing-container-custom">
 <div class="list grid">
-  <div class="card border-2 rounded-3 g-col-12 g-col-sm-6 g-col-md-4 mb-2" data-index="0" data-listing-file-modified-sort="1663777041457" data-listing-reading-time-sort="0.26">
-    <div class="card-header py-1 px-2 border-bottom border-1 bg-light">
-      <small class="card-text inline-block">
-        <a href="./dashboards/sveitarfelog/index.html" class="listing-title">Fjármál Sveitarfélaga</a><br> <span class="text-muted listing-subtitle"></span>
-      </small>
-    </div>
+  <div class="card border-2 rounded-3 g-col-12 g-col-sm-6 g-col-md-4 mb-2" data-index="0" data-listing-date-sort="1663459200000" data-listing-file-modified-sort="1663792731169" data-listing-reading-time-sort="0.26">
     <a href="./dashboards/sveitarfelog/index.html">
       <img src="./dashboards/sveitarfelog/image.png" alt="" class="card-img-top" style="vertical-align: middle;">
     </a>
-  </div>
-  <div class="card border-2 rounded-3 g-col-12 g-col-sm-6 g-col-md-4 mb-2" data-index="1" data-listing-file-modified-sort="1663777036235" data-listing-reading-time-sort="0.26">
-    <div class="card-header py-1 px-2 border-bottom border-1 bg-light">
-      <small class="card-text inline-block">
-        <a href="./dashboards/skattagogn/index.html" class="listing-title">Eignir, skuldir og skattar</a><br> <span class="text-muted listing-subtitle"></span>
+    <div class="card-footer py-1 px-2 border-bottom border-1 bg-light">
+      <small class="card-text inline-block gallery-footer">
+        <a href="./dashboards/sveitarfelog/index.html" class="listing-title">Fjármál Sveitarfélaga</a>
+      </small>
+      <br>
+      <small class="card-text inline-block gallery-footer">
+        <span class="text-muted listing-subtitle">Gagnvirk samantekt á ársreikningum sveitarfélaga úr gögnum Sambands Íslenskra Sveitarfélaga</span>
+        <br>
+        <span class="text-muted listing-date">Sep 18, 2022</span>
       </small>
     </div>
+  </div>
+  <div class="card border-2 rounded-3 g-col-12 g-col-sm-6 g-col-md-4 mb-2" data-index="1" data-listing-date-sort="1661385600000" data-listing-file-modified-sort="1663792714495" data-listing-reading-time-sort="0.26">
     <a href="./dashboards/skattagogn/index.html">
       <img src="./dashboards/skattagogn/image.png" alt="" class="card-img-top" style="vertical-align: middle;">
     </a>
+    <div class="card-footer py-1 px-2 border-bottom border-1 bg-light">
+      <small class="card-text inline-block gallery-footer">
+        <a href="./dashboards/skattagogn/index.html" class="listing-title">Eignir, skuldir og skattar</a>
+      </small>
+      <br>
+      <small class="card-text inline-block gallery-footer">
+        <span class="text-muted listing-subtitle">Gagnvirkt tól til að skoða eignir, tekjur og skuldir Íslendinga í skattframtalsgögnum Hagstofunnar</span>
+        <br>
+        <span class="text-muted listing-date">Aug 25, 2022</span>
+      </small>
+    </div>
   </div>
 </div>
 <div class="listing-no-matching d-none">

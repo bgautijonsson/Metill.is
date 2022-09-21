@@ -1,7 +1,7 @@
 ---
-title: "Alþingiskosningar"
-pagetitle: "Alþingiskosningar"
-subtitle: "A subtitle"
+title: "Hvað kostar kosningaherferð?"
+pagetitle: "Hvað kostar kosningaherferð?"
+subtitle: "Niðurstöður alþingiskosninga tengdar við fjármál stjórnmálaflokkanna"
 description: |
     A description of this stuff!
 author: 

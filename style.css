@@ -45,29 +45,7 @@ padding-bottom: 1em;
   
 }
 
-.card {
-  background-color: #faf9f9;
-  vertical-align: middle;
-  justify-self: center;
-}
 
-.column-screen-inset-shaded {
-  background-color: #efedf5;
-  padding-bottom: 0;
-}
-
-div.list.grid {
-  display: flex;
-  justify-content: center;
-  align-items: stretch;
-  align-content: center;
-  column-gap: 10px;
-  padding-left: 10px;
-  padding-right: 10px;
-  padding-top: 10px;
-  padding-bottom: 10px;
-  
-}
 
 
 

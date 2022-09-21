@@ -1,7 +1,7 @@
 ---
 title: "Fjármál stjórnmálaflokkanna"
 pagetitle: "Fjármál stjórnmálaflokkanna"
-subtitle: "This is a subtitle"
+subtitle: "Greining á ársreikningum stjórnmálaflokka úr gögnum Ríkisendurskoðunar"
 description: |
   A description
 author: 

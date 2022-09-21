@@ -60,9 +60,9 @@ ul.task-list li input[type="checkbox"] {
     }
 
     const options = {
-      valueNames: ['listing-date','listing-title','listing-author','listing-subtitle','listing-image','listing-description',{ data: ['index'] },{ data: ['categories'] },{ data: ['listing-date-sort'] },{ data: ['listing-file-modified-sort'] }],
+      valueNames: ['listing-image','listing-date','listing-title','listing-subtitle','listing-categories',{ data: ['index'] },{ data: ['categories'] },{ data: ['listing-date-sort'] },{ data: ['listing-file-modified-sort'] }],
       
-      searchColumns: ["listing-date","listing-title","listing-author","listing-subtitle","listing-image","listing-description"],
+      searchColumns: ["listing-date","listing-title","listing-author","listing-subtitle","listing-image","listing-description","listing-categories"],
     };
 
     window['quarto-listings'] = window['quarto-listings'] || {};
@@ -85,7 +85,7 @@ ul.task-list li input[type="checkbox"] {
 <link rel="stylesheet" href="style.css">
 </head>
 
-<body class="nav-fixed fullcontent">
+<body class="nav-fixed">
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
@@ -98,7 +98,7 @@ ul.task-list li input[type="checkbox"] {
   </div>
           <ul class="navbar-nav navbar-nav-scroll ms-auto">
   <li class="nav-item">
-    <a class="nav-link active" href="./posts.html" aria-current="page">Færslur</a>
+    <a class="nav-link active" href="./posts.html" aria-current="page">Greinar</a>
   </li>  
   <li class="nav-item">
     <a class="nav-link" href="./about.html">Um Metil</a>
@@ -111,7 +111,9 @@ ul.task-list li input[type="checkbox"] {
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
-    
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        
+    <h5 class="quarto-listing-category-title">Categories</h5><div class="quarto-listing-category category-default"><div class="category" data-category="">All <span class="quarto-category-count">(4)</span></div><div class="category" data-category="Hagstofa">Hagstofa <span class="quarto-category-count">(1)</span></div><div class="category" data-category="R">R <span class="quarto-category-count">(4)</span></div><div class="category" data-category="efnahagur">efnahagur <span class="quarto-category-count">(3)</span></div><div class="category" data-category="kosningar">kosningar <span class="quarto-category-count">(1)</span></div><div class="category" data-category="skattar">skattar <span class="quarto-category-count">(1)</span></div><div class="category" data-category="stjórnmál">stjórnmál <span class="quarto-category-count">(2)</span></div><div class="category" data-category="vinnumarkaður">vinnumarkaður <span class="quarto-category-count">(1)</span></div><div class="category" data-category="ársreikningar">ársreikningar <span class="quarto-category-count">(1)</span></div><div class="category" data-category="íslenska">íslenska <span class="quarto-category-count">(4)</span></div></div></div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
@@ -133,7 +135,7 @@ ul.task-list li input[type="checkbox"] {
 
 <div id="listing-posts" class="quarto-listing quarto-listing-container-default">
 <div class="list quarto-listing-default">
-<div class="quarto-post image-right" data-index="0" data-categories="stjórnmál,efnahagur,ársreikningar,R,íslenska" data-listing-date-sort="1663372800000" data-listing-file-modified-sort="1663777954559" data-listing-reading-time-sort="22.48">
+<div class="quarto-post image-right" data-index="0" data-categories="stjórnmál,efnahagur,ársreikningar,R,íslenska" data-listing-date-sort="1663372800000" data-listing-file-modified-sort="1663789782529" data-listing-reading-time-sort="22.48">
 <div class="thumbnail">
 <p><a href="./posts/stjornmalaflokkar/index.html"> <img src="./posts/stjornmalaflokkar/Figures/eigidfe.png" class="thumnail-image"> </a></p>
 </div>
@@ -143,53 +145,74 @@ ul.task-list li input[type="checkbox"] {
 Fjármál stjórnmálaflokkanna
 </h3>
 <div class="listing-subtitle">
-This is a subtitle
-</div>
-<div class="listing-description">
-<p>A description</p>
+Greining á ársreikningum stjórnmálaflokka úr gögnum Ríkisendurskoðunar
 </div>
 </a>
+<div class="listing-categories">
+<div class="listing-category" onclick="window.quartoListingCategory('stjórnmál'); return false;">
+stjórnmál
+</div>
+<div class="listing-category" onclick="window.quartoListingCategory('efnahagur'); return false;">
+efnahagur
+</div>
+<div class="listing-category" onclick="window.quartoListingCategory('ársreikningar'); return false;">
+ársreikningar
+</div>
+<div class="listing-category" onclick="window.quartoListingCategory('R'); return false;">
+R
+</div>
+<div class="listing-category" onclick="window.quartoListingCategory('íslenska'); return false;">
+íslenska
+</div>
+</div>
+<a href="./posts/stjornmalaflokkar/index.html"> </a>
 </div>
 <div class="metadata">
 <a href="./posts/stjornmalaflokkar/index.html">
 <div class="listing-date">
 Sep 17, 2022
 </div>
-<div class="listing-author">
-Brynjólfur Gauti Guðrúnar Jónsson
-</div>
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="1" data-categories="stjórnmál,kosningar,R,íslenska" data-listing-date-sort="1663372800000" data-listing-file-modified-sort="1663776970261" data-listing-reading-time-sort="12.58">
+<div class="quarto-post image-right" data-index="1" data-categories="stjórnmál,kosningar,R,íslenska" data-listing-date-sort="1663372800000" data-listing-file-modified-sort="1663790087433" data-listing-reading-time-sort="12.58">
 <div class="thumbnail">
 <p><a href="./posts/kosningar/index.html"> <img src="./posts/kosningar/Figures/thingmenn_atkvaedi_tw.png" class="thumnail-image"> </a></p>
 </div>
 <div class="body">
 <a href="./posts/kosningar/index.html">
 <h3 class="no-anchor listing-title">
-Alþingiskosningar
+Hvað kostar kosningaherferð?
 </h3>
 <div class="listing-subtitle">
-A subtitle
-</div>
-<div class="listing-description">
-<p>A description of this stuff!</p>
+Niðurstöður alþingiskosninga tengdar við fjármál stjórnmálaflokkanna
 </div>
 </a>
+<div class="listing-categories">
+<div class="listing-category" onclick="window.quartoListingCategory('stjórnmál'); return false;">
+stjórnmál
+</div>
+<div class="listing-category" onclick="window.quartoListingCategory('kosningar'); return false;">
+kosningar
+</div>
+<div class="listing-category" onclick="window.quartoListingCategory('R'); return false;">
+R
+</div>
+<div class="listing-category" onclick="window.quartoListingCategory('íslenska'); return false;">
+íslenska
+</div>
+</div>
+<a href="./posts/kosningar/index.html"> </a>
 </div>
 <div class="metadata">
 <a href="./posts/kosningar/index.html">
 <div class="listing-date">
 Sep 17, 2022
 </div>
-<div class="listing-author">
-Brynjólfur Gauti Guðrúnar Jónsson
-</div>
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="2" data-categories="skattar,efnahagur,R,íslenska" data-listing-date-sort="1662854400000" data-listing-file-modified-sort="1663777836769" data-listing-reading-time-sort="24.83">
+<div class="quarto-post image-right" data-index="2" data-categories="skattar,efnahagur,R,íslenska" data-listing-date-sort="1662854400000" data-listing-file-modified-sort="1663790018379" data-listing-reading-time-sort="24.83">
 <div class="thumbnail">
 <p><a href="./posts/skattagogn/index.html"> <img src="./posts/skattagogn/image.png" class="thumnail-image"> </a></p>
 </div>
@@ -199,25 +222,34 @@ Brynjólfur Gauti Guðrúnar Jónsson
 Tekjur, skattar og kaupmáttur
 </h3>
 <div class="listing-subtitle">
-Greining á tekjuskattsgögnum Hagstofunnar
-</div>
-<div class="listing-description">
-<p>Stundum les maður að skattakerfið ýti undir ójöfnuð, eða að það séu of háir skattar á þeim efnameiru. Hvort er það? Hér nota ég skattagögn Hagstofunnar til að skoða tekjur og skatta eftir tekjutíundum. Ég get ekki sagt hvort það sé sanngjarnt, en ég get sýnt hvernig það hefur breyst með tímanum.</p>
+Greining á tekjuskattsgögnum sem Hagstofan vinnur úr skattframtölum Íslendinga
 </div>
 </a>
+<div class="listing-categories">
+<div class="listing-category" onclick="window.quartoListingCategory('skattar'); return false;">
+skattar
+</div>
+<div class="listing-category" onclick="window.quartoListingCategory('efnahagur'); return false;">
+efnahagur
+</div>
+<div class="listing-category" onclick="window.quartoListingCategory('R'); return false;">
+R
+</div>
+<div class="listing-category" onclick="window.quartoListingCategory('íslenska'); return false;">
+íslenska
+</div>
+</div>
+<a href="./posts/skattagogn/index.html"> </a>
 </div>
 <div class="metadata">
 <a href="./posts/skattagogn/index.html">
 <div class="listing-date">
 Sep 11, 2022
 </div>
-<div class="listing-author">
-Brynjólfur Gauti Guðrúnar Jónsson
-</div>
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="3" data-categories="efnahagur,vinnumarkaður,Hagstofa,R,íslenska" data-listing-date-sort="1662768000000" data-listing-file-modified-sort="1663776941464" data-listing-reading-time-sort="46.31">
+<div class="quarto-post image-right" data-index="3" data-categories="efnahagur,vinnumarkaður,Hagstofa,R,íslenska" data-listing-date-sort="1662768000000" data-listing-file-modified-sort="1663792542684" data-listing-reading-time-sort="42.975">
 <div class="thumbnail">
 <p><a href="./posts/vinnuafl/index.html"> <img src="./posts/vinnuafl/hlutf_opinbert.png" class="thumnail-image"> </a></p>
 </div>
@@ -229,18 +261,30 @@ Vinnumarkaður
 <div class="listing-subtitle">
 Hver er fjöldi starfandi einstaklinga og hvernig skiptast þeir á vinnumarkaði?
 </div>
-<div class="listing-description">
-<p>Reglulega sjást fyrirsagnir þar sem talað er um að opinbert starfsfólk sé allt of margt og að hlutfall þess af heildarfjölda vinnandi fólks sé of hátt. Hér kryf ég reglulega nýjustu gögnin til að geta vitað hvort slíkar fullyrðingar séu teknar úr samhengi eða endurspegli raunveruleikann.</p>
-</div>
 </a>
+<div class="listing-categories">
+<div class="listing-category" onclick="window.quartoListingCategory('efnahagur'); return false;">
+efnahagur
+</div>
+<div class="listing-category" onclick="window.quartoListingCategory('vinnumarkaður'); return false;">
+vinnumarkaður
+</div>
+<div class="listing-category" onclick="window.quartoListingCategory('Hagstofa'); return false;">
+Hagstofa
+</div>
+<div class="listing-category" onclick="window.quartoListingCategory('R'); return false;">
+R
+</div>
+<div class="listing-category" onclick="window.quartoListingCategory('íslenska'); return false;">
+íslenska
+</div>
+</div>
+<a href="./posts/vinnuafl/index.html"> </a>
 </div>
 <div class="metadata">
 <a href="./posts/vinnuafl/index.html">
 <div class="listing-date">
 Sep 10, 2022
-</div>
-<div class="listing-author">
-Brynjólfur Gauti Guðrúnar Jónsson
 </div>
 </a>
 </div>

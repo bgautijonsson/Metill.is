@@ -5,12 +5,12 @@ toc: false
 editor: source
 listing:
     - id: posts
-      template: ejs/posts.ejs
+      template: ejs/gallery.ejs
       sort: "date desc"
       contents: posts
       max-items: 3
     - id: dashboards
-      template: ejs/posts.ejs
+      template: ejs/gallery.ejs
       sort: "date desc"
       contents: dashboards
       max-items: 2
@@ -18,12 +18,15 @@ listing:
 ---
 
 
-## Færslur
-
+## Nýjast
 
 ::: {#posts .column-screen-inset}
 
 :::
+
+[Allar greinar](posts.qmd){type="button" class="btn btn-primary btn-link"}
+
+<!-- <a href="posts.qmd" type="button" class="btn btn-primary btn-link" aria-pressed="true">Eldri færslur</button> -->
 
 ## Mælaborð
 
