@@ -3,8 +3,43 @@ pagetitle: "Um Metil"
 editor: source
 ---
 
+<br>
+
+
+
+::: {#hero-banner .column-screen-inset}
+
+**metill** *no kk*
+
+Tölfræðileg uppskrift þar sem innihaldið er gögn og útkoman er einhver ákveðin stærð sem við höfum áhuga á að meta. 
+
+:::
+
+<br>
+
+Orðið *metill* lýsir markmiði þessarar síðu: Að nota réttu gögnin og góðar uppskriftir til að fá út mat á ýmsum stærðum sem eru partur af umræðunni hverju sinni.
+
+# Höfundar
+
+::: columns
+
+::: {.column width="40%"}
+
+::: {#people-banner}
 
 
 
 
+![](images/binni.png){class="rounded-circle" width="50%"}
 
+
+
+[Brynjólfur Gauti Guðrúnar Jónsson](bggj.is){target=_blank"}
+
+PhD nemandi í tölfræði við HÍ
+
+:::
+
+:::
+
+:::

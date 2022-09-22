@@ -1,7 +1,21 @@
 
 #hero-banner {
-  padding-top: 35px;
-  background-color: rgb(237,243,249);
+  padding-left: 35px;
+  padding-right: 35px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  background-color: #f0f0f0;
+  border: 1px solid #737373;
+  text-align: center;
+}
+
+#people-banner {
+  padding-left: 5px;
+  padding-right: 5px;
+  padding-top: 5px;
+  background-color: #f0f0f0;
+  border: 1px solid #737373;
+  text-align: center;
 }
 
 #quarto-content main { 
