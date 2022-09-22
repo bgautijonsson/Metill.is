@@ -1,0 +1,24 @@
+---
+title-block-style: none
+pagetitle: "Verðbólga"
+subtitle: "Reiknaðu þína persónulega verðbólgu með þessari gagnvirku framsetningu á vísitölu neysluverðs"
+image: image.png
+href: maelabord/verdbolga/index.qmd
+date: "2022/09/22"
+---
+
+
+<iframe
+  src="https://bggj.shinyapps.io/verdbolga/"
+  style="
+    position: fixed;
+    top: 80px;
+    bottom: 0px;
+    right: 0px;
+    width: 100%;
+    border: none;
+    margin: 0;
+    padding: 0;
+    height: 100%;
+  ">
+</iframe>

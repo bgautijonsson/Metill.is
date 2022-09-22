@@ -13,7 +13,7 @@ listing:
       template: ejs/gallery.ejs
       sort: "date desc"
       contents: maelabord
-      max-items: 2
+      max-items: 3
         
 ---
 
