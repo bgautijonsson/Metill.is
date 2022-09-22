@@ -1,6 +1,6 @@
 ---
 title-block-style: none
-pagetitle: "Verðbólga"
+pagetitle: "Verðbólga (í vinnslu)"
 subtitle: "Reiknaðu þína persónulega verðbólgu með þessari gagnvirku framsetningu á vísitölu neysluverðs"
 image: image.png
 href: maelabord/verdbolga/index.qmd
