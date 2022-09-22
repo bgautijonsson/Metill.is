@@ -1,6 +1,6 @@
 ---
-pagetitle: "Færslur"
-title: "Færslur"
+pagetitle: "Greinasafn"
+title: "Greinasafn"
 editor: source
 listing:
     - id: posts
