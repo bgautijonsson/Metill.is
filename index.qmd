@@ -7,12 +7,12 @@ listing:
     - id: posts
       template: ejs/gallery.ejs
       sort: "date desc"
-      contents: posts
+      contents: greinar
       max-items: 3
     - id: dashboards
       template: ejs/gallery.ejs
       sort: "date desc"
-      contents: dashboards
+      contents: maelabord
       max-items: 2
         
 ---
@@ -24,7 +24,7 @@ listing:
 
 :::
 
-[Allar greinar](posts.qmd){type="button" class="btn btn-primary btn-link"}
+[Allar greinar](greinar){type="button" class="btn btn-primary btn-link"}
 
 <!-- <a href="/posts.html" type="button" class="btn btn-primary btn-link">Allar greinar</button> -->
 

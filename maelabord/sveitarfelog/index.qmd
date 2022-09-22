@@ -1,0 +1,24 @@
+---
+title-block-style: none
+pagetitle: "Fjármál Sveitarfélaga"
+subtitle: "Gagnvirk samantekt á ársreikningum sveitarfélaga úr gögnum Sambands Íslenskra Sveitarfélaga"
+image: image.png
+href: maelabord/sveitarfelog/index.qmd
+date: "2022/09/18"
+---
+
+
+<iframe
+  src="https://bggj.shinyapps.io/sveitarfelog_maelabord/"
+  style="
+    position: fixed;
+    top: 60px;
+    bottom: 0px;
+    right: 0px;
+    width: 100%;
+    border: none;
+    margin: 0;
+    padding: 0;
+    height: 100%;
+  ">
+</iframe>

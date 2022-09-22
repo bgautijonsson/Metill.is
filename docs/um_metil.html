@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Færslur</title>
+<title>Um Metil</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -25,8 +25,6 @@ ul.task-list li input[type="checkbox"] {
 
 <script src="site_libs/quarto-nav/quarto-nav.js"></script>
 <script src="site_libs/quarto-nav/headroom.min.js"></script>
-<script src="site_libs/quarto-listing/list.min.js"></script>
-<script src="site_libs/quarto-listing/quarto-listing.js"></script>
 <script src="site_libs/clipboard/clipboard.min.js"></script>
 <script src="site_libs/quarto-html/quarto.js"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
@@ -50,42 +48,12 @@ ul.task-list li input[type="checkbox"] {
     "search-submit-button-title": "Submit"
   }
 }</script>
-<script>
 
-  window.document.addEventListener("DOMContentLoaded", function (_event) {
-    const listingTargetEl = window.document.querySelector('#listing-posts .list');
-    if (!listingTargetEl) {
-      // No listing discovered, do not attach.
-      return; 
-    }
-
-    const options = {
-      valueNames: ['listing-image','listing-date','listing-title','listing-subtitle','listing-categories',{ data: ['index'] },{ data: ['categories'] },{ data: ['listing-date-sort'] },{ data: ['listing-file-modified-sort'] }],
-      
-      searchColumns: ["listing-categories"],
-    };
-
-    window['quarto-listings'] = window['quarto-listings'] || {};
-    window['quarto-listings']['listing-posts'] = new List('listing-posts', options);
-
-    if (window['quarto-listing-loaded']) {
-      window['quarto-listing-loaded']();
-    }
-  });
-
-  window.addEventListener('hashchange',() => {
-    if (window['quarto-listing-loaded']) {
-      window['quarto-listing-loaded']();
-    }
-  })
-  </script>
-
-  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
 
 <link rel="stylesheet" href="style.css">
 </head>
 
-<body class="nav-fixed">
+<body class="nav-fixed fullcontent">
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
@@ -101,7 +69,7 @@ ul.task-list li input[type="checkbox"] {
     <a class="nav-link" href="./greinar.html">Greinasafn</a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./um_metil.html">Um Metil</a>
+    <a class="nav-link active" href="./um_metil.html" aria-current="page">Um Metil</a>
   </li>  
 </ul>
       </div> <!-- /container-fluid -->
@@ -111,39 +79,33 @@ ul.task-list li input[type="checkbox"] {
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        
-    <h5 class="quarto-listing-category-title">Categories</h5><div class="quarto-listing-category category-default"><div class="category" data-category="">All <span class="quarto-category-count">(0)</span></div></div></div>
+    
 <!-- main -->
-<main class="content" id="quarto-document-content">
+<main class="content page-columns page-full" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default">
-<div class="quarto-title">
-<h1 class="title">Færslur</h1>
+
+
+<p><br></p>
+<div id="hero-banner" class="column-screen-inset">
+<p><strong>metill</strong> <em>no kk</em></p>
+<p>Tölfræðileg uppskrift þar sem innihaldið er gögn og útkoman er einhver ákveðin stærð sem við höfum áhuga á að meta.</p>
 </div>
-
-
-
-<div class="quarto-title-meta">
-
-    
-    
-  </div>
-  
-
-</header>
-
-<div id="listing-posts" class="quarto-listing quarto-listing-container-default">
-<div class="list quarto-listing-default">
-
+<p><br></p>
+<p>Orðið <em>metill</em> lýsir markmiði þessarar síðu: Að nota réttu gögnin og góðar uppskriftir til að fá út mat á ýmsum stærðum sem eru partur af umræðunni hverju sinni.</p>
+<section id="höfundar" class="level1">
+<h1>Höfundar</h1>
+<div class="columns">
+<div class="column" style="width:40%;">
+<div id="people-banner">
+<p><img src="images/binni.png" class="rounded-circle img-fluid" style="width:50.0%"></p>
+<p><a href="bggj.is" target="_blank&quot;">Brynjólfur Gauti Guðrúnar Jónsson</a></p>
+<p>PhD nemandi í tölfræði við HÍ</p>
 </div>
-<div class="listing-no-matching d-none">
-No matching items
 </div>
 </div>
 
 
-
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">

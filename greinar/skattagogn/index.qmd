@@ -1,0 +1,541 @@
+---
+title: "Tekjur, skattar og kaupmáttur"
+pagetitle: "Tekjur, skattar og kaupmáttur"
+subtitle: "Greining á tekjuskattsgögnum  sem Hagstofan vinnur úr skattframtölum Íslendinga"
+description: |
+    Stundum les maður að skattakerfið ýti undir ójöfnuð, eða að það séu of háir skattar á þeim efnameiru. Hvort er það? Hér nota ég skattagögn Hagstofunnar til að skoða tekjur og skatta eftir tekjutíundum. Ég get ekki sagt hvort það sé sanngjarnt, en ég get sýnt hvernig það hefur breyst með tímanum.
+author: 
+    -   name: "Brynjólfur Gauti Guðrúnar Jónsson"
+        url: "bggj.is"
+        affiliation: "Tölfræði, Raunvísindadeild Háskóla Íslands"
+        affiliation-url: "https://www.hi.is/tolfraedi_0"
+date: "2022/09/11"
+format: 
+    html:
+        code-fold: true
+        smooth-scroll: true
+        link-external-newwindow: true
+execute: 
+  echo: false
+  warning: false
+  cache: false
+editor: source
+title-block-banner: true
+categories:
+    - skattar
+    - efnahagur
+href: greinar/skattagogn/index.qmd
+image: image.png
+twitter-card: 
+    image: image.png
+---
+
+```{r}
+#| include: false
+
+library(cowplot)
+library(tidyverse)
+library(scales)
+library(pxweb)
+library(ggthemes)
+library(kableExtra)
+library(gganimate)
+library(lubridate)
+library(geomtextpath)
+library(ggtext)
+library(readxl)
+library(janitor)
+library(plotly)
+library(DBI)
+library(config)
+library(visitalaneysluverds)
+library(metill)
+theme_set(theme_metill())
+
+usr <- config::get("postgres_user")
+con <- dbConnect(RPostgres::Postgres(), 
+                 dbname = usr$dbname, 
+                 host = usr$host,
+                 port = usr$port, 
+                 user = usr$username, 
+                 password = usr$password)
+
+d <- tbl(con, "tiundamork_1997_2021") 
+```
+
+
+# Skilgreiningar
+
+## Tekjutíund
+
+```{r}
+plot_dat <- d |> 
+    filter(tiundarbreyta == "Heildartekjur",
+           name %in% c("Tekjur alls", "Fjöldi í hóp"),
+           ar == 2021) |> 
+    collect() |> 
+    pivot_wider(names_from = name, values_from = value) |> 
+    janitor::clean_names()
+
+fjoldi <- number(sum(plot_dat$fjoldi_i_hop), big.mark = ".", decimal.mark = ",")
+tekjur <- number(sum(plot_dat$tekjur_alls), big.mark = ".", decimal.mark = ",")
+tekjur_a_mann <- number(sum(plot_dat$tekjur_alls) / sum(plot_dat$fjoldi_i_hop), acrucay = 0.1, big.mark = ".", decimal.mark = ",")
+tekjur_a_mann_a_manudi <- number(sum(plot_dat$tekjur_alls) / sum(plot_dat$fjoldi_i_hop) / 12, accuracy = 0.1, big.mark = ".", decimal.mark = ",")
+```
+
+Það er fátt jafn sexý og þegar einhver talar um tekjutíundir, en hvað þýðir það? Í gögnum Hagstofunnar um tekjur eru samtals `r fjoldi` einstaklingar og þau fengu samtals tekjur upp á `r tekjur` milljónir króna, eða `r tekjur_a_mann` milljónir króna á mann á ári (`r tekjur_a_mann_a_manudi` milljónir á mánuði).
+
+En þessir einstaklingar höfðu ekki allir sömu tekjur, heldur er tekjum dreift ójafnt. Sum hafa hærri tekjur og aðrir lægri. Ímyndum að við tökum þessa `r fjoldi` einstaklinga, röðum þeim í vaxandi röð eftir tekjum þeirra og skiptum svo í tíu jafnstóra hópa. Þá erum við komin með það sem kallast *tekjutíundir*! Í *töflu I* að neðan sjáum við hvernig heildartekjur skiptust í tekjutíundir árið 2021.
+
+**Hér ber að hafa í huga að allir einstaklingar sem náð hafa 16 ára aldri teljast með í þessum gögnum. Því þýða mánaðartekjur upp á 37 þúsund kr í lægstu tíundinni ekki að fjölskyldur þurfi að lifa á þeim tekjum, heldur eru þarna margir einstaklingar með engar eða mjög litlar tekjur.**
+
+```{r}
+plot_dat |> 
+    mutate(
+        p = tekjur_alls / sum(tekjur_alls),
+        p = percent(p, decimal.mark = ",", big.mark = "."),
+        tekjur_a_mann = tekjur_alls / fjoldi_i_hop * 1e6 / 12,
+        tekjur_a_mann = number(
+            tekjur_a_mann, suffix = " kr", decimal.mark = ",", big.mark = "."
+        ),
+        tekjur_a_mann = ifelse(
+            tiundarhluti == 1, 
+            str_c(
+                tekjur_a_mann, 
+                footnote_marker_alphabet(1, format = "html")
+            ),
+            tekjur_a_mann
+        ),
+        tekjur_alls = number(
+            tekjur_alls, suffix = " mkr", decimal.mark = ",", big.mark = "."
+        )
+    ) |> 
+    select(tiundarhluti, tekjur_a_mann, tekjur_alls, p) |> 
+    kable(
+        format = "html",
+        col.names = c("Tekjutíund", "Tekjur á mann<br>(á mánuði)", "Tekjur alls", "Hlutfall allra tekna"), 
+        escape = FALSE, 
+        align = c("c", "c", "c", "c"),
+        caption = "Tafla I. Skipting heildartekna á tekjutíundir árið 2021"
+    ) |> 
+    kable_styling(bootstrap_options = c("striped", "hover"), full_width = FALSE) |> 
+    footnote(alphabet = c("Einstaklingar á aldrinum 16-17 hafa oft engar eða litlar tekjur meirihluta árs."), fixed_small_size = T)
+```
+
+Við getum skipt öðrum breytum en tekjum í tíundir. Í [mælaborðinu mínu um skattahögn Hagstofunnar](https://bggj.is/skattagogn){target="_blank"} er hægt að skoða ýmsar breytur eftir tíundum heildartekna, ráðstöfunartekna, eigna og annarra breytna!
+
+
+
+# Heildartekjur og skattar
+
+Við getum skoðað skattgreiðslur mismunandi tekjuhópa á tvo vegu:
+
+* Hversu hátt hlutfall af öllum sköttum borgar hver tekjuhópur?
+* Hversu hátt hlutfall af eigin tekjum borgar hver tekjuhópur í skatta?
+
+## Hversu hátt hlutfall af öllum sköttum borgar hver tekjuhópur?
+
+Það ætti ekki að koma á óvart að efri tekjutíundir borgi hærra hlutfall af öllum sköttum heldur en lægri tíundir. [Fjármálaráðuneytið benti á það í tilkynningu þann 23. júní 2021](https://www.stjornarradid.is/efst-a-baugi/frettir/stok-frett/2022/06/23/Kaupmattur-allra-hopa-aukist-og-allir-nema-tekjuhaestu-greida-laegri-skatt-/){target="_blank"} að efstu fimm tekjutíundirnar borgi *83%* af öllum sköttum. Er þetta eftirtektarvert? Út frá töflunni okkar að ofan getum við séð að efstu fimm tíundirnar fá
+
+$$
+34.4\% + 17.4\% + 12.8\% + 9.9\% + 7.8\% = 82.3\%
+$$
+
+af öllum tekjum, og því ætti það alls ekki að koma okkur á óvart að þau borgi það hátt hlutfall af öllum sköttum. Þessi tala, 83%, þýðir því ekki að það sé vegið að þeim tekuhærri á óréttlátan hátt.
+
+En hvað borgar hver tekjutíund mikið í skatta og hvernig ber því saman við heildartekjur þeirra? Á myndinni að neðan ber ég þetta tvennt saman. Hægt er að smella á **Play** til að sjá þróunina frá 1997 til 2021 eða velja ár til að skoða. Ef allir tekjuhópar borguðu jafnt hlutfall í skatta væru allir punktarnir á brotnu línunni.
+
+```{r}
+#| fig-asp: 1
+#| out-width: "100%"
+#| cache: false
+#| column: page
+
+plot_dat <- d |>
+    filter(tiundarbreyta %in% "Heildartekjur",
+           name %in% c("Tekjur alls", 
+                       "Ráðstöfunartekjur (Tekjur - Skattar)",
+                       "Fjöldi í hóp")) |> 
+    collect() |> 
+    pivot_wider() |> 
+    rename(fjoldi = "Fjöldi í hóp") |> 
+    mutate(`Skattar alls` = `Tekjur alls` - `Ráðstöfunartekjur (Tekjur - Skattar)`) |> 
+    select(-"Ráðstöfunartekjur (Tekjur - Skattar)") |> 
+    pivot_longer(c(-ar, -tiundarbreyta, -tiundarhluti, -fjoldi)) |> 
+    group_by(ar, name) |> 
+    mutate(p = value / sum(value)) |> 
+    ungroup()
+
+
+plot_dat <- plot_dat |> 
+    select(-tiundarbreyta, -value) |> 
+    pivot_wider(names_from = name, values_from = p) |> 
+    janitor::clean_names() |> 
+    rename(tekjur_hlutf = tekjur_alls, skattar_hlutf = skattar_alls) |> 
+    inner_join(
+        plot_dat |> 
+            select(-tiundarbreyta, -p) |> 
+            pivot_wider(names_from = name, values_from = value) |> 
+            janitor::clean_names(),
+        by = c("ar", "tiundarhluti", "fjoldi")
+    ) |> 
+    inner_join(
+        vnv() |> 
+            group_by(ar = year(date)) |> 
+            summarise(visitala = mean(cpi),
+                      .groups = "drop") |> 
+            mutate(visitala = visitala / visitala[ar == max(ar)]),
+        by = "ar"
+    ) |> 
+    mutate(tekjur_alls = tekjur_alls / visitala,
+           skattar_alls = skattar_alls / visitala,
+           skattar_hlutf_tekjum = skattar_alls / tekjur_alls) |> 
+    mutate(text = str_c("<b>Tekjutíund: ", tiundarhluti, "</b>", "\n",
+                        "Ár: ", ar, "\n",
+                        "Tekjur (á mann á mánuði): ", number(tekjur_alls * 1e6 / (fjoldi * 12), suffix = " kr", big.mark = ".", decimal.mark = ","), "\n",
+                        "% allra tekna: ", percent(tekjur_hlutf, accuracy = 0.1), "\n",
+                        "Skattar (á mann á mánuði): ", number(skattar_alls * 1e6 / (fjoldi * 12), suffix = " kr", big.mark = ".", decimal.mark = ","), "\n",
+                        "% allra skatta: ", percent(skattar_hlutf, accuracy = 0.1), "\n",
+                        "Skattbyrði (% af tekjum): ", percent(skattar_hlutf_tekjum, accuracy = 0.1)))
+
+
+
+p <- plot_dat |> 
+    ggplot(aes(tekjur_hlutf, skattar_hlutf, 
+               frame = ar, text = text)) +
+    geom_abline(intercept = 0, slope = 1, lty = 2) +
+    geom_point() +
+    scale_x_continuous(labels = label_percent(),
+                       expand = expansion(),
+                       limits = c(min(plot_dat$skattar_hlutf), 0.5),
+                       breaks = seq(0, 50, by = 10)/100) +
+    scale_y_continuous(labels = label_percent(),
+                       expand = expansion(),
+                       limits = c(min(plot_dat$skattar_hlutf), 0.5),
+                       breaks = seq(0, 50, by = 10)/100) +
+    theme(plot.margin = margin(t = 5, r = 5, b = 5, l = 5)) +
+    labs(x = "% af öllum tekjum",
+         y = "% af öllum sköttum",
+         title = "Hvað fær hver tekjutíund háa % af öllum tekjum og sköttum?")
+
+
+ggplotly(
+    p,
+    tooltip = "text"
+) |> 
+    animation_opts(
+        transition = 500,
+        redraw = FALSE
+        
+    ) |> 
+    animation_slider(currentvalue = list(prefix = "Ár:")) |> 
+    layout(
+        hoverlabel = list(align = "left")
+    )
+
+```
+
+<br>
+<br>
+
+## Skattbyrði
+
+Við getum líka skoðað *skattbyrði*, eða hversu hátt hlutfall af tekjum sínum hver hópur borgar í skatta. Eins og að ofan er hægt að smella á **Play** til að sjá þróunina frá 1997 til 2021 eða velja ár sjálf til að skoða. Í  [sömu tilkynningu frá fjármálaráðuneytinu](https://www.stjornarradid.is/efst-a-baugi/frettir/stok-frett/2022/06/23/Kaupmattur-allra-hopa-aukist-og-allir-nema-tekjuhaestu-greida-laegri-skatt-/){target="_blank"} og ég nefndi að ofan var bent á að skattbyrði allra tekjutíunda nema þeirri efstu hefði lækkað frá 2019 til 2021. Það er rétt, en það er gott að hafa í huga að skattbyrði sömu tíunda hækkaði flestöll árin frá 1997 til 2019. 
+
+Neðar í færslunni mun ég svo sýna hvernig skattbyrði hefur hækkað síðan 1997 hjá öllum tekjutíundum nema þeirri efstu.
+
+```{r}
+#| fig-asp: 1
+#| cache: false
+#| column: page
+
+plot_dat <- plot_dat |> 
+    mutate(
+        text = str_c("<b>Tekjutíund: ", tiundarhluti, "</b>", "\n",
+                     "Ár: ", ar, "\n",
+                     "Tekjur (á mann á mánuði): ", number(tekjur_alls * 1e6 / (fjoldi * 12), suffix = " kr", big.mark = ".", decimal.mark = ","), "\n",
+                     "% allra tekna: ", percent(tekjur_hlutf, accuracy = 0.1), "\n",
+                     "Skattar (á mann á mánuði): ", number(skattar_alls * 1e6 / (fjoldi * 12), suffix = " kr", big.mark = ".", decimal.mark = ","), "\n",
+                     "% allra skatta: ", percent(skattar_hlutf, accuracy = 0.1), "\n",
+                     "<b>Skattbyrði (% af tekjum): ", percent(skattar_hlutf_tekjum, accuracy = 0.1), "</b>")
+    )
+p <- plot_dat |> 
+    ggplot(aes(tiundarhluti, skattar_hlutf_tekjum, 
+               frame = ar, text = text)) +
+    geom_line(aes(group = "none")) +
+    geom_point() +
+    scale_x_continuous(expand = expansion(add = 0.05),
+                       breaks = seq(0, 10, by = 1)) +
+    scale_y_continuous(labels = label_percent(),
+                       expand = expansion(add = 0.002),
+                       breaks = seq(0, 50, by = 10)/100) +
+    theme(plot.margin = margin(t = 5, r = 5, b = 5, l = 5)) +
+    labs(x = "Tekjutíund",
+         y = "Skattbyrðu (Skattar sem % af tekjum)",
+         title = "Skattbyrði eftir tekjutíund")
+
+
+ggplotly(
+    p,
+    tooltip = "text"
+) |> 
+    animation_opts(
+        transition = 500,
+        redraw = FALSE
+        
+    ) |> 
+    animation_slider(currentvalue = list(prefix = "Ár:")) |> 
+    layout(
+        hoverlabel = list(align = "left")
+    )
+```
+
+<br>
+<br>
+
+# Þróun frá 1997
+
+## Kaupmáttur heildartekna
+
+Kaupmáttur er einfaldlega hækkun á tekjum umfram verðbólgu *(hækkun á verðlagi, mælt með vísitölu neysluverðs)*. Hér sjáum við hækkun kaupmáttar frá 1997 hjá meðaleinstakling úr hverru tekjutíund. 
+
+```{r}
+#| fig-asp: 0.9
+#| cache: false
+#| column: page
+
+
+plot_dat <- d |> 
+    filter(tiundarbreyta == "Heildartekjur",
+           name %in% c("Tekjur alls", "Fjöldi í hóp")) |> 
+    collect() |> 
+    pivot_wider() |> 
+    rename(fjoldi = "Fjöldi í hóp") |> 
+    pivot_longer(c(-ar, -tiundarbreyta, -tiundarhluti, -fjoldi)) |> 
+    group_by(ar, name) |> 
+    mutate(p = value / sum(value)) |> 
+    ungroup() |> 
+    select(-tiundarbreyta) |> 
+    inner_join(
+        vnv() |> 
+            group_by(ar = year(date)) |> 
+            summarise(cpi = mean(cpi),
+                      .groups = "drop") |> 
+            mutate(cpi = cpi / cpi[ar == max(ar)]),
+        by = "ar"
+    ) |> 
+    mutate(
+        value = (value / fjoldi) / cpi,
+        index = value / value[ar == min(ar)],
+        text = str_c("<b>Tekjutíund: ", tiundarhluti, "</b>", "\n",
+                     "Ár: ", ar, "\n",
+                     "Heildartekjur (á mann á mánuði): ",
+                     number(value * 1e6 / 12, suffix = " kr", big.mark = ".", decimal.mark = ","), "\n",
+                     "Breyting (síðan 1997): ", 
+                     ifelse(index >= 1, "+", ""),
+                     percent(index - 1, accuracy = 0.01, big.mark = ".", decimal.mark = ",")
+        )
+    )
+
+p <- plot_dat |> 
+    ggplot(aes(ar, index, text = text)) +
+    geom_hline(yintercept = 1, lty = 2) +
+    geom_line(aes(group = tiundarhluti, col = tiundarhluti)) +
+    scale_x_continuous() +
+    scale_y_log10(
+        labels = function(x) percent(x - 1),
+        breaks = c(
+            1, 1.25, 1.5, 2, 3,
+            1/1.25, 1/1.5, 1/2, 1/3
+        )
+    ) +
+    scale_colour_distiller(type = "div", palette = "RdYlBu", direction = 1) +
+    theme(legend.position = "none") +
+    labs(x = NULL,
+         y = NULL,
+         title = "Breyting á kaupmætti heildartekna frá 1997")
+
+ggplotly(
+    p,
+    tooltip = "text"
+) |> 
+    layout(
+        hoverlabel = list(align = "left")
+    )
+```
+
+## Kaupmáttur ráðstöfunartekna
+
+Við höfum frekar áhuga á kaupmætti ráðstöfunartekna *(heildartekjur að frádegnum sköttum)*. 
+
+```{r}
+#| fig-asp: 0.9
+#| cache: false
+#| column: page
+
+
+plot_dat <- d |> 
+    filter(tiundarbreyta == "Ráðstöfunartekjur",
+           name %in% c("Ráðstöfunartekjur (Tekjur - Skattar)", "Fjöldi í hóp")) |> 
+    collect() |> 
+    pivot_wider() |> 
+    rename(fjoldi = "Fjöldi í hóp") |> 
+    pivot_longer(c(-ar, -tiundarbreyta, -tiundarhluti, -fjoldi)) |> 
+    group_by(ar, name) |> 
+    mutate(p = value / sum(value)) |> 
+    ungroup() |> 
+    select(-tiundarbreyta) |> 
+    inner_join(
+        vnv() |> 
+            group_by(ar = year(date)) |> 
+            summarise(cpi = mean(cpi),
+                      .groups = "drop") |> 
+            mutate(cpi = cpi / cpi[ar == max(ar)]),
+        by = "ar"
+    ) |> 
+    mutate(
+        value = (value / fjoldi) / cpi,
+        index = value / value[ar == min(ar)],
+        text = str_c("<b>Tekjutíund: ", tiundarhluti, "</b>", "\n",
+                     "Ár: ", ar, "\n",
+                     "Ráðstöfunartekjur (á mann á mánuði): ", 
+                     number(value * 1e6 / 12, suffix = " kr", big.mark = ".", decimal.mark = ","), "\n",
+                     "Breyting (síðan 1997): ", 
+                     ifelse(index >= 1, "+", ""),
+                     percent(index - 1, accuracy = 0.01, big.mark = ".", decimal.mark = ",")
+        )
+    )
+
+p <- plot_dat |> 
+    ggplot(aes(ar, index, text = text)) +
+    geom_hline(yintercept = 1, lty = 2) +
+    geom_line(aes(group = tiundarhluti, col = tiundarhluti)) +
+    scale_x_continuous() +
+    scale_y_log10(
+        labels = function(x) percent(x - 1),
+        breaks = c(
+            1, 1.25, 1.5, 2, 3,
+            1/1.25, 1/1.5, 1/2, 1/3
+        )
+    ) +
+    scale_colour_distiller(type = "div", palette = "RdYlBu", direction = 1) +
+    theme(legend.position = "none") +
+    labs(x = NULL,
+         y = NULL,
+         title = "Breyting á kaupmætti ráðstöfunartekna frá 1997")
+
+ggplotly(
+    p,
+    tooltip = "text"
+) |> 
+    layout(
+        hoverlabel = list(align = "left")
+    )
+```
+
+
+
+## Skattbyrði
+
+Það er líka áhugavert að skoða breytingu í skattbyrði milli 1997 og 2021. Hér þýðir jákvæð prósenta að skattbyrði hefur aukist, en neikvæð prósenta að hún sé minni. Við sjáum að skattbyrði hefur aukist hjá öllum tekjutíundunum nema þeirri efstu. Hér erum við að skoða skattbyrði hvers hóps í heild sinni, þannig að það getur alltaf verið að þetta passi ekki við hvern og einn einstakling, heldur á þetta við um meðaltal allra einstaklinganna.
+
+```{r}
+#| fig-asp: 0.9
+#| cache: false
+#| column: page
+
+plot_dat <- d |>
+    filter(tiundarbreyta %in% "Heildartekjur",
+           name %in% c("Tekjur alls", 
+                       "Ráðstöfunartekjur (Tekjur - Skattar)",
+                       "Fjöldi í hóp")) |> 
+    collect() |> 
+    pivot_wider() |> 
+    rename(fjoldi = "Fjöldi í hóp") |> 
+    mutate(`Skattar alls` = `Tekjur alls` - `Ráðstöfunartekjur (Tekjur - Skattar)`) |> 
+    select(-"Ráðstöfunartekjur (Tekjur - Skattar)") |> 
+    janitor::clean_names() |> 
+    mutate(
+        value = skattar_alls / tekjur_alls,
+        index = value - value[ar == min(ar)],
+        text = str_c("<b>Tekjutíund: ", tiundarhluti, "</b>", "\n",
+                     "Ár: ", ar, "\n",
+                     "Skattbyrði: ", 
+                     percent(value, accuracy = 0.01, big.mark = ".", decimal.mark = ","), "\n",
+                     "Breyting (síðan 1997): ", 
+                     ifelse(index >= 0, "+", ""),
+                     percent(index, accuracy = 0.01, big.mark = ".", decimal.mark = ",", suffix = "%-stig")
+        )
+    )
+
+p <- plot_dat |> 
+    ggplot(aes(ar, index, text = text)) +
+    geom_hline(yintercept = 0, lty = 2) +
+    geom_line(aes(group = tiundarhluti, col = tiundarhluti)) +
+    scale_x_continuous() +
+    scale_y_continuous(
+        labels = label_percent(suffix = "%-stig")
+    ) +
+    scale_colour_distiller(type = "div", palette = "RdYlBu", direction = 1) +
+    theme(legend.position = "none") +
+    labs(x = NULL,
+         y = NULL,
+         title = "Breyting á skattbyrði miðað við 1997")
+
+ggplotly(
+    p,
+    tooltip = "text"
+) |> 
+    layout(
+        hoverlabel = list(align = "left")
+    )
+```
+
+
+```{r}
+#| include: false
+
+p <- plot_dat |> 
+    ggplot(aes(ar, index)) +
+    geom_hline(yintercept = 0, lty = 2) +
+    geom_line(aes(group = tiundarhluti, col = tiundarhluti)) +
+    geom_rangeframe() +
+    geom_text(
+        data = plot_dat |> 
+            filter(ar == max(ar)) |> 
+            mutate(
+                index = case_when(
+                    tiundarhluti == 1 ~ index + 0.0022,
+                    tiundarhluti == 8 ~ index - 0.0022,
+                    TRUE ~ index
+                )
+            ),
+        aes(col = tiundarhluti, label = str_c(tiundarhluti, ". tíund")), 
+        hjust = 0, 
+        nudge_x = 0.2
+    ) +
+    scale_x_tufte(
+        breaks = seq(1997, 2021, by = 3),
+        limits = c(1997, 2023)
+    ) +
+    scale_y_tufte(
+        labels = label_percent(suffix = "%-stig", decimal.mark = ",", big.mark = "."),
+        breaks = tufte_breaks(plot_dat$index)
+    ) +
+    scale_colour_distiller(type = "div", palette = "RdYlBu", direction = 1) +
+    theme(legend.position = "none") +
+    labs(x = NULL,
+         y = NULL,
+         colour = "Tekjutíund",
+         title = "Breyting á skattbyrði miðað við 1997",
+         subtitle = "Skattbyrði hefur aukist hjá öllum tekjutíundum nema þeirri hæstu",
+         caption = "Mynd frá bggj.is byggð á skattframtalsgögnum Hagstofunnar")
+
+ggsave(p, filename = "image.png",
+       width = 8, height = 0.621 * 8, scale = 1.3, bg = "white")
+```
+
+
+# Gögn
+
+Hér nota ég gögn Hagstofu um [skuldir, eignir, tekjur og fleira](https://hagstofa.is/talnaefni/samfelag/lifskjor/skuldir-og-eignir/){target="_blank"} sem hún vinnur úr skattframtölum Íslendinga. Ég hef áður sótt þessi gögn og unnið úr þeim svo ég sýni gagnaúrvinnsluna ekki hér. Hins vegar mun ég birta færslu á [Patreon síðunni minni](https://www.patreon.com/bggj){target="_blank"} þar sem ég fer yfir hvernig ég bjó til og uppfæri SQL gagnagrunninn minn, þar á meðal hvernig ég hef unnið úr þessum gögnum.

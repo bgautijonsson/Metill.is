@@ -70,5 +70,35 @@
   },
   "learn.qmd": {
     "learn.html": "afff4b14"
+  },
+  "maelabord/sveitarfelog/index.qmd": {
+    "index.html": "878a835a"
+  },
+  "maelabord/skattagogn/index.qmd": {
+    "index.html": "d0c894ef"
+  },
+  "greinar/stjornmalaflokkar/index.qmd": {
+    "index.html": "efc9cd70"
+  },
+  "greinar/visitala_neysluverds/index.qmd": {
+    "index.html": "93c4ef4f"
+  },
+  "greinar/kosningar/index.qmd": {
+    "index.html": "2c505af4"
+  },
+  "greinar/landspitali/index.qmd": {
+    "index.html": "ddf9d561"
+  },
+  "greinar/skattagogn/index.qmd": {
+    "index.html": "10067494"
+  },
+  "greinar/vinnuafl/index.qmd": {
+    "index.html": "cdf8a1c1"
+  },
+  "um_metil.qmd": {
+    "um_metil.html": "9dc9229d"
+  },
+  "greinar.qmd": {
+    "greinar.html": "62975eb7"
   }
 }

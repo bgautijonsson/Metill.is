@@ -12,9 +12,9 @@ website:
     collapse: false
     left:
       - text: "Greinasafn"
-        href: posts.qmd
+        href: greinar.qmd
       - text: "Um Metil"
-        href: about.qmd
+        href: um_metil.qmd
         
 format:
   html:
