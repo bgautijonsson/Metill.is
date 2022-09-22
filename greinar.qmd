@@ -5,7 +5,7 @@ editor: source
 listing:
     - id: posts
       sort: "date desc"
-      contents: posts
+      contents: greinar
       categories: true
       page-size: 10
       fields: [image, date, title, subtitle, categories]

@@ -24,7 +24,7 @@ listing:
 
 :::
 
-[Allar greinar](greinar){type="button" class="btn btn-primary btn-link"}
+[Allar greinar](greinar.qmd){type="button" class="btn btn-primary btn-link"}
 
 <!-- <a href="/posts.html" type="button" class="btn btn-primary btn-link">Allar greinar</button> -->
 

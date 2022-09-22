@@ -14,7 +14,14 @@
   },
   {
     "listing": "/greinar.html",
-    "items": []
+    "items": [
+      "/greinar/stjornmalaflokkar/index.html",
+      "/greinar/kosningar/index.html",
+      "/greinar/skattagogn/index.html",
+      "/greinar/vinnuafl/index.html",
+      "/greinar/visitala_neysluverds/index.html",
+      "/greinar/landspitali/index.html"
+    ]
   },
   {
     "listing": "/learn.html",
