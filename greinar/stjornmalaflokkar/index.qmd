@@ -3,7 +3,7 @@ title: "Fjármál stjórnmálaflokkanna"
 pagetitle: "Fjármál stjórnmálaflokkanna"
 subtitle: "Greining á ársreikningum stjórnmálaflokka úr gögnum Ríkisendurskoðunar"
 description: |
-  A description
+  Hversu miklar tekjur hafa stjórnmálaflokkarnir og hvaðan koma þær? Hækka útgjöld þeirra sjáanlega í kringum kosningar og eiga þeir einhverjar eignir? Hér köfum við ofan í ársreikninga stjórnmálaflokkanna.
 author: 
     -   name: "Brynjólfur Gauti Guðrúnar Jónsson"
         url: "https://twitter.com/bgautijonsson"
@@ -13,10 +13,7 @@ date: "2022/09/17"
 format: 
     html:
         code-fold: true
-        toc: true
-        toc-depth: 2
-        toc-location: right
-        toc-title: Efnisyfirlit
+        toc: false
         page-layout: full
         smooth-scroll: true
         link-external-newwindow: true
@@ -67,9 +64,12 @@ library(metill)
 library(patchwork)
 theme_set(theme_metill())
 
+
+
 ```
 
 ```{r}
+
 usr <- config::get("postgres_user")
 con <- dbConnect(RPostgres::Postgres(), 
                  dbname = usr$dbname, 
@@ -84,23 +84,24 @@ hlutf <- label_percent(accuracy = 0.1, big.mark = ".", decimal.mark = ",")
 
 
 ```{r}
+
 d <- tbl(con, "arsreikningar_stjornmalaflokka") |> 
-    collect() |> 
-    mutate_all(~ ifelse(is.na(.), 0, .)) |> 
-    inner_join(
-        vnv() |> 
-            group_by(ar = year(date)) |> 
-            summarise(cpi = mean(cpi)) |> 
-            mutate(cpi = cpi / cpi[ar == max(ar)]),
-        by = "ar"
-    ) |> 
-    mutate(
-        flokkur = case_when(
-            flokkur == "Flokkur Fólksins" ~ "Flokkur fólksins",
-            flokkur == "Framsóknarflokkurinn" ~ "Framsóknarflokkur",
-            TRUE ~ flokkur
-        )
+  collect() |> 
+  mutate_all(~ ifelse(is.na(.), 0, .)) |> 
+  inner_join(
+    vnv() |> 
+      group_by(ar = year(date)) |> 
+      summarise(cpi = mean(cpi)) |> 
+      mutate(cpi = cpi / cpi[ar == max(ar)]),
+    by = "ar"
+  ) |> 
+  mutate(
+    flokkur = case_when(
+      flokkur == "Flokkur Fólksins" ~ "Flokkur fólksins",
+      flokkur == "Framsóknarflokkurinn" ~ "Framsóknarflokkur",
+      TRUE ~ flokkur
     )
+  )
 
 xS <- "#e41a1c"
 xV <- "#00441b"
@@ -114,59 +115,59 @@ xFF <- "#FBB829"
 Annad <- "#e5d8bd"
 
 colours <- tibble(
-    flokkur = c(
-        "Sjálfstæðisflokkur",
-        "Framsóknarflokkur",
-        "Samfylkingin",
-        "Vinstrihreyfingin - grænt framboð",
-        "Viðreisn",
-        "Píratar",
-        "Miðflokkurinn",
-        "Flokkur fólksins"
-    ),
-    colour = c(
-        xD,
-        xB,
-        xS,
-        xV,
-        xC,
-        xP,
-        xM,
-        xFF
-    ),
-    merki = c(
-        "xD", 
-        "xB",
-        "xS",
-        "xV",
-        "xC",
-        "xP",
-        "xM",
-        "xF"
-    )
+  flokkur = c(
+    "Sjálfstæðisflokkur",
+    "Framsóknarflokkur",
+    "Samfylkingin",
+    "Vinstrihreyfingin - grænt framboð",
+    "Viðreisn",
+    "Píratar",
+    "Miðflokkurinn",
+    "Flokkur fólksins"
+  ),
+  colour = c(
+    xD,
+    xB,
+    xS,
+    xV,
+    xC,
+    xP,
+    xM,
+    xFF
+  ),
+  merki = c(
+    "xD", 
+    "xB",
+    "xS",
+    "xV",
+    "xC",
+    "xP",
+    "xM",
+    "xF"
+  )
 )
 
 d <- d |> 
-    inner_join(
-        colours,
-        by = "flokkur"
-    )
+  inner_join(
+    colours,
+    by = "flokkur"
+  )
 
 d <- d |> 
-    left_join(
-        tbl(con, "atkvaedi_stjornmalaflokka") |> 
-            filter(ar >= 2007) |> 
-            collect() |> 
-            mutate(ar = ifelse(ar == 2021, 2020, ar)),
-        by = c("flokkur", "ar")
-    ) |> 
-    left_join(
-        tbl(con, "thingmenn_stjornmalaflokka") |> 
-            filter(ar >= 2007) |> 
-            collect() |> 
-            mutate(ar = ifelse(ar == 2021, 2020, ar)),
-        by = c("flokkur", "ar")
-    )
+  left_join(
+    tbl(con, "atkvaedi_stjornmalaflokka") |> 
+      filter(ar >= 2007) |> 
+      collect() |> 
+      mutate(ar = ifelse(ar == 2021, 2020, ar)),
+    by = c("flokkur", "ar")
+  ) |> 
+  left_join(
+    tbl(con, "thingmenn_stjornmalaflokka") |> 
+      filter(ar >= 2007) |> 
+      collect() |> 
+      mutate(ar = ifelse(ar == 2021, 2020, ar)),
+    by = c("flokkur", "ar")
+  )
 
 
 
@@ -174,217 +175,141 @@ d <- d |>
 
 
 ```{r}
+
+# labels <- c(
+#   "2007\nKosningar",
+#   "2008",
+#   "2009\nKosningar",
+#   2010:2012,
+#   "2013\nKosningar",
+#   2014:2015,
+#   "2016\nKosningar",
+#   "2017\nKosningar",
+#   2018:2020
+# )
+
+labels <- 2007:2020
+
 dreifing_plot <- function(data, title) {
-    plot_dat <- data |> 
-        select(ar, flokkur, value, colour) |> 
-        group_by(ar) |> 
-        mutate(p = value / sum(value)) |> 
-        ungroup() |> 
-        mutate(
-            flokkur = fct_reorder(flokkur, value, .fun = sum),
-            text = str_c(
-                "<b>", flokkur, "</b>", "\n",
-                "Ár: ", ar, "\n",
-                "Upphæð: ", isk(value), "\n",
-                "<b>% upphæða: ", hlutf(p), "</b>"
-            )
-        )
-    
-    
-    p <- plot_dat |> 
-        ggplot(aes(ar, value, text = text)) +
-        geom_col(aes(fill = flokkur), position = "fill", colour = "grey95", width = 1) +
-        scale_x_continuous(breaks = 2007:2020) +
-        scale_y_continuous(labels = hlutf) +
-        scale_fill_manual(
-            values = c(
-                plot_dat |> arrange(flokkur) |> distinct(colour) |> pull(colour)
-            )
-        ) +
-        coord_cartesian(expand = FALSE) +
-        # theme_half_open() +
-        theme(legend.position = "none") +
-        labs(x = NULL, y = NULL, fill = NULL,
-             title = title)
-    
-    ggplotly(
-        p,
-        tooltip = "text"
-    ) |> 
-        layout(
-            hoverlabel = list(align = "left")
-        )
+  plot_dat <- data |> 
+    select(ar, flokkur, value, colour) |> 
+    group_by(ar) |> 
+    mutate(p = value / sum(value)) |> 
+    ungroup() |> 
+    mutate(
+      flokkur = fct_reorder(flokkur, value, .fun = sum),
+      text = str_c(
+        "<b>", flokkur, "</b>", "\n",
+        "Ár: ", ar, "\n",
+        "Upphæð: ", isk(value), "\n",
+        "<b>% upphæða: ", hlutf(p), "</b>"
+      )
+    )
+  
+  
+  p <- plot_dat |> 
+    ggplot(aes(ar, value, text = text)) +
+    geom_col(aes(fill = flokkur), position = "fill", colour = "grey95", width = 1) +
+    scale_x_continuous(breaks = 2007:2020, labels = labels) +
+    scale_y_continuous(labels = hlutf) +
+    scale_fill_manual(
+      values = c(
+        plot_dat |> arrange(flokkur) |> distinct(colour) |> pull(colour)
+      )
+    ) +
+    coord_cartesian(expand = FALSE) +
+    # theme_half_open() +
+    theme(legend.position = "none") +
+    labs(x = NULL, y = NULL, fill = NULL,
+         title = title)
+  
+  ggplotly(
+    p,
+    tooltip = "text"
+  ) |>
+    layout(
+      hoverlabel = list(align = "left")
+    )
+  
 }
 
 magn_plot <- function(data, title) {
-    plot_dat <- data |> 
-        select(ar, flokkur, value, colour) |> 
-        group_by(ar) |> 
-        mutate(p = value / sum(value)) |> 
-        ungroup() |> 
-        mutate(
-            flokkur = fct_reorder(flokkur, value, .fun = sum),
-            text = str_c(
-                "<b>", flokkur, "</b>", "\n",
-                "Ár: ", ar, "\n",
-                "<b>Upphæð: ", isk(value), "</b>", "\n",
-                "% upphæða: ", hlutf(p)
-            )
-        )
-    
-    
-    p <- plot_dat |> 
-        ggplot(aes(ar, value, text = text)) +
-        geom_col(aes(fill = flokkur), position = "stack", colour = "grey95", width = 1) +
-        scale_x_continuous(breaks = 2007:2020) +
-        scale_y_continuous(labels = isk) +
-        scale_fill_manual(
-            values = c(
-                plot_dat |> arrange(flokkur) |> distinct(colour) |> pull(colour)
-            )
-        ) +
-        coord_cartesian(expand = FALSE) +
-        # theme_half_open() +
-        theme(legend.position = "none") +
-        labs(x = NULL, y = NULL, fill = NULL,
-             title = title)
-    
-    ggplotly(
-        p,
-        tooltip = "text"
-    ) |> 
-        layout(
-            hoverlabel = list(align = "left")
-        )
-}
+  plot_dat <- data |> 
+    select(ar, flokkur, value, colour) |> 
+    group_by(ar) |> 
+    mutate(p = value / sum(value)) |> 
+    ungroup() |> 
+    mutate(
+      flokkur = fct_reorder(flokkur, value, .fun = sum),
+      text = str_c(
+        "<b>", flokkur, "</b>", "\n",
+        "Ár: ", ar, "\n",
+        "<b>Upphæð: ", isk(value), "</b>", "\n",
+        "% upphæða: ", hlutf(p)
+      )
+    )
+  
+  
+  p <- plot_dat |> 
+    ggplot(aes(ar, value, text = text)) +
+    geom_col(aes(fill = flokkur), position = "stack", colour = "grey95", width = 1) +
+    scale_x_continuous(breaks = 2007:2020, labels = labels) +
+    scale_y_continuous(labels = isk) +
+    scale_fill_manual(
+      values = c(
+        plot_dat |> arrange(flokkur) |> distinct(colour) |> pull(colour)
+      )
+    ) +
+    coord_cartesian(expand = FALSE) +
+    # theme_half_open() +
+    theme(legend.position = "none") +
+    labs(x = NULL, y = NULL, fill = NULL,
+         title = title)
+  
+  ggplotly(
+    p,
+    tooltip = "text"
+  ) |>
+    layout(
+      hoverlabel = list(align = "left")
+    )
+  
+} 
+
 ```
 
 
 
 # Tekjur stjórnmálaflokka
 
+Flokkarnir geta í grófum dráttum fengið tekjur á þrjá vegu:
+
+* Með framlögum frá ríkissjóð og sveitarfélögum í hlutfalli við fjölda atkvæða sem flokkurinn hlaut í síðustu kosningum
+
+>Stjórnmálasamtök sem hafa fengið a.m.k. einn mann kjörinn á þing eða náð að lágmarki 2,5% atkvæða eiga rétt til framlaga. Það framlag skiptist hlutfallslega milli flokka eftir atkvæðamagni í næstliðnum kosningum. Fjármála- og efnahagsráðuneytið fer með framkvæmd greiðslna á þessu framlagi.
+>
+> [Stjórnarráð Íslands](https://www.stjornarradid.is/verkefni/kosningar/framlog-til-stjornmalaflokka/){target="_blank"}
+
+> Sveitarfélag skal veita stjórnmálasamtökum, sem fengið hafa a.m.k. einn mann kjörinn í sveitarstjórn eða hlotið hið minnsta 5% atkvæða í næstliðnum sveitarstjórnarkosningum, árleg fjárframlög til starfsemi sinnar. Gilda hér um ákvæði 2. mgr. 5.gr. laga nr. 162/2006. Skal framlögum úthlutað í hlutfalli við atkvæðamagn. Miða skal við að greiða 175 kr. á hvern íbúa sem lögheimili á í sveitarfélaginu 1. janúar á ári hverju. Þessi fjárhæð tekur breytingum árlega miðað við vísitölu neysluverðs í október ár hvert og er grunnvísitalan 472,2 stig, m.v. október 2019.
+>
+> [Samband íslenskra sveitarfélaga](https://www.samband.is/frettir/vidmidunarreglur-um-framlog-til-stjornmalaflokka/)
+
+
+* Með framlögum frá einstaklingum og fyrirtækjum
+
+> Venjulegir aðilar (fólk og fyrirtæki) mega styrkja hvern flokk um 550.000 krónur ár hvert, heimildin var hækkuð úr 400.000 með lagabreytingu árið 2018.
+>
+> [Baldur S. Blöndal, Vísindavefurinn](https://www.visindavefur.is/svar.php?id=78542){target="_blank"}
+
+* Með öðrum hætti, eins og t.d. útleigu fasteigna, miðasölu á atburði og svo framvegis.
+
+
+
 ## Opinber framlög
 
-### Ríkissjóður
+Hér að neðan sjáum við samanlögð framlög frá ríkissjóð og sveitarfélögum.
 
 ::: {.panel-tabset}
-
-#### Dreifing
-
-```{r}
-#| fig-asp: 0.621
-#| fig-width: 10
-#| out-width: "100%"
-#| column: page
-
-d |> 
-    mutate(value = (framlog_rikis + framlog_althingi) / cpi) |> 
-    dreifing_plot(title = "Dreifing framlaga ríkissjóðs á stjórnmálaflokka ")
-
-```
-
-#### Magn
-
-```{r}
-#| fig-asp: 0.621
-#| fig-width: 10
-#| out-width: "100%"
-#| column: page
-
-d |> 
-    mutate(value = (framlog_rikis + framlog_althingi) / cpi) |> 
-    magn_plot(title = "Framlög ríkissjóðs til stjórnmálaflokka ")
-```
-
-:::
-
-
-### Sveitarfélög
-
-::: {.panel-tabset}
-
-#### Dreifing
-
-```{r}
-#| fig-asp: 0.621
-#| fig-width: 10
-#| out-width: "100%"
-#| column: page
-
-d |> 
-    mutate(value = framlog_svf / cpi) |> 
-    dreifing_plot(title = "Dreifing framlaga sveitarfélaga til stjórnmálaflokka ")
-
-```
-
-#### Magn
-
-```{r}
-#| fig-asp: 0.621
-#| fig-width: 10
-#| out-width: "100%"
-#| column: page
-
-d |> 
-    mutate(value = framlog_svf / cpi) |> 
-    magn_plot(title = "Framlög sveitarfélaga til stjórnmálaflokka ")
-```
-
-:::
-
-### Opinber framlög alls
-
-::: {.panel-tabset}
-
-#### Dreifing
-
-```{r}
-#| fig-asp: 0.621
-#| fig-width: 10
-#| out-width: "100%"
-#| column: page
-
-d |> 
-    mutate(value = framlog_althingi + framlog_rikis + framlog_svf,
-           value = value / cpi) |> 
-    dreifing_plot(title = "Dreifing framlaga hins opinbera til stjórnmálaflokka ")
-
-```
-
-#### Magn
-
-```{r}
-#| fig-asp: 0.621
-#| fig-width: 10
-#| out-width: "100%"
-#| column: page
-
-d |> 
-    mutate(value = framlog_althingi + framlog_rikis + framlog_svf,
-           value = value / cpi) |> 
-    magn_plot(title = "Framlög hins opinbera til stjórnmálaflokka ")
-```
-
-:::
-
-## Fyrirtæki og lögaðilar
-
-::: {.panel-tabset}
-
-### Dreifing
-
-```{r}
-#| fig-asp: 0.621
-#| fig-width: 10
-#| out-width: "100%"
-#| column: page
-
-d |> 
-    mutate(value = framlog_fyrirtaekja,
-           value = value / cpi) |> 
-    dreifing_plot(title = "Dreifing framlaga fyrirtækja/lögaðila til stjórnmálaflokka ")
-
-```
 
 ### Magn
 
@@ -395,31 +320,10 @@ d |>
 #| column: page
 
 d |> 
-    mutate(value = framlog_fyrirtaekja,
-           value = value / cpi) |> 
-    magn_plot(title = "Framlög fyrirtækja/lögaðila til stjórnmálaflokka ")
+  mutate(value = framlog_althingi + framlog_rikis + framlog_svf,
+         value = value / cpi) |> 
+  magn_plot(title = "Framlög hins opinbera til stjórnmálaflokka ")
 ```
-
-### Magn (Án 2007)
-
-```{r}
-#| fig-asp: 0.621
-#| fig-width: 10
-#| out-width: "100%"
-#| column: page
-
-d |> 
-    mutate(value = framlog_fyrirtaekja,
-           value = value / cpi) |> 
-    filter(ar > 2007) |> 
-    magn_plot(title = "Framlög fyrirtækja/lögaðila til stjórnmálaflokka (2008 - 2020)")
-```
-
-:::
-
-## Einstaklingar
-
-::: {.panel-tabset}
 
 ### Dreifing
 
@@ -430,119 +334,170 @@ d |>
 #| column: page
 
 d |> 
-    mutate(value = framlog_einstaklinga,
-           value = value / cpi) |> 
-    dreifing_plot(title = "Dreifing framlaga einstaklinga til stjórnmálaflokka ")
+  mutate(value = framlog_althingi + framlog_rikis + framlog_svf,
+         value = value / cpi) |> 
+  dreifing_plot(title = "Dreifing framlaga hins opinbera til stjórnmálaflokka ")
 
 ```
+
+:::
+
+
+## Fyrirtæki/lögaðilar og einstaklingar
+
+Skoðum næst framlög fyrirtækja og einstaklinga *(þar á meðal félagsgjöld)*.
+
+::: {.panel-tabset}
 
 ### Magn
 
 ```{r}
-#| fig-asp: 0.621
-#| fig-width: 10
+#| fig-asp: 0.15
+#| fig-width: 40
 #| out-width: "100%"
-#| column: page
+#| column: screen-inset
+#| layout-nrow: 1
 
 d |> 
-    mutate(value = framlog_einstaklinga,
-           value = value / cpi) |> 
-    magn_plot(title = "Framlög einstaklinga til stjórnmálaflokka ")
+  mutate(value = framlog_fyrirtaekja,
+         value = value / cpi) |> 
+  magn_plot(title = "Framlög fyrirtækja til stjórnmálaflokka ")
+
+d |> 
+  mutate(value = framlog_einstaklinga,
+         value = value / cpi) |> 
+  magn_plot(title = "Framlög einstaklinga til stjórnmálaflokka")
 ```
 
+### Dreifing
+
+```{r}
+#| fig-asp: 0.15
+#| fig-width: 40
+#| out-width: "100%"
+#| column: screen-inset
+#| layout-nrow: 1
+
+d |> 
+  mutate(value = framlog_fyrirtaekja,
+         value = value / cpi) |> 
+  dreifing_plot(title = "Dreifing framlaga fyrirtækja/lögaðila til stjórnmálaflokka ")
+
+d |> 
+  mutate(value = framlog_einstaklinga,
+         value = value / cpi) |> 
+  dreifing_plot(title = "Dreifing framlaga einstaklinga til stjórnmálaflokka ")
+
+```
+
+
+
 :::
+
 
 ## Aðrar tekjur
 
-::: {.panel-tabset}
-
-### Dreifing
+Aðrar tekjur eru meðal annars útleiga á fasteignum *(t.d. veislusölum)*, miðasala á viðburði, sala á auglýsingaplássi, eða önnur útseld þjónusta. Örfáir flokkar hafa slíkar tekjur, en Sjálfstæðisflokkur fær langmestar slíkar tekjur. Við munum líka sjá neðar að flokkurinn á meirihluta allra eigna flokkanna, þar á meðal fasteignir.
 
 ```{r}
-#| fig-asp: 0.621
-#| fig-width: 10
+#| fig-asp: 0.15
+#| fig-width: 40
 #| out-width: "100%"
-#| column: page
+#| column: screen-inset
+#| layout-nrow: 1
 
 d |> 
-    mutate(value = adrar_tekjur,
-           value = value / cpi) |> 
-    dreifing_plot(title = "Dreifing annarra tekna stjórnmálaflokka ")
+  mutate(value = adrar_tekjur,
+         value = value / cpi) |> 
+  dreifing_plot(title = "Dreifing annarra tekna stjórnmálaflokka ")
+
+d |> 
+  mutate(value = adrar_tekjur,
+         value = value / cpi) |> 
+  magn_plot(title = "Aðrar tekjur stjórnmálaflokka ")
+
 
 ```
 
-### Magn
+
+<hr>
+
+Það er áhugavert að sjá að tekjur Sjálfstæðisflokks af útleigu eru svo miklar að þær myndu nægja til að fjármagna allt starf Flokks fólksins.
+
+
 
 ```{r}
-#| fig-asp: 0.621
-#| fig-width: 10
+#| fig-asp: 0.5
+#| fig-width: 15
 #| out-width: "100%"
 #| column: page
 
-d |> 
-    mutate(value = adrar_tekjur,
-           value = value / cpi) |> 
-    magn_plot(title = "Aðrar tekjur stjórnmálaflokka ")
+
+plot_dat <- d |> 
+  mutate(
+    value = ifelse(
+      flokkur == "Sjálfstæðisflokkur", 
+      leigutekjur,
+      gjold
+    ),
+    value = value / cpi
+  ) |> 
+  filter(
+    flokkur %in% c("Sjálfstæðisflokkur", "Flokkur fólksins", "Viðreisn"),
+    ar >= 2015
+  ) |> 
+  mutate(y = value,
+         # y = case_when(
+         #     flokkur == "Flokkur Fólksins" ~ y * 1.006,
+         #     flokkur == "Viðreisn" ~ y * 0.992,
+         #     flokkur == "Sjálfstæðisflokkur" ~ y * 0.994,
+         #     TRUE ~ y
+         # ),
+         label = ifelse(
+           flokkur == "Sjálfstæðisflokkur",
+           "**Sjálfstæðisflokkur** (Leigutekjur)",
+           str_c(flokkur, " (Útgjöld)")
+         )
+  )
+
+p <- plot_dat |> 
+  ggplot(aes(ar, value, colour = flokkur)) +
+  geom_line(size = 1,) +
+  geom_richtext(
+    data = plot_dat |> filter(ar == max(ar)),
+    aes(label = label, y = y),
+    hjust = 0,
+    nudge_x = 0.05, size = 5,
+    fill = NA, label.color = NA
+  ) +
+  scale_x_continuous(limits = c(2014.8, 2021.9),
+                     expand = expansion(),
+                     breaks = c(2015:2020)) +
+  scale_y_continuous(labels = isk,
+                     breaks = pretty_breaks(4),
+                     limits = c(0, 80e6),
+                     expand = expansion()) +
+  scale_colour_manual(
+    values = c(xFF, xD, xC)
+  ) +
+  theme(legend.position = "none") +
+  labs(x = NULL,
+       y = NULL,
+       title = "Leigutekjur Sjálfstæðisflokks og útgjöld minni flokka",
+       subtitle = "Sjálfstæðisflokkur fengi nægar tekjur af útleigu fasteigna til að fjármagna Flokk floksins")
+
+p
+
+ggsave(plot = p, filename = "Figures/samanburdur.png",
+       width = 8, height = 0.5 * 8, scale = 1.2, bg = "white")
 ```
 
-:::
-
-## Heildartekjur
-
-::: {.panel-tabset}
-
-### Dreifing
-
-```{r}
-#| fig-asp: 0.621
-#| fig-width: 10
-#| out-width: "100%"
-#| column: page
-
-d |> 
-    mutate(value = tekjur,
-           value = value / cpi) |> 
-    dreifing_plot(title = "Dreifing heildartekna stjórnmálaflokka ")
-
-```
-
-### Magn
-
-```{r}
-#| fig-asp: 0.621
-#| fig-width: 10
-#| out-width: "100%"
-#| column: page
-
-d |> 
-    mutate(value = tekjur,
-           value = value / cpi) |> 
-    magn_plot(title = "Heildartekjur stjórnmálaflokka ")
-```
-
-:::
-
+<hr>
 
 # Kostnaður
 
-::: {.panel-tabset}
+Við sjáum að útgjöld flokkanna aukast á árum sem kosningar fara fram. 
 
-### Dreifing
-
-```{r}
-#| fig-asp: 0.621
-#| fig-width: 10
-#| out-width: "100%"
-#| column: page
-
-d |> 
-    mutate(value = gjold,
-           value = value / cpi) |> 
-    dreifing_plot(title = "Dreifing kostnaðar stjórnmálaflokka ")
-
-```
-
-### Magn
 
 ```{r}
 #| fig-asp: 0.621
@@ -550,94 +505,65 @@ d |>
 #| out-width: "100%"
 #| column: page
 
+labels <- c(
+  "2007\nKosningar",
+  "2008",
+  "2009\nKosningar",
+  2010:2012,
+  "2013\nKosningar",
+  2014:2015,
+  "2016\nKosningar",
+  "2017\nKosningar",
+  2018:2020
+)
+
+
+
 d |> 
-    mutate(value = gjold,
-           value = value / cpi) |> 
-    magn_plot(title = "Kostnaður stjórnmálaflokka")
+  mutate(value = gjold,
+         value = value / cpi) |> 
+  magn_plot(title = NULL)
+
+labels <- 2007:2020
 ```
 
-:::
 
 # Eignir, skuldir og eigið fé
 
 
 ## Eignir
 
-### Heildareignir
+> Never let a good crisis go to waste
+>
+> Winston Churchill
 
-::: {.panel-tabset}
-
-#### Dreifing
+Sjálfstæðisflokkur þekkir svo sannarlega orð Winston, því milli 2007 og 2008 jukust eignir hans um rúmlega 300 milljónir króna á föstu verðlagi. Þetta var ekki bara sparnaður í kreppu heldur fjárfestingar, enda jukust fastafjármunir flokksins um rúmlega 200 milljónir króna á sama tímabili.
 
 ```{r}
-#| fig-asp: 0.621
-#| fig-width: 10
+#| fig-asp: 0.15
+#| fig-width: 40
 #| out-width: "100%"
-#| column: page
+#| column: screen-inset
+#| layout-nrow: 1
 
 d |> 
-    mutate(value = eignir,
-           value = value / cpi) |> 
-    dreifing_plot(title = "Dreifing eigna stjórnmálaflokka ")
+  mutate(value = eignir,
+         value = value / cpi) |> 
+  magn_plot(title = "Eignir stjórnmálaflokka ")
+
+d |> 
+  mutate(value = eignir - veltufjarmunir,
+         value = value / cpi) |> 
+  magn_plot(title = "Fastafjármunir stjórnmálaflokka ")
+
 
 ```
 
-#### Magn
 
-```{r}
-#| fig-asp: 0.621
-#| fig-width: 10
-#| out-width: "100%"
-#| column: page
-
-d |> 
-    mutate(value = eignir,
-           value = value / cpi) |> 
-    magn_plot(title = "Eignir stjórnmálaflokka ")
-```
-
-:::
-
-### Fastafjármunir
-
-::: {.panel-tabset}
-
-#### Dreifing
-
-```{r}
-#| fig-asp: 0.621
-#| fig-width: 10
-#| out-width: "100%"
-#| column: page
-
-d |> 
-    mutate(value = eignir - veltufjarmunir,
-           value = value / cpi) |> 
-    dreifing_plot(title = "Dreifing fastafjármuna stjórnmálaflokka ")
-
-```
-
-#### Magn
-
-```{r}
-#| fig-asp: 0.621
-#| fig-width: 10
-#| out-width: "100%"
-#| column: page
-
-d |> 
-    mutate(value = eignir - veltufjarmunir,
-           value = value / cpi) |> 
-    magn_plot(title = "Fastafjármunir stjórnmálaflokka ")
-```
-
-:::
 
 ## Skuldir
 
-::: {.panel-tabset}
-
-### Dreifing
+Það er ekki nóg að vita bara hverjar eignir flokkanna eru, við viljum líka vita hvort þær séu fjármagnaðar með lántöku eða hreinum eignum. Á árunum 2008 - 2015 hefur Sjálfstæðisflokkur tekið mikið af lánum á meðan aðrir flokkar reyndu að borga sín niður.
 
 ```{r}
 #| fig-asp: 0.621
@@ -645,278 +571,92 @@ d |>
 #| out-width: "100%"
 #| column: page
 
+
 d |> 
-    mutate(value = skuldir,
-           value = value / cpi) |> 
-    dreifing_plot(title = "Dreifing skulda stjórnmálaflokka ")
+  mutate(value = skuldir,
+         value = value / cpi) |> 
+  magn_plot(title = "Skuldir stjórnmálaflokka ")
+
 
 ```
 
-### Magn
 
-```{r}
-#| fig-asp: 0.621
-#| fig-width: 10
-#| out-width: "100%"
-#| column: page
-
-d |> 
-    mutate(value = skuldir,
-           value = value / cpi) |> 
-    magn_plot(title = "Skuldir stjórnmálaflokka ")
-```
-
-:::
 
 ## Eigið fé
 
-::: {.panel-tabset}
+Með þekkingu okkar um eignir og skuldir að vopni getum við skoðað eigið fé flokkanna og fengið svör við spurningunni
 
-### Dreifing
+<p style="text-align:center;"> *Hverjar eru eignirnar umfram skuldirnar?*</p>
+
+Við sjáum til dæmis að Framsóknarflokkur hefur haft neikvætt eigið fé frá 2007 til 2020.
+
+Auk þess sjáum við að árið 2007 átti Sjálfstæðisflokkur 100% alls eigin fjár stjórnmálaflokka, en árið 2020 er sú tala dottin niður í 43,5%.
 
 ```{r}
-#| fig-asp: 0.621
-#| fig-width: 10
+#| fig-asp: 0.15
+#| fig-width: 40
 #| out-width: "100%"
-#| column: page
+#| column: screen-inset
+#| layout-nrow: 1
 
-d |> 
-    mutate(value = eignir - skuldir,
-           value = value / cpi) |> 
-    mutate(value = value * (value >= 0)) |> 
-    dreifing_plot(title = "Dreifing eigin fjár stjórnmálaflokka ")
+d |>
+  mutate(value = eignir - skuldir,
+         value = value / cpi) |>
+  mutate(value = value * (value >= 0)) |>
+  dreifing_plot(title = "Dreifing eigin fjár stjórnmálaflokka ")
+
+d |>
+  mutate(value = eignir - skuldir,
+         value = value / cpi) |>
+  magn_plot(title = "Eigið fé stjórnmálaflokka ")
+
 
 ```
 
 
 
-
-### Magn
-
 ```{r}
 #| fig-asp: 0.621
 #| fig-width: 10
 #| out-width: "100%"
-#| column: page
-
-d |> 
-    mutate(value = eignir - skuldir,
-           value = value / cpi) |> 
-    magn_plot(title = "Eigið fé stjórnmálaflokka ")
-```
-
-:::
-
-```{r}
-#| fig-asp: 0.621
-#| fig-width: 10
-#| out-width: "100%"
+#| column: screen-inset
 #| include: false
 
+
 plot_dat <- d |> 
-    mutate(value = (eignir - skuldir) / cpi) |> 
-    select(ar, flokkur, value, colour) |> 
-    group_by(ar) |> 
-    mutate(p = value / sum(value)) |> 
-    ungroup() |> 
-    mutate(
-        flokkur = str_to_sentence(flokkur),
-        flokkur = fct_reorder(flokkur, value, .fun = mean)
-    )
+  mutate(value = (eignir - skuldir) / cpi) |> 
+  select(ar, flokkur, value, colour) |> 
+  group_by(ar) |> 
+  mutate(p = value / sum(value)) |> 
+  ungroup() |> 
+  mutate(
+    flokkur = str_to_sentence(flokkur),
+    flokkur = fct_reorder(flokkur, value, .fun = mean)
+  )
 
 
 p <- plot_dat |> 
-    ggplot(aes(ar, value)) +
-    geom_col(aes(fill = flokkur), position = "stack", colour = "grey95", width = 1) +
-    scale_x_continuous(breaks = 2007:2020) +
-    scale_y_continuous(labels = isk) +
-    scale_fill_manual(
-        values = c(
-            plot_dat |> arrange(flokkur) |> distinct(colour) |> pull(colour)
-        )
-    ) +
-    coord_cartesian(expand = FALSE) +
-    guides(fill = guide_legend(reverse = T)) +
-    theme(legend.position = "top") +
-    labs(x = NULL, y = NULL, fill = NULL,
-         title = "Eigið fé íslenskra stjórnmálaflokka",
-         subtitle = "Árið 2007 átti Sjálfstæðisflokkur 100% alls eigin fjár flokkanna en 2020 á hann 43,5%",
-         caption = "Mynd eftir @bggjonsson unnin úr ársreikningum stjórnmálaflokka frá Ríkisendurskoðun")
-
-ggsave(plot = p, filename = "Figures/eigidfe.png",
-       width = 8, height = 0.621 * 8, scale = 1.3, bg = "white")
-```
-
-
-
-
-
-```{r}
-#| fig-asp: 0.621
-#| fig-width: 10
-#| out-width: "100%"
-#| include: false
-#| eval: false
-#| column: page
-
-
-
-
-plot_dat <- d |> 
-    mutate(
-        value = ifelse(
-            flokkur == "Sjálfstæðisflokkur", 
-            leigutekjur,
-            gjold
-        ),
-        value = value / cpi
-    ) |> 
-    filter(
-        flokkur %in% c("Sjálfstæðisflokkur", "Flokkur Fólksins", "Viðreisn"),
-        ar >= 2015
-    ) |> 
-    mutate(y = value,
-           # y = case_when(
-           #     flokkur == "Flokkur Fólksins" ~ y * 1.006,
-           #     flokkur == "Viðreisn" ~ y * 0.992,
-           #     flokkur == "Sjálfstæðisflokkur" ~ y * 0.994,
-           #     TRUE ~ y
-           # ),
-           label = ifelse(
-               flokkur == "Sjálfstæðisflokkur",
-               "**Sjálfstæðisflokkur** (Leigutekjur)",
-               str_c(flokkur, " (Útgjöld)")
-           )
+  ggplot(aes(ar, value)) +
+  geom_col(aes(fill = flokkur), position = "stack", colour = "grey95", width = 1) +
+  scale_x_continuous(breaks = 2007:2020) +
+  scale_y_continuous(labels = isk) +
+  scale_fill_manual(
+    values = c(
+      plot_dat |> arrange(flokkur) |> distinct(colour) |> pull(colour)
     )
-
-p <- plot_dat |> 
-    ggplot(aes(ar, value, colour = flokkur)) +
-    geom_line() +
-    geom_richtext(
-        data = plot_dat |> filter(ar == max(ar)),
-        aes(label = label, y = y),
-        hjust = 0,
-        nudge_x = 0.05,
-        fill = NA, label.color = NA
-    ) +
-    scale_x_continuous(limits = c(2014.8, 2021.9),
-                       expand = expansion(),
-                       breaks = c(2015:2020)) +
-    scale_y_continuous(labels = isk,
-                       breaks = pretty_breaks(4),
-                       limits = c(0, 80e6),
-                       expand = expansion()) +
-    scale_colour_manual(
-        values = c(xFF, xD, xC)
-    ) +
-    theme(legend.position = "none") +
-    labs(x = NULL,
-         y = NULL,
-         title = "Leigutekjur Sjálfstæðisflokks og útgjöld minni flokka",
-         subtitle = "Sjálfstæðisflokkur fengi nægar tekjur af útleigu fasteigna til að fjármagna Flokk floksins")
-
-ggsave(plot = p, filename = "Figures/samanburdur.png",
-       width = 8, height = 0.5 * 8, scale = 1.2, bg = "white")
-```
-
-
-
-```{r}
-#| fig-width: 10
-#| fig.asp: 1
-#| out-width: "100%"
-#| column: page
-#| include: false
-
-plot_dat <- d |> 
-    mutate(value = (framlog_rikis + framlog_althingi + framlog_svf) / cpi) |> 
-    select(ar, flokkur, value, colour) |> 
-    group_by(ar) |> 
-    mutate(p = value / sum(value),
-           flokkur = fct_reorder(flokkur, value, .fun = sum)) |> 
-    ungroup() 
-
-
-p1 <- plot_dat |> 
-    ggplot(aes(ar, value)) +
-    geom_col(aes(fill = flokkur), position = "stack", colour = "grey95", width = 1) +
-    scale_x_continuous(breaks = 2007:2020) +
-    scale_y_continuous(labels = isk) +
-    scale_fill_manual(
-        values = c(
-            plot_dat |> arrange(flokkur) |> distinct(colour) |> pull(colour)
-        )
-    ) +
-    coord_cartesian(expand = FALSE) +
-    theme(legend.position = "none",
-          axis.text.x = element_blank(),
-          # axis.line.x = element_blank(),
-          axis.ticks.x = element_blank()) +
-    labs(x = NULL, y = NULL, fill = NULL,
-         title = "Samanburður á fjármálum stjórnmálaflokka",
-         subtitle = "Opinber framlög")
-
-plot_dat <- d |> 
-    mutate(value = framlog_fyrirtaekja / cpi) |> 
-    select(ar, flokkur, value, colour) |> 
-    group_by(ar) |> 
-    mutate(p = value / sum(value),
-           flokkur = fct_reorder(flokkur, value, .fun = sum)) |> 
-    ungroup() 
-
-
-p2 <- plot_dat |> 
-    ggplot(aes(ar, value)) +
-    geom_col(aes(fill = flokkur), position = "stack", colour = "grey95", width = 1) +
-    scale_x_continuous(breaks = 2007:2020) +
-    scale_y_continuous(labels = isk) +
-    scale_fill_manual(
-        values = c(
-            plot_dat |> arrange(flokkur) |> distinct(colour) |> pull(colour)
-        )
-    ) +
-    coord_cartesian(expand = FALSE) +
-    theme(legend.position = "none",
-          axis.text.x = element_blank(),
-          # axis.line.x = element_blank(),
-          axis.ticks.x = element_blank(),
-          plot.margin = margin(t = 5, r = 5, b = 5, l = 12)) +
-    labs(x = NULL, y = NULL, fill = NULL,
-         title = NULL,
-         subtitle = "Framlög fyrirtækja")
-
-plot_dat <- d |> 
-    mutate(value = framlog_einstaklinga / cpi) |> 
-    select(ar, flokkur, value, colour) |> 
-    group_by(ar) |> 
-    mutate(p = value / sum(value),
-           flokkur = fct_reorder(flokkur, value, .fun = sum)) |> 
-    ungroup() 
-
-
-p3 <- plot_dat |> 
-    ggplot(aes(ar, value)) +
-    geom_col(aes(fill = flokkur), position = "stack", colour = "grey95", width = 1) +
-    scale_x_continuous(breaks = 2007:2020) +
-    scale_y_continuous(labels = isk) +
-    scale_fill_manual(
-        values = c(
-            plot_dat |> arrange(flokkur) |> distinct(colour) |> pull(colour)
-        )
-    ) +
-    coord_cartesian(expand = FALSE) +
-    theme(legend.position = "none",
-          plot.margin = margin(t = 5, r = 5, b = 5, l = 12)) +
-    labs(x = NULL, y = NULL, fill = NULL,
-         title = NULL,
-         subtitle = "Framlög einstaklinga")
-
-p <- plot_grid(p1, p2, p3, ncol = 1, rel_heights = c(0.95, 0.95, 1))
+  ) +
+  coord_cartesian(expand = FALSE) +
+  guides(fill = guide_legend(reverse = T)) +
+  theme(legend.position = "top") +
+  labs(x = NULL, y = NULL, fill = NULL,
+       title = "Eigið fé íslenskra stjórnmálaflokka",
+       subtitle = "Árið 2007 átti Sjálfstæðisflokkur 100% alls eigin fjár flokkanna en 2020 á hann 43,5%",
+       caption = "Mynd frá metill.is unnin úr ársreikningum stjórnmálaflokka frá Ríkisendurskoðun")
 
 p
 
-ggsave(plot = p, filename = "image.png",
-       width = 8, height = 1 * 8, scale = 1.2, bg = "white")
+ggsave(plot = p, filename = "Figures/eigidfe.png",
+       width = 8, height = 0.621 * 8, scale = 1.3, bg = "white")
 ```
 
 
