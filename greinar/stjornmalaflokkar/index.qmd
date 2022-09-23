@@ -13,8 +13,6 @@ date: "2022/09/17"
 format: 
     html:
         code-fold: true
-        toc: false
-        page-layout: full
         smooth-scroll: true
         link-external-newwindow: true
 execute: 
@@ -78,7 +76,7 @@ con <- dbConnect(RPostgres::Postgres(),
                  user = usr$username, 
                  password = usr$password)
 
-isk <- function(x, scale = 1e6, suffix = " mkr") number(x / scale, suffix = suffix, big.mark = ".", decimal.mark = ",")
+isk <- function(x, scale = 1e6, suffix = " m.kr") number(x / scale, suffix = suffix, big.mark = ".", decimal.mark = ",")
 hlutf <- label_percent(accuracy = 0.1, big.mark = ".", decimal.mark = ",")
 ```
 
@@ -176,21 +174,7 @@ d <- d |>
 
 ```{r}
 
-# labels <- c(
-#   "2007\nKosningar",
-#   "2008",
-#   "2009\nKosningar",
-#   2010:2012,
-#   "2013\nKosningar",
-#   2014:2015,
-#   "2016\nKosningar",
-#   "2017\nKosningar",
-#   2018:2020
-# )
-
-labels <- 2007:2020
-
-dreifing_plot <- function(data, title) {
+dreifing_plot <- function(data, title, breaks = 2007:2020, labels = 2007:2020) {
   plot_dat <- data |> 
     select(ar, flokkur, value, colour) |> 
     group_by(ar) |> 
@@ -210,7 +194,7 @@ dreifing_plot <- function(data, title) {
   p <- plot_dat |> 
     ggplot(aes(ar, value, text = text)) +
     geom_col(aes(fill = flokkur), position = "fill", colour = "grey95", width = 1) +
-    scale_x_continuous(breaks = 2007:2020, labels = labels) +
+    scale_x_continuous(breaks = breaks, labels = labels) +
     scale_y_continuous(labels = hlutf) +
     scale_fill_manual(
       values = c(
@@ -233,7 +217,7 @@ dreifing_plot <- function(data, title) {
   
 }
 
-magn_plot <- function(data, title) {
+magn_plot <- function(data, title, breaks = 2007:2020, labels = 2007:2020) {
   plot_dat <- data |> 
     select(ar, flokkur, value, colour) |> 
     group_by(ar) |> 
@@ -253,7 +237,7 @@ magn_plot <- function(data, title) {
   p <- plot_dat |> 
     ggplot(aes(ar, value, text = text)) +
     geom_col(aes(fill = flokkur), position = "stack", colour = "grey95", width = 1) +
-    scale_x_continuous(breaks = 2007:2020, labels = labels) +
+    scale_x_continuous(breaks = breaks, labels = labels) +
     scale_y_continuous(labels = isk) +
     scale_fill_manual(
       values = c(
@@ -315,8 +299,6 @@ Hér að neðan sjáum við samanlögð framlög frá ríkissjóð og sveitarfé
 
 ```{r}
 #| fig-asp: 0.621
-#| fig-width: 10
-#| out-width: "100%"
 #| column: page
 
 d |> 
@@ -329,8 +311,6 @@ d |>
 
 ```{r}
 #| fig-asp: 0.621
-#| fig-width: 10
-#| out-width: "100%"
 #| column: page
 
 d |> 
@@ -352,41 +332,48 @@ Skoðum næst framlög fyrirtækja og einstaklinga *(þar á meðal félagsgjöl
 ### Magn
 
 ```{r}
-#| fig-asp: 0.15
-#| fig-width: 40
-#| out-width: "100%"
-#| column: screen-inset
+#| fig-asp: 0.621
 #| layout-nrow: 1
+#| column: screen-inset
+
+breaks <- seq(2008, 2020, by = 2)
+labels <- breaks
 
 d |> 
   mutate(value = framlog_fyrirtaekja,
          value = value / cpi) |> 
-  magn_plot(title = "Framlög fyrirtækja til stjórnmálaflokka ")
+  magn_plot(title = "Framlög fyrirtækja til stjórnmálaflokka",
+            breaks =  seq(2008, 2020, by = 2),
+            labels =  seq(2008, 2020, by = 2))
 
 d |> 
   mutate(value = framlog_einstaklinga,
          value = value / cpi) |> 
-  magn_plot(title = "Framlög einstaklinga til stjórnmálaflokka")
+  magn_plot(title = "Framlög einstaklinga til stjórnmálaflokka",
+            breaks =  seq(2008, 2020, by = 2),
+            labels =  seq(2008, 2020, by = 2))
 ```
 
 ### Dreifing
 
 ```{r}
-#| fig-asp: 0.15
-#| fig-width: 40
-#| out-width: "100%"
+#| fig-asp: 0.621
 #| column: screen-inset
 #| layout-nrow: 1
 
 d |> 
   mutate(value = framlog_fyrirtaekja,
          value = value / cpi) |> 
-  dreifing_plot(title = "Dreifing framlaga fyrirtækja/lögaðila til stjórnmálaflokka ")
+  dreifing_plot(title = "Dreifing framlaga fyrirtækja/lögaðila til stjórnmálaflokka",
+                breaks =  seq(2008, 2020, by = 2),
+                labels =  seq(2008, 2020, by = 2))
 
 d |> 
   mutate(value = framlog_einstaklinga,
          value = value / cpi) |> 
-  dreifing_plot(title = "Dreifing framlaga einstaklinga til stjórnmálaflokka ")
+  dreifing_plot(title = "Dreifing framlaga einstaklinga til stjórnmálaflokka ",
+                breaks =  seq(2008, 2020, by = 2),
+                labels =  seq(2008, 2020, by = 2))
 
 ```
 
@@ -400,21 +387,23 @@ d |>
 Aðrar tekjur eru meðal annars útleiga á fasteignum *(t.d. veislusölum)*, miðasala á viðburði, sala á auglýsingaplássi, eða önnur útseld þjónusta. Örfáir flokkar hafa slíkar tekjur, en Sjálfstæðisflokkur fær langmestar slíkar tekjur. Við munum líka sjá neðar að flokkurinn á meirihluta allra eigna flokkanna, þar á meðal fasteignir.
 
 ```{r}
-#| fig-asp: 0.15
-#| fig-width: 40
-#| out-width: "100%"
+#| fig-asp: 0.621
 #| column: screen-inset
 #| layout-nrow: 1
 
 d |> 
   mutate(value = adrar_tekjur,
          value = value / cpi) |> 
-  dreifing_plot(title = "Dreifing annarra tekna stjórnmálaflokka ")
+  dreifing_plot(title = "Dreifing annarra tekna stjórnmálaflokka",
+                breaks = seq(2008, 2020, by = 2),
+                labels = seq(2008, 2020, by = 2))
 
 d |> 
   mutate(value = adrar_tekjur,
          value = value / cpi) |> 
-  magn_plot(title = "Aðrar tekjur stjórnmálaflokka ")
+  magn_plot(title = "Aðrar tekjur stjórnmálaflokka",
+            breaks = seq(2008, 2020, by = 2),
+            labels = seq(2008, 2020, by = 2))
 
 
 ```
@@ -427,12 +416,6 @@ d |>
 
 
 ```{r}
-#| fig-asp: 0.5
-#| fig-width: 15
-#| out-width: "100%"
-#| column: page
-
-
 plot_dat <- d |> 
   mutate(
     value = ifelse(
@@ -486,11 +469,12 @@ p <- plot_dat |>
        title = "Leigutekjur Sjálfstæðisflokks og útgjöld minni flokka",
        subtitle = "Sjálfstæðisflokkur fengi nægar tekjur af útleigu fasteigna til að fjármagna Flokk floksins")
 
-p
-
 ggsave(plot = p, filename = "Figures/samanburdur.png",
-       width = 8, height = 0.5 * 8, scale = 1.2, bg = "white")
+       width = 8, height = 0.5 * 8, scale = 1.4, bg = "white", dpi = 300)
+
 ```
+
+![](Figures/samanburdur.png){.column-page}
 
 <hr>
 
@@ -501,10 +485,8 @@ Við sjáum að útgjöld flokkanna aukast á árum sem kosningar fara fram.
 
 ```{r}
 #| fig-asp: 0.621
-#| fig-width: 10
-#| out-width: "100%"
 #| column: page
-
+breaks <- 2007:2020
 labels <- c(
   "2007\nKosningar",
   "2008",
@@ -522,9 +504,11 @@ labels <- c(
 d |> 
   mutate(value = gjold,
          value = value / cpi) |> 
-  magn_plot(title = NULL)
-
-labels <- 2007:2020
+  magn_plot(
+    title = NULL,
+    breaks = breaks,
+    labels = labels
+  )
 ```
 
 
@@ -540,21 +524,23 @@ labels <- 2007:2020
 Sjálfstæðisflokkur þekkir svo sannarlega orð Winston, því milli 2007 og 2008 jukust eignir hans um rúmlega 300 milljónir króna á föstu verðlagi. Þetta var ekki bara sparnaður í kreppu heldur fjárfestingar, enda jukust fastafjármunir flokksins um rúmlega 200 milljónir króna á sama tímabili.
 
 ```{r}
-#| fig-asp: 0.15
-#| fig-width: 40
-#| out-width: "100%"
+#| fig-asp: 0.621
 #| column: screen-inset
 #| layout-nrow: 1
 
 d |> 
   mutate(value = eignir,
          value = value / cpi) |> 
-  magn_plot(title = "Eignir stjórnmálaflokka ")
+  magn_plot(title = "Eignir stjórnmálaflokka",
+            breaks = seq(2008, 2020, by = 2),
+            labels = seq(2008, 2020, by = 2))
 
 d |> 
   mutate(value = eignir - veltufjarmunir,
          value = value / cpi) |> 
-  magn_plot(title = "Fastafjármunir stjórnmálaflokka ")
+  magn_plot(title = "Fastafjármunir stjórnmálaflokka",
+            breaks = seq(2008, 2020, by = 2),
+            labels = seq(2008, 2020, by = 2))
 
 
 ```
@@ -567,15 +553,13 @@ d |>
 
 ```{r}
 #| fig-asp: 0.621
-#| fig-width: 10
-#| out-width: "100%"
 #| column: page
 
 
 d |> 
   mutate(value = skuldir,
          value = value / cpi) |> 
-  magn_plot(title = "Skuldir stjórnmálaflokka ")
+  magn_plot(title = "Skuldir stjórnmálaflokka")
 
 
 ```
@@ -593,9 +577,7 @@ Við sjáum til dæmis að Framsóknarflokkur hefur haft neikvætt eigið fé fr
 Auk þess sjáum við að árið 2007 átti Sjálfstæðisflokkur 100% alls eigin fjár stjórnmálaflokka, en árið 2020 er sú tala dottin niður í 43,5%.
 
 ```{r}
-#| fig-asp: 0.15
-#| fig-width: 40
-#| out-width: "100%"
+#| fig-asp: 0.621
 #| column: screen-inset
 #| layout-nrow: 1
 
@@ -603,12 +585,16 @@ d |>
   mutate(value = eignir - skuldir,
          value = value / cpi) |>
   mutate(value = value * (value >= 0)) |>
-  dreifing_plot(title = "Dreifing eigin fjár stjórnmálaflokka ")
+  dreifing_plot(title = "Dreifing eigin fjár stjórnmálaflokka",
+                breaks = seq(2008, 2020, by = 2),
+                labels = seq(2008, 2020, by = 2))
 
 d |>
   mutate(value = eignir - skuldir,
          value = value / cpi) |>
-  magn_plot(title = "Eigið fé stjórnmálaflokka ")
+  magn_plot(title = "Eigið fé stjórnmálaflokka",
+            breaks = seq(2008, 2020, by = 2),
+            labels = seq(2008, 2020, by = 2))
 
 
 ```
@@ -617,8 +603,6 @@ d |>
 
 ```{r}
 #| fig-asp: 0.621
-#| fig-width: 10
-#| out-width: "100%"
 #| column: screen-inset
 #| include: false
 
