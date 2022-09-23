@@ -1,7 +1,7 @@
 /*-- scss:defaults --*/
 
 $darkblue:                      #484D6D;
-$lightblue:                     #74a9cf;
+$lightblue:                     #bcbddc;
 $white:                         #ffffff;
 
 
@@ -114,6 +114,8 @@ div.quarto-post .listing-categories .listing-category {
 
 div.list.grid {
   display: flex;
+  flex-basis: "100%";
+  flex-wrap: wrap;
   justify-content: center;
   align-items: stretch;
   align-content: center;
@@ -123,6 +125,8 @@ div.list.grid {
   padding-top: 10px;
   padding-bottom: 10px;
 }
+
+
 
 .listing-title {
   font-size: $font-size-base * 1.4;
@@ -161,3 +165,12 @@ div.list.grid {
 #mælaborð {
   margin-top: -30px;
 }
+
+@media (min-width: 900px) {
+  
+  .listing-card {
+  width: 30%;
+}
+  
+}
+

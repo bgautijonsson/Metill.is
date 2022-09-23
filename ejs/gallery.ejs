@@ -5,7 +5,7 @@
 
 <% for (const item of items) { %>
 
-  <div class="card border-2 rounded-3 g-col-12 g-col-sm-6 g-col-md-4 mb-2" <%= metadataAttrs(item) %>>
+  <div class="card listing-card border-2 rounded-3 g-col-12 g-col-sm-6 g-col-md-4 mb-2" <%= metadataAttrs(item) %>>
     
     <a href="<%- item.href %>">
       <img src="<%- item.image %>" alt="<%- item.description %>" class="card-img-top" style="vertical-align: middle;"/>
@@ -27,6 +27,7 @@
     </div>
     
   </div>
+  
 
 <% } %>
 
