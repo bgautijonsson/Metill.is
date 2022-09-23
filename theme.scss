@@ -126,6 +126,10 @@ div.list.grid {
   padding-bottom: 10px;
 }
 
+#listing-posts > div.list.grid > div:nth-child(1) {
+  width: 90%;
+}
+
 
 
 .listing-title {
