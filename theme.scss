@@ -126,8 +126,22 @@ div.list.grid {
   padding-bottom: 10px;
 }
 
-#listing-posts > div.list.grid > div:nth-child(1) {
-  width: 90%;
+div.card-body {
+  background-color: #F8F9FA;
+  
+  p.listing-description {
+    font-size: 0px;
+    padding: 0px;
+    margin: 0px;
+  }
+}
+
+div.card-footer {
+  background-color: #f0f0f0;
+  display: flex;
+  align-items: center;
+  align-content: center;
+  border: none;
 }
 
 
@@ -145,7 +159,7 @@ div.list.grid {
 }
 
 .listing-date {
-  font-size: $font-size-base * 0.8;
+  font-size: $font-size-base * 0.9;
 }
 
 .btn-primary {
@@ -175,6 +189,35 @@ div.list.grid {
   .listing-card {
   width: 30%;
 }
+
+  #listing-posts > div.list.grid > div:nth-child(1) {
+  width: 100%;
+  
+  img {
+    width: 50%;
+    margin: 5px;
+    border: 1px solid #969696;
+    float: right;
+  }
+  
+  a.listing-title {
+    font-size: 3vw;
+  }
+  
+  p.listing-subtitle {
+    color: #525252;
+    font-size: 1.1vw;
+  }
+  
+  p.listing-description {
+    font-size: 1.5vw;
+    padding: 10px;
+    color: #969696;
+  }
+  
+  
+}
+
   
 }
 
