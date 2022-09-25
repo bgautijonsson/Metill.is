@@ -19,20 +19,24 @@ listing:
 
 
 
-## Nýjast
+::: {.column-screen}
 
-::: {#posts .column-screen-inset}
+::: {#posts}
 
 :::
+
+::: {.frontpage-button}
 
 [Allar greinar](greinar.qmd){type="button" class="btn btn-primary btn-link"}
 
-<!-- <a href="/posts.html" type="button" class="btn btn-primary btn-link">Allar greinar</button> -->
+:::
 
-## Mælaborð
 
-::: {#dashboards .column-screen-inset}
+---
+
+::: {#dashboards}
 
 :::
 
 
+:::

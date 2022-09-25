@@ -1,51 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>metill.is/maelabord/sveitarfelog/index.html</loc>
-    <lastmod>2022-09-25T18:54:28.769Z</lastmod>
-  </url>
-  <url>
-    <loc>metill.is/maelabord/skattagogn/index.html</loc>
-    <lastmod>2022-09-25T18:54:29.059Z</lastmod>
-  </url>
-  <url>
-    <loc>metill.is/maelabord/verdbolga/index.html</loc>
-    <lastmod>2022-09-25T18:54:29.348Z</lastmod>
-  </url>
-  <url>
     <loc>metill.is/index.html</loc>
-    <lastmod>2022-09-25T18:54:30.305Z</lastmod>
-  </url>
-  <url>
-    <loc>metill.is/greinar/stjornmalaflokkar/index.html</loc>
-    <lastmod>2022-09-25T18:54:30.901Z</lastmod>
-  </url>
-  <url>
-    <loc>metill.is/greinar/visitala_neysluverds/index.html</loc>
-    <lastmod>2022-09-25T18:54:31.682Z</lastmod>
+    <lastmod>2022-09-25T19:25:36.787Z</lastmod>
   </url>
   <url>
     <loc>metill.is/greinar/landspitali/index.html</loc>
-    <lastmod>2022-09-25T18:54:33.311Z</lastmod>
-  </url>
-  <url>
-    <loc>metill.is/greinar/skattagogn/index.html</loc>
-    <lastmod>2022-09-25T18:54:33.882Z</lastmod>
+    <lastmod>2022-09-25T19:21:17.280Z</lastmod>
   </url>
   <url>
     <loc>metill.is/greinar/vinnuafl/index.html</loc>
-    <lastmod>2022-09-25T18:54:34.448Z</lastmod>
+    <lastmod>2022-09-25T19:21:18.005Z</lastmod>
   </url>
   <url>
     <loc>metill.is/um_metil.html</loc>
-    <lastmod>2022-09-25T18:54:34.764Z</lastmod>
+    <lastmod>2022-09-25T19:21:18.424Z</lastmod>
   </url>
   <url>
     <loc>metill.is/greinar.html</loc>
-    <lastmod>2022-09-25T18:54:35.197Z</lastmod>
+    <lastmod>2022-09-25T19:25:39.255Z</lastmod>
   </url>
   <url>
     <loc>metill.is/learn.html</loc>
-    <lastmod>2022-09-25T18:54:35.495Z</lastmod>
+    <lastmod>2022-09-25T19:21:19.293Z</lastmod>
   </url>
 </urlset>

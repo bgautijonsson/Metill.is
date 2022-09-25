@@ -85,7 +85,7 @@ div.quarto-post .listing-categories .listing-category {
   margin-right: auto;
   font-size: $font-size-base * 1.8;
   border-bottom: 1px solid $secondary; 
-  width: 75%;
+  width: 90%;
 }
 
 .navbar-nav {
@@ -101,11 +101,6 @@ div.quarto-post .listing-categories .listing-category {
 }
 
 
-.card {
-  background-color: #faf9f9;
-  vertical-align: middle;
-  justify-self: center;
-}
 
 .column-screen-inset-shaded {
   background-color: #efedf5;
@@ -114,20 +109,25 @@ div.quarto-post .listing-categories .listing-category {
 
 div.list.grid {
   display: flex;
-  flex-basis: "100%";
+  flex-basis: 100%;
   flex-wrap: wrap;
   justify-content: center;
   align-items: stretch;
   align-content: center;
-  column-gap: 10px;
-  padding-left: 10px;
-  padding-right: 10px;
+  column-gap: 0%;
+  padding-left: 0px;
+  padding-right: 0px;
   padding-top: 10px;
   padding-bottom: 10px;
 }
 
+.listing-card {
+  width: 90%;
+  background-color: $secondary;
+}
+
 div.card-body {
-  background-color: #F8F9FA;
+  
   
   p.listing-description {
     font-size: 0px;
@@ -168,20 +168,23 @@ div.card-footer {
 }
 
 .btn-link {
-  align-self: end;
   width: 30;
   color: $secondary;
   text-decoration: none;
-  margin-left: 80%;
-  margin-right: 0px;
+}
+
+.frontpage-button {
+  text-align: center;
 }
 
 .btn-link:hover {
   color: $secondary;
 }
 
-#mælaborð {
-  margin-top: -30px;
+div > hr {
+  width: 90%;
+  margin-left: 5%;
+  margin-right: 5%;
 }
 
 @media (min-width: 900px) {
@@ -191,12 +194,11 @@ div.card-footer {
 }
 
   #listing-posts > div.list.grid > div:nth-child(1) {
-  width: 100%;
+  width: 90%;
   
   img {
     width: 50%;
     margin: 5px;
-    border: 1px solid #969696;
     float: right;
   }
   
