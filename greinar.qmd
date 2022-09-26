@@ -1,6 +1,5 @@
 ---
 pagetitle: "Greinasafn"
-title: "Greinasafn"
 editor: source
 listing:
     - id: posts

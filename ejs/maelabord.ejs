@@ -1,0 +1,33 @@
+```{=html}
+
+<div class="container text-center">
+
+
+<% for (let i = 0; i < items.length; i++) { %>
+  
+  
+
+  <div class="row">
+    
+    
+    <div class="col6">
+      <a href="<%- items[i].href %>">
+        <img src="<%- items[i].image %>" alt="<%- items[i].description %>" class="card-img-top"/>
+      </a>
+    
+    
+      <a href="<%- items[i].href %>"><%= items[1].pagetitle %></a>
+      <p><%= items[i].subtitle %></p>
+      <p><%= items[i].description %></p>
+    </div>
+    
+    
+    
+    
+  </div>
+
+<% } %>
+
+</div>
+
+```

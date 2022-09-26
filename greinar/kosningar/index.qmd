@@ -16,10 +16,6 @@ format:
         page-layout: full
         smooth-scroll: true
         link-external-newwindow: true
-execute: 
-  echo: false
-  warning: false
-  cache: false
 editor: source
 draft: true
 title-block-banner: true

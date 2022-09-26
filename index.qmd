@@ -5,38 +5,18 @@ toc: false
 editor: source
 listing:
     - id: posts
-      template: ejs/gallery.ejs
+      template: ejs/greinar.ejs
       sort: "date desc"
       contents: greinar
       max-items: 4
-    - id: dashboards
-      template: ejs/gallery.ejs
-      sort: "date desc"
-      contents: maelabord
-      max-items: 3
         
 ---
 
 
 
-::: {.column-screen}
 
-::: {#posts}
-
-:::
-
-::: {.frontpage-button}
-
-[Allar greinar](greinar.qmd){type="button" class="btn btn-primary btn-link"}
+::: {#posts .column-screen}
 
 :::
 
 
----
-
-::: {#dashboards}
-
-:::
-
-
-:::

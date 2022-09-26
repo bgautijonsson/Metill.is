@@ -1,0 +1,46 @@
+```{=html}
+
+
+
+<div class="container-md mt-2">
+
+  <div class="row mb-2">
+  
+    <% let item = items[0]; { %>
+      <div class="card listing-card border-2 rounded-3 g-col-12 g-col-sm-6 g-col-md-4 mb-2">
+            
+        <div class="row">
+          <div class="col-md-6">
+            <h3 class="text-primary m-0 p-0"> <%=item.pagetitle%> </h3>
+            <p class="listing-subtitle"><%= item.subtitle %></p>
+            <p class="font-weight-light"><%= item.description %></p>
+            <a href="<%=item.href%>" class="stretched-link" style="text-decoration:none;"></a>
+          </div>
+          <div class="col-md-6">
+            <img src="<%=item.image%>" class="img-fluid rounded-start">
+          </div>
+        </div>
+      </div>
+    <% } %>
+  </div>
+  
+  <div class="row">
+    <% for (let i = 1; i < items.length; i++) { %>
+
+      <div class="col-md-4 p-0 d-flex">
+        <div class="card listing-card border-2 rounded-3 g-col-12 g-col-sm-6 g-col-md-4 mb-2">
+          <img src="<%=items[i].image%>" class="card-img-top mb-0 pb-0">
+
+          <div class="card-body">
+            <h3 class="text-primary m-0 p-0"> <%=items[i].pagetitle%> </h3>
+            <div class="mb-1 text-muted"> <%=items[i].date%> </div>
+            <p class="card-text mb-auto"> <%=items[i].subtitle%> </p>
+            <a href="<%=items[i].href%>" class="stretched-link" style="text-decoration:none;"></a>
+          </div>
+        </div>  
+      </div>
+      
+    <% } %>
+  </div>
+</div>
+```

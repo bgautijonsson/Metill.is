@@ -8,18 +8,16 @@ website:
   title: Metill
   site-url: metill.is
   search: false
-  navbar: 
-    collapse: false
-    left:
-      - text: "Greinasafn"
-        href: greinar.qmd
-      - text: "Um Metil"
-        href: um_metil.qmd
+  navbar: false
         
 format:
   html:
-    theme: [paper, theme.scss]
+    include-in-header: header/header.html
+    theme: [flatly, theme.scss]
     css: style.css
+    execute: 
+      freeze: true
+      cache: true
 
 editor: source
 

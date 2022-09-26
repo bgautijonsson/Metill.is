@@ -1,225 +1,48 @@
 /*-- scss:defaults --*/
 
-$darkblue:                      #484D6D;
-$lightblue:                     #bcbddc;
-$white:                         #ffffff;
+@import "https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css";
+@import "https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.bundle.min.js";
 
-
-$primary:                       #484D6D;
-$secondary:                     #faf9f9;
-
-$body-bg:                       #faf9f9;
-
-
+$primary:                       hsla(232, 20%, 35%, 1);
+$secondary:                     hsla(0, 9%, 98%, 1);
+$body-bg:                       $secondary;
 
 $font-size-base:                1rem; 
-$font-family-base:              "Segoe UI";
+$font-family-base:              "Lato";
 $font-family-sans-serif:        "Lato", "Open Sans", "Montserrat", "Roboto";
 $font-family-monospace:         "SFMono-Regular", "Menlo", "Monaco", "Consolas";
 
+  
+  
+/*-- scss:rules --*/  
 
-$headings-color:                $darkblue;
-$headings-font-weight:          4000;
-$headings-font-family:          "Segoe UI";
-
-
-$navbar-brand-font-size:        $font-size-base * 1.2;
-$navbar-brand-font-family:      "Playfair Display";
-$navbar-brand-font-weight:      700;
-
-
-
-/*-- scss:rules --*/
-header.quarto-title-block.default .quarto-title .title {
-    color: $secondary;
-    font-family: "Playfair Display";
-    font-size: $font-size-base * 3;
+.font-weight-light {
+  font-weight: 10;
 }
 
-div.quarto-post .listing-categories .listing-category {
-    color: #6c757d;
-    border: solid 1px #dee2e6;
-    border-radius: .25rem;
-    text-transform: uppercase;
-    font-size: .65em;
-    padding-left: .5em;
-    padding-right: .5em;
-    padding-top: .15em;
-    padding-bottom: .15em;
-    cursor: pointer;
-    margin-right: 4px;
-    margin-bottom: 4px;
-}
-
-.quarto-listing-category .category {
-    font-size: $font-size-base * 0.7;
-    cursor: pointer;
-    color: #525252;
-}
-
-
-.tab-content {
-    border-left: 0px;
-    border-right: 0px;
-    border-bottom: 0px;
-}
-
-
-#quarto-header {
+.hero-row {
   
 }
-
-.navbar {
-  overflow: visible;
+ 
+body > nav > div > div.d-flex.flex-row > header > div > a > h1 {
+  font-size: 48px;
+  font-family: "Playfair Display";
 }
 
+  
 
-
-.navbar-title {
-  text-align: center;
-  position: absolute;
-  top: 6%;
-  right: 0%;
-  left: 0;
-  margin-left: auto;
-  margin-right: auto;
-  font-size: $font-size-base * 1.8;
-  border-bottom: 1px solid $secondary; 
-  width: 90%;
+body > nav > div > div.col-12.d-flex.justify-content-center {
+  font-size: 24px;
+  border-top: 1px solid $secondary;
+  width: 100%;
+  font-family: "Segoe UI";
 }
-
-.navbar-nav {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  flex-wrap: nowrap;
-  padding-top: 45px;
-  padding-right: 30px;
-  text-align: center;
-  margin-left: auto;
-  float: left;
-}
-
-
-
-.column-screen-inset-shaded {
-  background-color: #efedf5;
-  padding-bottom: 0;
-}
-
-div.list.grid {
-  display: flex;
-  flex-basis: 100%;
-  flex-wrap: wrap;
-  justify-content: center;
-  align-items: stretch;
-  align-content: center;
-  column-gap: 0%;
-  padding-left: 0px;
-  padding-right: 0px;
-  padding-top: 10px;
-  padding-bottom: 10px;
-}
-
-.listing-card {
-  width: 90%;
+ 
+.card { 
   background-color: $secondary;
+  transition: 0.5s;
 }
-
-div.card-body {
-  
-  
-  p.listing-description {
-    font-size: 0px;
-    padding: 0px;
-    margin: 0px;
-  }
-}
-
-div.card-footer {
-  background-color: #f0f0f0;
-  display: flex;
-  align-items: center;
-  align-content: center;
-  border: none;
-}
-
-
-
-.listing-title {
-  font-size: $font-size-base * 1.4;
-}
-
-.listing-subtitle {
-  font-size: $font-size-base * 1;
-}
-
-.listing-description {
-  font-size: $font-size-base * 0.9;
-}
-
-.listing-date {
-  font-size: $font-size-base * 0.9;
-}
-
-.btn-primary {
-  color: $secondary;
-  background-color: $primary;
-}
-
-.btn-link {
-  width: 30;
-  color: $secondary;
-  text-decoration: none;
-}
-
-.frontpage-button {
-  text-align: center;
-}
-
-.btn-link:hover {
-  color: $secondary;
-}
-
-div > hr {
-  width: 90%;
-  margin-left: 5%;
-  margin-right: 5%;
-}
-
-@media (min-width: 900px) {
-  
-  .listing-card {
-  width: 30%;
-}
-
-  #listing-posts > div.list.grid > div:nth-child(1) {
-  width: 90%;
-  
-  img {
-    width: 50%;
-    margin: 5px;
-    float: right;
-  }
-  
-  a.listing-title {
-    font-size: 3vw;
-  }
-  
-  p.listing-subtitle {
-    color: #525252;
-    font-size: 1.1vw;
-  }
-  
-  p.listing-description {
-    font-size: 1.5vw;
-    padding: 10px;
-    color: #969696;
-  }
-  
+.card:hover {
+  background-color: hsla(0, 12%, 96%, 1);
   
 }
-
-  
-}
-
