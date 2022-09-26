@@ -13,17 +13,12 @@ $font-family-sans-serif:        "Lato", "Open Sans", "Montserrat", "Roboto";
 $font-family-monospace:         "SFMono-Regular", "Menlo", "Monaco", "Consolas";
 
   
-  
+$carousel-control-color:        $primary;
+$carousel-caption-color:        $primary;
+$carousel-indicator-active-bg:  $primary;
 /*-- scss:rules --*/  
 
-.font-weight-light {
-  font-weight: 10;
-}
 
-.hero-row {
-  
-}
- 
 body > nav > div > div.d-flex.flex-row > header > div > a > h1 {
   font-size: 48px;
   font-family: "Playfair Display";

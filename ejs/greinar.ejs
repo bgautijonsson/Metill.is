@@ -1,10 +1,7 @@
 ```{=html}
-
-
-
 <div class="container-md">
 
-  <div class="row hero-row pb-0 mb-2">
+  <div class="row hero-row shadow pb-0 mb-2">
   
     <% let item = items[0]; { %>
       <div class="container col-xxl-8 px-4 py-2">
@@ -18,7 +15,7 @@
           <div class="col-sm-12 col-10 col-lg-6 col-xl-6 mx-auto">
             <img src="<%=item.image%>" class="d-block mx-lg-auto img-fluid" alt="Bootstrap Themes" width="700" height="500" loading="lazy">
           </div>
-          <div class="col-sm-12 col-10 col-lg-6 col-xl-6">
+          <div class="col-sm-12 col-10 col-lg-6 col-xl-6 mx-auto">
             <p class="lead text-muted"> <%=item.description%> </p>
             <a href="<%=item.href%>" class="stretched-link" style="text-decoration:none;"></a>
           </div>
@@ -31,7 +28,7 @@
     <% for (let i = 1; i < items.length; i++) { %>
 
       <div class="col-md-4 p-0 d-flex">
-        <div class="card listing-card border-2 rounded-3 g-col-12 g-col-sm-6 g-col-md-4 mb-2">
+        <div class="card listing-card shadow-sm border-2 rounded-3 g-col-12 g-col-sm-6 g-col-md-4 mb-2">
           <img src="<%=items[i].image%>" class="card-img-top mb-0 pb-0">
 
           <div class="card-body">

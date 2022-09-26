@@ -1,33 +1,55 @@
 ```{=html}
+<div class="container-md">
+  <div class="row shadow">
+    <div id="dashboard-carousel" class="carousel slide px-0" data-bs-ride="false">
+        <div class="carousel-indicators">
+          <button type="button" data-bs-target="#dashboard-carousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+          <button type="button" data-bs-target="#dashboard-carousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
+          <button type="button" data-bs-target="#dashboard-carousel" data-bs-slide-to="2" aria-label="Slide 3"></button>
+        </div>
+        <div class="carousel-inner"></div>
 
-<div class="container text-center">
+          <% let item = items[0]; { %>
+            <div class="carousel-item active">
+              <a href="<%=item.href%>">
+                <img src="<%=item.image%>" class="d-block w-100" alt="...">
+              </a>
+              <div class="carousel-caption d-none d-md-block">
+                <h5> <%=item.pagetitle%> </h5>
+                <p> <%=item.subtitle%> </p>
+              </div>
+            </div>
+          <% } %>
+          
+          <% for (let i = 1; i < items.length; i++) { %>
 
-
-<% for (let i = 0; i < items.length; i++) { %>
-  
-  
-
-  <div class="row">
-    
-    
-    <div class="col6">
-      <a href="<%- items[i].href %>">
-        <img src="<%- items[i].image %>" alt="<%- items[i].description %>" class="card-img-top"/>
-      </a>
-    
-    
-      <a href="<%- items[i].href %>"><%= items[1].pagetitle %></a>
-      <p><%= items[i].subtitle %></p>
-      <p><%= items[i].description %></p>
+        
+          
+              
+              <div class="carousel-item">
+                <a href="<%=items[i].href%>">
+                  <img src="<%=items[i].image%>" class="d-block w-100" alt="...">
+                </a>
+                <div class="carousel-caption d-none d-md-block">
+                  <h5> <%=items[i].pagetitle%> </h5>
+                  <p> <%=items[i].subtitle%> </p>
+                </div>
+              </div>
+            
+        
+        
+          <% } %>
+      </div>
     </div>
-    
-    
-    
-    
+          <button class="carousel-control-prev" type="button" data-bs-target="#dashboard-carousel" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Previous</span>
+          </button>
+          <button class="carousel-control-next" type="button" data-bs-target="#dashboard-carousel" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Next</span>
+          </button>
   </div>
-
-<% } %>
-
 </div>
 
 ```

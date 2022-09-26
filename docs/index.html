@@ -77,6 +77,34 @@ ul.task-list li input[type="checkbox"] {
       window['quarto-listing-loaded']();
     }
   })
+  
+
+  window.document.addEventListener("DOMContentLoaded", function (_event) {
+    const listingTargetEl = window.document.querySelector('#listing-dashboards .list');
+    if (!listingTargetEl) {
+      // No listing discovered, do not attach.
+      return; 
+    }
+
+    const options = {
+      valueNames: ['listing-title-block-style','listing-pagetitle','listing-subtitle','listing-image','listing-href','listing-date','listing-path','listing-author','listing-description','listing-filename','listing-file-modified','listing-reading-time',{ data: ['index'] },{ data: ['categories'] },{ data: ['listing-date-sort'] },{ data: ['listing-file-modified-sort'] },{ data: ['listing-reading-time-sort'] }],
+      
+      searchColumns: ["listing-title-block-style","listing-pagetitle","listing-subtitle","listing-image","listing-href","listing-date","listing-path","listing-author","listing-description","listing-filename","listing-file-modified","listing-reading-time"],
+    };
+
+    window['quarto-listings'] = window['quarto-listings'] || {};
+    window['quarto-listings']['listing-dashboards'] = new List('listing-dashboards', options);
+
+    if (window['quarto-listing-loaded']) {
+      window['quarto-listing-loaded']();
+    }
+  });
+
+  window.addEventListener('hashchange',() => {
+    if (window['quarto-listing-loaded']) {
+      window['quarto-listing-loaded']();
+    }
+  })
   </script>
 </head><body class="fullcontent"><nav class="navbar m-0 p-0 bg-primary">
 
@@ -119,7 +147,7 @@ ul.task-list li input[type="checkbox"] {
 
 <div id="listing-posts" class="column-screen quarto-listing quarto-listing-container-custom">
 <div class="container-md">
-  <div class="row hero-row pb-0 mb-2">
+  <div class="row hero-row shadow pb-0 mb-2">
       <div class="container col-xxl-8 px-4 py-2">
         <div class="row">
           <div class="col justify-content-center">
@@ -131,7 +159,7 @@ ul.task-list li input[type="checkbox"] {
           <div class="col-sm-12 col-10 col-lg-6 col-xl-6 mx-auto">
             <img src="./greinar/stjornmalaflokkar/Figures/eigidfe.png" class="d-block mx-lg-auto img-fluid" alt="Bootstrap Themes" width="700" height="500" loading="lazy">
           </div>
-          <div class="col-sm-12 col-10 col-lg-6 col-xl-6">
+          <div class="col-sm-12 col-10 col-lg-6 col-xl-6 mx-auto">
             <p class="lead text-muted"> Hversu miklar tekjur hafa stjórnmálaflokkarnir og hvaðan koma þær? Hækka útgjöld þeirra sjáanlega í kringum kosningar og eiga þeir einhverjar eignir? Hér köfum við ofan í ársreikninga stjórnmálaflokkanna.
  </p>
             <a href="./greinar/stjornmalaflokkar/index.html" class="stretched-link" style="text-decoration:none;"></a>
@@ -141,7 +169,7 @@ ul.task-list li input[type="checkbox"] {
   </div>
   <div class="row">
       <div class="col-md-4 p-0 d-flex">
-        <div class="card listing-card border-2 rounded-3 g-col-12 g-col-sm-6 g-col-md-4 mb-2">
+        <div class="card listing-card shadow-sm border-2 rounded-3 g-col-12 g-col-sm-6 g-col-md-4 mb-2">
           <img src="./greinar/skattagogn/image.png" class="card-img-top mb-0 pb-0">
           <div class="card-body">
             <h3 class="text-primary m-0 p-0 anchored"> Tekjur, skattar og kaupmáttur </h3>
@@ -152,7 +180,7 @@ ul.task-list li input[type="checkbox"] {
         </div>  
       </div>
       <div class="col-md-4 p-0 d-flex">
-        <div class="card listing-card border-2 rounded-3 g-col-12 g-col-sm-6 g-col-md-4 mb-2">
+        <div class="card listing-card shadow-sm border-2 rounded-3 g-col-12 g-col-sm-6 g-col-md-4 mb-2">
           <img src="./greinar/vinnuafl/hlutf_opinbert.png" class="card-img-top mb-0 pb-0">
           <div class="card-body">
             <h3 class="text-primary m-0 p-0 anchored"> Vinnumarkaður </h3>
@@ -163,7 +191,7 @@ ul.task-list li input[type="checkbox"] {
         </div>  
       </div>
       <div class="col-md-4 p-0 d-flex">
-        <div class="card listing-card border-2 rounded-3 g-col-12 g-col-sm-6 g-col-md-4 mb-2">
+        <div class="card listing-card shadow-sm border-2 rounded-3 g-col-12 g-col-sm-6 g-col-md-4 mb-2">
           <img src="./greinar/visitala_neysluverds/undirtolur.png" class="card-img-top mb-0 pb-0">
           <div class="card-body">
             <h3 class="text-primary m-0 p-0 anchored"> Vísitala neysluverðs </h3>
@@ -179,11 +207,62 @@ ul.task-list li input[type="checkbox"] {
 No matching items
 </div>
 </div>
+<h2 id="mælaborð" class="anchored">Mælaborð</h2>
+<div id="listing-dashboards" class="column-screen quarto-listing quarto-listing-container-custom">
+<div class="container-md">
+  <div class="row shadow">
+    <div id="dashboard-carousel" class="carousel slide px-0" data-bs-ride="false">
+        <div class="carousel-indicators">
+          <button type="button" data-bs-target="#dashboard-carousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+          <button type="button" data-bs-target="#dashboard-carousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
+          <button type="button" data-bs-target="#dashboard-carousel" data-bs-slide-to="2" aria-label="Slide 3"></button>
+        </div>
+        <div class="carousel-inner"></div>
+            <div class="carousel-item active">
+              <a href="./maelabord/verdbolga/index.html">
+                <img src="./maelabord/verdbolga/image.png" class="d-block w-100" alt="...">
+              </a>
+              <div class="carousel-caption d-none d-md-block">
+                <h5 class="anchored"> Verðbólga (í vinnslu) </h5>
+                <p> Reiknaðu þína persónulega verðbólgu með þessari gagnvirku framsetningu á vísitölu neysluverðs </p>
+              </div>
+            </div>
+              <div class="carousel-item">
+                <a href="./maelabord/sveitarfelog/index.html">
+                  <img src="./maelabord/sveitarfelog/image.png" class="d-block w-100" alt="...">
+                </a>
+                <div class="carousel-caption d-none d-md-block">
+                  <h5 class="anchored"> Fjármál Sveitarfélaga </h5>
+                  <p> Gagnvirk samantekt á ársreikningum sveitarfélaga úr gögnum Sambands Íslenskra Sveitarfélaga </p>
+                </div>
+              </div>
+              <div class="carousel-item">
+                <a href="./maelabord/skattagogn/index.html">
+                  <img src="./maelabord/skattagogn/image.png" class="d-block w-100" alt="...">
+                </a>
+                <div class="carousel-caption d-none d-md-block">
+                  <h5 class="anchored"> Eignir, skuldir og skattar </h5>
+                  <p> Gagnvirkt tól til að skoða eignir, tekjur og skuldir Íslendinga í skattframtalsgögnum Hagstofunnar </p>
+                </div>
+              </div>
+      </div>
+    </div>
+          <button class="carousel-control-prev" type="button" data-bs-target="#dashboard-carousel" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Previous</span>
+          </button>
+          <button class="carousel-control-next" type="button" data-bs-target="#dashboard-carousel" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Next</span>
+          </button>
+  </div>
+</div>
 
 
+</main></div>
 
 
-</main> <!-- /main -->
+ <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {
   const toggleBodyColorMode = (bsSheetEl) => {
@@ -282,7 +361,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   }
 });
 </script>
-</div> <!-- /content -->
+ <!-- /content -->
 
 
 

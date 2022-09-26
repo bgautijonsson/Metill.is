@@ -12,7 +12,7 @@ date: "2022/09/22"
   src="https://bggj.shinyapps.io/verdbolga/"
   style="
     position: fixed;
-    top: 90px;
+    top: 110px;
     bottom: 0px;
     right: 0px;
     width: 100%;
