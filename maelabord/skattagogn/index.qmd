@@ -1,5 +1,6 @@
 ---
 title-block-style: none
+title: "Eignir, skuldir og skattar"
 pagetitle: "Eignir, skuldir og skattar"
 subtitle: "Gagnvirkt tól til að skoða eignir, tekjur og skuldir Íslendinga í skattframtalsgögnum Hagstofunnar"
 image: image.png
@@ -12,7 +13,7 @@ date: "2022/08/25"
   src="https://bggj.shinyapps.io/skattagogn/"
   style="
     position: fixed;
-    top: 110px;
+    top: 120px;
     bottom: 0px;
     right: 0px;
     width: 100%;

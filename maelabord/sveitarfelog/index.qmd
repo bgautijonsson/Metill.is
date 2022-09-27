@@ -1,6 +1,7 @@
 ---
 title-block-style: none
-pagetitle: "Fjármál Sveitarfélaga"
+title: "Fjármál sveitarfélaga"
+pagetitle: "Fjármál sveitarfélaga"
 subtitle: "Gagnvirk samantekt á ársreikningum sveitarfélaga úr gögnum Sambands Íslenskra Sveitarfélaga"
 image: image.png
 href: maelabord/sveitarfelog/index.qmd

@@ -1,5 +1,6 @@
 ---
 title-block-style: none
+title: "Verðbólga (í vinnslu)"
 pagetitle: "Verðbólga (í vinnslu)"
 subtitle: "Reiknaðu þína persónulega verðbólgu með þessari gagnvirku framsetningu á vísitölu neysluverðs"
 image: image.png

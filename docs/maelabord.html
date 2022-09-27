@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Færslur</title>
+<title>Mælaborð</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -52,20 +52,20 @@ ul.task-list li input[type="checkbox"] {
 <script>
 
   window.document.addEventListener("DOMContentLoaded", function (_event) {
-    const listingTargetEl = window.document.querySelector('#listing-posts .list');
+    const listingTargetEl = window.document.querySelector('#listing-maelabord .list');
     if (!listingTargetEl) {
       // No listing discovered, do not attach.
       return; 
     }
 
     const options = {
-      valueNames: ['listing-image','listing-date','listing-title','listing-subtitle','listing-categories',{ data: ['index'] },{ data: ['categories'] },{ data: ['listing-date-sort'] },{ data: ['listing-file-modified-sort'] }],
+      valueNames: ['listing-image','listing-date','listing-title','listing-subtitle',{ data: ['index'] },{ data: ['categories'] },{ data: ['listing-date-sort'] },{ data: ['listing-file-modified-sort'] }],
       
-      searchColumns: ["listing-categories"],
+      searchColumns: ["listing-date","listing-title","listing-author","listing-subtitle","listing-image","listing-description","listing-categories"],
     };
 
     window['quarto-listings'] = window['quarto-listings'] || {};
-    window['quarto-listings']['listing-posts'] = new List('listing-posts', options);
+    window['quarto-listings']['listing-maelabord'] = new List('listing-maelabord', options);
 
     if (window['quarto-listing-loaded']) {
       window['quarto-listing-loaded']();
@@ -114,29 +114,81 @@ ul.task-list li input[type="checkbox"] {
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
         
-    <h5 class="quarto-listing-category-title">Categories</h5><div class="quarto-listing-category category-default"><div class="category" data-category="">All <span class="quarto-category-count">(0)</span></div></div></div>
+    <h5 class="quarto-listing-category-title">Categories</h5><div class="quarto-listing-category category-default"><div class="category" data-category="">All <span class="quarto-category-count">(3)</span></div></div></div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default">
-<div class="quarto-title">
-<h1 class="title">Færslur</h1>
-</div>
 
 
-
-<div class="quarto-title-meta">
-
-    
-    
-  </div>
-  
-
-</header>
-
-<div id="listing-posts" class="quarto-listing quarto-listing-container-default">
+<p><br></p>
+<div id="listing-maelabord" class="quarto-listing quarto-listing-container-default">
 <div class="list quarto-listing-default">
-
+<div class="quarto-post image-right" data-index="0" data-listing-date-sort="1663804800000" data-listing-file-modified-sort="1664281356041" data-listing-reading-time-sort="0.26">
+<div class="thumbnail">
+<p><a href="./maelabord/verdbolga/index.html"> <img src="./maelabord/verdbolga/image.png" class="thumnail-image"> </a></p>
+</div>
+<div class="body">
+<a href="./maelabord/verdbolga/index.html">
+<h3 class="no-anchor listing-title">
+Verðbólga (í vinnslu)
+</h3>
+<div class="listing-subtitle">
+Reiknaðu þína persónulega verðbólgu með þessari gagnvirku framsetningu á vísitölu neysluverðs
+</div>
+</a>
+</div>
+<div class="metadata">
+<a href="./maelabord/verdbolga/index.html">
+<div class="listing-date">
+Sep 22, 2022
+</div>
+</a>
+</div>
+</div>
+<div class="quarto-post image-right" data-index="1" data-listing-date-sort="1663459200000" data-listing-file-modified-sort="1664281347030" data-listing-reading-time-sort="0.26">
+<div class="thumbnail">
+<p><a href="./maelabord/sveitarfelog/index.html"> <img src="./maelabord/sveitarfelog/image.png" class="thumnail-image"> </a></p>
+</div>
+<div class="body">
+<a href="./maelabord/sveitarfelog/index.html">
+<h3 class="no-anchor listing-title">
+Fjármál sveitarfélaga
+</h3>
+<div class="listing-subtitle">
+Gagnvirk samantekt á ársreikningum sveitarfélaga úr gögnum Sambands Íslenskra Sveitarfélaga
+</div>
+</a>
+</div>
+<div class="metadata">
+<a href="./maelabord/sveitarfelog/index.html">
+<div class="listing-date">
+Sep 18, 2022
+</div>
+</a>
+</div>
+</div>
+<div class="quarto-post image-right" data-index="2" data-listing-date-sort="1661385600000" data-listing-file-modified-sort="1664281244304" data-listing-reading-time-sort="0.26">
+<div class="thumbnail">
+<p><a href="./maelabord/skattagogn/index.html"> <img src="./maelabord/skattagogn/image.png" class="thumnail-image"> </a></p>
+</div>
+<div class="body">
+<a href="./maelabord/skattagogn/index.html">
+<h3 class="no-anchor listing-title">
+Eignir, skuldir og skattar
+</h3>
+<div class="listing-subtitle">
+Gagnvirkt tól til að skoða eignir, tekjur og skuldir Íslendinga í skattframtalsgögnum Hagstofunnar
+</div>
+</a>
+</div>
+<div class="metadata">
+<a href="./maelabord/skattagogn/index.html">
+<div class="listing-date">
+Aug 25, 2022
+</div>
+</a>
+</div>
+</div>
 </div>
 <div class="listing-no-matching d-none">
 No matching items

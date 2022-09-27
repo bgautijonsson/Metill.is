@@ -143,15 +143,22 @@ p <- plot_dat |>
                      breaks = c(-0.02, 0, 0.04, 0.06, 0.08, 0.1)) +
   scale_colour_brewer(type = "qual", palette = "Paired") +
   scale_fill_brewer(type = "qual", palette = "Paired") +
-  theme(legend.position = "none",
-        plot.background = element_blank(),
-        panel.background = element_blank()) +
+  theme(legend.position = "none") +
   labs(x = NULL,
        y = NULL,
        title = "Árleg breyting vísitölu og áhrif undirtalna")
 
-ggsave(plot = p, filename = "undirtolur.png",
-       width = 8, height = 0.621 * 8, scale = 1)
+ggsave(
+  plot = p + 
+    theme(
+      plot.background = element_blank(),
+      panel.background = element_blank()
+    ), 
+  filename = "undirtolur.png",
+  width = 8, 
+  height = 0.621 * 8,
+  scale = 1
+)
 
 ggplotly(
   p,
@@ -161,7 +168,8 @@ ggplotly(
          xaxis = list(
            rangeslider = list(type = "date")
          )
-  )
+  ) |> 
+  config(displayModeBar = FALSE)
 ```
 
 ## Vægi
@@ -223,10 +231,13 @@ ggplotly(
   p,
   tooltip = "text"
 ) |> 
-  layout(hoverlabel = list(align = "left"),
-         xaxis = list(
-           rangeslider = list(type = "date")
-         ))
+  layout(
+    hoverlabel = list(align = "left"),
+    xaxis = list(
+      rangeslider = list(type = "date")
+    )
+  ) |> 
+  config(displayModeBar = FALSE)
 ```
 
 ## Verðbreyting
@@ -286,7 +297,10 @@ ggplotly(
   p,
   tooltip = "text"
 ) |> 
-  layout(hoverlabel = list(align = "left"))
+  layout(
+    hoverlabel = list(align = "left")
+  ) |> 
+  config(displayModeBar = FALSE)
 ```
 
 :::
@@ -322,7 +336,8 @@ p <- plot_dat |>
 ggplotly(
   p,
   tooltip = "text"
-)
+) |> 
+  config(displayModeBar = FALSE)
 ```
 
 
@@ -404,7 +419,8 @@ ggplotly(
   animation_slider(currentvalue = list(prefix = "Ár:")) |> 
   layout(
     hoverlabel = list(align = "left")
-  )
+  ) |> 
+  config(displayModeBar = FALSE)
 ```
 
 

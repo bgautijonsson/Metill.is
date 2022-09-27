@@ -4,7 +4,7 @@
   <div class="row hero-row shadow pb-0 mb-2">
   
     <% let item = items[0]; { %>
-      <div class="container col-xxl-8 px-4 py-2">
+      <div class="container col-12 col-lg-11 col-xxl-10 px-4 py-2">
         <div class="row">
           <div class="col justify-content-center">
             <h1 class="display-5 fw-bold lh-1 mb-3 text-primary text-center"> <%=item.pagetitle%> </h1>
@@ -12,11 +12,11 @@
           </div>
         </div>
         <div class="row flex-lg-row-reverse align-items-center g-1 pb-0">
-          <div class="col-sm-12 col-10 col-lg-6 col-xl-6 mx-auto">
+          <div class="-col-md col-lg-6 col-xl-6 col-xxl-6 mx-auto">
             <img src="<%=item.image%>" class="d-block mx-lg-auto img-fluid" alt="Bootstrap Themes" width="700" height="500" loading="lazy">
           </div>
-          <div class="col-sm-12 col-10 col-lg-6 col-xl-6 mx-auto">
-            <p class="lead text-muted"> <%=item.description%> </p>
+          <div class="-col-md col-lg-6 col-xl-6 col-xxl-6 mx-auto">
+            <p class="lead text-muted text-break fs-6"> <%=item.description%> </p>
             <a href="<%=item.href%>" class="stretched-link" style="text-decoration:none;"></a>
           </div>
         </div>

@@ -1,0 +1,22 @@
+---
+pagetitle: "Mælaborð"
+editor: source
+listing:
+    - id: maelabord
+      sort: "date desc"
+      contents: maelabord
+      categories: true
+      page-size: 10
+      fields: [image, date, title, subtitle]
+---
+
+<br>
+
+
+::: {#maelabord}
+
+:::
+
+
+
+

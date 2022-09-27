@@ -1,5 +1,13 @@
 [
   {
+    "listing": "/maelabord.html",
+    "items": [
+      "/maelabord/verdbolga/index.html",
+      "/maelabord/sveitarfelog/index.html",
+      "/maelabord/skattagogn/index.html"
+    ]
+  },
+  {
     "listing": "/index.html",
     "items": [
       "/greinar/stjornmalaflokkar/index.html",

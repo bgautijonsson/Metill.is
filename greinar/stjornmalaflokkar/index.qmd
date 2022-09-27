@@ -209,7 +209,8 @@ dreifing_plot <- function(data, title, breaks = 2007:2020, labels = 2007:2020) {
   ) |>
     layout(
       hoverlabel = list(align = "left")
-    )
+    ) |> 
+    config(displayModeBar = FALSE)
   
 }
 
@@ -252,7 +253,8 @@ magn_plot <- function(data, title, breaks = 2007:2020, labels = 2007:2020) {
   ) |>
     layout(
       hoverlabel = list(align = "left")
-    )
+    ) |> 
+    config(displayModeBar = FALSE)
   
 } 
 

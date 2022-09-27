@@ -144,7 +144,6 @@ En hvað borgar hver tekjutíund mikið í skatta og hvernig ber því saman vi�
 ```{r}
 #| fig-asp: 1
 #| out-width: "100%"
-#| cache: false
 #| column: page
 
 plot_dat <- d |>
@@ -227,7 +226,8 @@ ggplotly(
   animation_slider(currentvalue = list(prefix = "Ár:")) |> 
   layout(
     hoverlabel = list(align = "left")
-  )
+  ) |> 
+  config(displayModeBar = FALSE)
 
 ```
 
@@ -242,7 +242,6 @@ Neðar í færslunni mun ég svo sýna hvernig skattbyrði hefur hækkað síða
 
 ```{r}
 #| fig-asp: 1
-#| cache: false
 #| column: page
 
 plot_dat <- plot_dat |> 
@@ -283,7 +282,8 @@ ggplotly(
   animation_slider(currentvalue = list(prefix = "Ár:")) |> 
   layout(
     hoverlabel = list(align = "left")
-  )
+  ) |> 
+  config(displayModeBar = FALSE)
 ```
 
 <br>
@@ -297,7 +297,6 @@ Kaupmáttur er einfaldlega hækkun á tekjum umfram verðbólgu *(hækkun á ver
 
 ```{r}
 #| fig-asp: 0.9
-#| cache: false
 #| column: page
 
 
@@ -357,7 +356,8 @@ ggplotly(
 ) |> 
   layout(
     hoverlabel = list(align = "left")
-  )
+  ) |> 
+  config(displayModeBar = FALSE)
 ```
 
 ## Kaupmáttur ráðstöfunartekna
@@ -366,7 +366,6 @@ Við höfum frekar áhuga á kaupmætti ráðstöfunartekna *(heildartekjur að 
 
 ```{r}
 #| fig-asp: 0.9
-#| cache: false
 #| column: page
 
 
@@ -426,7 +425,8 @@ ggplotly(
 ) |> 
   layout(
     hoverlabel = list(align = "left")
-  )
+  ) |> 
+  config(displayModeBar = FALSE)
 ```
 
 
@@ -484,7 +484,8 @@ ggplotly(
 ) |> 
   layout(
     hoverlabel = list(align = "left")
-  )
+  ) |> 
+  config(displayModeBar = FALSE)
 ```
 
 
