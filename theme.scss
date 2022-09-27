@@ -5,6 +5,7 @@
 
 $primary:                       hsla(232, 20%, 35%, 1);
 $secondary:                     hsla(0, 9%, 98%, 1);
+$success:                       hsla(192, 100%, 33%, 1);
 $body-bg:                       $secondary;
 
 $font-size-base:                1rem; 
@@ -41,4 +42,12 @@ body > nav > div > div.col-12.d-flex.justify-content-center {
 .card:hover {
   background-color: hsla(0, 12%, 96%, 1);
   
+}
+
+.hero-row {
+  background-color: $secondary;
+}
+
+.hero-row:hover {
+  background-color: hsla(0, 12%, 96%, 1);
 }

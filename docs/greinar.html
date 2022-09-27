@@ -59,9 +59,9 @@ ul.task-list li input[type="checkbox"] {
     }
 
     const options = {
-      valueNames: ['listing-image','listing-date','listing-title','listing-subtitle','listing-categories',{ data: ['index'] },{ data: ['categories'] },{ data: ['listing-date-sort'] },{ data: ['listing-file-modified-sort'] }],
+      valueNames: ['listing-execute','listing-freeze','listing-title-block-banner','listing-title','listing-pagetitle','listing-subtitle','listing-description','listing-author','listing-date','listing-format','listing-editor','listing-draft','listing-categories','listing-href','listing-image','listing-path','listing-filename','listing-file-modified','listing-reading-time','listing-twitter-card',{ data: ['index'] },{ data: ['categories'] },{ data: ['listing-date-sort'] },{ data: ['listing-file-modified-sort'] },{ data: ['listing-reading-time-sort'] }],
       
-      searchColumns: ["listing-date","listing-title","listing-author","listing-subtitle","listing-image","listing-description","listing-categories"],
+      searchColumns: ["listing-execute","listing-freeze","listing-title-block-banner","listing-title","listing-pagetitle","listing-subtitle","listing-description","listing-author","listing-date","listing-format","listing-editor","listing-draft","listing-categories","listing-href","listing-image","listing-path","listing-filename","listing-file-modified","listing-reading-time","listing-twitter-card"],
     };
 
     window['quarto-listings'] = window['quarto-listings'] || {};
@@ -78,7 +78,7 @@ ul.task-list li input[type="checkbox"] {
     }
   })
   </script>
-</head><body><nav class="navbar m-0 p-0 bg-primary">
+</head><body class="fullcontent"><nav class="navbar m-0 p-0 bg-primary">
 
   <div class="container bg-primary text-secondary justify-content-center flex-wrap align-items-baseline">
     <div class="d-flex flex-row">
@@ -112,150 +112,80 @@ ul.task-list li input[type="checkbox"] {
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
 <!-- sidebar -->
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        
-    <h5 class="quarto-listing-category-title">Categories</h5><div class="quarto-listing-category category-default"><div class="category" data-category="">All <span class="quarto-category-count">(4)</span></div><div class="category" data-category="Hagstofa">Hagstofa <span class="quarto-category-count">(2)</span></div><div class="category" data-category="efnahagur">efnahagur <span class="quarto-category-count">(4)</span></div><div class="category" data-category="skattar">skattar <span class="quarto-category-count">(1)</span></div><div class="category" data-category="stjórnmál">stjórnmál <span class="quarto-category-count">(1)</span></div><div class="category" data-category="verðlag">verðlag <span class="quarto-category-count">(1)</span></div><div class="category" data-category="vinnumarkaður">vinnumarkaður <span class="quarto-category-count">(1)</span></div><div class="category" data-category="ársreikningar">ársreikningar <span class="quarto-category-count">(1)</span></div></div></div>
+    
 <!-- main -->
-<main class="content" id="quarto-document-content">
+<main class="content page-columns page-full" id="quarto-document-content">
 
 
 
-<p><br></p>
-<div id="listing-posts" class="quarto-listing quarto-listing-container-default">
-<div class="list quarto-listing-default">
-<div class="quarto-post image-right" data-index="0" data-categories="stjórnmál,efnahagur,ársreikningar" data-listing-date-sort="1663372800000" data-listing-file-modified-sort="1664278152287" data-listing-reading-time-sort="16.315">
-<div class="thumbnail">
-<p><a href="./greinar/stjornmalaflokkar/index.html"> <img src="./greinar/stjornmalaflokkar/Figures/eigidfe.png" class="thumnail-image"> </a></p>
-</div>
-<div class="body">
-<a href="./greinar/stjornmalaflokkar/index.html">
-<h3 class="no-anchor listing-title">
-Fjármál stjórnmálaflokkanna
-</h3>
-<div class="listing-subtitle">
-Greining á ársreikningum stjórnmálaflokka úr gögnum Ríkisendurskoðunar
-</div>
-</a>
-<div class="listing-categories">
-<div class="listing-category" onclick="window.quartoListingCategory('stjórnmál'); return false;">
-stjórnmál
-</div>
-<div class="listing-category" onclick="window.quartoListingCategory('efnahagur'); return false;">
-efnahagur
-</div>
-<div class="listing-category" onclick="window.quartoListingCategory('ársreikningar'); return false;">
-ársreikningar
-</div>
-</div>
-<a href="./greinar/stjornmalaflokkar/index.html"> </a>
-</div>
-<div class="metadata">
-<a href="./greinar/stjornmalaflokkar/index.html">
-<div class="listing-date">
-Sep 17, 2022
-</div>
-</a>
-</div>
-</div>
-<div class="quarto-post image-right" data-index="1" data-categories="skattar,efnahagur" data-listing-date-sort="1662854400000" data-listing-file-modified-sort="1664278781754" data-listing-reading-time-sort="20.235">
-<div class="thumbnail">
-<p><a href="./greinar/skattagogn/index.html"> <img src="./greinar/skattagogn/image.png" class="thumnail-image"> </a></p>
-</div>
-<div class="body">
-<a href="./greinar/skattagogn/index.html">
-<h3 class="no-anchor listing-title">
-Tekjur, skattar og kaupmáttur
-</h3>
-<div class="listing-subtitle">
-Greining á tekjuskattsgögnum sem Hagstofan vinnur úr skattframtölum Íslendinga
-</div>
-</a>
-<div class="listing-categories">
-<div class="listing-category" onclick="window.quartoListingCategory('skattar'); return false;">
-skattar
-</div>
-<div class="listing-category" onclick="window.quartoListingCategory('efnahagur'); return false;">
-efnahagur
-</div>
-</div>
-<a href="./greinar/skattagogn/index.html"> </a>
-</div>
-<div class="metadata">
-<a href="./greinar/skattagogn/index.html">
-<div class="listing-date">
-Sep 11, 2022
-</div>
-</a>
-</div>
-</div>
-<div class="quarto-post image-right" data-index="2" data-categories="efnahagur,vinnumarkaður,Hagstofa" data-listing-date-sort="1662768000000" data-listing-file-modified-sort="1664280917390" data-listing-reading-time-sort="37.66">
-<div class="thumbnail">
-<p><a href="./greinar/vinnuafl/index.html"> <img src="./greinar/vinnuafl/hlutf_opinbert.png" class="thumnail-image"> </a></p>
-</div>
-<div class="body">
-<a href="./greinar/vinnuafl/index.html">
-<h3 class="no-anchor listing-title">
-Vinnumarkaður
-</h3>
-<div class="listing-subtitle">
-Hver er fjöldi starfandi einstaklinga og hvernig skiptast þeir á vinnumarkaði?
-</div>
-</a>
-<div class="listing-categories">
-<div class="listing-category" onclick="window.quartoListingCategory('efnahagur'); return false;">
-efnahagur
-</div>
-<div class="listing-category" onclick="window.quartoListingCategory('vinnumarkaður'); return false;">
-vinnumarkaður
-</div>
-<div class="listing-category" onclick="window.quartoListingCategory('Hagstofa'); return false;">
-Hagstofa
-</div>
-</div>
-<a href="./greinar/vinnuafl/index.html"> </a>
-</div>
-<div class="metadata">
-<a href="./greinar/vinnuafl/index.html">
-<div class="listing-date">
-Sep 10, 2022
-</div>
-</a>
-</div>
-</div>
-<div class="quarto-post image-right" data-index="3" data-categories="efnahagur,verðlag,Hagstofa" data-listing-date-sort="1661817600000" data-listing-file-modified-sort="1664278582957" data-listing-reading-time-sort="14.295">
-<div class="thumbnail">
-<p><a href="./greinar/visitala_neysluverds/index.html"> <img src="./greinar/visitala_neysluverds/undirtolur.png" class="thumnail-image"> </a></p>
-</div>
-<div class="body">
-<a href="./greinar/visitala_neysluverds/index.html">
-<h3 class="no-anchor listing-title">
-Vísitala neysluverðs
-</h3>
-<div class="listing-subtitle">
-Vísitalan og áhrif undirtalna á heildina
-</div>
-</a>
-<div class="listing-categories">
-<div class="listing-category" onclick="window.quartoListingCategory('efnahagur'); return false;">
-efnahagur
-</div>
-<div class="listing-category" onclick="window.quartoListingCategory('verðlag'); return false;">
-verðlag
-</div>
-<div class="listing-category" onclick="window.quartoListingCategory('Hagstofa'); return false;">
-Hagstofa
-</div>
-</div>
-<a href="./greinar/visitala_neysluverds/index.html"> </a>
-</div>
-<div class="metadata">
-<a href="./greinar/visitala_neysluverds/index.html">
-<div class="listing-date">
-Aug 30, 2022
-</div>
-</a>
-</div>
-</div>
+<div id="listing-posts" class="column-screen quarto-listing quarto-listing-container-custom">
+<div class="container-md">
+  <div class="row hero-row shadow pb-0 mb-2 position-relative">
+      <div class="container col-12 col-md-12 col-lg-11 col-xxl-10 px-4 py-2">
+        <div class="row">
+          <div class="col justify-content-center">
+            <h1 class="display-5 fw-bold lh-1 mb-3 text-primary text-center"> Fjármál stjórnmálaflokkanna </h1>
+            <h3 class="text-primary m-0 p-0 text-center anchored"> Greining á ársreikningum stjórnmálaflokka úr gögnum Ríkisendurskoðunar </h3>
+          </div>
+        </div>
+        <div class="row flex-lg-row-reverse align-items-center g-1 pb-0">
+          <div class="col-md-12 col-lg-6 col-xl-6 col-xxl-6 mx-auto">
+            <img src="./greinar/stjornmalaflokkar/Figures/eigidfe.png" class="d-block mx-lg-auto img-fluid" alt="Bootstrap Themes" width="700" height="500" loading="lazy">
+          </div>
+          <div class="col-md-12 col-lg-6 col-xl-6 col-xxl-6 mx-auto">
+            <p class="lead text-muted text-break fs-6"> Hversu miklar tekjur hafa stjórnmálaflokkarnir og hvaðan koma þær? Hækka útgjöld þeirra sjáanlega í kringum kosningar og eiga þeir einhverjar eignir? Hér köfum við ofan í ársreikninga stjórnmálaflokkanna.
+ </p>
+          </div>
+        </div>
+      </div>
+      <a href="./greinar/stjornmalaflokkar/index.html" class="stretched-link"></a>
+  </div>
+  <div class="row">
+      <div class="col-md-4 p-0 d-flex">
+        <div class="card listing-card shadow-sm border-2 rounded-3 g-col-12 g-col-sm-6 g-col-md-4 mb-2">
+          <img src="./greinar/skattagogn/image.png" class="card-img-top mb-0 pb-0">
+          <div class="card-body">
+            <h3 class="text-primary m-0 p-0 anchored"> Tekjur, skattar og kaupmáttur </h3>
+            <div class="mb-1 text-muted"> Sep 11, 2022 </div>
+            <p class="card-text mb-auto text-muted"> Greining á tekjuskattsgögnum  sem Hagstofan vinnur úr skattframtölum Íslendinga </p>
+            <a href="./greinar/skattagogn/index.html" class="stretched-link" style="text-decoration:none;"></a>
+          </div>
+        </div>  
+      </div>
+      <div class="col-md-4 p-0 d-flex">
+        <div class="card listing-card shadow-sm border-2 rounded-3 g-col-12 g-col-sm-6 g-col-md-4 mb-2">
+          <img src="./greinar/vinnuafl/hlutf_opinbert.png" class="card-img-top mb-0 pb-0">
+          <div class="card-body">
+            <h3 class="text-primary m-0 p-0 anchored"> Vinnumarkaður </h3>
+            <div class="mb-1 text-muted"> Sep 10, 2022 </div>
+            <p class="card-text mb-auto text-muted"> Hver er fjöldi starfandi einstaklinga og hvernig skiptast þeir á vinnumarkaði? </p>
+            <a href="./greinar/vinnuafl/index.html" class="stretched-link" style="text-decoration:none;"></a>
+          </div>
+        </div>  
+      </div>
+      <div class="col-md-4 p-0 d-flex">
+        <div class="card listing-card shadow-sm border-2 rounded-3 g-col-12 g-col-sm-6 g-col-md-4 mb-2">
+          <img src="./greinar/visitala_neysluverds/undirtolur.png" class="card-img-top mb-0 pb-0">
+          <div class="card-body">
+            <h3 class="text-primary m-0 p-0 anchored"> Vísitala neysluverðs </h3>
+            <div class="mb-1 text-muted"> Aug 30, 2022 </div>
+            <p class="card-text mb-auto text-muted"> Vísitalan og áhrif undirtalna á heildina </p>
+            <a href="./greinar/visitala_neysluverds/index.html" class="stretched-link" style="text-decoration:none;"></a>
+          </div>
+        </div>  
+      </div>
+      <div class="col-md-4 p-0 d-flex">
+        <div class="card listing-card shadow-sm border-2 rounded-3 g-col-12 g-col-sm-6 g-col-md-4 mb-2">
+          <img src="./greinar/landspitali/hjukthyngd.png" class="card-img-top mb-0 pb-0">
+          <div class="card-body">
+            <h3 class="text-primary m-0 p-0 anchored"> Landspítalinn </h3>
+            <div class="mb-1 text-muted"> Aug 24, 2022 </div>
+            <p class="card-text mb-auto text-muted"> Hvaða upplýsingar eru til um rekstur Landspítalans og hvar má finna þær? </p>
+            <a href="" class="stretched-link" style="text-decoration:none;"></a>
+          </div>
+        </div>  
+      </div>
+  </div>
 </div>
 <div class="listing-no-matching d-none">
 No matching items

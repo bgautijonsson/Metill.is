@@ -61,7 +61,6 @@ theme_set(theme_metill())
 
 
 ```
-
 ```{r}
 
 usr <- config::get("postgres_user")
@@ -75,8 +74,6 @@ con <- dbConnect(RPostgres::Postgres(),
 isk <- function(x, scale = 1e6, suffix = " m.kr") number(x / scale, suffix = suffix, big.mark = ".", decimal.mark = ",")
 hlutf <- label_percent(accuracy = 0.1, big.mark = ".", decimal.mark = ",")
 ```
-
-
 ```{r}
 
 d <- tbl(con, "arsreikningar_stjornmalaflokka") |> 
@@ -166,8 +163,6 @@ d <- d |>
 
 
 ```
-
-
 ```{r}
 
 dreifing_plot <- function(data, title, breaks = 2007:2020, labels = 2007:2020) {
@@ -262,11 +257,9 @@ magn_plot <- function(data, title, breaks = 2007:2020, labels = 2007:2020) {
 
 
 
-# Tekjur stjórnmálaflokka
 
-Flokkarnir geta í grófum dráttum fengið tekjur á þrjá vegu:
 
-* Með framlögum frá ríkissjóð og sveitarfélögum í hlutfalli við fjölda atkvæða sem flokkurinn hlaut í síðustu kosningum
+## Opinber framlög
 
 >Stjórnmálasamtök sem hafa fengið a.m.k. einn mann kjörinn á þing eða náð að lágmarki 2,5% atkvæða eiga rétt til framlaga. Það framlag skiptist hlutfallslega milli flokka eftir atkvæðamagni í næstliðnum kosningum. Fjármála- og efnahagsráðuneytið fer með framkvæmd greiðslna á þessu framlagi.
 >
@@ -276,20 +269,6 @@ Flokkarnir geta í grófum dráttum fengið tekjur á þrjá vegu:
 >
 > [Samband íslenskra sveitarfélaga](https://www.samband.is/frettir/vidmidunarreglur-um-framlog-til-stjornmalaflokka/)
 
-
-* Með framlögum frá einstaklingum og fyrirtækjum
-
-> Venjulegir aðilar (fólk og fyrirtæki) mega styrkja hvern flokk um 550.000 krónur ár hvert, heimildin var hækkuð úr 400.000 með lagabreytingu árið 2018.
->
-> [Baldur S. Blöndal, Vísindavefurinn](https://www.visindavefur.is/svar.php?id=78542){target="_blank"}
-
-* Með öðrum hætti, eins og t.d. útleigu fasteigna, miðasölu á atburði og svo framvegis.
-
-
-
-## Opinber framlög
-
-Hér að neðan sjáum við samanlögð framlög frá ríkissjóð og sveitarfélögum.
 
 ::: {.panel-tabset}
 
@@ -302,7 +281,7 @@ Hér að neðan sjáum við samanlögð framlög frá ríkissjóð og sveitarfé
 d |> 
   mutate(value = framlog_althingi + framlog_rikis + framlog_svf,
          value = value / cpi) |> 
-  magn_plot(title = "Framlög hins opinbera til stjórnmálaflokka ")
+  magn_plot(title = "Framlög hins opinbera")
 ```
 
 ### Dreifing
@@ -314,7 +293,7 @@ d |>
 d |> 
   mutate(value = framlog_althingi + framlog_rikis + framlog_svf,
          value = value / cpi) |> 
-  dreifing_plot(title = "Dreifing framlaga hins opinbera til stjórnmálaflokka ")
+  dreifing_plot(title = "Dreifing framlaga hins opinbera")
 
 ```
 
@@ -323,7 +302,9 @@ d |>
 
 ## Fyrirtæki/lögaðilar og einstaklingar
 
-Skoðum næst framlög fyrirtækja og einstaklinga *(þar á meðal félagsgjöld)*.
+> Venjulegir aðilar (fólk og fyrirtæki) mega styrkja hvern flokk um 550.000 krónur ár hvert, heimildin var hækkuð úr 400.000 með lagabreytingu árið 2018.
+>
+> [Baldur S. Blöndal, Vísindavefurinn](https://www.visindavefur.is/svar.php?id=78542){target="_blank"}
 
 ::: {.panel-tabset}
 
@@ -340,14 +321,14 @@ labels <- breaks
 d |> 
   mutate(value = framlog_fyrirtaekja,
          value = value / cpi) |> 
-  magn_plot(title = "Framlög fyrirtækja til stjórnmálaflokka",
+  magn_plot(title = "Framlög fyrirtækja",
             breaks =  seq(2008, 2020, by = 2),
             labels =  seq(2008, 2020, by = 2))
 
 d |> 
   mutate(value = framlog_einstaklinga,
          value = value / cpi) |> 
-  magn_plot(title = "Framlög einstaklinga til stjórnmálaflokka",
+  magn_plot(title = "Framlög einstaklinga",
             breaks =  seq(2008, 2020, by = 2),
             labels =  seq(2008, 2020, by = 2))
 ```
@@ -362,14 +343,14 @@ d |>
 d |> 
   mutate(value = framlog_fyrirtaekja,
          value = value / cpi) |> 
-  dreifing_plot(title = "Dreifing framlaga fyrirtækja/lögaðila til stjórnmálaflokka",
+  dreifing_plot(title = "Dreifing framlaga fyrirtækja/lögaðila",
                 breaks =  seq(2008, 2020, by = 2),
                 labels =  seq(2008, 2020, by = 2))
 
 d |> 
   mutate(value = framlog_einstaklinga,
          value = value / cpi) |> 
-  dreifing_plot(title = "Dreifing framlaga einstaklinga til stjórnmálaflokka ",
+  dreifing_plot(title = "Dreifing framlaga einstaklinga",
                 breaks =  seq(2008, 2020, by = 2),
                 labels =  seq(2008, 2020, by = 2))
 
@@ -392,14 +373,14 @@ Aðrar tekjur eru meðal annars útleiga á fasteignum *(t.d. veislusölum)*, mi
 d |> 
   mutate(value = adrar_tekjur,
          value = value / cpi) |> 
-  dreifing_plot(title = "Dreifing annarra tekna stjórnmálaflokka",
+  dreifing_plot(title = "Dreifing annarra tekna",
                 breaks = seq(2008, 2020, by = 2),
                 labels = seq(2008, 2020, by = 2))
 
 d |> 
   mutate(value = adrar_tekjur,
          value = value / cpi) |> 
-  magn_plot(title = "Aðrar tekjur stjórnmálaflokka",
+  magn_plot(title = "Aðrar tekjur",
             breaks = seq(2008, 2020, by = 2),
             labels = seq(2008, 2020, by = 2))
 
@@ -529,14 +510,14 @@ Sjálfstæðisflokkur þekkir svo sannarlega orð Winston, því milli 2007 og 2
 d |> 
   mutate(value = eignir,
          value = value / cpi) |> 
-  magn_plot(title = "Eignir stjórnmálaflokka",
+  magn_plot(title = "Eignir",
             breaks = seq(2008, 2020, by = 2),
             labels = seq(2008, 2020, by = 2))
 
 d |> 
   mutate(value = eignir - veltufjarmunir,
          value = value / cpi) |> 
-  magn_plot(title = "Fastafjármunir stjórnmálaflokka",
+  magn_plot(title = "Fastafjármunir",
             breaks = seq(2008, 2020, by = 2),
             labels = seq(2008, 2020, by = 2))
 
@@ -557,7 +538,7 @@ d |>
 d |> 
   mutate(value = skuldir,
          value = value / cpi) |> 
-  magn_plot(title = "Skuldir stjórnmálaflokka")
+  magn_plot(title = "Skuldir")
 
 
 ```
@@ -583,14 +564,14 @@ d |>
   mutate(value = eignir - skuldir,
          value = value / cpi) |>
   mutate(value = value * (value >= 0)) |>
-  dreifing_plot(title = "Dreifing eigin fjár stjórnmálaflokka",
+  dreifing_plot(title = "Dreifing eigin fjár",
                 breaks = seq(2008, 2020, by = 2),
                 labels = seq(2008, 2020, by = 2))
 
 d |>
   mutate(value = eignir - skuldir,
          value = value / cpi) |>
-  magn_plot(title = "Eigið fé stjórnmálaflokka",
+  magn_plot(title = "Eigið fé",
             breaks = seq(2008, 2020, by = 2),
             labels = seq(2008, 2020, by = 2))
 

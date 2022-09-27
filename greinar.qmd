@@ -3,20 +3,15 @@ pagetitle: "Greinasafn"
 editor: source
 listing:
     - id: posts
+      template: ejs/greinar.ejs
       sort: "date desc"
       contents: greinar
-      categories: true
-      page-size: 10
-      fields: [image, date, title, subtitle, categories]
 ---
 
 
-<br>
-
-::: {#posts}
+::: {#posts .column-screen}
 
 :::
-
 
 
 

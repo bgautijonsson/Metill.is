@@ -1,0 +1,13 @@
+h1:not(.title), h2, h3, h4 {
+    color: hsla(232, 20%, 35%, 1);
+}
+
+blockquote) {
+    text-align: justify;
+    hyphens: auto;
+
+}
+
+.tab-content {
+    border: none;
+}
