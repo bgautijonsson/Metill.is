@@ -9,9 +9,32 @@ $success:                       hsla(192, 100%, 33%, 1);
 $body-bg:                       $secondary;
 
 $font-size-base:                1rem; 
+$font-family-sans-serif:        "Lato", "Open Sans", "Montserrat", "Roboto", 
+                                // Cross-platform generic font family (default user interface font)
+                                system-ui, 
+                                // Safari for macOS and iOS (San Francisco)
+                                -apple-system
+                                // Windows
+                                "Segoe UI",
+                                // Android
+                                Roboto,
+                                // older macOS and iOS
+                                "Helvetica Neue"
+                                // Linux
+                                "Noto Sans",
+                                "Liberation Sans",
+                                // Basic web fallback
+                                Arial,
+                                // Sans serif fallback
+                                sans-serif,
+                                // Emoji fonts
+                                "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji" !default;
+
+
 $font-family-base:              "Lato";
-$font-family-sans-serif:        "Lato", "Open Sans", "Montserrat", "Roboto";
-$font-family-monospace:         "SFMono-Regular", "Menlo", "Monaco", "Consolas"; 
+$font-family-monospace:         SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+
+$headings-font-family:          "Bookman", "Playfair Display";
 
   
 $carousel-control-color:        $primary;
