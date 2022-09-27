@@ -3,13 +3,14 @@ pagetitle: "Greinasafn"
 editor: source
 listing:
     - id: posts
-      template: ejs/greinar.ejs
+      type: default
       sort: "date desc"
       contents: greinar
 ---
 
+<br>
 
-::: {#posts .column-screen}
+::: {#posts}
 
 :::
 

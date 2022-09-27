@@ -59,9 +59,9 @@ ul.task-list li input[type="checkbox"] {
     }
 
     const options = {
-      valueNames: ['listing-image','listing-date','listing-title','listing-subtitle',{ data: ['index'] },{ data: ['categories'] },{ data: ['listing-date-sort'] },{ data: ['listing-file-modified-sort'] }],
+      valueNames: ['listing-execute','listing-freeze','listing-title-block-banner','listing-css','listing-title-block-style','listing-pagetitle','listing-pagesubtitle','listing-image','listing-href','listing-pagedate','listing-path','listing-author','listing-description','listing-filename','listing-file-modified','listing-reading-time',{ data: ['index'] },{ data: ['categories'] },{ data: ['listing-file-modified-sort'] },{ data: ['listing-reading-time-sort'] }],
       
-      searchColumns: ["listing-author","listing-image","listing-description","listing-categories"],
+      searchColumns: ["listing-execute","listing-freeze","listing-title-block-banner","listing-css","listing-title-block-style","listing-pagetitle","listing-pagesubtitle","listing-image","listing-href","listing-pagedate","listing-path","listing-author","listing-description","listing-filename","listing-file-modified","listing-reading-time"],
     };
 
     window['quarto-listings'] = window['quarto-listings'] || {};
@@ -78,7 +78,7 @@ ul.task-list li input[type="checkbox"] {
     }
   })
   </script>
-</head><body><nav class="navbar m-0 p-0 bg-primary">
+</head><body class="fullcontent"><nav class="navbar m-0 p-0 bg-primary">
 
   <div class="container bg-primary text-secondary justify-content-center flex-wrap align-items-baseline">
     <div class="d-flex flex-row">
@@ -112,78 +112,68 @@ ul.task-list li input[type="checkbox"] {
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
 <!-- sidebar -->
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        
-    <h5 class="quarto-listing-category-title">Categories</h5><div class="quarto-listing-category category-default"><div class="category" data-category="">All <span class="quarto-category-count">(3)</span></div></div></div>
+    
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
 
 
 <p><br></p>
-<div id="listing-maelabord" class="quarto-listing quarto-listing-container-default">
-<div class="list quarto-listing-default">
-<div class="quarto-post image-right" data-index="0" data-listing-file-modified-sort="1664288220628" data-listing-reading-time-sort="0.02">
-<div class="thumbnail">
-<p><a href="./maelabord/sveitarfelog/index.html"> <img src="./maelabord/sveitarfelog/image.png" class="thumnail-image"> </a></p>
-</div>
-<div class="body">
-<a href="./maelabord/sveitarfelog/index.html">
-<h3 class="no-anchor listing-title">
-</h3>
-<div class="listing-subtitle">
-
-</div>
-</a>
-</div>
-<div class="metadata">
-<a href="./maelabord/sveitarfelog/index.html"> </a>
-</div>
-</div>
-<div class="quarto-post image-right" data-index="1" data-listing-file-modified-sort="1664285207961" data-listing-reading-time-sort="0.02">
-<div class="thumbnail">
-<p><a href="./maelabord/skattagogn/index.html"> <img src="./maelabord/skattagogn/image.png" class="thumnail-image"> </a></p>
-</div>
-<div class="body">
-<a href="./maelabord/skattagogn/index.html">
-<h3 class="no-anchor listing-title">
-</h3>
-<div class="listing-subtitle">
-
-</div>
-</a>
-</div>
-<div class="metadata">
-<a href="./maelabord/skattagogn/index.html"> </a>
-</div>
-</div>
-<div class="quarto-post image-right" data-index="2" data-listing-file-modified-sort="1664285511273" data-listing-reading-time-sort="0.02">
-<div class="thumbnail">
-<p><a href="./maelabord/verdbolga/index.html"> <img src="./maelabord/verdbolga/image.png" class="thumnail-image"> </a></p>
-</div>
-<div class="body">
-<a href="./maelabord/verdbolga/index.html">
-<h3 class="no-anchor listing-title">
-</h3>
-<div class="listing-subtitle">
-
-</div>
-</a>
-</div>
-<div class="metadata">
-<a href="./maelabord/verdbolga/index.html"> </a>
-</div>
-</div>
-</div>
-<div class="listing-no-matching d-none">
-No matching items
-</div>
+<div id="listing-maelabord" class="quarto-listing quarto-listing-container-custom">
+<div class="container-md">
+  <div class="row shadow">
+    <div id="dashboard-carousel" class="carousel slide px-0" data-bs-ride="false">
+        <div class="carousel-indicators">
+          <button type="button" data-bs-target="#dashboard-carousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+          <button type="button" data-bs-target="#dashboard-carousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
+          <button type="button" data-bs-target="#dashboard-carousel" data-bs-slide-to="2" aria-label="Slide 3"></button>
+        </div>
+        <div class="carousel-inner"></div>
+            <div class="carousel-item active">
+              <a href="./maelabord/sveitarfelog/index.html">
+                <img src="./maelabord/sveitarfelog/image.png" class="d-block w-100" alt="...">
+              </a>
+              <div class="carousel-caption d-none d-md-block">
+                <h5 class="anchored"> Fjármál sveitarfélaga </h5>
+                <p> Gagnvirk samantekt á ársreikningum sveitarfélaga úr gögnum Sambands Íslenskra Sveitarfélaga </p>
+              </div>
+            </div>
+              <div class="carousel-item">
+                <a href="./maelabord/skattagogn/index.html">
+                  <img src="./maelabord/skattagogn/image.png" class="d-block w-100" alt="...">
+                </a>
+                <div class="carousel-caption d-none d-md-block">
+                  <h5 class="anchored"> Eignir, skuldir og skattar </h5>
+                  <p> Gagnvirkt tól til að skoða eignir, tekjur og skuldir Íslendinga í skattframtalsgögnum Hagstofunnar </p>
+                </div>
+              </div>
+              <div class="carousel-item">
+                <a href="./maelabord/verdbolga/index.html">
+                  <img src="./maelabord/verdbolga/image.png" class="d-block w-100" alt="...">
+                </a>
+                <div class="carousel-caption d-none d-md-block">
+                  <h5 class="anchored"> Verðbólga (í vinnslu) </h5>
+                  <p> Reiknaðu þína persónulega verðbólgu með þessari gagnvirku framsetningu á vísitölu neysluverðs </p>
+                </div>
+              </div>
+      </div>
+    </div>
+          <button class="carousel-control-prev" type="button" data-bs-target="#dashboard-carousel" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Previous</span>
+          </button>
+          <button class="carousel-control-next" type="button" data-bs-target="#dashboard-carousel" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Next</span>
+          </button>
+  </div>
 </div>
 
 
+</main></div>
 
 
-</main> <!-- /main -->
+ <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {
   const toggleBodyColorMode = (bsSheetEl) => {
@@ -282,7 +272,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   }
 });
 </script>
-</div> <!-- /content -->
+ <!-- /content -->
 
 
 
