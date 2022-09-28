@@ -1,4 +1,8 @@
 ---
+title: "Pyngjuhornið"
+subtitle: "Fyrir hugsjónafólk sem hlær síðast"
+description: "Hér má finna allar þær greiningar sem ég hef unnið fyrir fréttabréf Pyngjunnar"
+title-block-banner: true
 pagetitle: "Pyngjan"
 editor: source
 listing:

@@ -1,9 +1,9 @@
 ---
 title: "Strætó"
 pagetitle: "Strætó"
-subtitle: "Hvernig eru fjármál Strætó?"
+subtitle: "Hvað getum við lært af því hvernig Strætó bs. birtir tölurnar sínar?"
 description: | 
-    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras consequat aliquet molestie. Fusce venenatis faucibus erat et blandit. Mauris aliquam convallis fermentum. Cras eu velit sit amet nibh sollicitudin dapibus.
+    Í ársreikningi Strætó bs. frá 2021 má finna áhugaverða myndræna framsetningu á tölum. Hér skoða ég hvað við getum lært af þessu og hvernig við getum hjálpað þeim að koma gögnunum ennþá betur til skila.
 author: 
     -   name: "Brynjólfur Gauti Guðrúnar Jónsson"
         url: "https://twitter.com/bgautijonsson"
@@ -12,8 +12,6 @@ author:
 date: "2022/09/28"
 format: 
     html:
-        code-fold: true
-        page-layout: full
         smooth-scroll: true
         link-external-newwindow: true
 editor: source
@@ -64,9 +62,132 @@ d <- tibble(
   mutate(raunverd = verd / cpi)
 
 isk <- function(x) number(x, suffix = " kr", big.mark = ".", decimal.mark = ",", accuracy = 1)
+hlutf <- function(x) percent(x, big.mark = ".", decimal.mark = ",", accuracy = 0.1)
 ```
 
+
+Í [ársreikningi Strætó bs. frá 2021](https://straeto.is/media/2022/03/straetobs_arsreikningur_31122021_undirritad.pdf){target="_blank"} má finna þessar tvær myndir:
+
+::: {layout-ncol=2 #hero-banner .column-screen style="border:none;"}
+
+![](Figures/straeto1.png)
+
+![](Figures/straeto2.png)
+
+:::
+
+Þetta er áhugaverð leið til að birta tímaröð af tölum. Vanalega viljum við að tíminn á x-ás byrji vinstra megin og fari svo hækkandi til hægri. Ég myndi t.d. vanalega teikna þessar myndir svona:
+
+
 ```{r}
+#| column: page
+#| fig-asp: 0.5
+#| out-width: 100%
+#| fig-width: 8
+
+
+p <- tibble(
+  ar = 2017:2021,
+  "Eiginfjárhlutfall" = c(64, 49, 47, 40, 26)/100,
+  "Langtímaskuldir/Eigið fé" = c(0, 56.3, 57.7, 77.8, 148.8)/100
+) |> 
+  pivot_longer(c(-ar)) |> 
+  mutate(
+    text = str_c(
+      "Ár: ", ar, "\n",
+      "Breyta: ", name, "\n",
+      "Gildi: ", hlutf(value), "\n"
+    )
+  ) |> 
+  ggplot(aes(ar, value, group = name, text = text)) +
+  geom_line() +
+  geom_point(size = 14, colour = "#FAF9F9") +
+  geom_text(
+    aes(
+      label = percent(value)
+    )
+  ) +
+  scale_x_continuous(
+    limits = c(2016.5, 2021.5)
+  ) +
+  scale_y_continuous() +
+  facet_wrap("name", ncol = 2, scales = "free") +
+  labs(
+    x = NULL,
+    y = NULL,
+    title = "Framsetning sem endurspeglar gögnin"
+  ) +
+  theme(axis.line.y = element_blank(),
+        axis.text.y = element_blank(),
+        axis.ticks.y = element_blank())
+
+ggplotly(
+  p,
+  tooltip = "text"
+)
+```
+
+
+Það er hins vegar frekar leitt við mína framsetningu að það sést of vel hvað reksturinn gengur illa. Hin framsetningin er því bara frekar góð
+
+```{r}
+#| column: page
+#| fig-asp: 0.5
+#| out-width: 100%
+#| fig-width: 8
+
+
+p <- tibble(
+  ar = 2017:2021,
+  "Eiginfjárhlutfall" = c(64, 49, 47, 40, 26)/100,
+  "Langtímaskuldir/Eigið fé" = c(0, 56.3, 57.7, 77.8, 148.8)/100
+) |> 
+  pivot_longer(c(-ar)) |> 
+  mutate(
+    text = str_c(
+      "Ár: ", ar, "\n",
+      "Breyta: ", name, "\n",
+      "Gildi: ", hlutf(value), "\n"
+    )
+  ) |> 
+  ggplot(aes(-ar, value, group = name, text = text)) +
+  geom_line() +
+  geom_point(size = 14, colour = "#FAF9F9") +
+  geom_text(
+    aes(
+      label = percent(value)
+    )
+  ) +
+  scale_x_continuous(
+    limits = c(-2021.5, -2016.5),
+    breaks = -(2017:2021),
+    labels = 2017:2021
+  ) +
+  scale_y_continuous() +
+  facet_wrap("name", ncol = 2, scales = "free") +
+  labs(
+    x = NULL,
+    y = NULL,
+    title = "Framsetning fyrir hugsjónafólk sem hlær síðast"
+  ) +
+  theme(axis.line.y = element_blank(),
+        axis.text.y = element_blank(),
+        axis.ticks.y = element_blank())
+
+ggplotly(
+  p,
+  tooltip = "text"
+)
+```
+
+# Fargjald
+
+Hérna kemur kafli þar sem við beitum lexíum frá Strætó bs. á fargjaldsverðið
+
+```{r}
+#| column: page
+#| fig-asp: 0.621
+
 plot_dat <- d |> 
   pivot_longer(c(verd, raunverd)) |> 
   group_by(ar) |> 
