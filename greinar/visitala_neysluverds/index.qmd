@@ -616,6 +616,60 @@ ggplotly(
 
 :::
 
+## Reiknuð húsaleiga
+
+> Reiknuð húsaleiga er mat á virði þeirrar þjónustu sem eigendur hafa af notkun eigin húsnæðis
+>
+> [Hagstofa Íslands](https://www.hagstofa.is/media/50143/20161103_husnaedi-i-visitolu-neysluverds.pdf){target="_blank"}
+
+
+```{r}
+#| fig.asp: 1
+#| column: page
+
+litur <- colours |> filter(undirvisitala == "Húsnæði, hiti og rafmagn") |> pull(colour)
+
+p <- d_undir |> 
+  filter(flokkur_3 == "Reiknuð húsaleiga") |> 
+  select(date, breyting, year_breyting) |> 
+  rename("Mánaðarleg" = breyting, "Árleg" = year_breyting) |> 
+  pivot_longer(c(-date)) |> 
+  group_by(date) |> 
+  mutate(
+    text = str_c(
+      "Dagsetning: ", format(date, "%B, %Y"), "\n",
+      ifelse(name == "Árleg", "<b>", ""),
+      "Verðbreyting (árleg): ", percent(value[name=="Árleg"], accuracy = 0.01, big.mark = ".", decimal.mark = ","), 
+      ifelse(name == "Árleg", "</b>", ""),
+      "\n",
+      ifelse(name == "Mánaðarleg", "<b>", ""),
+      "Verðbreyting (mánaðarleg): ", percent(value[name=="Mánaðarleg"], accuracy = 0.01, big.mark = ".", decimal.mark = ","),
+      ifelse(name == "Mánaðarleg", "</b>", "")
+    )
+  ) |> 
+  ungroup() |> 
+  ggplot(aes(date, value, text = text)) +
+  geom_hline(yintercept = 0, lty = 2, alpha = 0.3) +
+  geom_line(aes(group = name)) +
+  scale_y_continuous(
+    labels = label_percent()
+  ) +
+  facet_wrap("name", scales = "free_y", ncol = 1) +
+  labs(
+    x = NULL,
+    y = NULL,
+    title = "Verðbreytingar á reiknaðri húsaleigu"
+  )
+
+ggplotly(
+  p,
+  tooltip = "text"
+) |> 
+  layout(hoverlabel = list(align = "left")) |> 
+  config(displayModeBar = FALSE)
+```
+
+
 # Árleg breyting og mánaðarleg breyting
 
 Þar sem árleg verðbólga samanstendur af verðbólgu síðustu 12 mánaða getur ekki hver og einn mánuður lækkað hana mikið. Ef mánaðarleg verðbólga síðustu 11 mánuði hefur verið 0,5% en hún mælist svo 0% verður árleg verðbólgan samt $1,005^{11} = 1,056 = 5,6\%$. Hins vegar getur verið gott að bera saman mánaðarlega verðbólgu við meðaltal síðastliðins árs. Ef mánaðarleg verðbólga er lægri en meðaltal síðasta árs er árleg verðbólga að lækka.
