@@ -152,7 +152,8 @@ ggsave(
   plot = p + 
     theme(
       plot.background = element_blank(),
-      panel.background = element_blank()
+      panel.background = element_blank(),
+      panel.grid = element_blank()
     ), 
   filename = "undirtolur.png",
   width = 8, 

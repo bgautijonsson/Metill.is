@@ -1,1 +1,1 @@
-Sitemap: metill.is/sitemap.xml
+Sitemap: https://metill.is/sitemap.xml

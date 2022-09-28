@@ -7,7 +7,7 @@ project:
 website:
   title: Metill
   description: Notum gögn til að upplýsa, ekki sannfæra.
-  site-url: metill.is
+  site-url: https://metill.is
   search: false
   navbar: false
   open-graph: true
