@@ -321,7 +321,7 @@ p <- plot_dat |>
                       "<b>Árleg (deilt með 12): ", percent(year_breyting/12, accuracy = 0.01), "\n</b>",
                       "<b>Mánaðarleg: ", percent(breyting, accuracy = 0.01), "</b>")) |> 
   filter(undirvisitala == "Vísitala neysluverðs",
-         date >= ymd("2020-08-01")) |> 
+         date >= ymd("2020-09-01")) |> 
   ggplot(aes(year_ahrif/12, ahrif, text = text)) +
   geom_abline(intercept = 0, slope = 1, lty = 2) +
   geom_path(aes(group = "none")) +
