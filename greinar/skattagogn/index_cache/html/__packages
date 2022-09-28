@@ -1,3 +1,4 @@
+usethis
 cowplot
 tidyverse
 ggplot2
@@ -22,5 +23,4 @@ plotly
 DBI
 config
 visitalaneysluverds
-usethis
 metill

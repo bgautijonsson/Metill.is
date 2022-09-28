@@ -22,8 +22,8 @@ categories:
     - vinnumarkaður
     - Hagstofa
 href: greinar/vinnuafl/index.qmd
-image: hlutf_opinbert.png
-twitter-card: 
+image: hlutf_opinbert_fp.png
+twitter-card:
     image: hlutf_opinbert.png
 ---
 
@@ -509,6 +509,14 @@ p2 <- plot_dat2 |>
 
 p <- plot_grid(p1, p2, ncol = 1)
 
+ggsave(
+  plot = p ,
+  filename = "hlutf_opinbert.png",
+  width = 8, 
+  height = 0.621 * 8, 
+  scale = 1.3
+)
+
 p
 
 p <- plot_grid(
@@ -523,7 +531,7 @@ p <- plot_grid(
 
 ggsave(
   plot = p ,
-  filename = "hlutf_opinbert.png",
+  filename = "hlutf_opinbert_fp.png",
   width = 8, 
   height = 0.621 * 8, 
   scale = 1.3
