@@ -26,7 +26,6 @@ website:
 format:
   html:
     include-in-header: header/header.html
-    include-after-body: footer/footer.html
     theme: [flatly, theme.scss]
     css: style.css
     execute: 
