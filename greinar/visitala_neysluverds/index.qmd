@@ -715,7 +715,8 @@ p <- plot_dat |>
   scale_colour_brewer(type = "qual", palette = "Paired") +
   scale_fill_brewer(type = "qual", palette = "Paired") +
   # theme_half_open() +
-  theme(legend.position = "none") +
+  theme(legend.position = "none",
+        plot.margin = margin(t = 5, r = 15, b = 5, l = 5)) +
   labs(x = "Vægi á Íslandi",
        y = "Samræmt vægi",
        title = "Samanburður á íslensku og samræmdu vægi")
