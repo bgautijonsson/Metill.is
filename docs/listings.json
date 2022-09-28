@@ -31,5 +31,11 @@
   {
     "listing": "/learn.html",
     "items": []
+  },
+  {
+    "listing": "/pyngjan.html",
+    "items": [
+      "/pyngjan/straeto/index.html"
+    ]
   }
 ]

@@ -1,0 +1,15 @@
+---
+pagetitle: "Pyngjan"
+editor: source
+listing:
+    - id: posts
+      type: default
+      sort: "date desc"
+      contents: pyngjan
+---
+
+<br>
+
+::: {#posts}
+
+:::

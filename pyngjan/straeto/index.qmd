@@ -1,0 +1,248 @@
+---
+title: "Strætó"
+pagetitle: "Strætó"
+subtitle: "Hvernig eru fjármál Strætó?"
+description: | 
+    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras consequat aliquet molestie. Fusce venenatis faucibus erat et blandit. Mauris aliquam convallis fermentum. Cras eu velit sit amet nibh sollicitudin dapibus.
+author: 
+    -   name: "Brynjólfur Gauti Guðrúnar Jónsson"
+        url: "https://twitter.com/bgautijonsson"
+        affiliation: "Tölfræði, Raunvísindadeild Háskóla Íslands"
+        affiliation-url: "https://www.hi.is/tolfraedi_0"
+date: "2022/09/28"
+format: 
+    html:
+        code-fold: true
+        page-layout: full
+        smooth-scroll: true
+        link-external-newwindow: true
+editor: source
+categories:
+    - verðlag
+    - strætó
+image: image.png
+twitter-card:
+    image: image.png
+---
+
+```{r}
+#| include: false
+#| cache: false
+
+
+library(cowplot)
+library(tidyverse)
+library(scales)
+library(pxweb)
+library(ggthemes)
+library(kableExtra)
+library(gganimate)
+library(lubridate)
+library(plotly)
+library(metill)
+library(visitalaneysluverds)
+library(ggtext)
+
+theme_set(theme_metill())
+
+
+d <- tibble(
+  ar = 2012:2022,
+  verd = c(350, 350, 350, 400, 420, 440, 460, 470, 480, 490, 550)
+) |> 
+  inner_join(
+    vnv() |> 
+      group_by(ar = year(date)) |> 
+      summarise(
+        cpi = mean(cpi)
+      ) |> 
+      mutate(
+        cpi = cpi / cpi[ar == max(ar)]
+      ),
+    by = "ar"
+  ) |> 
+  mutate(raunverd = verd / cpi)
+
+isk <- function(x) number(x, suffix = " kr", big.mark = ".", decimal.mark = ",", accuracy = 1)
+```
+
+```{r}
+plot_dat <- d |> 
+  pivot_longer(c(verd, raunverd)) |> 
+  group_by(ar) |> 
+  mutate(
+    text = str_c(
+      "Ár: ", ar, "\n",
+      ifelse(name == "verd", "<b>", ""),
+      "Verð (hvers árs): ", value[name == "verd"] |> isk(), "\n",
+      ifelse(name == "verd", "</b>", ""),
+      ifelse(name == "raunverd", "<b>", ""),
+      "Verð (fast): ", value[name == "raunverd"] |> isk(), 
+      ifelse(name == "raunverd", "</b>", "")
+    )
+  )
+
+p <- plot_dat |> 
+  ggplot(aes(ar, value, text = text)) +
+  geom_line(aes(col = name, group = name)) +
+  geom_point(aes(col = name, group = name), size = 2) +
+  scale_x_continuous(
+    breaks = 2012:2022
+  ) +
+  scale_y_continuous() +
+  scale_colour_manual(
+    values = c("#7570b3", "#d95f02")
+  ) +
+  theme(plot.subtitle = element_markdown(),
+        legend.position = "none") +
+  labs(
+    x = NULL,
+    y = NULL,
+    title = " Verð staks fargjalds í strætó",
+    subtitle = str_c("Sýnt fyrir ",
+                     "<b style='color:#7570b3;text-'>", "fast verðlag", "</b>",
+                     " og ",
+                     "<b style='color:#d95f02;'>", "verðlag hvers árs", "</b>"),
+    caption = "Metill.is"
+  ) 
+
+ggplotly(
+  p,
+  tooltip = "text"
+)
+
+
+ggsave(
+  p + 
+    scale_x_tufte(
+      breaks = 2012:2022,
+      labels = 2022:2012
+    ) +
+    scale_y_tufte(
+      breaks = tufte_breaks(plot_dat$value),
+      labels = label_number(suffix = " kr")
+    ),
+  filename = "image.png",
+  width = 8,
+  height = 0.621 * 8
+)
+```
+
+
+
+```{r}
+plot_arrangement <- function() {
+  list(
+    geom_line(aes(col = name, group = name), size = 1),
+    geom_point(aes(group = name), size = 3.4, shape = "square"),
+    geom_point(aes(col = name, group = name), size = 2.3, shape = "square"),
+    geom_point(aes(group = name), size = 2.3, shape = "square", col = "white", alpha = 0.5)
+  )
+}
+
+p <- plot_dat |> 
+  ggplot(aes(-ar, value, text = text)) +
+  plot_arrangement() +
+  theme_half_open() +
+  scale_x_tufte(
+    breaks = -(2012:2022),
+    labels = 2012:2022
+  ) +
+  scale_y_tufte(
+    breaks = tufte_breaks(plot_dat$value),
+    labels = label_number(suffix = " kr")
+  )+
+  scale_colour_manual(
+    values = c("#386cb0", "#fdc086")
+  ) +
+  theme(plot.subtitle = element_markdown(),
+        legend.position = "none") +
+  labs(
+    x = NULL,
+    y = NULL,
+    title = "Verð staks fargjalds í strætó",
+    subtitle = str_c("Sýnt fyrir ",
+                     "<b style='color:#386cb0;text-'>", "fast verðlag", "</b>",
+                     " og ",
+                     "<b style='color:#fdc086;'>", "verðlag hvers árs", "</b>")
+  ) 
+
+ggsave(
+  p,
+  filename = "image_pyngjan_invx.png",
+  width = 8,
+  height = 0.621 * 8,
+  bg = "white"
+)
+
+p <- plot_dat |> 
+  ggplot(aes(ar, -value, text = text)) +
+  plot_arrangement() +
+  theme_half_open() +
+  scale_x_tufte(
+    breaks = 2012:2022,
+    labels = 2012:2022
+  ) +
+  scale_y_tufte(
+    breaks = -tufte_breaks(plot_dat$value),
+    labels = function(x) isk(abs(x))
+  )+
+  scale_colour_manual(
+    values = c("#386cb0", "#fdc086")
+  ) +
+  theme(plot.subtitle = element_markdown(),
+        legend.position = "none") +
+  labs(
+    x = NULL,
+    y = NULL,
+    title = "Verð staks fargjalds í strætó",
+    subtitle = str_c("Sýnt fyrir ",
+                     "<b style='color:#386cb0;text-'>", "fast verðlag", "</b>",
+                     " og ",
+                     "<b style='color:#fdc086;'>", "verðlag hvers árs", "</b>")
+  ) 
+
+ggsave(
+  p,
+  filename = "image_pyngjan_invy.png",
+  width = 8,
+  height = 0.621 * 8,
+  bg = "white"
+)
+
+p <- plot_dat |> 
+  ggplot(aes(-ar, -value, text = text)) +
+  plot_arrangement() +
+  theme_half_open() +
+  scale_x_tufte(
+    breaks = -(2012:2022),
+    labels = 2012:2022
+  ) +
+  scale_y_tufte(
+    breaks = -tufte_breaks(plot_dat$value),
+    labels = function(x) isk(abs(x))
+  )+
+  scale_colour_manual(
+    values = c("#386cb0", "#fdc086")
+  ) +
+  theme(plot.subtitle = element_markdown(),
+        legend.position = "none") +
+  labs(
+    x = NULL,
+    y = NULL,
+    title = "Verð staks fargjalds í strætó",
+    subtitle = str_c("Sýnt fyrir ",
+                     "<b style='color:#386cb0;text-'>", "fast verðlag", "</b>",
+                     " og ",
+                     "<b style='color:#fdc086;'>", "verðlag hvers árs", "</b>")
+  ) 
+
+ggsave(
+  p,
+  filename = "image_pyngjan_invxy.png",
+  width = 8,
+  height = 0.621 * 8,
+  bg = "white"
+)
+```
+
