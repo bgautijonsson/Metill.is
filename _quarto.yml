@@ -11,11 +11,14 @@ website:
   search: false
   navbar: false
   open-graph: true
+  reader-mode: true
   twitter-card: 
     creator: "@bggjonsson"
     card-style: summary_large_image
     site: "@bggjonsson"
   page-footer:
+    background: primary
+    foreground: secondary
     center:
       - text: "Um Metil"
         href: um_metil.qmd
@@ -23,6 +26,7 @@ website:
 format:
   html:
     include-in-header: header/header.html
+    include-after-body: footer/footer.html
     theme: [flatly, theme.scss]
     css: style.css
     execute: 
