@@ -8,6 +8,7 @@ website:
   title: Metill
   description: Notum gögn til að upplýsa, ekki sannfæra.
   site-url: https://metill.is
+  favicon: "favicon/favicon-32x32.png"
   search: false
   navbar: false
   open-graph: true
