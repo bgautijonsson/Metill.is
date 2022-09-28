@@ -16,7 +16,7 @@ format:
         smooth-scroll: true
         link-external-newwindow: true
 editor: source
-draft: false
+draft: true
 title-block-banner: true
 categories:
     - stjórnmál

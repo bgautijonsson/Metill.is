@@ -3,10 +3,10 @@
 execute: 
   echo: false
   warning: false
-  cache: true
+  cache: false
 # freeze computational output
 # (see https://quarto.org/docs/projects/code-execution.html#freeze)
-freeze: true
+freeze: false
 
 # Enable banner style title blocks
 title-block-banner: true 

@@ -6,9 +6,19 @@ project:
 
 website:
   title: Metill
+  description: Notum gögn til að upplýsa, ekki sannfæra.
   site-url: metill.is
   search: false
   navbar: false
+  open-graph: true
+  twitter-card: 
+    creator: "@bggjonsson"
+    card-style: summary_large_image
+    site: "@bggjonsson"
+  page-footer:
+    center:
+      - text: "Um Metil"
+        href: um_metil.qmd
         
 format:
   html:

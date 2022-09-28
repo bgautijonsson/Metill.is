@@ -1,0 +1,88 @@
+---
+title: "Fjármál sveitarfélaga"
+pagetitle: "Fjármál sveitarfélaga"
+subtitle: "Greining á ársreikningum sveitarfélaga úr gögnum Sambands Íslenskra Sveitarfélaga"
+description: |
+  Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras consequat aliquet molestie. Fusce venenatis faucibus erat et blandit. Mauris aliquam convallis fermentum. Cras eu velit sit amet nibh sollicitudin dapibus.
+author: 
+    -   name: "Brynjólfur Gauti Guðrúnar Jónsson"
+        url: "https://twitter.com/bgautijonsson"
+        affiliation: "Tölfræði, Raunvísindadeild Háskóla Íslands"
+        affiliation-url: "https://www.hi.is/tolfraedi_0"
+date: "2022/09/27"
+format: 
+    html:
+        code-fold: true
+        smooth-scroll: true
+        link-external-newwindow: true
+editor: source
+draft: true
+title-block-banner: true
+categories:
+    - stjórnmál
+    - efnahagur
+    - ársreikningar
+href: greinar/fjarmal_sveitarfelaga/index.qmd
+
+---
+
+
+```{r}
+#| include: false
+
+library(cowplot)
+library(tidyverse)
+library(scales)
+library(ggthemes)
+library(kableExtra)
+library(gganimate)
+library(lubridate)
+library(geomtextpath)
+library(ggtext)
+library(readxl)
+library(janitor)
+library(plotly)
+library(config)
+library(DBI)
+library(visitalaneysluverds)
+library(tidyverse)
+library(lubridate)
+library(ggthemes)
+library(cowplot)
+library(scales)
+library(visitalaneysluverds)
+library(feather)
+library(gganimate)
+library(metill)
+library(patchwork)
+theme_set(theme_metill())
+
+
+usr <- config::get("postgres_user")
+con <- dbConnect(RPostgres::Postgres(), 
+                 dbname = usr$dbname, 
+                 host = usr$host,
+                 port = usr$port, 
+                 user = usr$username, 
+                 password = usr$password)
+
+isk <- function(x, scale = 1e6, suffix = " m.kr") number(x / scale, suffix = suffix, big.mark = ".", decimal.mark = ",")
+hlutf <- label_percent(accuracy = 0.1, big.mark = ".", decimal.mark = ",")
+
+
+d <- read_feather("data/data.feather")
+```
+
+
+```{r}
+d |> 
+  filter(
+    sveitarfelag %in% c(
+      "Reykjavíkurborg", 
+      "Garðabær",
+      "Kópavogsbær", 
+      "Hafnarfjarðarkaupstaður"
+    )
+  )
+```
+
