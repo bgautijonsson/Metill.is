@@ -3,7 +3,7 @@ title: "Strætó"
 pagetitle: "Strætó"
 subtitle: "Hvað getum við lært af því hvernig Strætó bs. birtir tölurnar sínar?"
 description: | 
-    Í ársreikningi Strætó bs. frá 2021 má finna áhugaverða myndræna framsetningu á tölum. Hér skoða ég hvað við getum lært af þessu og hvernig við getum hjálpað þeim að koma gögnunum ennþá betur til skila.
+    Í ársreikningi Strætó bs. frá 2021 má finna áhugaverða myndræna framsetningu á tölum. Hér skoða ég hvað við getum lært af þessu og hvernig við getum hjálpað þeim að koma gögnunum ennþá betur til skila. 
 author: 
     -   name: "Brynjólfur Gauti Guðrúnar Jónsson"
         url: "https://twitter.com/bgautijonsson"
@@ -15,10 +15,8 @@ format:
         smooth-scroll: true
         link-external-newwindow: true
         code-fold: true
+        
 editor: source
-categories:
-    - verðlag
-    - strætó
 image: image.png
 twitter-card:
     image: image.png
@@ -131,6 +129,8 @@ ggplotly(
 
 
 Það er hins vegar frekar leitt við mína framsetningu að það sést of vel hvað reksturinn gengur illa. Hin framsetningin er því bara frekar góð
+
+
 
 ```{r}
 #| column: page
@@ -566,4 +566,7 @@ ggsave(
   bg = "white"
 )
 ```
+
+
+
 
