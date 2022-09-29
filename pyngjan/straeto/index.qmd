@@ -551,16 +551,24 @@ p <- plot_dat |>
   labs(
     x = NULL,
     y = NULL,
-    title = "Verð staks fargjalds í strætó",
-    subtitle = str_c("Sýnt fyrir ",
-                     "<b style='color:#386cb0;text-'>", "fast verðlag", "</b>",
+    title = "Framsetning fyrir hugsjónarfólk sem hlær síðast",
+    subtitle = str_c("Verð strætófargjalds á ",
+                     "<b style='color:#386cb0;text-'>", "föstu verðlagi", "</b>",
                      " og ",
-                     "<b style='color:#fdc086;'>", "verðlag hvers árs", "</b>")
+                     "<b style='color:#fdc086;'>", "verðlagi hvers árs", "</b>")
   ) 
 
 ggsave(
   p,
   filename = "image_pyngjan_invxy.png",
+  width = 8,
+  height = 0.621 * 8,
+  bg = "white"
+)
+
+ggsave(
+  p,
+  filename = "image_pyngjan_invxy.pdf",
   width = 8,
   height = 0.621 * 8,
   bg = "white"

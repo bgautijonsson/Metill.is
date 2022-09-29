@@ -18,6 +18,15 @@
   text-align: center;
 }
 
+#between-content {
+  padding-left: 35px;
+  padding-right: 35px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  background-color: #edf2f4;
+  border: none;
+}
+
 #quarto-content main { 
   margin-top: 0;
   padding-top: 0;

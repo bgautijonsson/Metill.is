@@ -9,7 +9,7 @@ author:
         url: "https://twitter.com/bgautijonsson"
         affiliation: "Tölfræði, Raunvísindadeild Háskóla Íslands"
         affiliation-url: "https://www.hi.is/tolfraedi_0"
-date: "2022/09/17"
+date: "2022/09/29"
 format: 
     html:
         code-fold: true
@@ -30,6 +30,7 @@ image: Figures/eigidfe.png
 
 ```{r}
 #| include: false
+#| cache: true
 
 library(cowplot)
 library(tidyverse)
@@ -261,6 +262,8 @@ magn_plot <- function(data, title, breaks = 2007:2020, labels = 2007:2020) {
 
 ## Opinber framlög
 
+
+
 >Stjórnmálasamtök sem hafa fengið a.m.k. einn mann kjörinn á þing eða náð að lágmarki 2,5% atkvæða eiga rétt til framlaga. Það framlag skiptist hlutfallslega milli flokka eftir atkvæðamagni í næstliðnum kosningum. Fjármála- og efnahagsráðuneytið fer með framkvæmd greiðslna á þessu framlagi.
 >
 > [Stjórnarráð Íslands](https://www.stjornarradid.is/verkefni/kosningar/framlog-til-stjornmalaflokka/){target="_blank"}
@@ -388,11 +391,10 @@ d |>
 ```
 
 
-<hr>
 
 Það er áhugavert að sjá að tekjur Sjálfstæðisflokks af útleigu eru svo miklar að þær myndu nægja til að fjármagna allt starf Flokks fólksins.
 
-
+::: {#between-content}
 
 ```{r}
 plot_dat <- d |> 
@@ -417,8 +419,8 @@ plot_dat <- d |>
          # ),
          label = ifelse(
            flokkur == "Sjálfstæðisflokkur",
-           "**Sjálfstæðisflokkur** (Leigutekjur)",
-           str_c(flokkur, " (Útgjöld)")
+           "Sjálfstæðisflokkur<br>(Leigutekjur)",
+           str_c(flokkur, "<br>(Útgjöld)")
          )
   )
 
@@ -426,10 +428,17 @@ p <- plot_dat |>
   ggplot(aes(ar, value, colour = flokkur)) +
   geom_line(size = 1,) +
   geom_richtext(
-    data = plot_dat |> filter(ar == max(ar)),
-    aes(label = label, y = y),
-    hjust = 0,
-    nudge_x = 0.05, size = 5,
+    data = plot_dat |> 
+      filter(ar == max(ar)) |> 
+      mutate(
+        x = case_when(
+          flokkur == "Viðreisn" ~ ar + 0.3,
+          TRUE ~ ar + 0.5
+        )
+      ),
+    aes(x = x, label = label, y = y),
+    hjust = 0.5,
+    size = 4.5,
     fill = NA, label.color = NA
   ) +
   scale_x_continuous(limits = c(2014.8, 2021.9),
@@ -437,7 +446,7 @@ p <- plot_dat |>
                      breaks = c(2015:2020)) +
   scale_y_continuous(labels = isk,
                      breaks = pretty_breaks(4),
-                     limits = c(0, 80e6),
+                     limits = c(0, 82e6),
                      expand = expansion()) +
   scale_colour_manual(
     values = c(xFF, xD, xC)
@@ -446,16 +455,36 @@ p <- plot_dat |>
   labs(x = NULL,
        y = NULL,
        title = "Leigutekjur Sjálfstæðisflokks og útgjöld minni flokka",
-       subtitle = "Sjálfstæðisflokkur fengi nægar tekjur af útleigu fasteigna til að fjármagna Flokk floksins")
+       subtitle = "Sjálfstæðisflokkur fengi nægar tekjur af útleigu fasteigna til að fjármagna flokk floksins")
 
-ggsave(plot = p, filename = "Figures/samanburdur.png",
-       width = 8, height = 0.5 * 8, scale = 1.4, bg = "white", dpi = 300)
+ggsave(
+  plot = p +
+    theme(
+      plot.background = element_blank(),
+      panel.background = element_blank(),
+      panel.grid = element_blank()
+    ), 
+  filename = "Figures/samanburdur_page.png",
+  width = 8, 
+  height = 0.56 * 8, 
+  scale = 1.1, 
+  dpi = 300
+)
+
+ggsave(
+  plot = p, 
+  filename = "Figures/samanburdur.png",
+  width = 8, 
+  height = 0.5 * 8, 
+  scale = 1.3, 
+  dpi = 300
+)
 
 ```
 
-![](Figures/samanburdur.png){.column-page}
+![](Figures/samanburdur_page.png){.column-page}
 
-<hr>
+:::
 
 # Kostnaður
 

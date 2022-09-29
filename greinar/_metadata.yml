@@ -10,3 +10,10 @@ freeze: true
 
 # Enable banner style title blocks
 title-block-banner: true 
+
+language:
+  title-block-author-single: "Höfundur"
+  title-block-author-plural: "Höfundar"
+  title-block-affiliation-single: "Stofnun"
+  title-block-affiliation-plural: "Stofnun"
+  title-block-published: "Síðast uppfært"
