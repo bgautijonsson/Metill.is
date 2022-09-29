@@ -9,11 +9,12 @@ author:
         url: "https://twitter.com/bgautijonsson"
         affiliation: "Tölfræði, Raunvísindadeild Háskóla Íslands"
         affiliation-url: "https://www.hi.is/tolfraedi_0"
-date: "2022/09/28"
+date: "2022/09/30"
 format: 
     html:
         smooth-scroll: true
         link-external-newwindow: true
+        code-fold: true
 editor: source
 categories:
     - verðlag
@@ -246,7 +247,10 @@ ggplotly(
   tooltip = "text"
 ) |> 
   config(displayModeBar = FALSE)
+```
 
+```{r}
+#| echo: false
 
 ggsave(
   p + 
@@ -263,6 +267,7 @@ ggsave(
   height = 0.621 * 8
 )
 ```
+
 
 ### X-ás öfugur
 
@@ -384,7 +389,7 @@ ggplotly(
 
 ### Fyrir hugsjónafólk?
 
-En hvað ef fólk sé svo mikið á varðbergi að það fylgist með báðum snúningunum? Síðasta bragðið sem við getum beitt er þá að snúa báðum ásunum við. Þá virðist reyndar verðið ekki vera að lækka, en ef við treystum á það að fólk sjái að ásarnir séu öfugir er eina vonin okkar að rugla það svo mikið að það viti ekki hvort verðið hafi hækkað eða lækkað og haldi því áfram að kaupa!
+En hvað ef fólk væri svo mikið á varðbergi að það fylgdist með báðum ásunum til að taka eftir snúningum? Síðasta bragðið sem við getum beitt er þá að snúa báðum ásunum við. Þá virðist reyndar verðið ekki vera að lækka, en ef við treystum á það að fólk sjái að ásarnir séu öfugir er eina vonin okkar að rugla það svo mikið að það viti ekki hvort verðið hafi hækkað eða lækkað og haldi því áfram að kaupa!
 
 <h3 style="font-weight:800;font-family:Lato;" class="py-0 my-0 text-center"> 
   Verð strætófargjalds á
@@ -446,6 +451,7 @@ ggplotly(
 :::
 
 ```{r}
+#| echo: false
 plot_arrangement <- function() {
   list(
     geom_line(aes(col = name, group = name), size = 1),
