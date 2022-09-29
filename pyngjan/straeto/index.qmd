@@ -124,7 +124,8 @@ p <- tibble(
 ggplotly(
   p,
   tooltip = "text"
-)
+) |> 
+  config(displayModeBar = FALSE)
 ```
 
 
@@ -177,16 +178,33 @@ p <- tibble(
 ggplotly(
   p,
   tooltip = "text"
-)
+) |> 
+  config(displayModeBar = FALSE)
 ```
 
-# Fargjald
 
-Hérna kemur kafli þar sem við beitum lexíum frá Strætó bs. á fargjaldsverðið
+Getum við notað það sem við höfum lært frá ársreikningi Strætó bs. til að teikna betri mynd af verði staks fargjalds? Skoðum mismunandi framsetningar á gögnunum.
+
+
+## Framsetningar
+
+::: {.panel-tabset}
+
+### Venjuleg
+
+Hér er venjuleg framsetning sem endurspeglar gögnin. Við erum hinsvegar hugsjónafólk og viljum ekki að fólk hætti að kaupa strætómiða. Hvernig getum við hjálpað fólki að misskilja gögnin svo það haldi áfram að kaupa miða?
+
+
+<h3 style="font-weight:800;font-family:Lato;" class="py-0 my-0 text-center"> 
+  Verð strætófargjalds á
+  <b style='color:#7570b3;text-'>föstu verðlagi </b>
+  og
+  <b style='color:#d95f02;'> verðlagi hvers árs</b>
+</h3>
 
 ```{r}
 #| column: page
-#| fig-asp: 0.621
+#| fig-asp: 0.8
 
 plot_dat <- d |> 
   pivot_longer(c(verd, raunverd)) |> 
@@ -215,22 +233,19 @@ p <- plot_dat |>
     values = c("#7570b3", "#d95f02")
   ) +
   theme(plot.subtitle = element_markdown(),
-        legend.position = "none") +
+        legend.position = "none",
+        plot.margin = margin()) +
   labs(
     x = NULL,
     y = NULL,
-    title = " Verð staks fargjalds í strætó",
-    subtitle = str_c("Sýnt fyrir ",
-                     "<b style='color:#7570b3;text-'>", "fast verðlag", "</b>",
-                     " og ",
-                     "<b style='color:#d95f02;'>", "verðlag hvers árs", "</b>"),
-    caption = "Metill.is"
+    title = NULL
   ) 
 
 ggplotly(
   p,
   tooltip = "text"
-)
+) |> 
+  config(displayModeBar = FALSE)
 
 
 ggsave(
@@ -249,7 +264,186 @@ ggsave(
 )
 ```
 
+### X-ás öfugur
 
+Byrjum á því að snúa x-ásinum við. Nú heldur fólk við fýrstu sýn að miðaverðinu fari lækkandi, en ef einhver skoðar myndina nánar sést að x-ásinn er öfugur. Það er því ekki hægt að saka okkur um að ljúga, við erum jú að sýna gögnin!
+
+<h3 style="font-weight:800;font-family:Lato;" class="py-0 my-0 text-center"> 
+  Verð strætófargjalds á
+  <b style='color:#7570b3;text-'>föstu verðlagi </b>
+  og
+  <b style='color:#d95f02;'> verðlagi hvers árs</b>
+</h3>
+
+```{r}
+#| column: page
+#| fig-asp: 0.8
+
+plot_dat <- d |> 
+  pivot_longer(c(verd, raunverd)) |> 
+  group_by(ar) |> 
+  mutate(
+    text = str_c(
+      "Ár: ", ar, "\n",
+      ifelse(name == "verd", "<b>", ""),
+      "Verð (hvers árs): ", value[name == "verd"] |> isk(), "\n",
+      ifelse(name == "verd", "</b>", ""),
+      ifelse(name == "raunverd", "<b>", ""),
+      "Verð (fast): ", value[name == "raunverd"] |> isk(), 
+      ifelse(name == "raunverd", "</b>", "")
+    )
+  )
+
+p <- plot_dat |> 
+  ggplot(aes(-ar, value, text = text)) +
+  geom_line(aes(col = name, group = name)) +
+  geom_point(aes(col = name, group = name), size = 2) +
+  scale_x_continuous(
+    breaks = -(2012:2022),
+    labels = 2012:2022
+  ) +
+  scale_y_continuous() +
+  scale_colour_manual(
+    values = c("#7570b3", "#d95f02")
+  ) +
+  theme(plot.subtitle = element_markdown(),
+        legend.position = "none") +
+  labs(
+    x = NULL,
+    y = NULL,
+    title = NULL
+  ) 
+
+ggplotly(
+  p,
+  tooltip = "text"
+) |> 
+  config(displayModeBar = FALSE)
+
+```
+
+### Y-ás öfugur
+
+Kannski höfum við beitt x-ás brögðunum nokkrum sinnum og fólk því á varðbergi. Ekkert mál! Við bara snúum y-ásinum við. Þá virðist miðaverðið ennþá vera að lækka.
+
+<h3 style="font-weight:800;font-family:Lato;" class="py-0 my-0 text-center"> 
+  Verð strætófargjalds á
+  <b style='color:#7570b3;text-'>föstu verðlagi </b>
+  og
+  <b style='color:#d95f02;'> verðlagi hvers árs</b>
+</h3>
+
+```{r}
+#| column: page
+#| fig-asp: 0.8
+
+plot_dat <- d |> 
+  pivot_longer(c(verd, raunverd)) |> 
+  group_by(ar) |> 
+  mutate(
+    text = str_c(
+      "Ár: ", ar, "\n",
+      ifelse(name == "verd", "<b>", ""),
+      "Verð (hvers árs): ", value[name == "verd"] |> isk(), "\n",
+      ifelse(name == "verd", "</b>", ""),
+      ifelse(name == "raunverd", "<b>", ""),
+      "Verð (fast): ", value[name == "raunverd"] |> isk(), 
+      ifelse(name == "raunverd", "</b>", "")
+    )
+  )
+
+p <- plot_dat |> 
+  ggplot(aes(ar, -value, text = text)) +
+  geom_line(aes(col = name, group = name)) +
+  geom_point(aes(col = name, group = name), size = 2) +
+  scale_x_continuous(
+    breaks = 2012:2022
+  ) +
+  scale_y_continuous(
+    labels = function(x) abs(x)
+  ) +
+  scale_colour_manual(
+    values = c("#7570b3", "#d95f02")
+  ) +
+  theme(plot.subtitle = element_markdown(),
+        legend.position = "none") +
+  labs(
+    x = NULL,
+    y = NULL,
+    title = NULL
+  ) 
+
+ggplotly(
+  p,
+  tooltip = "text"
+) |> 
+  config(displayModeBar = FALSE)
+
+
+```
+
+### Fyrir hugsjónafólk?
+
+En hvað ef fólk sé svo mikið á varðbergi að það fylgist með báðum snúningunum? Síðasta bragðið sem við getum beitt er þá að snúa báðum ásunum við. Þá virðist reyndar verðið ekki vera að lækka, en ef við treystum á það að fólk sjái að ásarnir séu öfugir er eina vonin okkar að rugla það svo mikið að það viti ekki hvort verðið hafi hækkað eða lækkað og haldi því áfram að kaupa!
+
+<h3 style="font-weight:800;font-family:Lato;" class="py-0 my-0 text-center"> 
+  Verð strætófargjalds á
+  <b style='color:#7570b3;text-'>föstu verðlagi </b>
+  og
+  <b style='color:#d95f02;'> verðlagi hvers árs</b>
+</h3>
+
+```{r}
+#| column: page
+#| fig-asp: 0.8
+
+plot_dat <- d |> 
+  pivot_longer(c(verd, raunverd)) |> 
+  group_by(ar) |> 
+  mutate(
+    text = str_c(
+      "Ár: ", ar, "\n",
+      ifelse(name == "verd", "<b>", ""),
+      "Verð (hvers árs): ", value[name == "verd"] |> isk(), "\n",
+      ifelse(name == "verd", "</b>", ""),
+      ifelse(name == "raunverd", "<b>", ""),
+      "Verð (fast): ", value[name == "raunverd"] |> isk(), 
+      ifelse(name == "raunverd", "</b>", "")
+    )
+  )
+
+p <- plot_dat |> 
+  ggplot(aes(-ar, -value, text = text)) +
+  geom_line(aes(col = name, group = name)) +
+  geom_point(aes(col = name, group = name), size = 2) +
+  scale_x_continuous(
+    breaks = -(2012:2022),
+    labels = 2012:2022
+  ) +
+  scale_y_continuous(
+    labels = function(x) abs(x)
+  ) +
+  scale_colour_manual(
+    values = c("#7570b3", "#d95f02")
+  ) +
+  theme(plot.subtitle = element_markdown(),
+        legend.position = "none") +
+  labs(
+    x = NULL,
+    y = NULL,
+    title = NULL
+  ) 
+
+ggplotly(
+  p,
+  tooltip = "text"
+) |> 
+  config(displayModeBar = FALSE)
+
+
+```
+
+:::
 
 ```{r}
 plot_arrangement <- function() {
