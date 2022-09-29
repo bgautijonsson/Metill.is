@@ -128,7 +128,7 @@ ggplotly(
 ```
 
 
-Það er hins vegar frekar leitt við mína framsetningu að það sést of vel hvað reksturinn gengur illa. Hin framsetningin er því bara frekar góð
+Það er hins vegar frekar leitt við mína framsetningu að það sést of vel hvað reksturinn gengur illa. Hin framsetningin er því bara frekar góð.
 
 
 
