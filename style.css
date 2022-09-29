@@ -23,8 +23,9 @@
   padding-right: 35px;
   padding-top: 10px;
   padding-bottom: 10px;
-  background-color: #edf2f4;
+  background-color: #dbe1e6;
   border: none;
+  color: hsla(232, 20%, 30%, 1);
 }
 
 #quarto-content main { 

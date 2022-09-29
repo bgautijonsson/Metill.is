@@ -257,9 +257,6 @@ magn_plot <- function(data, title, breaks = 2007:2020, labels = 2007:2020) {
 ```
 
 
-
-
-
 ## Opinber framlög
 
 
@@ -267,7 +264,7 @@ magn_plot <- function(data, title, breaks = 2007:2020, labels = 2007:2020) {
 >Stjórnmálasamtök sem hafa fengið a.m.k. einn mann kjörinn á þing eða náð að lágmarki 2,5% atkvæða eiga rétt til framlaga. Það framlag skiptist hlutfallslega milli flokka eftir atkvæðamagni í næstliðnum kosningum. Fjármála- og efnahagsráðuneytið fer með framkvæmd greiðslna á þessu framlagi.
 >
 > [Stjórnarráð Íslands](https://www.stjornarradid.is/verkefni/kosningar/framlog-til-stjornmalaflokka/){target="_blank"}
-
+>
 > Sveitarfélag skal veita stjórnmálasamtökum, sem fengið hafa a.m.k. einn mann kjörinn í sveitarstjórn eða hlotið hið minnsta 5% atkvæða í næstliðnum sveitarstjórnarkosningum, árleg fjárframlög til starfsemi sinnar. Gilda hér um ákvæði 2. mgr. 5.gr. laga nr. 162/2006. Skal framlögum úthlutað í hlutfalli við atkvæðamagn. Miða skal við að greiða 175 kr. á hvern íbúa sem lögheimili á í sveitarfélaginu 1. janúar á ári hverju. Þessi fjárhæð tekur breytingum árlega miðað við vísitölu neysluverðs í október ár hvert og er grunnvísitalan 472,2 stig, m.v. október 2019.
 >
 > [Samband íslenskra sveitarfélaga](https://www.samband.is/frettir/vidmidunarreglur-um-framlog-til-stjornmalaflokka/)
@@ -312,6 +309,8 @@ d |>
 ::: {.panel-tabset}
 
 ### Magn
+
+Dragið músina yfir hluta myndritsins til að fela árið 2007 á vinstri myndinni að neðan og fá skýrari mynd á þróunina undanfarin ár.
 
 ```{r}
 #| fig-asp: 0.621
@@ -392,7 +391,7 @@ d |>
 
 
 
-Það er áhugavert að sjá að tekjur Sjálfstæðisflokks af útleigu eru svo miklar að þær myndu nægja til að fjármagna allt starf Flokks fólksins.
+Það er áhugavert að sjá að tekjur Sjálfstæðisflokks af útleigu eru svo miklar að þær myndu nægja til að fjármagna allt starf Flokks fólksins. Ef við tökum með miðasölu á viðburði, auglýsingapláss og selda þjónustu gætu aðrar tekjur Sjálfstæðisflokks fjármagnað flokk Pírata.
 
 ::: {#between-content}
 
@@ -441,7 +440,7 @@ p <- plot_dat |>
     size = 4.5,
     fill = NA, label.color = NA
   ) +
-  scale_x_continuous(limits = c(2014.8, 2021.9),
+  scale_x_continuous(limits = c(2014.8, 2021.2),
                      expand = expansion(),
                      breaks = c(2015:2020)) +
   scale_y_continuous(labels = isk,
@@ -484,6 +483,97 @@ ggsave(
 
 ![](Figures/samanburdur_page.png){.column-page}
 
+```{r}
+plot_dat <- d |> 
+  mutate(
+    value = ifelse(
+      flokkur == "Sjálfstæðisflokkur", 
+      adrar_tekjur,
+      gjold
+    ),
+    value = value / cpi
+  ) |> 
+  filter(
+    flokkur %in% c("Sjálfstæðisflokkur", "Flokkur fólksins", "Viðreisn", "Píratar"),
+    ar >= 2015
+  ) |> 
+  mutate(y = value,
+         y = case_when(
+             flokkur == "Sjálfstæðisflokkur" ~ y * 0.93,
+             flokkur == "Píratar" ~ y * 1.01,
+             flokkur == "Viðreisn" ~ y * 1.01,
+             flokkur == "Flokkur fólksins" ~ y * 1.07,
+             TRUE ~ y
+         ),
+         label = ifelse(
+           flokkur == "Sjálfstæðisflokkur",
+           "Sjálfstæðisflokkur<br>(Aðrar tekjur)",
+           str_c(flokkur, " (Útgjöld)")
+         )
+  )
+
+p <- plot_dat |> 
+  ggplot(aes(ar, value, colour = flokkur)) +
+  geom_line(size = 1,) +
+  geom_richtext(
+    data = plot_dat |> 
+      filter(ar == max(ar)) |> 
+      mutate(
+        x = case_when(
+          flokkur == "Viðreisn" ~ ar + 0.6,
+          flokkur == "Píratar" ~ ar + 0.6,
+          flokkur == "Flokkur fólksins" ~ ar + 0.5,
+          TRUE ~ ar + 0.7
+        )
+      ),
+    aes(x = x, label = label, y = y),
+    hjust = 0.5,
+    size = 4.5,
+    fill = NA, label.color = NA
+  ) +
+  scale_x_continuous(limits = c(2014.8, 2021.3),
+                     expand = expansion(),
+                     breaks = c(2015:2020)) +
+  scale_y_continuous(labels = isk,
+                     breaks = pretty_breaks(4),
+                     limits = c(0, NA),
+                     expand = expansion()) +
+  scale_colour_manual(
+    values = c(xFF, xP, xD, xC)
+  ) +
+  theme(legend.position = "none") +
+  labs(x = NULL,
+       y = NULL,
+       title = "Aðrar tekjur Sjálfstæðisflokks og útgjöld minni flokka",
+       subtitle = "Útleiga, miðasala, auglýsingar og seld þjónusta Sjálfstæðisflokks gætu fjármagnað flokk Pírata")
+
+ggsave(
+  plot = p +
+    theme(
+      plot.background = element_blank(),
+      panel.background = element_blank(),
+      panel.grid = element_blank()
+    ), 
+  filename = "Figures/samanburdur2_page.png",
+  width = 8, 
+  height = 0.56 * 8, 
+  scale = 1.1, 
+  dpi = 300
+)
+
+ggsave(
+  plot = p, 
+  filename = "Figures/samanburdur2.png",
+  width = 8, 
+  height = 0.5 * 8, 
+  scale = 1.1, 
+  dpi = 300
+)
+```
+
+
+![](Figures/samanburdur2_page.png){.column-page}
+
 :::
 
 # Kostnaður
@@ -524,6 +614,12 @@ d |>
 
 
 ## Eignir
+
+Eignir geta verið tvenns konar:
+
+* **Veltufjármunir** Þetta er handbært fé eða eignir sem er auðvelt að breyta í peninga. Hjá flestum flokkum eru eignirnar að mestu leyti veltufjármunir, þ.e. uppsafnaðir peningar frá ríkinu og styrktaraðilum.
+
+* **Fastafjármunir** Þetta eru eignir sem er ekki jafn auðvelt að breyta í peninga. Sjálfstæðisflokkur hefur átt kringum 65% allra fastafjármuna flokkanna og eru þeir að mestu leyti fasteignir.
 
 > Never let a good crisis go to waste
 >
