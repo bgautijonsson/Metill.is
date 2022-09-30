@@ -393,7 +393,11 @@ d |>
 
 Það er áhugavert að sjá að tekjur Sjálfstæðisflokks af útleigu eru svo miklar að þær myndu nægja til að fjármagna allt starf Flokks fólksins. Ef við tökum með miðasölu á viðburði, auglýsingapláss og selda þjónustu gætu aðrar tekjur Sjálfstæðisflokks fjármagnað flokk Pírata.
 
-::: {#between-content}
+::: {#between-content .column-screen .shadow}
+
+::: columns
+
+::: {.column width="50%"}
 
 ```{r}
 plot_dat <- d |> 
@@ -481,7 +485,11 @@ ggsave(
 
 ```
 
-![](Figures/samanburdur_page.png){.column-page}
+![](Figures/samanburdur_page.png)
+
+:::
+
+::: {.column width="50%"}
 
 ```{r}
 plot_dat <- d |> 
@@ -572,7 +580,10 @@ ggsave(
 ```
 
 
-![](Figures/samanburdur2_page.png){.column-page}
+![](Figures/samanburdur2_page.png)
+
+:::
+:::
 
 :::
 
@@ -629,7 +640,7 @@ Sjálfstæðisflokkur þekkir svo sannarlega orð Winston, því milli 2007 og 2
 
 ```{r}
 #| fig-asp: 0.621
-#| column: screen-inset
+#| column: page
 #| layout-nrow: 1
 
 d |> 
@@ -639,15 +650,35 @@ d |>
             breaks = seq(2008, 2020, by = 2),
             labels = seq(2008, 2020, by = 2))
 
+
+
+
+```
+
+
+Við sjáum að margir flokkar hafa talsverða veltufjármuni, en örfáir flokkar hafa einhverja fastafjármuni. 
+
+```{r}
+#| fig-asp: 0.621
+#| column: screen-inset
+#| layout-nrow: 1
+
+
+d |> 
+  mutate(value = veltufjarmunir,
+         value = value / cpi) |> 
+  magn_plot(title = "Veltufjármunir",
+            breaks = seq(2008, 2020, by = 2),
+            labels = seq(2008, 2020, by = 2))
+
 d |> 
   mutate(value = eignir - veltufjarmunir,
          value = value / cpi) |> 
   magn_plot(title = "Fastafjármunir",
             breaks = seq(2008, 2020, by = 2),
             labels = seq(2008, 2020, by = 2))
-
-
 ```
+
 
 
 
@@ -676,14 +707,40 @@ Með þekkingu okkar um eignir og skuldir að vopni getum við skoðað eigið f
 
 <p style="text-align:center;"> *Hverjar eru eignirnar umfram skuldirnar?*</p>
 
+
+::: {.panel-tabset}
+
+### Magn
+
 Við sjáum til dæmis að Framsóknarflokkur hefur haft neikvætt eigið fé frá 2007 til 2020.
+
+
+```{r}
+#| fig-asp: 1
+#| column: page
+
+d |>
+  mutate(value = eignir - skuldir,
+         value = value / cpi) |>
+  magn_plot(title = "Eigið fé",
+            breaks = seq(2008, 2020, by = 2),
+            labels = seq(2008, 2020, by = 2))
+
+```
+
+
+
+
+### Dreifing
 
 Auk þess sjáum við að árið 2007 átti Sjálfstæðisflokkur 100% alls eigin fjár stjórnmálaflokka, en árið 2020 er sú tala dottin niður í 43,5%.
 
+
+
 ```{r}
-#| fig-asp: 0.621
-#| column: screen-inset
-#| layout-nrow: 1
+#| fig-asp: 1
+#| column: page
+
 
 d |>
   mutate(value = eignir - skuldir,
@@ -693,20 +750,12 @@ d |>
                 breaks = seq(2008, 2020, by = 2),
                 labels = seq(2008, 2020, by = 2))
 
-d |>
-  mutate(value = eignir - skuldir,
-         value = value / cpi) |>
-  magn_plot(title = "Eigið fé",
-            breaks = seq(2008, 2020, by = 2),
-            labels = seq(2008, 2020, by = 2))
-
-
 ```
 
-
+:::
 
 ```{r}
-
+#| eval: false
 
 plot_dat <- d |> 
   mutate(value = (eignir - skuldir) / cpi) |> 
