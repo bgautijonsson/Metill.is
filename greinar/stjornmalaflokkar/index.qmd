@@ -204,7 +204,25 @@ dreifing_plot <- function(data, title, breaks = 2007:2020, labels = 2007:2020) {
     tooltip = "text"
   ) |>
     layout(
-      hoverlabel = list(align = "left")
+      hoverlabel = list(align = "left"),
+      plot_bgcolor  = "rgba(0, 0, 0, 0)",
+      paper_bgcolor = "rgba(0, 0, 0, 0)",
+      yaxis = list(
+        linewidth = 1.5,
+        tickfont = list(
+          color = "#4A4C45",
+          size = 12,
+          font = "Lato"
+        )
+      ),
+      xaxis = list(
+        linewidth = 1.5,
+        tickfont = list(
+          color = "#4A4C45",
+          size = 12,
+          font = "Lato"
+        )
+      )
     ) |> 
     config(displayModeBar = FALSE)
   
@@ -248,7 +266,25 @@ magn_plot <- function(data, title, breaks = 2007:2020, labels = 2007:2020) {
     tooltip = "text"
   ) |>
     layout(
-      hoverlabel = list(align = "left")
+      hoverlabel = list(align = "left"),
+      plot_bgcolor  = "rgba(0, 0, 0, 0)",
+      paper_bgcolor = "rgba(0, 0, 0, 0)",
+      yaxis = list(
+        linewidth = 1.5,
+        tickfont = list(
+          color = "#4A4C45",
+          size = 12,
+          font = "Lato"
+        )
+      ),
+      xaxis = list(
+        linewidth = 1.5,
+        tickfont = list(
+          color = "#4A4C45",
+          size = 12,
+          font = "Lato"
+        )
+      )
     ) |> 
     config(displayModeBar = FALSE)
   
@@ -507,11 +543,11 @@ plot_dat <- d |>
   ) |> 
   mutate(y = value,
          y = case_when(
-             flokkur == "Sjálfstæðisflokkur" ~ y * 0.93,
-             flokkur == "Píratar" ~ y * 1.01,
-             flokkur == "Viðreisn" ~ y * 1.01,
-             flokkur == "Flokkur fólksins" ~ y * 1.07,
-             TRUE ~ y
+           flokkur == "Sjálfstæðisflokkur" ~ y * 0.93,
+           flokkur == "Píratar" ~ y * 1.01,
+           flokkur == "Viðreisn" ~ y * 1.01,
+           flokkur == "Flokkur fólksins" ~ y * 1.07,
+           TRUE ~ y
          ),
          label = ifelse(
            flokkur == "Sjálfstæðisflokkur",
@@ -716,8 +752,9 @@ Við sjáum til dæmis að Framsóknarflokkur hefur haft neikvætt eigið fé fr
 
 
 ```{r}
-#| fig-asp: 1
-#| column: page
+#| fig-asp: 0.8
+#| column: screen-inset
+#| classes: between-content
 
 d |>
   mutate(value = eignir - skuldir,
@@ -738,8 +775,9 @@ Auk þess sjáum við að árið 2007 átti Sjálfstæðisflokkur 100% alls eigi
 
 
 ```{r}
-#| fig-asp: 1
-#| column: page
+#| fig-asp: 0.8
+#| column: screen-inset
+#| classes: between-content
 
 
 d |>
@@ -748,7 +786,7 @@ d |>
   mutate(value = value * (value >= 0)) |>
   dreifing_plot(title = "Dreifing eigin fjár",
                 breaks = seq(2008, 2020, by = 2),
-                labels = seq(2008, 2020, by = 2))
+                labels = seq(2008, 2020, by = 2)) 
 
 ```
 

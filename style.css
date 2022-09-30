@@ -36,6 +36,7 @@
   background-color: #f0efef;
   border: none;
   color: hsla(232, 20%, 30%, 1);
+  box-shadow: 0 .5rem 1rem rgba(0, 0, 0, .15);
 }
 
 #quarto-content main { 
@@ -88,6 +89,8 @@ h1:not(.title), h2, h3, h4 {
 
 .tab-content {
   border: none;
+  padding-right: 0;
+  padding-left: 0;
 }
 
 
