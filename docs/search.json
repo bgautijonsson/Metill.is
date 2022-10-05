@@ -32,14 +32,7 @@
     "href": "greinar/visitala_neysluverds/index.html",
     "title": "Vísitala neysluverðs",
     "section": "",
-    "text": "Hér nota ég gögn um Hlutfallslega skiptingu og áhrifaþætti vísitölu neysluverðs frá Hagstofu Íslands."
-  },
-  {
-    "objectID": "greinar/visitala_neysluverds/index.html#reiknuð-húsaleiga",
-    "href": "greinar/visitala_neysluverds/index.html#reiknuð-húsaleiga",
-    "title": "Vísitala neysluverðs",
-    "section": "Reiknuð húsaleiga",
-    "text": "Reiknuð húsaleiga\n\nReiknuð húsaleiga er mat á virði þeirrar þjónustu sem eigendur hafa af notkun eigin húsnæðis\nHagstofa Íslands"
+    "text": "Undirvísitölur\nÍ grófum dráttum er vísitala neysluverðs vegið meðaltal af breytingu í verði hinna ýmsu afurða sem við kaupum. Því eru t.d. áhrif breytingar á húsnæðisverði reiknuð með því að margfalda verðbreytingar þess flokks við vægi hans í vísitölunni. Vægið á að endurspegla útgjöld einhvers konar meðal-Íslendings.\nFærið músina yfir myndirnar til að sjá nákvæm tölugildi og hvaða litir tilheyra hvaða flokkum.\n\nVísitalaVægiVerðbreyting\n\n\nDragið rennuna undir myndinni til að þysja inn á tiltekið tímabil.\n\n\n\n\n\n\n\n\nDragið rennuna undir myndinni til að þysja inn á tiltekið tímabil.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nÁrleg breyting og mánaðarleg breyting\nÞar sem árleg verðbólga samanstendur af verðbólgu síðustu 12 mánaða getur ekki hver og einn mánuður lækkað hana mikið. Ef mánaðarleg verðbólga síðustu 11 mánuði hefur verið 0,5% en hún mælist svo 0% verður árleg verðbólgan samt \\(1,005^{11} = 1,056 = 5,6\\%\\). Hins vegar getur verið gott að bera saman mánaðarlega verðbólgu við meðaltal síðastliðins árs. Ef mánaðarleg verðbólga er lægri en meðaltal síðasta árs er árleg verðbólga að lækka.\n\n\n\n\n\n\n\n\nSamræmd vísitala neysluverðs"
   },
   {
     "objectID": "greinar/landspitali/index.html",
@@ -89,6 +82,13 @@
     "title": "Landspítalinn",
     "section": "Á höfðatölu",
     "text": "Á höfðatölu\n\n\n\nVið getum svo notað tölur Hagstofu um mannfjölda eftir aldri til að reikna launaútgjöld á höfðatölu, bæði fyrir alla íbúa og fyrir íbúa sem hafa náð 65 ára aldri.\nUpphæðirnar að neðan eru leiðréttar fyrir verðbólgu með vísitölu neysluverðs.\n\nAllir65+\n\n\nEf við skoðum launaútgjöld á hvern íbúa sýnist okkur að launaútgjöldin hafa aldrei verið hærri.\n\n\n\n\n\n\n\n\nEn þegar við skoðum launaútgjöld á hvern íbúa sem hefur náð 65 ára aldri eru við rétt að komast upp í sömu fjárhæð og árið 2007."
+  },
+  {
+    "objectID": "greinar/leikskolar/index.html",
+    "href": "greinar/leikskolar/index.html",
+    "title": "Leikskólar",
+    "section": "",
+    "text": "Eins árs gömul börn\n\n\n\nMest er talað um fjölda eins árs barna svo við byrjum á að skoða þær tölur\n\n\n\n\nEn hvernig hefur þetta hlutfall þróast undanfarin ár? Skoðum þróunina hjá þeim 16 sveitarfélögum sem hafa haft stærstu árgangana síðustu árin\n\n\n\nHeildarfjöldi leikskólaplássa\nEndurtökum þetta nú fyrir leikskólana í heild sinni. Þá skoðum við heildarfjölda nemenda í leikskólum sem hlutfall af fjölda barna á aldrinum 1 árs til 5 ára. Við sjáum að neðan að stundum benda gögnin til þess að fleiri börn eru í leikskólum heldur en eru í árganginum. Þetta getur alltaf gerst þar sem við erum að skoða fjöldatölur í árgangi mánuði seinna en fjöldatölur í leikskólum.\n\n\n\n\n\n\n\nSkoðum þróunina núna fyrir sömu 16 sveitarfélög og að ofan."
   },
   {
     "objectID": "greinar/skattagogn/index.html",
@@ -151,7 +151,7 @@
     "href": "greinar.html",
     "title": "Metill",
     "section": "",
-    "text": "Vinnumarkaður\n\n\nHver er fjöldi starfandi einstaklinga og hvernig skiptast þeir á vinnumarkaði?\n\n\nReglulega sjást fyrirsagnir þar sem talað er um að opinbert starfsfólk sé allt of margt og að hlutfall þess af heildarfjölda vinnandi fólks sé of hátt. Hér kryf ég reglulega nýjustu gögnin til að geta vitað hvort slíkar fullyrðingar séu teknar úr samhengi eða endurspegli raunveruleikann.\n\n\n\n\n\n\nOct 4, 2022\n\n\nBrynjólfur Gauti Guðrúnar Jónsson\n\n\n\n\n\n\n  \n\n\n\n\nVísitala neysluverðs\n\n\nVísitalan og áhrif undirtalna á heildina unnið úr nýjustu gögnum Hagstofu hverju sinni\n\n\nVerðbólga er ekki alltaf það sama og verðbólga. Stundum er stór hluti af henni hækkun á húsnæðisverði, stundum ferðir og flutningar. Það er því gott að skoða undirvísitölurnar og áhrif þeirra á heildina.\n\n\n\n\n\n\nSep 28, 2022\n\n\nBrynjólfur Gauti Guðrúnar Jónsson\n\n\n\n\n\n\n  \n\n\n\n\nTekjur, skattar og kaupmáttur\n\n\nGreining á tekjuskattsgögnum sem Hagstofan vinnur úr skattframtölum Íslendinga\n\n\nStundum les maður að skattakerfið ýti undir ójöfnuð, eða að það séu of háir skattar á þeim efnameiru. Hvort er það? Hér nota ég skattagögn Hagstofunnar til að skoða tekjur og skatta eftir tekjutíundum. Ég get ekki sagt hvort það sé sanngjarnt, en ég get sýnt hvernig það hefur breyst með tímanum.\n\n\n\n\n\n\nSep 11, 2022\n\n\nBrynjólfur Gauti Guðrúnar Jónsson\n\n\n\n\n\n\n  \n\n\n\n\nLandspítalinn\n\n\nHvaða upplýsingar eru til um rekstur Landspítalans og hvar má finna þær?\n\n\nHvernig er nýting legurýma á Landspítala? Hvaða hlutfall launa fer í þessi margræddu millistjórnendastörf? Hér ætla ég aðeins að skoða hvaða gögn eru til um rekstur landspítalans, hvar má finna þau og hvað mætti betur fara í birtingu þeirra gagna.\n\n\n\n\n\n\nAug 24, 2022\n\n\nBrynjólfur Gauti Guðrúnar Jónsson\n\n\n\n\n\n\nNo matching items"
+    "text": "Leikskólar\n\n\nHvernig gengur sveitarfélögum landsins að brúa bilið?\n\n\nHvernig gengur sveitarfélögum að útbúa leikskólapláss? Hvernig ber fjölda nemenda í leikskólum saman við heildarfjölda barna í hverjum árgangi? Hér skoðum við gögn Hagstofunnar um leikskóla og berum saman við mannfjöldatölur eftir aldri.\n\n\n\n\n\n\nOct 5, 2022\n\n\nBrynjólfur Gauti Guðrúnar Jónsson\n\n\n\n\n\n\n  \n\n\n\n\nVinnumarkaður\n\n\nHver er fjöldi starfandi einstaklinga og hvernig skiptast þeir á vinnumarkaði?\n\n\nReglulega sjást fyrirsagnir þar sem talað er um að opinbert starfsfólk sé allt of margt og að hlutfall þess af heildarfjölda vinnandi fólks sé of hátt. Hér kryf ég reglulega nýjustu gögnin til að geta vitað hvort slíkar fullyrðingar séu teknar úr samhengi eða endurspegli raunveruleikann.\n\n\n\n\n\n\nOct 4, 2022\n\n\nBrynjólfur Gauti Guðrúnar Jónsson\n\n\n\n\n\n\n  \n\n\n\n\nVísitala neysluverðs\n\n\nVísitalan og áhrif undirtalna á heildina unnið úr nýjustu gögnum Hagstofu hverju sinni\n\n\nVerðbólga er ekki alltaf það sama og verðbólga. Stundum er stór hluti af henni hækkun á húsnæðisverði, stundum ferðir og flutningar. Það er því gott að skoða undirvísitölurnar og áhrif þeirra á heildina.\n\n\n\n\n\n\nSep 28, 2022\n\n\nBrynjólfur Gauti Guðrúnar Jónsson\n\n\n\n\n\n\n  \n\n\n\n\nTekjur, skattar og kaupmáttur\n\n\nGreining á tekjuskattsgögnum sem Hagstofan vinnur úr skattframtölum Íslendinga\n\n\nStundum les maður að skattakerfið ýti undir ójöfnuð, eða að það séu of háir skattar á þeim efnameiru. Hvort er það? Hér nota ég skattagögn Hagstofunnar til að skoða tekjur og skatta eftir tekjutíundum. Ég get ekki sagt hvort það sé sanngjarnt, en ég get sýnt hvernig það hefur breyst með tímanum.\n\n\n\n\n\n\nSep 11, 2022\n\n\nBrynjólfur Gauti Guðrúnar Jónsson\n\n\n\n\n\n\n  \n\n\n\n\nLandspítalinn\n\n\nHvaða upplýsingar eru til um rekstur Landspítalans og hvar má finna þær?\n\n\nHvernig er nýting legurýma á Landspítala? Hvaða hlutfall launa fer í þessi margræddu millistjórnendastörf? Hér ætla ég aðeins að skoða hvaða gögn eru til um rekstur landspítalans, hvar má finna þau og hvað mætti betur fara í birtingu þeirra gagna.\n\n\n\n\n\n\nAug 24, 2022\n\n\nBrynjólfur Gauti Guðrúnar Jónsson\n\n\n\n\n\n\nNo matching items"
   },
   {
     "objectID": "learn.html",
