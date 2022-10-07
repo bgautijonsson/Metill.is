@@ -23,7 +23,7 @@ categories:
     - efnahagur
     - ársreikningar
 href: greinar/stjornmalaflokkar/index.qmd
-image: Figures/eigidfe.png
+image: Figures/eigidfe_page.png
 
 ---
 
@@ -64,118 +64,70 @@ theme_set(theme_metill())
 ```
 ```{r}
 
-usr <- config::get("postgres_user")
-con <- dbConnect(RPostgres::Postgres(), 
-                 dbname = usr$dbname, 
-                 host = usr$host,
-                 port = usr$port, 
-                 user = usr$username, 
-                 password = usr$password)
+if (!file.exists("data/data.csv")) {
+  
+  usr <- config::get("postgres_user")
+  con <- dbConnect(RPostgres::Postgres(), 
+                   dbname = usr$dbname, 
+                   host = usr$host,
+                   port = usr$port, 
+                   user = usr$username, 
+                   password = usr$password)
+  
+  d <- tbl(con, "arsreikningar_stjornmalaflokka") |> 
+    collect() |> 
+    mutate_all(~ ifelse(is.na(.), 0, .)) |> 
+    inner_join(
+      vnv() |> 
+        group_by(ar = year(date)) |> 
+        summarise(cpi = mean(cpi)) |> 
+        mutate(cpi = cpi / cpi[ar == max(ar)]),
+      by = "ar"
+    ) |> 
+    mutate(
+      flokkur = case_when(
+        flokkur == "Flokkur Fólksins" ~ "Flokkur fólksins",
+        flokkur == "Framsóknarflokkurinn" ~ "Framsóknarflokkur",
+        TRUE ~ flokkur
+      )
+    )
+  
+  d <- d |> 
+    inner_join(
+      flokkar_palette(),
+      by = "flokkur"
+    ) |> 
+    left_join(
+      tbl(con, "atkvaedi_stjornmalaflokka") |> 
+        filter(ar >= 2007) |> 
+        collect() |> 
+        mutate(ar = ifelse(ar == 2021, 2020, ar)),
+      by = c("flokkur", "ar")
+    ) |> 
+    left_join(
+      tbl(con, "thingmenn_stjornmalaflokka") |> 
+        filter(ar >= 2007) |> 
+        collect() |> 
+        mutate(ar = ifelse(ar == 2021, 2020, ar)),
+      by = c("flokkur", "ar")
+    )
+  
+  d |> 
+    write_csv("data/data.csv")
+  
+} else {
+  d <- read_csv("data/data.csv")
+}
 
 isk <- function(x, scale = 1e6, suffix = " m.kr") number(x / scale, suffix = suffix, big.mark = ".", decimal.mark = ",")
 hlutf <- label_percent(accuracy = 0.1, big.mark = ".", decimal.mark = ",")
-```
-```{r}
-
-d <- tbl(con, "arsreikningar_stjornmalaflokka") |> 
-  collect() |> 
-  mutate_all(~ ifelse(is.na(.), 0, .)) |> 
-  inner_join(
-    vnv() |> 
-      group_by(ar = year(date)) |> 
-      summarise(cpi = mean(cpi)) |> 
-      mutate(cpi = cpi / cpi[ar == max(ar)]),
-    by = "ar"
-  ) |> 
-  mutate(
-    flokkur = case_when(
-      flokkur == "Flokkur Fólksins" ~ "Flokkur fólksins",
-      flokkur == "Framsóknarflokkurinn" ~ "Framsóknarflokkur",
-      TRUE ~ flokkur
-    )
-  )
-
-xS <- "#e41a1c"
-xV <- "#00441b"
-xD <- "#377eb8"
-xP <- "#984ea3"
-xB <- "#41ab5d"
-xBF <- "#cab2d6"
-xC <- "#ff7d14"
-xM <- "#08306b"
-xFF <- "#FBB829"
-xO <- "#d78604"
-Annad <- "#e5d8bd"
-
-colours <- tibble(
-  flokkur = c(
-    "Sjálfstæðisflokkur",
-    "Framsóknarflokkur",
-    "Samfylkingin",
-    "Vinstrihreyfingin - grænt framboð",
-    "Viðreisn",
-    "Píratar",
-    "Miðflokkurinn",
-    "Flokkur fólksins",
-    "Borgarahreyfingin",
-    "Björt framtíð"
-  ),
-  colour = c(
-    xD,
-    xB,
-    xS,
-    xV,
-    xC,
-    xP,
-    xM,
-    xFF,
-    xO,
-    xBF
-  ),
-  merki = c(
-    "xD", 
-    "xB",
-    "xS",
-    "xV",
-    "xC",
-    "xP",
-    "xM",
-    "xF",
-    "xO",
-    "xA"
-  )
-)
-
-d <- d |> 
-  inner_join(
-    colours,
-    by = "flokkur"
-  )
-
-d <- d |> 
-  left_join(
-    tbl(con, "atkvaedi_stjornmalaflokka") |> 
-      filter(ar >= 2007) |> 
-      collect() |> 
-      mutate(ar = ifelse(ar == 2021, 2020, ar)),
-    by = c("flokkur", "ar")
-  ) |> 
-  left_join(
-    tbl(con, "thingmenn_stjornmalaflokka") |> 
-      filter(ar >= 2007) |> 
-      collect() |> 
-      mutate(ar = ifelse(ar == 2021, 2020, ar)),
-    by = c("flokkur", "ar")
-  )
-
-
 
 ```
 ```{r}
 
 dreifing_plot <- function(data, title, breaks = 2007:2020, labels = 2007:2020) {
   plot_dat <- data |> 
-    select(ar, flokkur, value, colour) |> 
+    select(ar, flokkur, value, litur) |> 
     group_by(ar) |> 
     mutate(p = value / sum(value)) |> 
     ungroup() |> 
@@ -197,7 +149,7 @@ dreifing_plot <- function(data, title, breaks = 2007:2020, labels = 2007:2020) {
     scale_y_continuous(labels = hlutf) +
     scale_fill_manual(
       values = c(
-        plot_dat |> arrange(flokkur) |> distinct(colour) |> pull(colour)
+        plot_dat |> arrange(flokkur) |> distinct(litur) |> pull(litur)
       )
     ) +
     coord_cartesian(expand = FALSE) +
@@ -237,7 +189,7 @@ dreifing_plot <- function(data, title, breaks = 2007:2020, labels = 2007:2020) {
 
 magn_plot <- function(data, title, breaks = 2007:2020, labels = 2007:2020) {
   plot_dat <- data |> 
-    select(ar, flokkur, value, colour) |> 
+    select(ar, flokkur, value, litur) |> 
     group_by(ar) |> 
     mutate(p = value / sum(value)) |> 
     ungroup() |> 
@@ -259,7 +211,7 @@ magn_plot <- function(data, title, breaks = 2007:2020, labels = 2007:2020) {
     scale_y_continuous(labels = isk) +
     scale_fill_manual(
       values = c(
-        plot_dat |> arrange(flokkur) |> distinct(colour) |> pull(colour)
+        plot_dat |> arrange(flokkur) |> distinct(litur) |> pull(litur)
       )
     ) +
     coord_cartesian(expand = FALSE) +
@@ -483,13 +435,14 @@ p <- plot_dat |>
                      limits = c(0, 82e6),
                      expand = expansion()) +
   scale_colour_manual(
-    values = c(xFF, xD, xC)
+    values = flokkar_palette() |> slice(8, 1, 5) |> pull(litur)
   ) +
   theme(legend.position = "none") +
   labs(x = NULL,
        y = NULL,
        title = "Leigutekjur Sjálfstæðisflokks og útgjöld minni flokka",
-       subtitle = "Sjálfstæðisflokkur fengi nægar tekjur af útleigu fasteigna til að fjármagna flokk floksins")
+       subtitle = "Sjálfstæðisflokkur fengi nægar tekjur af útleigu fasteigna til að fjármagna flokk floksins",
+       caption = "Mynd frá metill.is unnin úr ársreikningum stjórnmálaflokka frá Ríkisendurskoðun")
 
 ggsave(
   plot = p +
@@ -578,13 +531,14 @@ p <- plot_dat |>
                      limits = c(0, NA),
                      expand = expansion()) +
   scale_colour_manual(
-    values = c(xFF, xP, xD, xC)
+    values = flokkar_palette() |> slice(8, 6, 1, 5) |> pull(litur)
   ) +
   theme(legend.position = "none") +
   labs(x = NULL,
        y = NULL,
        title = "Aðrar tekjur Sjálfstæðisflokks og útgjöld minni flokka",
-       subtitle = "Útleiga, miðasala, auglýsingar og seld þjónusta Sjálfstæðisflokks gætu fjármagnað flokk Pírata")
+       subtitle = "Útleiga, miðasala, auglýsingar og seld þjónusta Sjálfstæðisflokks gætu fjármagnað flokk Pírata",
+       caption = "Mynd frá metill.is unnin úr ársreikningum stjórnmálaflokka frá Ríkisendurskoðun")
 
 ggsave(
   plot = p +
@@ -605,7 +559,7 @@ ggsave(
   filename = "Figures/samanburdur2.png",
   width = 8, 
   height = 0.5 * 8, 
-  scale = 1.1, 
+  scale = 1.3, 
   dpi = 300
 )
 ```
@@ -792,7 +746,7 @@ d |>
 
 plot_dat <- d |> 
   mutate(value = (eignir - skuldir) / cpi) |> 
-  select(ar, flokkur, value, colour) |> 
+  select(ar, flokkur, value, litur) |> 
   group_by(ar) |> 
   mutate(p = value / sum(value)) |> 
   ungroup() |> 
@@ -809,25 +763,40 @@ p <- plot_dat |>
   scale_y_continuous(labels = isk) +
   scale_fill_manual(
     values = c(
-      plot_dat |> arrange(flokkur) |> distinct(colour) |> pull(colour)
+      plot_dat |> arrange(flokkur) |> distinct(litur) |> pull(litur)
     )
   ) +
   coord_cartesian(expand = FALSE) +
   guides(fill = guide_legend(reverse = T)) +
   theme(
     legend.position = "top",
-    plot.background = element_blank(),
-    panel.background = element_blank(),
-    legend.background = element_blank(),
-    legend.box.background = element_blank()
   ) +
   labs(x = NULL, y = NULL, fill = NULL,
        title = "Eigið fé íslenskra stjórnmálaflokka",
        subtitle = "Árið 2007 átti Sjálfstæðisflokkur 100% alls eigin fjár flokkanna en 2020 á hann 43,5%",
        caption = "Mynd frá metill.is unnin úr ársreikningum stjórnmálaflokka frá Ríkisendurskoðun")
 
-ggsave(plot = p, filename = "Figures/eigidfe.png",
-       width = 8, height = 0.8 * 8, scale = 1.3)
+ggsave(
+  plot = p,
+  filename = "Figures/eigidfe.png",
+  width = 8,
+  height = 0.621 * 8, 
+  scale = 1.3
+)
+
+ggsave(
+  plot = p +
+    theme(
+      plot.background = element_blank(),
+      panel.background = element_blank(),
+      legend.background = element_blank(),
+      legend.box.background = element_blank()
+    ),
+  filename = "Figures/eigidfe_page.png",
+  width = 8,
+  height = 0.621 * 8, 
+  scale = 1.3
+)
 ```
 
 

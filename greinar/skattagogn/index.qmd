@@ -49,15 +49,25 @@ library(visitalaneysluverds)
 library(metill)
 theme_set(theme_metill())
 
-usr <- config::get("postgres_user")
-con <- dbConnect(RPostgres::Postgres(), 
-                 dbname = usr$dbname, 
-                 host = usr$host,
-                 port = usr$port, 
-                 user = usr$username, 
-                 password = usr$password)
-
-d <- tbl(con, "tiundamork_1997_2021") 
+if (!file.exists("data/data.csv")) {
+  
+  usr <- config::get("postgres_user")
+  con <- dbConnect(RPostgres::Postgres(), 
+                   dbname = usr$dbname, 
+                   host = usr$host,
+                   port = usr$port, 
+                   user = usr$username, 
+                   password = usr$password)
+  
+  d <- tbl(con, "tiundamork_1997_2021") |> 
+    collect()
+  
+  d |> 
+    write_csv("data/data.csv")
+  
+} else {
+  d <- read_csv("data/data.csv")
+}
 ```
 
 
@@ -70,7 +80,6 @@ plot_dat <- d |>
   filter(tiundarbreyta == "Heildartekjur",
          name %in% c("Tekjur alls", "Fjöldi í hóp"),
          ar == 2021) |> 
-  collect() |> 
   pivot_wider(names_from = name, values_from = value) |> 
   janitor::clean_names()
 
@@ -150,13 +159,10 @@ En hvað borgar hver tekjutíund mikið í skatta og hvernig ber því saman vi�
 plot_dat <- d |>
   filter(tiundarbreyta %in% "Heildartekjur",
          name %in% c("Tekjur alls", 
-                     "Ráðstöfunartekjur (Tekjur - Skattar)",
+                     "Skattar alls",
                      "Fjöldi í hóp")) |> 
-  collect() |> 
   pivot_wider() |> 
   rename(fjoldi = "Fjöldi í hóp") |> 
-  mutate(`Skattar alls` = `Tekjur alls` - `Ráðstöfunartekjur (Tekjur - Skattar)`) |> 
-  select(-"Ráðstöfunartekjur (Tekjur - Skattar)") |> 
   pivot_longer(c(-ar, -tiundarbreyta, -tiundarhluti, -fjoldi)) |> 
   group_by(ar, name) |> 
   mutate(p = value / sum(value)) |> 
@@ -444,13 +450,11 @@ ggplotly(
 plot_dat <- d |>
   filter(tiundarbreyta %in% "Heildartekjur",
          name %in% c("Tekjur alls", 
-                     "Ráðstöfunartekjur (Tekjur - Skattar)",
+                     "Skattar alls",
                      "Fjöldi í hóp")) |> 
   collect() |> 
   pivot_wider() |> 
   rename(fjoldi = "Fjöldi í hóp") |> 
-  mutate(`Skattar alls` = `Tekjur alls` - `Ráðstöfunartekjur (Tekjur - Skattar)`) |> 
-  select(-"Ráðstöfunartekjur (Tekjur - Skattar)") |> 
   janitor::clean_names() |> 
   mutate(
     value = skattar_alls / tekjur_alls,
