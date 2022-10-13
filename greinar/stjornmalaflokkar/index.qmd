@@ -9,14 +9,14 @@ author:
         url: "https://twitter.com/bgautijonsson"
         affiliation: "Tölfræði, Raunvísindadeild Háskóla Íslands"
         affiliation-url: "https://www.hi.is/tolfraedi_0"
-date: "2022/09/29"
+date: "2022/10/14"
 format: 
     html:
         code-fold: true
         smooth-scroll: true
         link-external-newwindow: true
 editor: source
-draft: true
+draft: false
 title-block-banner: true
 categories:
     - stjórnmál
@@ -30,7 +30,6 @@ image: Figures/eigidfe_page.png
 
 ```{r}
 #| include: false
-#| cache: true
 
 library(cowplot)
 library(tidyverse)
@@ -62,6 +61,7 @@ theme_set(theme_metill())
 
 
 ```
+
 ```{r}
 
 if (!file.exists("data/data.csv")) {
@@ -123,6 +123,8 @@ isk <- function(x, scale = 1e6, suffix = " m.kr") number(x / scale, suffix = suf
 hlutf <- label_percent(accuracy = 0.1, big.mark = ".", decimal.mark = ",")
 
 ```
+
+
 ```{r}
 
 dreifing_plot <- function(data, title, breaks = 2007:2020, labels = 2007:2020) {
@@ -617,11 +619,6 @@ Eignir geta verið tvenns konar:
 
 * **Fastafjármunir** Þetta eru eignir sem er ekki jafn auðvelt að breyta í peninga. Sjálfstæðisflokkur hefur átt kringum 65% allra fastafjármuna flokkanna og eru þeir að mestu leyti fasteignir.
 
-> Never let a good crisis go to waste
->
-> Winston Churchill
-
-Sjálfstæðisflokkur þekkir svo sannarlega orð Winston, því milli 2007 og 2008 jukust eignir hans um rúmlega 300 milljónir króna á föstu verðlagi. Þetta var ekki bara sparnaður í kreppu heldur fjárfestingar, enda jukust fastafjármunir flokksins um rúmlega 200 milljónir króna á sama tímabili.
 
 ```{r}
 #| fig-asp: 0.8
@@ -669,7 +666,7 @@ d |>
 
 ## Skuldir
 
-Það er ekki nóg að vita bara hverjar eignir flokkanna eru, við viljum líka vita hvort þær séu fjármagnaðar með lántöku eða hreinum eignum. Á árunum 2008 - 2015 hefur Sjálfstæðisflokkur tekið mikið af lánum á meðan aðrir flokkar reyndu að borga sín niður.
+Það er ekki nóg að vita bara hverjar eignir flokkanna eru, við viljum líka vita hvort þær séu fjármagnaðar með lántöku eða hreinum eignum. 
 
 ```{r}
 #| fig-asp: 0.8
@@ -702,8 +699,7 @@ Við sjáum til dæmis að Framsóknarflokkur hefur haft neikvætt eigið fé fr
 
 ```{r}
 #| fig-asp: 1
-#| column: screen-inset
-#| classes: between-content
+#| column: page
 
 d |>
   mutate(value = eignir - skuldir,
@@ -721,12 +717,9 @@ d |>
 
 Auk þess sjáum við að árið 2007 átti Sjálfstæðisflokkur 100% alls eigin fjár stjórnmálaflokka, en árið 2020 er sú tala dottin niður í 43,5%.
 
-
-
 ```{r}
 #| fig-asp: 1
-#| column: screen-inset
-#| classes: between-content
+#| column: page
 
 
 d |>

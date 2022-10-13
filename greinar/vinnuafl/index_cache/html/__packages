@@ -25,3 +25,6 @@ mgcv
 emmeans
 broom
 metill
+patchwork
+gt
+plotly
