@@ -60,9 +60,9 @@ ul.task-list li input[type="checkbox"] {
     }
 
     const options = {
-      valueNames: ['listing-execute','listing-title-block-banner','listing-language','listing-title','listing-pagetitle','listing-subtitle','listing-description','listing-author','listing-date','listing-format','listing-editor','listing-draft','listing-categories','listing-href','listing-image','listing-path','listing-filename','listing-file-modified','listing-reading-time','listing-twitter-card',{ data: ['index'] },{ data: ['categories'] },{ data: ['listing-date-sort'] },{ data: ['listing-file-modified-sort'] },{ data: ['listing-reading-time-sort'] }],
+      valueNames: ['listing-execute','listing-title-block-banner','listing-language','listing-title','listing-pagetitle','listing-subtitle','listing-description','listing-author','listing-date','listing-format','listing-editor','listing-categories','listing-href','listing-image','listing-twitter-card','listing-path','listing-filename','listing-file-modified','listing-reading-time','listing-draft',{ data: ['index'] },{ data: ['categories'] },{ data: ['listing-date-sort'] },{ data: ['listing-file-modified-sort'] },{ data: ['listing-reading-time-sort'] }],
       
-      searchColumns: ["listing-execute","listing-title-block-banner","listing-language","listing-title","listing-pagetitle","listing-subtitle","listing-description","listing-author","listing-date","listing-format","listing-editor","listing-draft","listing-categories","listing-href","listing-image","listing-path","listing-filename","listing-file-modified","listing-reading-time","listing-twitter-card"],
+      searchColumns: ["listing-execute","listing-title-block-banner","listing-language","listing-title","listing-pagetitle","listing-subtitle","listing-description","listing-author","listing-date","listing-format","listing-editor","listing-categories","listing-href","listing-image","listing-twitter-card","listing-path","listing-filename","listing-file-modified","listing-reading-time","listing-draft"],
     };
 
     window['quarto-listings'] = window['quarto-listings'] || {};
@@ -157,34 +157,23 @@ ul.task-list li input[type="checkbox"] {
       <div class="container col-12 col-md-12 col-lg-11 col-xxl-10 px-4 py-2">
         <div class="row">
           <div class="col justify-content-center">
-            <h1 class="display-5 fw-bold lh-1 mb-3 text-primary text-center"> Fjármál stjórnmálaflokkanna </h1>
-            <h3 class="text-primary m-0 p-0 text-center anchored"> Greining á ársreikningum stjórnmálaflokka úr gögnum Ríkisendurskoðunar </h3>
+            <h1 class="display-5 fw-bold lh-1 mb-3 text-primary text-center"> Leikskólar </h1>
+            <h3 class="text-primary m-0 p-0 text-center anchored"> Hvernig gengur sveitarfélögum landsins að brúa bilið? </h3>
           </div>
         </div>
         <div class="row flex-lg-row-reverse align-items-center g-1 pb-0">
           <div class="col-md-12 col-lg-6 col-xl-6 col-xxl-6 mx-auto">
-            <img src="./greinar/stjornmalaflokkar/Figures/eigidfe_page.png" class="d-block mx-lg-auto img-fluid px-1 mx-1" alt="Bootstrap Themes" width="700" height="500" loading="lazy">
+            <img src="./greinar/leikskolar/Figures/ordered_2021_fp.png" class="d-block mx-lg-auto img-fluid px-1 mx-1" alt="Bootstrap Themes" width="700" height="500" loading="lazy">
           </div>
           <div class="col-md-12 col-lg-6 col-xl-6 col-xxl-6 mx-auto">
-            <p class="lead text-muted text-break fs-6 px-2 mx-2"> Hversu miklar tekjur hafa stjórnmálaflokkarnir og hvaðan koma þær? Hækka útgjöld þeirra sjáanlega í kringum kosningar og eiga þeir einhverjar eignir? Hér köfum við ofan í ársreikninga stjórnmálaflokkanna.
+            <p class="lead text-muted text-break fs-6 px-2 mx-2"> Hvernig gengur sveitarfélögum að útbúa leikskólapláss? Hvernig ber fjölda nemenda í leikskólum saman við heildarfjölda barna í hverjum árgangi? Hér skoðum við gögn Hagstofunnar um leikskóla og berum saman við mannfjöldatölur eftir aldri.
  </p>
           </div>
         </div>
       </div>
-      <a href="./greinar/stjornmalaflokkar/index.html" class="stretched-link"></a>
+      <a href="./greinar/leikskolar/index.html" class="stretched-link"></a>
   </div>
   <div class="row">
-      <div class="col-md-4 p-0 d-flex">
-        <div class="card listing-card shadow-sm border-2 rounded-3 g-col-12 g-col-sm-6 g-col-md-4 mb-2">
-          <img src="./greinar/leikskolar/Figures/ordered_2021_fp.png" class="card-img-top mb-0 pb-0">
-          <div class="card-body">
-            <h3 class="text-primary m-0 p-0 anchored"> Leikskólar </h3>
-            <div class="mb-1 text-muted"> Oct 5, 2022 </div>
-            <p class="card-text mb-auto text-muted"> Hvernig gengur sveitarfélögum landsins að brúa bilið? </p>
-            <a href="./greinar/leikskolar/index.html" class="stretched-link" style="text-decoration:none;"></a>
-          </div>
-        </div>  
-      </div>
       <div class="col-md-4 p-0 d-flex">
         <div class="card listing-card shadow-sm border-2 rounded-3 g-col-12 g-col-sm-6 g-col-md-4 mb-2">
           <img src="./greinar/vinnuafl/figures/hlutf_opinbert_fp.png" class="card-img-top mb-0 pb-0">
@@ -204,6 +193,17 @@ ul.task-list li input[type="checkbox"] {
             <div class="mb-1 text-muted"> Sep 28, 2022 </div>
             <p class="card-text mb-auto text-muted"> Vísitalan og áhrif undirtalna á heildina unnið úr nýjustu gögnum Hagstofu hverju sinni </p>
             <a href="./greinar/visitala_neysluverds/index.html" class="stretched-link" style="text-decoration:none;"></a>
+          </div>
+        </div>  
+      </div>
+      <div class="col-md-4 p-0 d-flex">
+        <div class="card listing-card shadow-sm border-2 rounded-3 g-col-12 g-col-sm-6 g-col-md-4 mb-2">
+          <img src="./greinar/skattagogn/image_fp.png" class="card-img-top mb-0 pb-0">
+          <div class="card-body">
+            <h3 class="text-primary m-0 p-0 anchored"> Tekjur, skattar og kaupmáttur </h3>
+            <div class="mb-1 text-muted"> Sep 11, 2022 </div>
+            <p class="card-text mb-auto text-muted"> Greining á tekjuskattsgögnum  sem Hagstofan vinnur úr skattframtölum Íslendinga </p>
+            <a href="./greinar/skattagogn/index.html" class="stretched-link" style="text-decoration:none;"></a>
           </div>
         </div>  
       </div>
