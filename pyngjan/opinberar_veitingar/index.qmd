@@ -1,0 +1,425 @@
+---
+title: "Opinberar veitingar"
+pagetitle: "Opinberar veitingar"
+subtitle: "Hvaða veitingar eru vinsælastar á fundum og viðburðum ríkisins?"
+description: | 
+    Alþingi, ríkisstjórn og ríkið á helst að endurspegla þjóðina í öllum sínum kostum og göllum. Eitt málefni sem er okkur öllum mikilvægt er matur. Hvað finnst okkur gott að borða? Hvar finnst okkur gott að borða? Er ríkið sammála okkur í þessum málum? Hér skoða ég útgjöld ríkisins til veitingastaða, veisluþjónusta og mötuneyta.
+author: 
+    -   name: "Brynjólfur Gauti Guðrúnar Jónsson"
+        url: "https://twitter.com/bgautijonsson"
+        affiliation: "Tölfræði, Raunvísindadeild Háskóla Íslands"
+        affiliation-url: "https://www.hi.is/tolfraedi_0"
+date: "2022/09/30"
+format: 
+    html:
+        smooth-scroll: true
+        link-external-newwindow: true
+        code-fold: true
+        
+editor: source
+image: Figures/veitingastadir.png
+twitter-card:
+    image: Figures/veitingastadir.png
+fig-cap-location: margin
+tbl-cap-location: margin
+---
+
+```{r}
+#| include: false
+library(cowplot)
+library(tidyverse)
+library(scales)
+library(pxweb)
+library(ggthemes)
+library(kableExtra)
+library(gganimate)
+library(lubridate)
+library(plotly)
+library(metill)
+library(visitalaneysluverds)
+library(ggtext)
+library(feather)
+library(geomtextpath)
+library(patchwork)
+
+theme_set(theme_metill())
+
+
+```
+
+
+```{r}
+#| eval: false
+d <- read_feather("Data/opnir_reikningar.feather")
+```
+
+Á [opnirreikningar.is](www.opnirreikningar.is){target="_blank"} stendur:
+
+> Opnirreikningar.is var opnaður í september 2017 með það að markmiði að auka gagnsæi og aðgengi almennings að fjárhagsupplýsingum ríkisins. Á vefnum er unnt að skoða upplýsingar um greidda reikninga ráðuneyta og stofnana úr bókhaldi ríkisins.
+>
+> Birtar eru reikningsupplýsingar úr fjárhagskerfi ríkisins. Vefurinn er uppfærður mánaðarlega og nýjar upplýsingar birtast að jafnaði 10. hvers mánaðar. Þær upplýsingar sem birtar eru tengjast reikningum sem greiddir voru í mánuðinum á undan.
+>
+> Á vefnum er hægt að leita eftir stofnun, birgja, tegund kostnaðar og tímasetningu.
+
+
+
+Það er hægt að leita og fletta upp reikningum á þessari síðu, en ég tók mig bara til og skrifaði R kóða til að sækja gögnin, hreinsa þau aðeins og geyma í PostgreSQL gagnagrunni. Ef þið hafið áhuga á að læra meira um hvernig ég sæki og geymi opinber gögn mun ég reglulega birta greinar um það fyrir áskrifendur að [Patreon síðu minni](https://www.patreon.com/bggj){target="_blank"}.
+
+![Svona birtast opnir reikningar í gagnagrunninum mínum](Figures/database_R.png){.between-content .p-0 .fig-cap-location-margin}
+
+
+# Veitingastaðir
+
+## Rekstraraðilar
+
+Til að fletta upp veitingastöðum þurfum við að leita að fyrirtækjunum sem hjá um reksturinn, ekki veitingastöðunum sjálfum. Ég [fékk frábærar hugmyndir frá ykkur á Twitter](https://twitter.com/bggjonsson/status/1579780373298696192){target="_blank"} og framkvæmdi svo smá rannsóknarvinnu til að finna nöfnin á rekstraraðilunum.
+
+```{r}
+#| column: body
+#| tbl-cap-location: margin
+#| tbl-cap: Nokkrir valdir rekstraraðilar og nöfn veitingastaðanna
+
+
+tribble(
+  ~kt, ~stadur,
+  "Pizza-Pizza ehf.", "Domino's Piza",
+  "Jómfrúin veitingahús ehf", "Jómfrúin",
+  "FoodCo hf.", "Aktu taktu, Eldsmiðjan, Saffran, Pítan o.fl.",
+  "KFC ehf.", "KFC",
+  "Stjarnan ehf.", "Subway",
+  "HALAL ehf.", "Mandi",
+  "Hlöllabátar ehf.", "Hlöllabátar",
+  "Hamborgarab Tómasar Geirsg ehf", "Hamborgarabúlla Tómasar"
+) |> 
+  kable(
+    col.names = c("Fyrirtæki", "Veitingastaðir")
+  ) |> 
+  kable_styling(bootstrap_options = c("striped", "hover"), full_width = FALSE)
+```
+
+
+## Árleg útgjöld frá ríkinu
+
+Það er skemmtilegt að sjá að tveir styrktaraðilar Pyngjunnar, Domino's og Jómfrúin, eru vinsælustu veitingastaðirnir hjá ríkinu. Eins og vitur maður mælti við mig:
+
+> Þetta er hringrás. Þegar öllu er á botninn hvolft erum við sponsaðir af ríkinu.
+>
+> Arnar Þór Ólafsson
+
+```{r}
+#| eval: false
+fyrirtaeki <- c(
+  "jómfr",
+  "pizza-pizza",
+  "kfc",
+  "subway",
+  "foodco",
+  # "gleðipinnar",
+  "^stjarnan ehf",
+  "hamborgarab",
+  "hlölla",
+  "^halal"
+)
+
+fyrirtaeki_string <- str_c(
+  fyrirtaeki, 
+  collapse = "|"
+)
+
+
+plot_dat <- d |> 
+  filter(
+    str_detect(
+      str_to_lower(birgi), 
+      fyrirtaeki_string
+    )
+  ) |> 
+  mutate(kr = vnv_convert(kr, floor_date(dags_greidslu, "month")),
+         ar = year(dags_greidslu),
+         q = floor_date(dags_greidslu, "quarter")) |> 
+  count(ar, birgi, wt = kr, name = "kr") |> 
+  filter(ar > 2017)
+
+hjusts <- tribble(
+  ~birgi, ~hjust,
+  "FoodCo hf.", 0.14,
+  "Hamborgarab Tómasar Geirsg ehf", 0.87,
+  "Jómfrúin veitingahús ehf.", 0.37,
+  "KFC ehf", 0.68,
+  "Pizza-Pizza ehf.", 0.66,
+  "Stjarnan ehf.", 0.64,
+  "HALAL ehf.", 0.1,
+  "Hlöllabátar ehf.", 0.8,
+)
+
+plot_dat <- plot_dat |> 
+  inner_join(
+    hjusts,
+    by = "birgi"
+  )
+
+p <- plot_dat |> 
+  ggplot(aes(ar, kr)) +
+  geom_textline(
+    aes(group = birgi, col = birgi, label = birgi, hjust = birgi),
+    text_smoothing = 20
+  ) +
+  scale_x_tufte(
+    breaks = tufte_breaks(plot_dat$ar)
+  ) +
+  scale_y_tufte(
+    breaks = tufte_breaks(plot_dat$kr),
+    labels = label_isk(accuracy = 0.1, scale = 1e-6)
+  ) +
+  scale_colour_brewer(type = "qual", palette = "Dark2") +
+  scale_hjust_manual(
+    values = plot_dat |> arrange(birgi) |> distinct(birgi, hjust) |> pull(hjust)
+  ) +
+  coord_cartesian(clip = "off") +
+  theme(
+    legend.position = "none"
+  ) +
+  labs(
+    x = NULL,
+    y = NULL,
+    title = "Hvaðan fær ríkið veitingar sínar?",
+    subtitle = "Árleg útgjöld ríkisins til veitingastaða á föstu verðlagi 2022"
+  )
+
+ggsave(
+  plot = p,
+  filename = "Figures/veitingastadir.png",
+  width = 8,
+  height = 0.621 * 8,
+  scale = 1.3
+)
+
+
+ggsave(
+  plot = p +
+    theme(
+      plot.background = element_blank(),
+      panel.background = element_blank(),
+      plot.margin = margin(t = 0, r = 100, l = 100, b = 0)
+    ),
+  filename = "Figures/veitingastadir_page.png",
+  width = 8,
+  height = 0.4 * 8,
+  scale = 1.5
+)
+```
+
+![](Figures/veitingastadir_page.png){.column-screen .between-content}
+
+
+## Heildarútgjöld eftir stofnun
+
+Ef við skoðum svo útgjöld hverrar ríkisstofnanar fyrir sig sjáum við mikinn smekksmun innámilli. Til dæmis vinnur greinilega einungis hugsjónafólk með gourmet smekk hjá *Lögreglustjóranum á Suðurnesjum* því sú stofnun kaupir **bara KFC!**
+
+*Barnaverndarstofa* gengur sömuleiðis ótroðnar slóðir og borðar fjölbreytta blöndu af Mandi og Subway með smá Domino's inná milli.
+
+::: {.callout-tip collapse="true"}
+## Frumkvöðlaráðgjöf Pyngjunnar og Metils
+
+Ef þú ert frumkvöðull að hugsa um að opna hamborgarastað og þig vantar stóran reglulegan kúnna væri best að hafa samband við **Umhverfisstofnun**, **Mennta- og menningamálaráðuneytið** og **Ríkisskattstjóra**, og reyna að stela smá bissness frá Tomma. Ef þú kannt að djúpsteikta kjúkling fyrir burgerinn er **Lögreglustjórinn á Suðurnesjum** þinn mikilvægasti kúnni.
+:::
+
+
+
+
+
+```{r}
+#| eval: false
+
+
+plot_dat <- d |> 
+  filter(
+    str_detect(
+      str_to_lower(birgi), 
+      fyrirtaeki_string
+    )
+  ) |> 
+  mutate(kr = vnv_convert(kr, floor_date(dags_greidslu, "month")),
+         ar = year(dags_greidslu),
+         q = floor_date(dags_greidslu, "quarter")) |> 
+  count(ar, kaupandi, birgi, wt = kr, name = "kr") |> 
+  filter(ar > 2017)
+
+top_stofnanir <- plot_dat |> 
+  count(kaupandi, wt = kr, name = "kr") |> 
+  arrange(desc(kr)) |> 
+  slice_max(order_by = kr, n = 20)
+
+
+p1 <- plot_dat |> 
+  semi_join(
+    top_stofnanir,
+    by = "kaupandi"
+  ) |> 
+  count(kaupandi, birgi, wt = kr, name = "kr") |> 
+  mutate(kaupandi = fct_reorder(kaupandi, kr, .fun = sum)) |> 
+  ggplot(aes(kr, kaupandi)) +
+  geom_col(aes(fill = birgi), position = "fill") +
+  scale_x_continuous(
+    labels = label_hlutf()
+  ) +
+  scale_colour_brewer(type = "qual", palette = "Dark2") +
+  scale_fill_brewer(type = "qual", palette = "Dark2") +
+  theme(
+    legend.position = "top",
+    plot.margin = margin(t = 5, r = 35, b = 5, l = 5)
+  ) +
+  coord_cartesian(expand = F) +
+  labs(
+    x = NULL,
+    y = NULL,
+    fill = NULL,
+    title = "Dreifing útgjalda ríkisstofnana til veitingastaða"
+  )
+
+ggsave(
+  plot = p1,
+  filename = "Figures/stofnanir_fill.png",
+  width = 8,
+  height = 0.621 * 8,
+  scale = 1.5
+)
+
+p2 <- plot_dat |> 
+  semi_join(
+    top_stofnanir,
+    by = "kaupandi"
+  ) |> 
+  count(kaupandi, birgi, wt = kr, name = "kr") |> 
+  mutate(kaupandi = fct_reorder(kaupandi, kr, .fun = sum)) |> 
+  ggplot(aes(kr, kaupandi)) +
+  geom_col(aes(fill = birgi), position = "stack") +
+  scale_x_continuous(
+    labels = label_isk(scale = 1e-6)
+  ) +
+  scale_colour_brewer(type = "qual", palette = "Dark2") +
+  scale_fill_brewer(type = "qual", palette = "Dark2") +
+  theme(
+    legend.position = "top",
+    plot.margin = margin(t = 5, r = 35, b = 5, l = 5)
+  ) +
+  coord_cartesian(expand = F) +
+  labs(
+    x = NULL,
+    y = NULL,
+    fill = NULL,
+    title = "Heildarmagn útgjalda ríkisstofnana til veitingastaða"
+  )
+
+ggsave(
+  plot = p2,
+  filename = "Figures/stofnanir_stack.png",
+  width = 8,
+  height = 0.621 * 8,
+  scale = 1.5
+)
+
+
+p <- p1 + 
+  labs(title = NULL,
+       subtitle = "Dreifing") +
+  (
+    p2 +
+      labs(title = NULL,
+           subtitle = "Magn") +
+      theme(axis.text.y = element_blank(),
+            axis.title.y = element_blank(),
+            axis.ticks.y = element_blank(),
+            plot.margin = margin(t = 5, r = 115, b = 5))
+  ) +
+  plot_layout(guides = "collect") +
+  plot_annotation(title = paste0(paste0(rep(" ", 60), collapse = ""), "Útgjöld ríkisstofnana til veitingastaða"),
+                  theme = theme(plot.title.position = "panel")) &
+  theme(legend.position = "top",
+        plot.title.position = "panel")
+
+
+ggsave(
+  plot = p,
+  filename = "Figures/stofnanir_saman.png",
+  width = 8,
+  height = 0.4 * 8,
+  scale = 1.7
+) 
+```
+
+![](Figures/stofnanir_saman.png){.column-screen}
+
+
+# Veisluþjónustur og mötuneyti
+
+Veitingastaðir blikna þó í samanburði við veisluþjónustur og mötuneyti. Til að setja þau útgjöld í smá samhengi voru **útgjöld ríkisins til Múlakaffi ehf `r isk(430915577, scale = 1e-6)`** á tímabilinu, samanborið við **`r isk(426001051, scale = 1e-6)` til Krabbameinsfélags Íslands**, og það er bara eitt fyrirtækið! Það er nóg til að kaupa 360.669,5 skammta af 15 kjötbollum úr Ikea, eða gefa þúsund manns einn skammt á dag í heilt ár.
+
+```{r}
+#| eval: false
+fyrirtaeki <- c(
+  "múlakaffi",
+  "krabbameinsfélag íslands",
+  "krydd og kaviar",
+  "kiwi veitingar",
+  "tokyo veitingar"
+)
+
+fyrirtaeki_string <- str_c(
+  fyrirtaeki, 
+  collapse = "|"
+)
+
+plot_dat <- d |> 
+  filter(
+    str_detect(
+      str_to_lower(birgi), 
+      fyrirtaeki_string
+    )
+  ) |> 
+  mutate(kr = vnv_convert(kr, floor_date(dags_greidslu, "month")),
+         ar = year(dags_greidslu),
+         q = floor_date(dags_greidslu, "quarter")) |> 
+  count(ar, birgi, wt = kr, name = "kr") |> 
+  group_by(birgi) |> 
+  mutate(kr_cumsum = cumsum(kr))
+
+p <- plot_dat |> 
+  # filter(ar > 2017) |> 
+  ggplot(aes(ar, kr_cumsum)) +
+  geom_textline(
+    aes(group = birgi, col = birgi, label = birgi),
+    text_smoothing = 60, hjust = "auto"
+  ) +
+  scale_x_tufte(
+    breaks = tufte_breaks(plot_dat$ar)
+  ) +
+  scale_y_tufte(
+    breaks = tufte_breaks(plot_dat$kr_cumsum),
+    labels = label_isk(accuracy = 0.1, scale = 1e-6)
+  ) +
+  scale_colour_brewer(type = "qual", palette = "Set1") +
+  coord_cartesian(clip = "off") +
+  theme(
+    legend.position = "none"
+  ) +
+  labs(
+    x = NULL,
+    y = NULL,
+    title = "Uppsöfnuð útgjöld til veisluþjónusta og mötuneyta",
+    subtitle = "Útgjöld ríkisins til Múlakaffi eru nánast þau sömu og til Krabbameinsfélags Íslands"
+  )
+
+
+ggsave(
+  plot = p,
+  filename = "Figures/mulakaffi_krabbamein.png",
+  width = 8,
+  height = 0.621 * 8,
+  scale = 1.3
+)
+```
+
+![](Figures/mulakaffi_krabbamein.png){.column-page}
+
+

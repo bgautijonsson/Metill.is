@@ -1,0 +1,18 @@
+{
+  "hash": "5b2c572fbf2fd17216a67efc6ba5fe17",
+  "result": {
+    "markdown": "---\ntitle: \"Óorð\"\npagetitle: \"Óorð\"\nsubtitle: \"Er þrautin Óorð í Kappsmálum sanngjörn?\"\ndescription: |\n  Í líkindafræði eru veðmál sögð vera sanngjörn ef vænt útkoma er 0, sem sagt ef þú tekur veðmálinu óendanlega oft munt þú koma út á núlli. Er þrautin Óorð úr Kappsmálum sanngjörn að þessu leyti?\nauthor: \n    -   name: \"Brynjólfur Gauti Guðrúnar Jónsson\"\n        url: \"https://twitter.com/bgautijonsson\"\n        affiliation: \"Tölfræði, Raunvísindadeild Háskóla Íslands\"\n        affiliation-url: \"https://www.hi.is/tolfraedi_0\"\ndate: \"2022/09/29\"\nformat: \n    html:\n        code-fold: true\n        smooth-scroll: true\n        link-external-newwindow: true\neditor: source\ndraft: true\ntitle-block-banner: true\ncategories:\n    - laugardags\n    - sjónvarp\nhref: greinar/kappsmal/index.qmd\nimage: Figures/image.png\n\n---\n\n\n\n\nÞrautin óorð virkar svona:\n\n> Þetta fer þannig fram við fáum fjögur orð hérna upp á skjáinn. Eitt orð er alvöru orð. Restin er eitthvað bull frá þeim. Þið eigið að týna út bullið eitt af öðru og ef þið náið að týna þau út þá getið þið fengið níu stig en ef þið klúðrið fyrsta orðinu þá fáið þið mínus sex og svo mínus 3 og svo núll og svo níu.\n>\n> Bragi Valdimar Skúlason\n\n\n::: {layout=\"[50,50]\"}\n\nÍ stuttu máli\n\n\n::: {.cell}\n::: {.cell-output-display}\n`````{=html}\n<table class=\"table table-hover\" style=\"width: auto !important; margin-left: auto; margin-right: auto;\">\n <thead>\n  <tr>\n   <th style=\"text-align:left;\"> Hversu mörg óorð finnur liðið? </th>\n   <th style=\"text-align:right;\"> Stig </th>\n  </tr>\n </thead>\n<tbody>\n  <tr>\n   <td style=\"text-align:left;\"> Ekkert </td>\n   <td style=\"text-align:right;\"> -6 </td>\n  </tr>\n  <tr>\n   <td style=\"text-align:left;\"> Eitt </td>\n   <td style=\"text-align:right;\"> -3 </td>\n  </tr>\n  <tr>\n   <td style=\"text-align:left;\"> Tvö </td>\n   <td style=\"text-align:right;\"> 0 </td>\n  </tr>\n  <tr>\n   <td style=\"text-align:left;\"> Þrjú </td>\n   <td style=\"text-align:right;\"> 9 </td>\n  </tr>\n</tbody>\n</table>\n\n`````\n:::\n:::\n\n\n:::\n\n\n",
+    "supporting": [],
+    "filters": [
+      "rmarkdown/pagebreak.lua"
+    ],
+    "includes": {
+      "include-in-header": [
+        "<script src=\"../../site_libs/kePrint-0.0.1/kePrint.js\"></script>\n<link href=\"../../site_libs/lightable-0.0.1/lightable.css\" rel=\"stylesheet\" />\n"
+      ]
+    },
+    "engineDependencies": {},
+    "preserve": {},
+    "postProcess": true
+  }
+}

@@ -1,5 +1,33 @@
 [
   {
+    "objectID": "pyngjan/opinberar_veitingar/index.html",
+    "href": "pyngjan/opinberar_veitingar/index.html",
+    "title": "Opinberar veitingar",
+    "section": "",
+    "text": "Á opnirreikningar.is stendur:\nÞað er hægt að leita og fletta upp reikningum á þessari síðu, en ég tók mig bara til og skrifaði R kóða til að sækja gögnin, hreinsa þau aðeins og geyma í PostgreSQL gagnagrunni. Ef þið hafið áhuga á að læra meira um hvernig ég sæki og geymi opinber gögn mun ég reglulega birta greinar um það fyrir áskrifendur að Patreon síðu minni."
+  },
+  {
+    "objectID": "pyngjan/opinberar_veitingar/index.html#rekstraraðilar",
+    "href": "pyngjan/opinberar_veitingar/index.html#rekstraraðilar",
+    "title": "Opinberar veitingar",
+    "section": "Rekstraraðilar",
+    "text": "Rekstraraðilar\nTil að fletta upp veitingastöðum þurfum við að leita að fyrirtækjunum sem hjá um reksturinn, ekki veitingastöðunum sjálfum. Ég fékk frábærar hugmyndir frá ykkur á Twitter og framkvæmdi svo smá rannsóknarvinnu til að finna nöfnin á rekstraraðilunum.\n\n\n\n\n \n  \n    Fyrirtæki \n    Veitingastaðir \n  \n \n\n  \n    Pizza-Pizza ehf. \n    Domino's Piza \n  \n  \n    Jómfrúin veitingahús ehf \n    Jómfrúin \n  \n  \n    FoodCo hf. \n    Aktu taktu, Eldsmiðjan, Saffran, Pítan o.fl. \n  \n  \n    KFC ehf. \n    KFC \n  \n  \n    Stjarnan ehf. \n    Subway \n  \n  \n    HALAL ehf. \n    Mandi \n  \n  \n    Hlöllabátar ehf. \n    Hlöllabátar \n  \n  \n    Hamborgarab Tómasar Geirsg ehf \n    Hamborgarabúlla Tómasar \n  \n\n\n\nNokkrir valdir rekstraraðilar og nöfn veitingastaðanna"
+  },
+  {
+    "objectID": "pyngjan/opinberar_veitingar/index.html#árleg-útgjöld-frá-ríkinu",
+    "href": "pyngjan/opinberar_veitingar/index.html#árleg-útgjöld-frá-ríkinu",
+    "title": "Opinberar veitingar",
+    "section": "Árleg útgjöld frá ríkinu",
+    "text": "Árleg útgjöld frá ríkinu\nÞað er skemmtilegt að sjá að tveir styrktaraðilar Pyngjunnar, Domino’s og Jómfrúin, eru vinsælustu veitingastaðirnir hjá ríkinu. Eins og vitur maður mælti við mig:\n\nÞetta er hringrás. Þegar öllu er á botninn hvolft erum við sponsaðir af ríkinu.\nArnar Þór Ólafsson"
+  },
+  {
+    "objectID": "pyngjan/opinberar_veitingar/index.html#heildarútgjöld-eftir-stofnun",
+    "href": "pyngjan/opinberar_veitingar/index.html#heildarútgjöld-eftir-stofnun",
+    "title": "Opinberar veitingar",
+    "section": "Heildarútgjöld eftir stofnun",
+    "text": "Heildarútgjöld eftir stofnun\nEf við skoðum svo útgjöld hverrar ríkisstofnanar fyrir sig sjáum við mikinn smekksmun innámilli. Til dæmis vinnur greinilega einungis hugsjónafólk með gourmet smekk hjá Lögreglustjóranum á Suðurnesjum því sú stofnun kaupir bara KFC!\nBarnaverndarstofa gengur sömuleiðis ótroðnar slóðir og borðar fjölbreytta blöndu af Mandi og Subway með smá Domino’s inná milli.\n\n\n\n\n\n\nFrumkvöðlaráðgjöf Pyngjunnar og Metils\n\n\n\n\n\nEf þú ert frumkvöðull að hugsa um að opna hamborgarastað og þig vantar stóran reglulegan kúnna væri best að hafa samband við Umhverfisstofnun, Mennta- og menningamálaráðuneytið og Ríkisskattstjóra, og reyna að stela smá bissness frá Tomma. Ef þú kannt að djúpsteikta kjúkling fyrir burgerinn er Lögreglustjórinn á Suðurnesjum þinn mikilvægasti kúnni."
+  },
+  {
     "objectID": "pyngjan/straeto/index.html",
     "href": "pyngjan/straeto/index.html",
     "title": "Strætó",
@@ -172,6 +200,6 @@
     "href": "pyngjan.html",
     "title": "Pyngjuhornið",
     "section": "",
-    "text": "Strætó\n\n\nHvað getum við lært af því hvernig Strætó bs. birtir tölurnar sínar?\n\n\nÍ ársreikningi Strætó bs. frá 2021 má finna áhugaverða myndræna framsetningu á tölum. Hér skoða ég hvað við getum lært af þessu og hvernig við getum hjálpað þeim að koma gögnunum ennþá betur til skila.\n\n\n\n\n\n\nSep 30, 2022\n\n\nBrynjólfur Gauti Guðrúnar Jónsson\n\n\n\n\n\n\nNo matching items"
+    "text": "Opinberar veitingar\n\n\nHvaða veitingar eru vinsælastar á fundum og viðburðum ríkisins?\n\n\nAlþingi, ríkisstjórn og ríkið á helst að endurspegla þjóðina í öllum sínum kostum og göllum. Eitt málefni sem er okkur öllum mikilvægt er matur. Hvað finnst okkur gott að borða? Hvar finnst okkur gott að borða? Er ríkið sammála okkur í þessum málum? Hér skoða ég útgjöld ríkisins til veitingastaða, veisluþjónusta og mötuneyta.\n\n\n\n\n\n\nSep 30, 2022\n\n\nBrynjólfur Gauti Guðrúnar Jónsson\n\n\n\n\n\n\n  \n\n\n\n\nStrætó\n\n\nHvað getum við lært af því hvernig Strætó bs. birtir tölurnar sínar?\n\n\nÍ ársreikningi Strætó bs. frá 2021 má finna áhugaverða myndræna framsetningu á tölum. Hér skoða ég hvað við getum lært af þessu og hvernig við getum hjálpað þeim að koma gögnunum ennþá betur til skila.\n\n\n\n\n\n\nSep 30, 2022\n\n\nBrynjólfur Gauti Guðrúnar Jónsson\n\n\n\n\n\n\nNo matching items"
   }
 ]
