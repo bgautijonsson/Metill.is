@@ -28,7 +28,6 @@ twitter-card:
 
 ```{r}
 #| include: false
-#| cache: false
 
 library(cowplot)
 library(tidyverse)
@@ -310,7 +309,6 @@ Kaupmáttur er einfaldlega hækkun á tekjum umfram verðbólgu *(hækkun á ver
 plot_dat <- d |> 
   filter(tiundarbreyta == "Heildartekjur",
          name %in% c("Tekjur alls", "Fjöldi í hóp")) |> 
-  collect() |> 
   pivot_wider() |> 
   rename(fjoldi = "Fjöldi í hóp") |> 
   pivot_longer(c(-ar, -tiundarbreyta, -tiundarhluti, -fjoldi)) |> 
@@ -379,7 +377,6 @@ Við höfum frekar áhuga á kaupmætti ráðstöfunartekna *(heildartekjur að 
 plot_dat <- d |> 
   filter(tiundarbreyta == "Ráðstöfunartekjur",
          name %in% c("Ráðstöfunartekjur (Tekjur - Skattar)", "Fjöldi í hóp")) |> 
-  collect() |> 
   pivot_wider() |> 
   rename(fjoldi = "Fjöldi í hóp") |> 
   pivot_longer(c(-ar, -tiundarbreyta, -tiundarhluti, -fjoldi)) |> 
@@ -444,7 +441,6 @@ ggplotly(
 
 ```{r}
 #| fig-asp: 0.9
-#| cache: false
 #| column: page
 
 plot_dat <- d |>
@@ -452,7 +448,6 @@ plot_dat <- d |>
          name %in% c("Tekjur alls", 
                      "Skattar alls",
                      "Fjöldi í hóp")) |> 
-  collect() |> 
   pivot_wider() |> 
   rename(fjoldi = "Fjöldi í hóp") |> 
   janitor::clean_names() |> 

@@ -3,7 +3,6 @@
 execute: 
   echo: false
   warning: false
-  cache: true
   freeze: auto
 # freeze computational output
 # (see https://quarto.org/docs/projects/code-execution.html#freeze)

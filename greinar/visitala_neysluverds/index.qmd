@@ -29,7 +29,6 @@ twitter-card:
 
 ```{r}
 #| include: false
-#| cache: false
 
 
 library(cowplot)

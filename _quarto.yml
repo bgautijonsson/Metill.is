@@ -33,7 +33,6 @@ format:
     css: style.css
     execute: 
       freeze: auto
-      cache: true
 
 editor: source
 
