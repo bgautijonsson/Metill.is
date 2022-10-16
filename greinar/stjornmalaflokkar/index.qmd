@@ -9,14 +9,14 @@ author:
         url: "https://twitter.com/bgautijonsson"
         affiliation: "Tölfræði, Raunvísindadeild Háskóla Íslands"
         affiliation-url: "https://www.hi.is/tolfraedi_0"
-date: "2022/10/14"
+date: "2022/10/17"
 format: 
     html:
         code-fold: true
         smooth-scroll: true
         link-external-newwindow: true
 editor: source
-draft: true
+draft: false
 title-block-banner: true
 categories:
     - stjórnmál
@@ -233,7 +233,7 @@ magn_plot <- function(data, title, breaks = 2007:2020, labels = 2007:2020) {
 
 # Fyrirvari
 
-Allar fjárhæðir eru sýndar á föstu verðlagi 2022.
+* Allar fjárhæðir eru sýndar á föstu verðlagi 2022.
 
 ## Opinber framlög
 
@@ -295,7 +295,7 @@ d |>
 
 ### Magn
 
-Dragið músina yfir hluta myndritsins til að fela árið 2007 á vinstri myndinni að neðan og fá skýrari mynd á þróunina undanfarin ár.
+Með því að færa músina yfir y-ás er hægt að þysja inn og sjá betur þróun áranna eftir 2007.
 
 ```{r}
 #| fig-asp: 0.8
@@ -443,14 +443,14 @@ p <- plot_dat |>
   labs(x = NULL,
        y = NULL,
        title = "Leigutekjur Sjálfstæðisflokks og útgjöld minni flokka",
-       subtitle = "Sjálfstæðisflokkur fengi nægar tekjur af útleigu fasteigna til að fjármagna flokk floksins",
-       caption = "Mynd frá metill.is unnin úr ársreikningum stjórnmálaflokka frá Ríkisendurskoðun")
+       subtitle = "Sjálfstæðisflokkur fengi nægar tekjur af útleigu fasteigna til að fjármagna Flokk floksins",
+       caption = "Metill.is")
 
 ggsave(
   plot = p +
     theme(
-      plot.background = element_blank(),
-      panel.background = element_blank(),
+      plot.background = element_rect(fill = "#f0efef"),
+      panel.background = element_rect(fill = "#f0efef"),
       panel.grid = element_blank()
     ), 
   filename = "Figures/samanburdur_page.png",
@@ -540,13 +540,13 @@ p <- plot_dat |>
        y = NULL,
        title = "Aðrar tekjur Sjálfstæðisflokks og útgjöld minni flokka",
        subtitle = "Útleiga, miðasala, auglýsingar og seld þjónusta Sjálfstæðisflokks gætu fjármagnað flokk Pírata",
-       caption = "Mynd frá metill.is unnin úr ársreikningum stjórnmálaflokka frá Ríkisendurskoðun")
+       caption = "Metill.is")
 
 ggsave(
   plot = p +
     theme(
-      plot.background = element_blank(),
-      panel.background = element_blank(),
+      plot.background = element_rect(fill = "#f0efef"),
+      panel.background = element_rect(fill = "#f0efef"),
       panel.grid = element_blank()
     ), 
   filename = "Figures/samanburdur2_page.png",
