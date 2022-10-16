@@ -661,8 +661,77 @@ d |>
             labels = seq(2008, 2020, by = 2))
 ```
 
+```{r}
+#| fig-asp: 0.8
+#| column: screen-inset
+#| layout-nrow: 1
 
 
+plot_dat <- d |> 
+  select(ar, flokkur, litur, fasteignir, cpi) |> 
+  filter(ar == max(ar)) |> 
+  mutate(fasteignir = fasteignir/cpi,
+         flokkur = fct_reorder(flokkur, fasteignir),
+         hlutf = fasteignir / sum(fasteignir))
+
+
+p <- plot_dat |> 
+  ggplot(aes(fasteignir, flokkur)) +
+  geom_col(aes(fill = litur)) +
+  scale_x_continuous(
+    expand = expansion(),
+    labels = metill::label_isk(scale = 1e-6),
+    breaks = tufte_breaks(plot_dat$fasteignir),
+    sec.axis = sec_axis(
+      trans = ~ . / sum(plot_dat$fasteignir),
+      labels = label_hlutf(),
+      breaks = tufte_breaks(plot_dat$hlutf)
+      )
+    ) +
+  scale_fill_identity() +
+  theme(
+    plot.margin = margin(t = 5, r = 50, b = 5, l = 5)
+  ) +
+  labs(
+    x = NULL,
+    y = NULL,
+    title = "Fasteignir stjórnmálaflokka í ársreikningum 2020",
+    subtitle = "Fjórir flokkar eiga fasteignir fyrir meira en 80 m.kr",
+    caption = "Metill.is"
+  )
+
+
+ggsave(
+  plot = p +
+    theme(
+      plot.background = element_rect(fill = "#f0efef"),
+      panel.background = element_rect(fill = "#f0efef"),
+      panel.grid = element_blank()
+    ), 
+  filename = "Figures/fasteignir_page.png",
+  width = 8, 
+  height = 0.5 * 8, 
+  scale = 1.2, 
+  dpi = 300
+)
+
+ggsave(
+  plot = p, 
+  filename = "Figures/fasteignir.png",
+  width = 8, 
+  height = 0.5 * 8, 
+  scale = 1.2, 
+  dpi = 300
+)
+
+
+```
+
+::: {.between-content .column-screen .justify-content-center .p-0}
+
+![](Figures/fasteignir_page.png){width="80%" fig-align="center" style="padding:0;"}
+
+:::
 
 ## Skuldir
 
