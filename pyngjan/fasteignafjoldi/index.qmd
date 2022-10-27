@@ -17,9 +17,9 @@ format:
         code-fold: true
         
 editor: source
-image: image.png
+image: Figures/pop_arnar_page.png
 twitter-card:
-    image: image.png
+    image: Figures/pop_arnar_page.png
 ---
 
 ```{r}
