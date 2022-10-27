@@ -1,0 +1,369 @@
+---
+title: "Fasteignauppbygging"
+pagetitle: "Fasteignauppbygging"
+subtitle: "Hvað byggjum við mikið af fasteignum? Er það nóg fyrir vaxandi mannfjöldann?"
+description: | 
+    Stundum er talað um að við byggjum of mikið af fasteignum en oftast vill fólk meina að það sé mikill skortur. Hvað byggjum við mikið af fasteignum og hvað erum við mörg? Eru þetta nógu margar fasteignir?
+author: 
+    -   name: "Brynjólfur Gauti Guðrúnar Jónsson"
+        url: "https://twitter.com/bgautijonsson"
+        affiliation: "Tölfræði, Raunvísindadeild Háskóla Íslands"
+        affiliation-url: "https://www.hi.is/tolfraedi_0"
+date: "2022/09/30"
+format: 
+    html:
+        smooth-scroll: true
+        link-external-newwindow: true
+        code-fold: true
+        
+editor: source
+image: image.png
+twitter-card:
+    image: image.png
+---
+
+```{r}
+#| include: false
+#| cache: false
+
+
+library(cowplot)
+library(tidyverse)
+library(scales)
+library(pxweb)
+library(ggthemes)
+library(kableExtra)
+library(gganimate)
+library(lubridate)
+library(plotly)
+library(metill)
+library(ggtext)
+library(feather)
+library(patchwork)
+
+theme_set(theme_metill(type = "blog"))
+
+
+if (!file.exists("data/data.feather")) {
+  init_db()
+  
+  mannfjoldi <- mtl_mannfjoldi() |> 
+    mutate(
+      arnar = ifelse(aldur == 29, 1, 0),
+      fullordin = ifelse(aldur >= 20, 1, 0)
+    ) |> 
+    group_by(ar) |> 
+    summarise(
+      pop_fullordin = sum(pop * fullordin),
+      pop_arnar = sum(pop * arnar),
+      pop_total = sum(pop)
+    ) |> 
+    collect()
+  
+  fasteignir <- mtl_fjoldi_fasteigna() |> 
+    count(ar, wt = fjoldi, name = "fjoldi") |>
+    collect()
+  
+  d <- fasteignir |> 
+    inner_join(
+      mannfjoldi,
+      by = "ar"
+    )
+  
+  d |> write_feather("data/data.feather")
+  
+} else {
+  d <- read_feather("data/data.feather")
+}
+```
+
+
+Þjóðskrá heldur úti gögnum um [fjölda íbúða eftir byggingarári](https://www.skra.is/gogn/fasteignagattin/fjoldatolur-ur-fasteignaskra/fjoldi-ibuda-eftir-byggingarari/), sem ná alveg aftur til ársins 1900. Skoðum þessi gögn og berum þau saman við gögn Hagstofunnar um [mannfjölda eftir kyni og aldri](https://px.hagstofa.is/pxis/pxweb/is/Ibuar/Ibuar__mannfjoldi__1_yfirlit__Yfirlit_mannfjolda/MAN00101.px). Við ætlum reyndar ekki að skoða þetta eftir kyni, en það er lítið mál að súmmera upp þessar tölur.
+
+```{r}
+plot_dat <- d
+
+p1 <- plot_dat |> 
+  ggplot(aes(ar, fjoldi)) +
+  geom_line() +
+  scale_x_tufte(
+    breaks = tufte_breaks(plot_dat$ar)
+  ) +
+  scale_y_tufte(
+    breaks = tufte_breaks(plot_dat$fjoldi),
+    labels = label_number(big.mark = ".", decimal.mark = ",")
+  ) +
+  labs(
+    x = NULL,
+    y = NULL,
+    subtitle = "Fjöldi nýrra fasteigna"
+  )
+
+plot_dat <- d |> 
+  arrange(ar) |> 
+  mutate(diff = c(NA, diff(pop_total))) 
+
+
+p2 <- plot_dat |> 
+  ggplot(aes(ar, pop_total)) +
+  geom_line() +
+    scale_x_tufte(
+    breaks = tufte_breaks(plot_dat$ar)
+  ) +
+  scale_y_tufte(
+    breaks = c(0, tufte_breaks(plot_dat$pop_total)),
+    labels = label_number(big.mark = ".", decimal.mark = ",")
+  ) +
+  labs(
+    x = NULL,
+    y = NULL,
+    subtitle = "Mannfjöldi á Íslandi"
+  )
+
+
+plot_dat <- d |> 
+  mutate(p = fjoldi / pop_total * 1000)
+
+
+p3 <- plot_dat |> 
+  ggplot(aes(ar, p)) +
+  geom_line() +
+  scale_x_tufte(
+    breaks = tufte_breaks(plot_dat$ar)
+  ) +
+  scale_y_tufte(
+    breaks = tufte_breaks(plot_dat$p),
+    labels = label_number(accuracy = 1, big.mark = ".", decimal.mark = ",")
+  ) +
+  labs(
+    x = NULL,
+    y = NULL,
+    subtitle = "Nýjar fasteignir á hverja þúsund íbúa"
+  )
+
+p <- p1 + p2 + p3 +
+  plot_annotation(
+    title = "Fasteignauppbygging og mannfjöldi",
+    theme = theme(
+      plot.margin = margin(t = 5, r = 35, b = 5, l = 35)
+    )
+  )
+
+ggsave(
+  plot = p,
+  filename = "Figures/pop_total_page.png",
+  width = 8, height = 0.3 * 8, scale = 1.6
+)
+```
+
+![](Figures/pop_total_page.png){.column-screen .between-content}
+
+```{r}
+plot_dat <- d |> 
+  mutate(p = pop_fullordin / pop_total)
+
+
+p1 <- plot_dat |> 
+  ggplot(aes(ar, p)) +
+  geom_line() +
+  scale_x_tufte(
+    breaks = tufte_breaks(plot_dat$ar)
+  ) +
+  scale_y_tufte(
+    breaks = tufte_breaks(plot_dat$p),
+    labels = label_percent(accuracy = 1, big.mark = ".", decimal.mark = ",")
+  ) +
+  labs(
+    x = NULL,
+    y = NULL,
+    subtitle = "Hlutfall fullorðinna af íbúum"
+  )
+
+
+plot_dat <- d |> 
+  mutate(p = fjoldi / pop_fullordin * 1000)
+
+
+p2 <- plot_dat |> 
+  ggplot(aes(ar, p)) +
+  geom_line() +
+  scale_x_tufte(
+    breaks = tufte_breaks(plot_dat$ar)
+  ) +
+  scale_y_tufte(
+    breaks = tufte_breaks(plot_dat$p),
+    labels = label_number(accuracy = 1, big.mark = ".", decimal.mark = ",")
+  ) +
+  labs(
+    x = NULL,
+    y = NULL,
+    subtitle = "Nýjar fasteignir á hverja þúsund fullorðna"
+  )
+
+p <- p1 + p2 + 
+  plot_annotation(
+    title = "Fullorðnum fjölgar hraðar en börnum"
+  )
+
+ggsave(
+  plot = p,
+  filename = "Figures/pop_fullordin_page.png",
+  width = 8, height = 0.4 * 8, scale = 1.5
+)
+```
+
+
+![](Figures/pop_fullordin.png){.column-page}
+
+```{r}
+plot_dat <- d |> 
+  mutate(p = fjoldi / pop_arnar * 1000)
+
+
+p <- plot_dat |> 
+  ggplot(aes(ar, p)) +
+  geom_line() +
+  scale_x_tufte(
+    breaks = tufte_breaks(plot_dat$ar)
+  ) +
+  scale_y_tufte(
+    breaks = tufte_breaks(plot_dat$p),
+    labels = label_number(accuracy = 1, big.mark = ".", decimal.mark = ",")
+  ) +
+  labs(
+    x = NULL,
+    y = NULL,
+    title = "Fjöldi nýbyggðra fasteigna á hverja þúsund jafnaldra Arnars eftir ári"
+  )
+
+```
+
+
+```{r}
+theme_set(theme_metill(type = "standalone"))
+plot_dat <- d
+
+p1 <- plot_dat |> 
+  ggplot(aes(ar, fjoldi)) +
+  geom_line() +
+  scale_x_tufte(
+    breaks = tufte_breaks(plot_dat$ar)
+  ) +
+  scale_y_tufte(
+    breaks = tufte_breaks(plot_dat$fjoldi),
+    labels = label_number(big.mark = ".", decimal.mark = ",")
+  ) +
+  labs(
+    x = NULL,
+    y = NULL,
+    subtitle = "Fjöldi nýrra fasteigna"
+  )
+
+plot_dat <- d |> 
+  arrange(ar) |> 
+  mutate(diff = c(NA, diff(pop_total))) 
+
+
+p2 <- plot_dat |> 
+  ggplot(aes(ar, pop_total)) +
+  geom_line() +
+    scale_x_tufte(
+    breaks = tufte_breaks(plot_dat$ar)
+  ) +
+  scale_y_tufte(
+    breaks = c(0, tufte_breaks(plot_dat$pop_total)),
+    labels = label_number(big.mark = ".", decimal.mark = ",")
+  ) +
+  labs(
+    x = NULL,
+    y = NULL,
+    subtitle = "Mannfjöldi á Íslandi"
+  )
+
+
+plot_dat <- d |> 
+  mutate(p = fjoldi / pop_total * 1000)
+
+
+p3 <- plot_dat |> 
+  ggplot(aes(ar, p)) +
+  geom_line() +
+  scale_x_tufte(
+    breaks = tufte_breaks(plot_dat$ar)
+  ) +
+  scale_y_tufte(
+    breaks = tufte_breaks(plot_dat$p),
+    labels = label_number(accuracy = 1, big.mark = ".", decimal.mark = ",")
+  ) +
+  labs(
+    x = NULL,
+    y = NULL,
+    subtitle = "Nýjar fasteignir á hverja þúsund íbúa"
+  )
+
+p <- p1 + p2 + p3 +
+  plot_annotation(
+    title = "Fasteignauppbygging og mannfjöldi",
+    theme = theme(
+      plot.margin = margin(t = 5, r = 35, b = 5, l = 35)
+    )
+  )
+
+ggsave(
+  plot = p,
+  filename = "Figures/pop_total.png",
+  width = 8, height = 0.3 * 8, scale = 1.6
+)
+
+plot_dat <- d |> 
+  mutate(p = pop_fullordin / pop_total)
+
+
+p1 <- plot_dat |> 
+  ggplot(aes(ar, p)) +
+  geom_line() +
+  scale_x_tufte(
+    breaks = tufte_breaks(plot_dat$ar)
+  ) +
+  scale_y_tufte(
+    breaks = tufte_breaks(plot_dat$p),
+    labels = label_percent(accuracy = 1, big.mark = ".", decimal.mark = ",")
+  ) +
+  labs(
+    x = NULL,
+    y = NULL,
+    subtitle = "Hlutfall fullorðinna af íbúum"
+  )
+
+
+plot_dat <- d |> 
+  mutate(p = fjoldi / pop_fullordin * 1000)
+
+
+p2 <- plot_dat |> 
+  ggplot(aes(ar, p)) +
+  geom_line() +
+  scale_x_tufte(
+    breaks = tufte_breaks(plot_dat$ar)
+  ) +
+  scale_y_tufte(
+    breaks = tufte_breaks(plot_dat$p),
+    labels = label_number(accuracy = 1, big.mark = ".", decimal.mark = ",")
+  ) +
+  labs(
+    x = NULL,
+    y = NULL,
+    subtitle = "Nýjar fasteignir á hverja þúsund fullorðna"
+  )
+
+p <- p1 + p2 + 
+  plot_annotation(
+    title = "Fullorðnum fjölgar hraðar en börnum"
+  )
+
+ggsave(
+  plot = p,
+  filename = "Figures/pop_fullordin.png",
+  width = 8, height = 0.4 * 8, scale = 1.5
+)
+```
