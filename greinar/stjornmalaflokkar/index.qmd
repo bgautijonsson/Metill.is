@@ -35,7 +35,7 @@ library(cowplot)
 library(tidyverse)
 library(scales)
 library(ggthemes)
-library(kableExtra)
+library(kableExtra) 
 library(gganimate)
 library(lubridate)
 library(geomtextpath)
@@ -285,6 +285,83 @@ d |>
 :::
 
 
+```{r}
+#| include: false
+#| eval: false
+
+plot_dat <- d |> 
+  mutate(framlog_opinber = framlog_althingi + framlog_rikis + framlog_svf,
+         framlog_opinber = framlog_opinber / cpi,
+         flokkur = fct_reorder(flokkur, framlog_opinber)) |> 
+  select(ar, flokkur, framlog_opinber, litur)
+
+
+p <- plot_dat |> 
+  ggplot(aes(ar, framlog_opinber)) +
+  geom_col(aes(fill = flokkur), width = 1, colour = "grey95", position = "stack") +
+  scale_x_continuous(
+    expand = expansion(),
+    breaks = 2007:2020
+    ) +
+  scale_y_continuous(
+    expand = expansion(),
+    labels = label_isk(scale = 1e-6)
+  ) +
+  scale_fill_manual(
+    values = plot_dat |> arrange(flokkur) |> distinct(litur) |> pull(litur)
+  ) +
+  theme(
+    legend.position = "top"
+    ) +
+  labs(
+    x = NULL,
+    y = NULL,
+    fill = NULL,
+    title = "Opinber útgjöld til stjórnmálaflokka",
+    subtitle = "Sýnd á föstu verðlagi 2022"
+  )
+
+ggsave(
+  plot = p,
+  filename = "Figures/opinber_utgjold_magn.png",
+  width = 8, height = 0.621 * 8, scale = 1.5
+)
+
+
+p <- plot_dat |> 
+  ggplot(aes(ar, framlog_opinber)) +
+  geom_col(aes(fill = flokkur), width = 1, colour = "grey95", position = "fill") +
+  scale_x_continuous(
+    expand = expansion(),
+    breaks = 2007:2020
+    ) +
+  scale_y_continuous(
+    expand = expansion(),
+    labels = label_hlutf()
+  ) +
+  scale_fill_manual(
+    values = plot_dat |> arrange(flokkur) |> distinct(litur) |> pull(litur)
+  ) +
+  theme(
+    legend.position = "top"
+    ) +
+  labs(
+    x = NULL,
+    y = NULL,
+    fill = NULL,
+    title = "Dreifing opinberra útgjöld til stjórnmálaflokka",
+    subtitle = "Dvínandi fylgi Samfylkingarinnar eftir 2013 sést í lægri framlögum frá ríki og sveitarfélögum"
+  )
+
+ggsave(
+  plot = p,
+  filename = "Figures/opinber_utgjold_dreifing.png",
+  width = 8, height = 0.621 * 8, scale = 1.5
+)
+```
+
+
+
 ## Fyrirtæki/lögaðilar og einstaklingar
 
 > Venjulegir aðilar (fólk og fyrirtæki) mega styrkja hvern flokk um 550.000 krónur ár hvert, heimildin var hækkuð úr 400.000 með lagabreytingu árið 2018.
@@ -346,6 +423,48 @@ d |>
 
 
 :::
+
+```{r}
+#| include: false
+#| eval: false
+
+plot_dat <- d |> 
+  mutate(framlog_fyrirtaekja = framlog_fyrirtaekja / cpi,
+         flokkur = fct_reorder(flokkur, framlog_fyrirtaekja)) |> 
+  select(ar, flokkur, framlog_fyrirtaekja, litur)
+
+
+
+p <- plot_dat |> 
+  ggplot(aes(ar, framlog_fyrirtaekja)) +
+  geom_col(aes(fill = flokkur), width = 1, colour = "grey95", position = "fill") +
+  scale_x_continuous(
+    expand = expansion(),
+    breaks = 2007:2020
+    ) +
+  scale_y_continuous(
+    expand = expansion(),
+    labels = label_hlutf()
+  ) +
+  scale_fill_manual(
+    values = plot_dat |> arrange(flokkur) |> distinct(litur) |> pull(litur)
+  ) +
+  theme(
+    legend.position = "top"
+    ) +
+  labs(
+    x = NULL,
+    y = NULL,
+    fill = NULL,
+    title = "Dreifing framlaga fyrirtækja til stjórnmálaflokka"
+  )
+
+ggsave(
+  plot = p,
+  filename = "Figures/framlog_fyrirtaekja_dreifing.png",
+  width = 8, height = 0.621 * 8, scale = 1.5
+)
+```
 
 
 ## Aðrar tekjur
