@@ -1,0 +1,283 @@
+---
+title: "Leiga og kaupverð"
+pagetitle: "Leiga og kaupverð"
+subtitle: "Hvernig ber leiguverði saman við kaupverð?"
+description: |
+  Stundum er talað um að leiga vaxi of hratt, eða að hún vaxi hægar en húsnæðisverð. Hérna nota ég kaupskrá, leiguskrá og vaxtatöflu Landsbanka til að bera leigu saman við afborganir á óverðtryggðu láni með jöfnum greiðslum og breytilegum vöxtum að því gefnu að kaupandi fær lán fyrir 80% af kaupverði fasteignarinnar.
+author: 
+    -   name: "Brynjólfur Gauti Guðrúnar Jónsson"
+        url: "https://twitter.com/bgautijonsson"
+        affiliation: "Tölfræði, Raunvísindadeild Háskóla Íslands"
+        affiliation-url: "https://www.hi.is/tolfraedi_0"
+date: "2022/10/18"
+format: 
+    html:
+        code-fold: true
+        smooth-scroll: true
+        link-external-newwindow: true
+editor: source
+draft: true
+title-block-banner: true
+categories:
+    - stjórnmál
+    - efnahagur
+    - fasteignir
+    - sveitarfélög
+href: greinar/leigaogkaupverd/index.qmd
+image: Figures/throun_fast_per_einst_fp.png
+---
+
+
+```{r}
+#| include: false
+
+library(cowplot)
+library(tidyverse)
+library(scales)
+library(ggthemes)
+library(kableExtra)
+library(gganimate)
+library(lubridate)
+library(geomtextpath)
+library(ggtext)
+library(readxl)
+library(janitor)
+library(plotly)
+library(config)
+library(DBI)
+library(visitalaneysluverds)
+library(tidyverse)
+library(lubridate)
+library(ggthemes)
+library(cowplot)
+library(scales)
+library(visitalaneysluverds)
+library(feather)
+library(gganimate)
+library(metill)
+library(patchwork)
+theme_set(theme_metill())
+
+
+```
+
+
+
+
+```{r}
+if (!file.exists("data/kaupskra_data.feather")) {
+  init_db()
+  
+  kaupskra <- mtl_kaupskra() |>
+    collect() |>
+    filter(tegund %in% c("Fjölbýli", "Einbýli", "Sérbýli")) |> 
+    select(fastnum, utgdag, kaupverd) |>
+    mutate(utgdag = as_date(utgdag)) |> 
+    arrange(fastnum, utgdag) |>
+    group_by(fastnum) |>
+    mutate(n_obs = n()) |>
+    ungroup() |>
+    filter(n_obs > 1) 
+  
+  
+  
+  
+  d <- kaupskra |> 
+    distinct() |>
+    group_by(fastnum) |>
+    mutate(breyting = c(NA, exp(diff(log(kaupverd)))) - 1,
+           timi = c(NA, diff(utgdag)) / 365.25,
+           ars_breyting = breyting / timi) |>
+    ungroup() |>
+    drop_na()  |>
+    filter(
+      ars_breyting < quantile(ars_breyting, 0.95, na.rm = T),
+      ars_breyting > quantile(ars_breyting, 0.05, na.rm = T)
+    ) |>
+    mutate(dags = floor_date(utgdag, "month")) |>
+    select(dags, ars_breyting) |>
+    nest(data = ars_breyting)
+  
+  d <- d |> 
+    inner_join(
+      crossing(
+        dags = unique(d$dags),
+        size = c(0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9)
+      ),
+      by = "dags"
+    ) |>
+    mutate(
+      lower = 0.5 - size/2,
+      upper = 0.5 + size/2,
+      lower = map2_dbl(data, lower, ~ quantile(.x$ars_breyting, probs = .y)),
+      upper = map2_dbl(data, upper, ~ quantile(.x$ars_breyting, probs = .y)),
+      mean = map_dbl(data, ~ median(.x$ars_breyting))
+    )  |>
+    # filter(year(dags) >= 2013) |>
+    group_by(size) |> 
+    mutate(
+      upper = loess(upper ~ as.numeric(dags), span = 0.15) |> predict(),
+      lower = loess(lower ~ as.numeric(dags), span = 0.15) |> predict()
+    ) |> 
+    ungroup() |> 
+    mutate(group = hlutf(size, accuracy = 1) |> fct_reorder(-size),
+           y1 = min(lower),
+           y2 = max(upper),
+           y = sample(c(y1, y2), size = n())) |> 
+    select(-data)
+  
+  d |> write_feather("data/kaupskra_data.feather")
+  
+  
+  leiguskra <- mtl_leiguskra() |>
+    collect()
+  
+  d <- leiguskra |>
+    select(fastnum, utgdag, heildarverd) |>
+    arrange(fastnum, utgdag) |>
+    group_by(fastnum) |>
+    mutate(n_obs = n()) |>
+    ungroup() |>
+    filter(n_obs > 1) |> 
+    mutate(heildarverd = vnv_convert(heildarverd, floor_date(utgdag, "month"), include_housing = FALSE))
+  
+  plot_dat <- d |>
+    distinct() |>
+    group_by(fastnum) |>
+    mutate(breyting = c(NA, exp(diff(log(heildarverd)))) - 1,
+           timi = c(NA, diff(utgdag)) / 365.25,
+           ars_breyting = breyting / timi) |>
+    ungroup() |>
+    drop_na()  |>
+    filter(
+      ars_breyting < quantile(ars_breyting, 0.95, na.rm = T),
+      ars_breyting > quantile(ars_breyting, 0.05, na.rm = T)
+    ) |>
+    mutate(dags = floor_date(utgdag, "month")) |>
+    select(dags, ars_breyting) |>
+    nest(data = ars_breyting) |>
+    inner_join(
+      crossing(
+        dags = unique(d$utgdag),
+        size = c(0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9)
+      ),
+      by = "dags"
+    ) |>
+    mutate(
+      lower = 0.5 - size/2,
+      upper = 0.5 + size/2,
+      lower = map2_dbl(data, lower, ~ quantile(.x$ars_breyting, probs = .y)),
+      upper = map2_dbl(data, upper, ~ quantile(.x$ars_breyting, probs = .y)),
+      mean = map_dbl(data, ~ median(.x$ars_breyting))
+    )  |>
+    # filter(year(dags) >= 2013) |>
+    group_by(size) |> 
+    mutate(
+      upper = loess(upper ~ as.numeric(dags), span = 0.15) |> predict(),
+      lower = loess(lower ~ as.numeric(dags), span = 0.15) |> predict()
+    ) |> 
+    ungroup() |> 
+    mutate(group = hlutf(size, accuracy = 1) |> fct_reorder(-size),
+           y1 = min(lower),
+           y2 = max(upper),
+           y = sample(c(y1, y2), size = n())) |> 
+    select(-data)
+  
+  plot_dat |> 
+    write_feather("data/leiguskra_data.feather")
+  
+} else {
+  kaupskra <- read_feather("data/kaupskra_data.feather")
+  leiguskra <- read_feather("data/leiguskra_data.feather")
+}
+```
+
+
+```{r}
+p <- kaupskra |>
+  ggplot(aes(dags, y = y, ymin = lower, ymax = upper)) +
+  geom_ribbon(aes(group = group, fill = group), col = "grey70", size = 0.02) +
+  scale_x_date(
+    date_breaks = "year",
+    date_labels = "%Y",
+    expand = expansion()
+  ) +
+  geom_hline(yintercept = 0, lty = 2, alpha = 1) +
+  scale_y_tufte(
+    labels = label_hlutf(),
+    breaks = tufte_breaks(kaupskra$y)
+  ) +
+  scale_fill_brewer(type = "seq", palette = "PuBu") +
+  guides(
+    fill = guide_legend(reverse = T, title.hjust = 0.5)
+  ) +
+  coord_cartesian(
+    
+  ) +
+  theme(
+    legend.position = "top",
+    legend.title = element_text(colour = "#525252", family = "Lato"),
+    legend.text = element_text(colour = "#525252", family = "Lato")
+  ) +
+  labs(
+    x = NULL,
+    y = NULL,
+    title = "Hækkun fasteignaverðs á ársgrundvelli",
+    subtitle = "Reiknuð sem munur á núverandi og síðasta kaupverði íbúðar og leiðrétt fyrir tíma milli kaupsamninga",
+    fill = "Hlutfall kaupsamninga\nsem lenda innan hvers bils",
+    caption = "www.metill.is"
+  )
+
+ggsave(
+  p, 
+  filename = "Figures/kaupverd_breyting.png",
+  width = 8, height = 0.621 * 8, scale = 1.3
+)
+```
+
+![](Figures/kaupverd_breyting.png){.column-page}
+
+
+```{r}
+p <- leiguskra |> 
+  ggplot(aes(dags, y = y, ymin = lower, ymax = upper)) +
+  geom_ribbon(aes(group = group, fill = group), col = "grey70", size = 0.02) +
+  scale_x_date(
+    date_breaks = "year",
+    date_labels = "%Y",
+    expand = expansion()
+  ) +
+  geom_hline(yintercept = 0, lty = 2, alpha = 1) +
+  scale_y_tufte(
+    labels = label_hlutf(),
+    breaks = tufte_breaks(leiguskra$y)
+  ) +
+  scale_fill_brewer(type = "seq", palette = "PuBu") +
+  guides(
+    fill = guide_legend(reverse = T, title.hjust = 0.5)
+  ) +
+  coord_cartesian(
+
+  ) +
+  theme(
+    legend.position = "top",
+    legend.title = element_text(colour = "#525252", family = "Lato"),
+    legend.text = element_text(colour = "#525252", family = "Lato")
+  ) +
+  labs(
+    x = NULL,
+    y = NULL,
+    title = "Hækkun leiguverðs á ársgrundvelli",
+    subtitle = "Reiknuð sem munur á núverandi og síðasta leiguverði íbúðar og leiðrétt fyrir tíma milli leigusamninga",
+    fill = "Hlutfall leigusamninga\nsem lenda innan hvers bils",
+    caption = "www.metill.is"
+  )
+
+ggsave(
+  p, 
+  filename = "Figures/leiguverd_breyting.png",
+  width = 8, height = 0.621 * 8, scale = 1.3
+)
+```
+
+![](Figures/leiguverd_breyting.png){.column-page}
