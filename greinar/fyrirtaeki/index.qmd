@@ -1,0 +1,275 @@
+---
+title: "Fyrirtæki"
+pagetitle: "Fyrirtæki"
+subtitle: "Hver er afkoma íslenskra fyrirtækja?"
+description: |
+  Oft er talað um uppbyggingu fasteigna í sveitarfélögum landsins. Hvað segja gögnin um frammistöðu þeirra? Hvaða sveitarfélög byggja mest og hvernig ber það saman við mannfjöldann þar?
+author: 
+    -   name: "Brynjólfur Gauti Guðrúnar Jónsson"
+        url: "https://twitter.com/bgautijonsson"
+        affiliation: "Tölfræði, Raunvísindadeild Háskóla Íslands"
+        affiliation-url: "https://www.hi.is/tolfraedi_0"
+date: "2022/10/31"
+format: 
+    html:
+        code-fold: true
+        smooth-scroll: true
+        link-external-newwindow: true
+editor: source
+draft: true
+title-block-banner: true
+categories:
+    - stjórnmál
+    - efnahagur
+    - fasteignir
+    - sveitarfélög
+href: greinar/fasteignafjoldi/index.qmd
+image: Figures/throun_fast_per_einst_fp.png
+---
+
+
+```{r}
+#| include: false
+
+library(cowplot)
+library(tidyverse)
+library(scales)
+library(ggthemes)
+library(kableExtra)
+library(gganimate)
+library(lubridate)
+library(geomtextpath)
+library(ggtext)
+library(readxl)
+library(janitor)
+library(plotly)
+library(config)
+library(DBI)
+library(visitalaneysluverds)
+library(tidyverse)
+library(lubridate)
+library(ggthemes)
+library(cowplot)
+library(scales)
+library(visitalaneysluverds)
+library(feather)
+library(gganimate)
+library(metill)
+library(patchwork)
+library(pxweb)
+theme_set(theme_metill(type = "blog"))
+```
+
+
+```{r}
+if (!file.exists("data/data.feather")) {
+  url <- "https://px.hagstofa.is:443/pxis/api/v1/is/Atvinnuvegir/fyrirtaeki/afkoma/1_afkoma/FYR08001.px"
+  d <- pxweb_get(
+    url,
+    query = list(
+      "Atvinnugreinahópur" = c("*"),
+      "Fjöldi starfsmanna" = c("*"),
+      "Breyta" = c("*"),
+      "Ár" = c("*")
+    )
+  ) |> 
+    as.data.frame() |> 
+    as_tibble() |> 
+    janitor::clean_names() |> 
+    rename(value = 5) |> 
+    mutate(ar = parse_number(ar),
+           fjoldi_starfsmanna = as_factor(fjoldi_starfsmanna) |> 
+             fct_relevel("0-1", "2-4", "5-9", "10-49", "50-99", "100+"))
+  
+  d |> write_feather("data/data.feather")
+} else {
+  d <- read_feather("data/data.feather")
+}
+```
+
+```{r}
+plot_dat <- d |> 
+  filter(str_detect(breyta, "Launakostnaður|Rekstrartekjur"),
+         fjoldi_starfsmanna %in% c("10-49", "50-99", "100+"),
+         !str_detect(atvinnugreinahopur, "undanskil")) |>
+  mutate(atvinnugreinahopur = str_replace(atvinnugreinahopur, "\\(ÍSAT.*$", "") |> 
+           str_wrap(width = 40)) |> 
+  pivot_wider(names_from = breyta, values_from = value) |> 
+  janitor::clean_names() |> 
+  group_by(ar, atvinnugreinahopur) |> 
+  summarise(laun = sum(x13320_launakostnadur, na.rm = T),
+            tekjur = sum(x12110_rekstrartekjur, na.rm = T),
+            .groups = "drop") |> 
+  mutate(laun_per = laun / tekjur) |> 
+  group_by(atvinnugreinahopur) |> 
+  mutate(laun_per = laun_per / laun_per[ar == min(ar)]) |> 
+  ungroup()
+
+
+p <- plot_dat |> 
+  ggplot(aes(ar, laun_per)) +
+  geom_hline(yintercept = 1, lty = 2) +
+  geom_line(
+    data = plot_dat |> rename(atv = atvinnugreinahopur),
+    aes(group = atv), 
+    alpha = 0.1
+  ) +
+  geom_line() +
+  scale_x_continuous(
+    breaks = seq(2009, 2019, by = 2)
+  ) +
+  scale_y_log10(
+    labels = function(x) percent(x - 1),
+    breaks = c(0.7, 0.85, 1, 1.15, 1.3, 1.45)
+  ) +
+  scale_colour_brewer(type = "div", palette = "RdYlBu") +
+  facet_wrap("atvinnugreinahopur") +
+  coord_cartesian() +
+  labs(
+    x = NULL,
+    y = NULL,
+    title = "Breyting á launakostnaði fyrirtækja sem hlutfall af tekjum miðað við 2008",
+    subtitle = str_c(
+      "Sýnt fyrir fyrirtæki með 10 eða fleiri starfsfólk. ",
+      "Mynd er á lograkvarða svo -50% og +100% eru jafn langt frá 0%."
+    )
+  )
+
+ggsave(
+  plot = p +
+    theme(
+      plot.margin = margin(t = 5, r = 35, b = 5, l = 35)
+    ),
+  filename = "Figures/laun_hlutf_tekjur_page.png", 
+  width = 8, height = 0.621 * 8, scale = 1.7
+)
+```
+
+![](Figures/laun_hlutf_tekjur_page.png){.column-screen .between-content}
+
+
+```{r}
+plot_dat <- d |> 
+    filter(str_detect(breyta, "Launakostnaður|Fjöldi starfsmanna"),
+           fjoldi_starfsmanna %in% c("10-49", "50-99", "100+"),
+           !str_detect(atvinnugreinahopur, "undanskil")) |>
+    mutate(atvinnugreinahopur = str_replace(atvinnugreinahopur, "\\(ÍSAT.*$", "") |> 
+               str_wrap(width = 40)) |> 
+    pivot_wider(names_from = breyta, values_from = value) |> 
+    janitor::clean_names() |> 
+    group_by(ar, atvinnugreinahopur) |> 
+    summarise(laun = sum(x13320_launakostnadur, na.rm = T),
+              fjoldi = sum(x16110_fjoldi_starfsmanna, na.rm = T),
+              .groups = "drop") |> 
+    inner_join(
+        vnv() |> 
+            group_by(ar = year(date)) |> 
+            summarise(cpi = mean(cpi)) |> 
+            mutate(cpi = cpi / cpi[ar == max(ar)]),
+        by = "ar"
+    ) |> 
+    mutate(laun = laun / cpi,
+           laun_per = laun / fjoldi) |> 
+    group_by(atvinnugreinahopur) |> 
+    mutate(laun_per = laun_per / laun_per[ar == min(ar)]) |> 
+    ungroup()
+
+
+p <- plot_dat |> 
+  ggplot(aes(ar, laun_per)) +
+  geom_hline(yintercept = 1, lty = 2) +
+  geom_line(
+    data = plot_dat |> rename(atv = atvinnugreinahopur),
+    aes(group = atv), 
+    alpha = 0.1
+  ) +
+  geom_line() +
+  scale_x_continuous(
+    breaks = seq(2009, 2019, by = 2)
+  ) +
+  scale_y_log10(
+    labels = function(x) percent(x - 1),
+    breaks = c(0.7, 0.85, 1, 1.15, 1.3, 1.45)
+  ) +
+  scale_colour_brewer(type = "div", palette = "RdYlBu") +
+  facet_wrap("atvinnugreinahopur") +
+  coord_cartesian() +
+  labs(
+    x = NULL,
+    y = NULL,
+    title = "Breyting á launakostnaði fyrirtækja per starfsmaður miðað við 2008 á föstu verðlagi 2022",
+    subtitle = str_c(
+      "Sýnt fyrir fyrirtæki með 10 eða fleiri starfsfólk. ",
+      "Mynd er á lograkvarða svo -50% og +100% eru jafn langt frá 0%."
+    )
+  )
+
+ggsave(
+  plot = p +
+    theme(
+      plot.margin = margin(t = 5, r = 35, b = 5, l = 35)
+    ),
+  filename = "Figures/laun_per_starfs_page.png",
+  width = 8, height = 0.621 * 8, scale = 1.7
+)
+```
+
+![](Figures/laun_per_starfs_page.png){.column-screen .between-content}
+
+
+
+```{r}
+plot_dat <- d |> 
+    filter(str_detect(breyta, "Vergur|Vinnsluvirði"),
+           fjoldi_starfsmanna %in% c("10-49", "50-99", "100+"),
+           !str_detect(atvinnugreinahopur, "undanskil")) |>
+    mutate(atvinnugreinahopur = str_replace(atvinnugreinahopur, "\\(ÍSAT.*$", "") |> 
+               str_wrap(width = 40)) |> 
+    pivot_wider(names_from = breyta, values_from = value) |> 
+    janitor::clean_names() |> 
+    group_by(ar, atvinnugreinahopur) |> 
+    summarise(afgangur = sum(x12170_vergur_rekstrarafgangur, na.rm = T),
+              vinnsluvirdi = sum(x12150_vinnsluvirdi_a_thattaverdi, na.rm = T),
+              .groups = "drop") |> 
+    mutate(hlutf = afgangur / vinnsluvirdi)
+
+
+p <- plot_dat |> 
+  ggplot(aes(ar, hlutf)) +
+  geom_hline(yintercept = c(0, 1), lty = 2) +
+  geom_line(
+    data = plot_dat |> rename(atv = atvinnugreinahopur),
+    aes(group = atv), 
+    alpha = 0.1
+  ) +
+  geom_line() +
+  scale_x_continuous(
+    breaks = seq(2009, 2019, by = 2)
+  ) +
+  scale_y_continuous(
+    labels = label_hlutf(),
+    breaks = pretty_breaks()
+  ) +
+  scale_colour_brewer(type = "div", palette = "RdYlBu") +
+  facet_wrap("atvinnugreinahopur") +
+  coord_cartesian() +
+  labs(
+    x = NULL,
+    y = NULL,
+    title = "Vergur rekstrarafgangur fyrirtækja sem hlutfall af vinnsluvirði",
+    subtitle = str_c(
+      "Sýnt fyrir fyrirtæki með 10 eða fleiri starfsfólk. "
+    )
+  )
+
+ggsave(
+  plot = p +
+    theme(
+      plot.margin = margin(t = 5, r = 35, b = 5, l = 35)
+    ),
+  filename = "Figures/afgangur_hlutf_vinnsluvirdi_page.png",
+  width = 8, height = 0.621 * 8, scale = 1.7
+)
+```
+
+![](Figures/afgangur_hlutf_vinnsluvirdi_page.png){.column-screen .between-content}

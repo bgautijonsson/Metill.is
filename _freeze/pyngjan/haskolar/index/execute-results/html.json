@@ -1,0 +1,14 @@
+{
+  "hash": "55cf8dba03bc557476731ce56f9129c0",
+  "result": {
+    "markdown": "---\ntitle: \"Fasteignauppbygging\"\npagetitle: \"Fasteignauppbygging\"\nsubtitle: \"Hvað byggjum við mikið af fasteignum? Er það nóg fyrir vaxandi mannfjöldann?\"\ndescription: | \n    Stundum er talað um að við byggjum of mikið af fasteignum en oftast vill fólk meina að það sé mikill skortur. Hvað byggjum við mikið af fasteignum og hvað erum við mörg? Eru þetta nógu margar fasteignir?\nauthor: \n    -   name: \"Brynjólfur Gauti Guðrúnar Jónsson\"\n        url: \"https://twitter.com/bgautijonsson\"\n        affiliation: \"Tölfræði, Raunvísindadeild Háskóla Íslands\"\n        affiliation-url: \"https://www.hi.is/tolfraedi_0\"\ndate: \"2022/10/28\"\nformat: \n    html:\n        smooth-scroll: true\n        link-external-newwindow: true\n        code-fold: true\n        \neditor: source\nimage: Figures/pop_arnar_page.png\ntwitter-card:\n    image: Figures/pop_arnar_page.png\n---\n\n\n",
+    "supporting": [],
+    "filters": [
+      "rmarkdown/pagebreak.lua"
+    ],
+    "includes": {},
+    "engineDependencies": {},
+    "preserve": {},
+    "postProcess": true
+  }
+}

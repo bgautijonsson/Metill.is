@@ -1,0 +1,56 @@
+---
+title: "Fasteignauppbygging"
+pagetitle: "Fasteignauppbygging"
+subtitle: "Hvað byggjum við mikið af fasteignum? Er það nóg fyrir vaxandi mannfjöldann?"
+description: | 
+    Stundum er talað um að við byggjum of mikið af fasteignum en oftast vill fólk meina að það sé mikill skortur. Hvað byggjum við mikið af fasteignum og hvað erum við mörg? Eru þetta nógu margar fasteignir?
+author: 
+    -   name: "Brynjólfur Gauti Guðrúnar Jónsson"
+        url: "https://twitter.com/bgautijonsson"
+        affiliation: "Tölfræði, Raunvísindadeild Háskóla Íslands"
+        affiliation-url: "https://www.hi.is/tolfraedi_0"
+date: "2022/10/28"
+format: 
+    html:
+        smooth-scroll: true
+        link-external-newwindow: true
+        code-fold: true
+        
+editor: source
+image: Figures/pop_arnar_page.png
+twitter-card:
+    image: Figures/pop_arnar_page.png
+---
+
+```{r}
+#| include: false
+#| cache: false
+# 
+# 
+# library(cowplot)
+# library(tidyverse)
+# library(scales)
+# library(pxweb)
+# library(ggthemes)
+# library(kableExtra)
+# library(gganimate)
+# library(lubridate)
+# library(plotly)
+# library(metill)
+# library(ggtext)
+# library(feather)
+# library(patchwork)
+# 
+# theme_set(theme_metill(type = "blog"))
+# 
+# 
+# if (!file.exists("data/data.feather")) {
+#   
+#   
+#   d |> write_feather("data/data.feather")
+#   
+# } else {
+#   d <- read_feather("data/data.feather")
+# }
+```
+

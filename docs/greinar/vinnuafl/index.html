@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Brynjólfur Gauti Guðrúnar Jónsson">
-<meta name="dcterms.date" content="2022-10-04">
+<meta name="dcterms.date" content="2022-11-04">
 <meta name="description" content="Reglulega sjást fyrirsagnir þar sem talað er um að opinbert starfsfólk sé allt of margt og að hlutfall þess af heildarfjölda vinnandi fólks sé of hátt. Hér kryf ég reglulega nýjustu gögnin til að geta vitað hvort slíkar fullyrðingar séu teknar úr samhengi eða endurspegli raunveruleikann.">
 
 <title>Vinnumarkaður</title>
@@ -135,7 +135,7 @@ ul.task-list li input[type="checkbox"] {
       <div>
       <div class="quarto-title-meta-heading">Síðast uppfært</div>
       <div class="quarto-title-meta-contents">
-        <p class="date">October 4, 2022</p>
+        <p class="date">November 4, 2022</p>
       </div>
     </div>
       
@@ -194,9 +194,9 @@ ul.task-list li input[type="checkbox"] {
 <p><code>gam(Opinbert ~ s(manudur, bs = "cc") + s(timi, bs = "ad"), offset = log(Heild), family = nb())</code></p>
 <p>Fjöldi opinbers starfsfólks er jákvæð fjöldatala svo fyrsta ágískunin er alltaf <a href="https://en.wikipedia.org/wiki/Negative_binomial_distribution">neikvæða tvíkostadreifingin</a>. Við metum líkanið á lograkvarða, bæði því það er náttúrulega matið fyrir dreifinguna, en líka því við búumst við því að útkoman breytist hlutfallslega milli ára.</p>
 <p>Hér fyrir neðan sjáum við svo matið á árstíðaráhrifum:</p>
-<div class="cell page-columns page-full" data-fig.asp="1.3">
+<div class="cell page-columns page-full" data-fig.asp="0.6">
 <div class="cell-output-display column-page">
-<p><img src="index_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid" style="width:100.0%"></p>
+<p><img src="index_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid" style="width:100.0%"></p>
 </div>
 </div>
 </div>
@@ -226,9 +226,6 @@ p = \frac{O}{H},
 </div>
 </div>
 </div>
-</section>
-<section id="árlegar-breytingar" class="level1 page-columns page-full">
-<h1>Árlegar breytingar</h1>
 <div class="panel-tabset column-page page-columns page-full">
 <ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-3-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-3-1" role="tab" aria-controls="tabset-3-1" aria-selected="true">Hrein breyting</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-3-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-3-2" role="tab" aria-controls="tabset-3-2" aria-selected="false">Eftir bakgrunni</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-3-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-3-3" role="tab" aria-controls="tabset-3-3" aria-selected="false">Hlutfallsleg breyting</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-3-4-tab" data-bs-toggle="tab" data-bs-target="#tabset-3-4" role="tab" aria-controls="tabset-3-4" aria-selected="false">Eftir bakgrunni</a></li></ul>
 <div class="tab-content page-columns page-full">
@@ -258,6 +255,10 @@ p = \frac{O}{H},
 </div>
 </div>
 </div>
+<div class="cell">
+
+</div>
+<p class="page-columns page-full"><img src="figures/hlutf_erlent.png" class="column-page img-fluid" data-padding="20"></p>
 
 
 </section>
