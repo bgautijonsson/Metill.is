@@ -137,8 +137,8 @@ if (!file.exists("data/data.parquet")) {
       mannfjoldi = pop,
       innfluttir = inflow_pop,
       utfluttir = outflow,
-      haelisleitendur = asylum,
-      rikisborgarar = acquisition,
+      haelisumsoknir = asylum,
+      nyir_innlendir_rikisborgarar = acquisition,
       erlendir_rikisborgarar_samtals = stock
     ) |> 
     pivot_longer(c(-(ar:mannfjoldi))) |> 
@@ -194,7 +194,7 @@ Gögnin sem eru notuð í þessari greiningu [koma frá gögnum OECD um fólksfl
 p1 <- d |> 
   filter(ar == 2021) |> 
   group_by(land) |> 
-  summarise(haelisleitendur = sum(haelisleitendur)) |> 
+  summarise(haelisumsoknir = sum(haelisumsoknir)) |> 
   mutate(
     colour = case_when(
       land == "Ísland" ~ litur_island,
@@ -207,9 +207,9 @@ p1 <- d |>
     linewidth = 1 * (land == "Ísland"),
     size = as_factor(linewidth),
     land = glue("<i style='color:{colour}'>{land}</i>"),
-    land = fct_reorder(land, haelisleitendur)
+    land = fct_reorder(land, haelisumsoknir)
   ) |> 
-  ggplot(aes(haelisleitendur, land, col = colour, size = size)) +
+  ggplot(aes(haelisumsoknir, land, col = colour, size = size)) +
   geom_point() +
   geom_segment(aes(yend = land, xend = 0, linewidth = linewidth), lty = 2, alpha = 0.5) +
   scale_x_continuous(
@@ -243,7 +243,7 @@ ggsave(
 
 p2 <- d |> 
   group_by(land) |> 
-  summarise(haelisleitendur = sum(haelisleitendur)) |> 
+  summarise(haelisumsoknir = sum(haelisumsoknir)) |> 
   mutate(
     colour = case_when(
       land == "Ísland" ~ litur_island,
@@ -256,9 +256,9 @@ p2 <- d |>
     linewidth = 1 * (land == "Ísland"),
     size = as_factor(linewidth),
     land = glue("<i style='color:{colour}'>{land}</i>"),
-    land = fct_reorder(land, haelisleitendur)
+    land = fct_reorder(land, haelisumsoknir)
   ) |> 
-  ggplot(aes(haelisleitendur, land, col = colour, size = size)) +
+  ggplot(aes(haelisumsoknir, land, col = colour, size = size)) +
   geom_point() +
   geom_segment(aes(yend = land, xend = 0, linewidth = linewidth), lty = 2, alpha = 0.5) +
   scale_x_continuous(
@@ -305,7 +305,7 @@ ggsave(
 
 ```{r}
 plot_dat <- d |> 
-  select(ar, land, value = haelisleitendur) |> 
+  select(ar, land, value = haelisumsoknir) |> 
   mutate(
     colour = case_when(
       land == "Ísland" ~ litur_island,
@@ -385,7 +385,7 @@ ggsave(
 
 ```{r}
 plot_dat <- d |> 
-  select(ar, land, value = haelisleitendur) |> 
+  select(ar, land, value = haelisumsoknir) |> 
   arrange(ar, desc(value)) |> 
   group_by(ar) |> 
   mutate(row = row_number()) |> 
@@ -635,7 +635,7 @@ ggsave(
 plot_dat <- d |> 
   filter(ar == 2020) |> 
   mutate(
-    fjoldi_ekki_vinn = fjoldi_erl * (1 - hlutf_vinnandi),
+    fjoldi_ekki_vinn = erlendir_rikisborgarar_samtals * (1 - hlutf_vinnandi),
     colour = case_when(
       land == "Ísland" ~ "#08306b",
       TRUE ~ "#737373"
