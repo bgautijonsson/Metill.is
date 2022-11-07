@@ -1,0 +1,14 @@
+{
+  "hash": "e7cbc33b929c359b19d3b1b2da1a34c2",
+  "result": {
+    "markdown": "---\ntitle: \"Fólksflutningar og hælisleitendur\"\npagetitle: \"Fólksflutningar og hælisleitendur\"\nsubtitle: \"Hvað segja gögnin um fjölda hælisleitenda og fólksflutninga til Íslands?\"\ndescription: |\n  Oft er talað um uppbyggingu fasteigna í sveitarfélögum landsins. Hvað segja gögnin um frammistöðu þeirra? Hvaða sveitarfélög byggja mest og hvernig ber það saman við mannfjöldann þar?\nauthor: \n    -   name: \"Brynjólfur Gauti Guðrúnar Jónsson\"\n        url: \"https://twitter.com/bgautijonsson\"\n        affiliation: \"Tölfræði, Raunvísindadeild Háskóla Íslands\"\n        affiliation-url: \"https://www.hi.is/tolfraedi_0\"\ndate: \"2022/11/07\"\nformat: \n    html:\n        code-fold: true\n        smooth-scroll: true\n        link-external-newwindow: true\neditor: source\ndraft: true\ntitle-block-banner: true\ncategories:\n    - stjórnmál\n    - fólksflutningar\nhref: greinar/flottafolk/index.qmd\nimage: Figures/haelisl_uppsafnad.png\nexecute: \n  eval: false\n---\n\n\n\n::: {.cell}\n\n:::\n\n\n# Gögn\n\nGögnin sem eru notuð í þessari greiningu [koma frá gögnum OECD um fólksflutninga](https://stats.oecd.org/viewhtml.aspx?datasetcode=MIG&lang=en){target=\"_blank\"}. Hægt er að nálgast unnin gögn sem eru notuð í þessari greiningu [hér](data/data.csv){target=\"_blank\"}.\n\n# Umsóknir um hæli\n\n\n::: {.column-page}\n![](Figures/haelisl_saman_2.png)\n:::\n\n\n::: {.cell}\n\n:::\n\n::: {.cell}\n\n:::\n\n::: {.cell}\n\n:::\n\n::: {.cell}\n\n:::\n\n::: {.cell}\n\n:::\n\n::: {.cell}\n\n:::\n",
+    "supporting": [],
+    "filters": [
+      "rmarkdown/pagebreak.lua"
+    ],
+    "includes": {},
+    "engineDependencies": {},
+    "preserve": {},
+    "postProcess": true
+  }
+}

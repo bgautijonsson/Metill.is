@@ -1,0 +1,674 @@
+---
+title: "Fólksflutningar og hælisleitendur"
+pagetitle: "Fólksflutningar og hælisleitendur"
+subtitle: "Hvað segja gögnin um fjölda hælisleitenda og fólksflutninga til Íslands?"
+description: |
+  Oft er talað um uppbyggingu fasteigna í sveitarfélögum landsins. Hvað segja gögnin um frammistöðu þeirra? Hvaða sveitarfélög byggja mest og hvernig ber það saman við mannfjöldann þar?
+author: 
+    -   name: "Brynjólfur Gauti Guðrúnar Jónsson"
+        url: "https://twitter.com/bgautijonsson"
+        affiliation: "Tölfræði, Raunvísindadeild Háskóla Íslands"
+        affiliation-url: "https://www.hi.is/tolfraedi_0"
+date: "2022/11/07"
+format: 
+    html:
+        code-fold: true
+        smooth-scroll: true
+        link-external-newwindow: true
+editor: source
+draft: true
+title-block-banner: true
+categories:
+    - stjórnmál
+    - fólksflutningar
+href: greinar/flottafolk/index.qmd
+image: Figures/haelisl_uppsafnad.png
+execute: 
+  eval: false
+---
+
+
+```{r}
+#| include: false
+
+library(cowplot)
+library(tidyverse)
+library(scales)
+library(ggthemes)
+library(kableExtra)
+library(gganimate)
+library(lubridate)
+library(geomtextpath)
+library(ggtext)
+library(readxl)
+library(janitor)
+library(plotly)
+library(tidyverse)
+library(lubridate)
+library(ggthemes)
+library(cowplot)
+library(scales)
+library(visitalaneysluverds)
+library(feather)
+library(gganimate)
+library(metill)
+library(patchwork)
+library(arrow)
+library(glue)
+theme_set(theme_metill())
+
+
+```
+
+
+```{r}
+if (!file.exists("data/data.parquet")) {
+  
+  country_names <- tribble(
+    ~country, ~land,
+    "Australia", "Ástralía",
+    "Belgium", "Belgía",
+    "Bulgaria", "Búlgaría",
+    "Canada", "Kanada",
+    "Czech Republic", "Tékkland",
+    "Denmark", "Danmörk",
+    "Estonia", "Eistland",
+    "Finland", "Finnland",
+    "France", "Frakkland",
+    "Germany", "Þýskaland",
+    "Greece", "Grikkland",
+    "Hungary", "Ungverjaland",
+    "Iceland", "Ísland",
+    "Ireland", "Írland",
+    "Israel", "Ísrael",
+    "Italy", "Ítalía", 
+    "Latvia", "Latvía",
+    "Luxembourg", "Lúxemborg",
+    "New Zealand", "Nýja Sjáland",
+    "Norway", "Noregur",
+    "Netherlands", "Holland",
+    "Poland", "Pólland",
+    "Portugal", "Portúgal",
+    "Slovak Republic", "Slóvakía",
+    "Slovenia", "Slóvenía",
+    "Spain", "Spánn",
+    "Sweden", "Svíþjóð",
+    "Switzerland", "Sviss",
+    "United Kingdom", "Bretland",
+    "United States", "Bandaríkin"
+  )
+  
+  pop <- read_csv("data/HISTPOP_05112022174045625.csv")
+  
+  mig <- read_csv("data/MIG_05112022173659951.csv")
+  
+  employ <- read_csv("data/MIG_NUP_RATES_GENDER_05112022181828243.csv")
+  
+  d <- mig |> 
+    janitor::clean_names() |> 
+    select(year, country, nationality = country_of_birth_nationality, variable, value) |> 
+    pivot_wider(names_from = "variable", values_from = "value") |> 
+    janitor::clean_names() |> 
+    select(
+      year, country, nationality,
+      inflow_pop = inflows_of_foreign_population_by_nationality, 
+      inflow_workers = inflows_of_foreign_workers_by_nationality,
+      outflow = outflows_of_foreign_population_by_nationality, 
+      asylum = inflows_of_asylum_seekers_by_nationality,
+      acquisition =acquisition_of_nationality_by_country_of_former_nationality,
+      stock = stock_of_foreign_born_population_by_country_of_birth
+    ) |> 
+    inner_join(
+      pop |> 
+        janitor::clean_names() |> 
+        select(year = time, country, pop = value),
+      by = c("country", "year")
+    ) |> 
+    group_by(year, country, pop) |> 
+    summarise_at(vars(inflow_pop:stock), sum, na.rm = T) |> 
+    ungroup() |> 
+    inner_join(
+      country_names,
+      by = "country"
+    ) |> 
+    select(
+      ar = year,
+      land,
+      mannfjoldi = pop,
+      innfluttir = inflow_pop,
+      utfluttir = outflow,
+      haelisleitendur = asylum,
+      rikisborgarar = acquisition,
+      fjoldi_erl = stock
+    ) |> 
+    pivot_longer(c(-(ar:mannfjoldi))) |> 
+    mutate(value = value / mannfjoldi * 1e3) |> 
+    pivot_wider() |> 
+    select(-mannfjoldi) 
+  
+  
+  
+  
+  d <- employ |> 
+    janitor::clean_names() |> 
+    select(country = country_2, ar = year, hlutf_vinnandi = value) |> 
+    mutate(hlutf_vinnandi = hlutf_vinnandi / 100) |> 
+    inner_join(
+      country_names,
+      by = "country"
+    ) |> 
+    select(-country) |> 
+    inner_join(
+      d,
+      by = c("ar", "land")
+    )
+  
+  d |> 
+    write_csv("data/data.csv")
+  
+} else {
+  d <- read_csv("data/data.csv")
+}
+
+caption <- "Mynd eftir @bggjonsson hjá metill.is byggð á gögnum OECD um fólksflutninga:\nhttps://stats.oecd.org/viewhtml.aspx?datasetcode=MIG&lang=en#"
+litur_island <- "#08306b"
+litur_danmork <- "#e41a1c"
+litur_finnland <- "#3690c0"
+litur_noregur <- "#7f0000"
+litur_svithjod <- "#fd8d3c"
+litur_annad <- "#737373"
+```
+
+# Gögn
+
+Gögnin sem eru notuð í þessari greiningu [koma frá gögnum OECD um fólksflutninga](https://stats.oecd.org/viewhtml.aspx?datasetcode=MIG&lang=en){target="_blank"}. Hægt er að nálgast unnin gögn sem eru notuð í þessari greiningu [hér](data/data.csv){target="_blank"}.
+
+# Umsóknir um hæli
+
+
+::: {.column-page}
+![](Figures/haelisl_saman_2.png)
+:::
+
+```{r}
+p1 <- d |> 
+  filter(ar == 2021) |> 
+  group_by(land) |> 
+  summarise(haelisleitendur = sum(haelisleitendur)) |> 
+  mutate(
+    colour = case_when(
+      land == "Ísland" ~ litur_island,
+      land == "Danmörk" ~ litur_danmork,
+      land == "Finnland" ~ litur_finnland,
+      land == "Noregur" ~ litur_noregur,
+      land == "Svíþjóð" ~ litur_svithjod,
+      TRUE ~ litur_annad
+    ),
+    linewidth = 1 * (land == "Ísland"),
+    size = as_factor(linewidth),
+    land = glue("<i style='color:{colour}'>{land}</i>"),
+    land = fct_reorder(land, haelisleitendur)
+  ) |> 
+  ggplot(aes(haelisleitendur, land, col = colour, size = size)) +
+  geom_point() +
+  geom_segment(aes(yend = land, xend = 0, linewidth = linewidth), lty = 2, alpha = 0.5) +
+  scale_x_continuous(
+    expand = expansion(),
+    limits = c(0, 5)
+  ) +
+  scale_colour_identity() +
+  scale_size_manual(values = c(1, 3)) +
+  scale_linewidth(
+    range = c(0.2, 0.4)
+  ) +
+  theme(
+    plot.margin = margin(t = 5, r = 25, b = 5, l = 5),
+    axis.text.y = element_markdown(size = 10, family = "Lato"),
+    legend.position = "none"
+  ) +
+  labs(
+    x = NULL,
+    y = NULL,
+    title = "Hvaða land tekur núna við flestum umsóknum um hæli?",
+    subtitle = "Fjöldi umsókna á 1.000 íbúa árið 2021",
+    caption = caption
+  )
+
+
+ggsave(
+  plot = p1,
+  filename = "Figures/haelisl_2021.png",
+  width = 8, height = 0.5 * 8, scale = 1.3
+)
+
+p2 <- d |> 
+  group_by(land) |> 
+  summarise(haelisleitendur = sum(haelisleitendur)) |> 
+  mutate(
+    colour = case_when(
+      land == "Ísland" ~ litur_island,
+      land == "Danmörk" ~ litur_danmork,
+      land == "Finnland" ~ litur_finnland,
+      land == "Noregur" ~ litur_noregur,
+      land == "Svíþjóð" ~ litur_svithjod,
+      TRUE ~ litur_annad
+    ),
+    linewidth = 1 * (land == "Ísland"),
+    size = as_factor(linewidth),
+    land = glue("<i style='color:{colour}'>{land}</i>"),
+    land = fct_reorder(land, haelisleitendur)
+  ) |> 
+  ggplot(aes(haelisleitendur, land, col = colour, size = size)) +
+  geom_point() +
+  geom_segment(aes(yend = land, xend = 0, linewidth = linewidth), lty = 2, alpha = 0.5) +
+  scale_x_continuous(
+    expand = expansion(),
+    limits = c(0, 160)
+  ) +
+  scale_colour_identity() +
+  scale_size_manual(values = c(1, 3)) +
+  scale_linewidth(
+    range = c(0.2, 0.4)
+  ) +
+  theme(
+    plot.margin = margin(t = 5, r = 25, b = 5, l = 5),
+    axis.text.y = element_markdown(size = 10),
+    legend.position = "none"
+  ) +
+  labs(
+    x = NULL,
+    y = NULL,
+    title = "Hvaða land hefur tekið við flestum umsóknum um hæli?",
+    subtitle = "Fjöldi umsókna á 1.000 íbúa frá 2000 til 2021",
+    caption = caption
+  )
+
+ggsave(
+  plot = p2,
+  filename = "Figures/haelisl_uppsafnad.png",
+  width = 8, height = 0.5 * 8, scale = 1.3
+)
+
+p <- (p1 + labs(title = NULL, caption = NULL)) + 
+  (p2 + labs(title = NULL, caption = NULL)) +
+  plot_annotation(
+    title = "Hvaða land hefur tekið við flestum umsóknum um hæli?",
+    caption = caption
+  )
+
+ggsave(
+  plot = p,
+  filename = "Figures/haelisl_saman.png",
+  width = 8, height = 0.5 * 8, scale = 1.3
+)
+```
+
+```{r}
+plot_dat <- d |> 
+  select(ar, land, value = haelisleitendur) |> 
+  mutate(
+    colour = case_when(
+      land == "Ísland" ~ litur_island,
+      land == "Danmörk" ~ litur_danmork,
+      land == "Finnland" ~ litur_finnland,
+      land == "Noregur" ~ litur_noregur,
+      land == "Svíþjóð" ~ litur_svithjod,
+      TRUE ~ litur_annad
+    ),
+    linewidth = 1 * (land == "Ísland"),
+    size = as_factor(linewidth)
+  )
+
+p3 <-plot_dat |> 
+  ggplot(aes(ar, value)) +
+  geom_line(
+    data = plot_dat |> 
+      filter(colour == litur_annad),
+    aes(group = land, colour = litur_annad),
+    alpha = 0.3,
+    col = litur_annad
+  ) +
+  geom_line(
+    data = plot_dat |> 
+      filter(colour != litur_annad),
+    aes(group = land, colour = colour),
+    linewidth = 1
+  ) +
+  geom_text(
+    data = plot_dat |> 
+      filter(colour != litur_annad, ar == max(ar)) |> 
+      mutate(
+        value = case_when(
+          land == "Danmörk" ~ value + 0.3,
+          land == "Finnland" ~ value - 0.3,
+          TRUE ~ value
+        )
+      ),
+    aes(label = land, colour = colour),
+    hjust = 0,
+    nudge_x = 0.1
+  ) +
+  scale_x_tufte(
+    breaks = tufte_breaks(plot_dat$ar),
+    limits = c(2000, 2021.8)
+  ) +
+  scale_y_tufte(
+    breaks = tufte_breaks(plot_dat$value[plot_dat$value <= 15]),
+    labels = label_number(accuracy = 1),
+    limits = c(0, NA),
+    expand = expansion()
+  ) +
+  scale_colour_identity() +
+  coord_cartesian(ylim = c(0, 15)) +
+  labs(
+    x = NULL,
+    y = NULL,
+    subtitle = "Fjöldi umsókna á 1.000 íbúa eftir ári"
+  )
+
+p <- (
+  (p1 + labs(title = NULL, caption = NULL)) + 
+    (p2 + labs(title = NULL, caption = NULL))
+)/
+  p3 +
+  plot_annotation(
+    title = "Hvaða land hefur tekið við flestum umsóknum um hæli?",
+    caption = caption
+  )
+
+ggsave(
+  plot = p,
+  filename = "Figures/haelisl_saman_2.png",
+  width = 8, height = 1 * 8, scale = 1.3
+)
+```
+
+```{r}
+plot_dat <- d |> 
+  select(ar, land, value = haelisleitendur) |> 
+  arrange(ar, desc(value)) |> 
+  group_by(ar) |> 
+  mutate(row = row_number()) |> 
+  ungroup() |> 
+  filter(
+    land %in% c("Ísland", "Noregur", "Svíþjóð", "Danmörk", "Finnland")
+  )
+
+p <- plot_dat |> 
+  ggplot(aes(ar, row)) +
+  geom_line(aes(group = land, col = land)) +
+  geom_text(
+    data = plot_dat |> 
+      filter(ar == max(ar)),
+    aes(label = land, col = land),
+    hjust = 0,
+    nudge_x = 0.1
+  ) +
+  scale_x_tufte() +
+  scale_y_tufte(
+    labels = function(x) abs(x),
+    breaks = tufte_breaks(plot_dat$row)
+  ) +
+  scale_colour_manual(
+    values = c(
+      litur_danmork,
+      litur_finnland,
+      litur_island,
+      litur_noregur,
+      litur_svithjod
+    )
+  ) +
+  coord_cartesian(clip = "off", ylim = c(29, 1)) +
+  theme(
+    legend.position = "none",
+    plot.margin = margin(t = 5, r = 35, b = 5, l = 5)
+  ) +
+  labs(
+    x = NULL,
+    y = NULL,
+    title = "Sætaröðun landa eftir fjölda hælisumsókna á 1.000 íbúa",
+    subtitle = "Hér þýðir 1. sæti að landið var með flestar umsóknir og 29. sæti fæstar"
+  )
+
+ggsave(
+  plot = p,
+  filename = "Figures/haelis_saeti.png",
+  width = 8, height = 0.5 * 8, scale = 1.3
+)
+```
+
+
+
+```{r}
+plot_dat <- d |> 
+  filter(ar < 2021) |> 
+  mutate(net = innfluttir - utfluttir) |> 
+  mutate(
+    colour = case_when(
+      land == "Ísland" ~ litur_island,
+      land == "Danmörk" ~ litur_danmork,
+      land == "Finnland" ~ litur_finnland,
+      land == "Noregur" ~ litur_noregur,
+      land == "Svíþjóð" ~ litur_svithjod,
+      TRUE ~ litur_annad
+    ),
+    linewidth = 1 * (land == "Ísland"),
+    size = as_factor(linewidth)
+  )
+
+
+p1 <- plot_dat |> 
+  ggplot(aes(ar, net)) +
+  geom_hline(yintercept = 0, lty = 2) +
+  geom_line(
+    data = plot_dat |> 
+      filter(colour == litur_annad),
+    aes(group = land, col = colour),
+    alpha = 0.5
+  ) +
+  geom_line(
+    data = plot_dat |> 
+      filter(colour != litur_annad),
+    aes(group = land, col = colour),
+    linewidth = 1
+  ) +
+  geom_text(
+    data = plot_dat |> 
+      filter(colour != litur_annad, ar == max(ar)) |> 
+      mutate(
+        net = case_when(
+          land == "Svíþjóð" ~ net + 0.65,
+          land == "Ísland" ~ net + 0.25,
+          land == "Noregur" ~ net - 0.15,
+          TRUE ~ net
+        )
+      ),
+    aes(label = land, colour = colour),
+    hjust = 0,
+    nudge_x = 0.1
+  ) +
+  scale_x_tufte(
+    breaks = tufte_breaks(plot_dat$ar),
+    limits = c(2000, 2021)
+  ) +
+  scale_y_tufte(
+    breaks = tufte_breaks(plot_dat$net),
+    labels = label_number(accuracy = 1),
+    expand = expansion()
+  ) +
+  scale_colour_identity() +
+  theme(legend.position = "none") +
+  labs(
+    x = NULL,
+    y = NULL,
+    title = "Árleg breyting á fjölda íbúa með annað ríkisfang á 1.000 innlenda íbúa",
+    subtitle = "Reiknuð sem fjöldi erlendra sem flytur til landsins mínur fjöldi sem flytur frá landi"
+  )
+
+ggsave(
+  plot = p1,
+  filename = "Figures/netto_erl.png",
+  width = 8, height = 0.5 * 8, scale = 1.3
+)
+
+plot_dat <- d |> 
+  distinct(land, ar, hlutf_vinnandi) |> 
+  filter(ar >= 2015) |> 
+  group_by(land) |> 
+  summarise(hlutf_vinnandi = mean(hlutf_vinnandi)) |> 
+  ungroup() |> 
+  mutate(
+    colour = case_when(
+      land == "Ísland" ~ litur_island,
+      land == "Danmörk" ~ litur_danmork,
+      land == "Finnland" ~ litur_finnland,
+      land == "Noregur" ~ litur_noregur,
+      land == "Svíþjóð" ~ litur_svithjod,
+      TRUE ~ litur_annad
+    ),
+    linewidth = 1 * (land == "Ísland"),
+    size = as_factor(linewidth),
+    land = glue("<i style='color:{colour}'>{land}</i>"),
+    land = fct_reorder(land, hlutf_vinnandi)
+  ) 
+
+p2 <- plot_dat |> 
+  ggplot(aes(hlutf_vinnandi, land, col = colour, size = size)) +
+  geom_point() +
+  geom_segment(aes(yend = land, xend = 0, linewidth = linewidth), lty = 2, alpha = 0.5) +
+  scale_x_continuous(
+    expand = expansion(),
+    limits = c(0, 1),
+    labels = label_percent()
+  ) +
+  scale_colour_identity() +
+  scale_size_manual(values = c(1, 3)) +
+  scale_linewidth(
+    range = c(0.2, 0.4)
+  ) +
+  theme(
+    plot.margin = margin(t = 5, r = 25, b = 5, l = 5),
+    axis.text.y = element_markdown(size = 10, family = "Lato"),
+    legend.position = "none"
+  ) +
+  labs(
+    x = NULL,
+    y = NULL,
+    title = "Hlutfall innflytjenda sem eru á vinnumarkaði",
+    subtitle = "Meðaltal hlutfalls frá 2015 til 2021"
+  )
+
+ggsave(
+  plot = p2,
+  filename = "Figures/hlutf_vinnandi_2015_2021.png",
+  width = 8, height = 0.5 * 8, scale = 1.3
+)
+
+p <- (p2 + labs(title = NULL, subtitle = "Hlutfall innflytjenda sem eru á vinnumarkaði (meðaltal 2015 - 2021)")) /
+  (p1 + labs(title = NULL, subtitle = "Árleg breyting (innfluttir - útfluttir) á fjölda íbúa með erlent ríkisfang per 1.000 innlendir íbúar")) +
+  plot_annotation(
+    title = "Fjöldi innflytjenda og þátttaka á atvinnumarkaði",
+    caption = caption
+  )
+
+
+ggsave(
+  plot = p,
+  filename = "Figures/vinnandi_saman.png",
+  width = 8, height = 0.85 * 8, scale = 1.3
+)
+```
+
+
+
+```{r}
+plot_dat <- d |> 
+  filter(ar < 2021) |> 
+  mutate(net = innfluttir - utfluttir,
+         net_ekki_vinna = net * (1 - hlutf_vinnandi)) |> 
+  mutate(
+    colour = case_when(
+      land == "Ísland" ~ "#08306b",
+      TRUE ~ "#737373"
+    )
+  )
+
+
+p <- plot_dat |> 
+  ggplot(aes(ar, net_ekki_vinna)) +
+  geom_hline(yintercept = 0, lty = 2) +
+  geom_line(aes(group = land, col = colour, alpha = colour)) +
+  scale_x_tufte(
+    breaks = tufte_breaks(plot_dat$ar)
+  ) +
+  scale_y_tufte(
+    breaks = tufte_breaks(plot_dat$net_ekki_vinna),
+    labels = label_number(accuracy = 1),
+    expand = expansion()
+  ) +
+  scale_colour_identity() +
+  scale_alpha_manual(values = c(1, 0.2)) +
+  theme(legend.position = "none") +
+  labs(
+    x = NULL,
+    y = NULL,
+    title = "Árleg breyting á fjölda íbúa með annað ríkisfang á 1.000 innlenda íbúa",
+    subtitle = "Reiknuð sem fjöldi erlendra sem flytur til landsins mínur fjöldi sem flytur frá landi"
+  )
+
+ggsave(
+  plot = p,
+  filename = "Figures/netto_erl_ekkivinna.png",
+  width = 8, height = 0.5 * 8, scale =1.3
+)
+```
+
+
+```{r}
+plot_dat <- d |> 
+  filter(ar == 2020) |> 
+  mutate(
+    fjoldi_ekki_vinn = fjoldi_erl * (1 - hlutf_vinnandi),
+    colour = case_when(
+      land == "Ísland" ~ "#08306b",
+      TRUE ~ "#737373"
+    ),
+    linewidth = 1 * (land == "Ísland"),
+    land = glue("<i style='color:{colour}'>{land}</i>"),
+    land = fct_reorder(land, fjoldi_ekki_vinn)
+  )
+
+
+p <- plot_dat |> 
+  ggplot(aes(fjoldi_ekki_vinn, land, col = colour, size = colour)) +
+  geom_point() +
+  geom_segment(aes(yend = land, xend = 0, linewidth = linewidth), lty = 2, alpha = 0.5) +
+  scale_x_continuous(
+    expand = expansion()
+    # limits = c(0, 1),
+    # labels = label_percent()
+  ) +
+  scale_colour_identity() +
+  scale_size_manual(values = c(3, 1)) +
+  scale_linewidth(
+    range = c(0.2, 0.4)
+  ) +
+  theme(
+    plot.margin = margin(t = 5, r = 25, b = 5, l = 5),
+    axis.text.y = element_markdown(size = 10, family = "Lato"),
+    legend.position = "none"
+  ) +
+  labs(
+    x = NULL,
+    y = NULL,
+    title = "Hlutfall innflytjenda sem eru á vinnumarkaði",
+    subtitle = "Meðaltal hlutfalls frá 2015 til 2021"
+  )
+
+ggsave(
+  plot = p,
+  filename = "Figures/fjoldi_ekki_vinn_2021.png",
+  width = 8, height = 0.5 * 8, scale = 1.3
+)
+```
+
