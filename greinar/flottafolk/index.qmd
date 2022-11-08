@@ -100,13 +100,14 @@ if (!file.exists("data/data.parquet")) {
   
   pop <- read_csv("data/HISTPOP_05112022174045625.csv")
   
-  mig <- read_csv("data/MIG_05112022173659951.csv")
+  mig <- read_csv("data/MIG_05112022173659951.csv") 
   
   employ <- read_csv("data/MIG_NUP_RATES_GENDER_05112022181828243.csv")
   
   d <- mig |> 
     janitor::clean_names() |> 
     select(year, country, nationality = country_of_birth_nationality, variable, value) |> 
+    filter(nationality != "Total") |> 
     pivot_wider(names_from = "variable", values_from = "value") |> 
     janitor::clean_names() |> 
     select(
@@ -214,7 +215,7 @@ p1 <- d |>
   geom_segment(aes(yend = land, xend = 0, linewidth = linewidth), lty = 2, alpha = 0.5) +
   scale_x_continuous(
     expand = expansion(),
-    limits = c(0, 5)
+    limits = c(0, 2.5)
   ) +
   scale_colour_identity() +
   scale_size_manual(values = c(1, 3)) +
@@ -263,7 +264,7 @@ p2 <- d |>
   geom_segment(aes(yend = land, xend = 0, linewidth = linewidth), lty = 2, alpha = 0.5) +
   scale_x_continuous(
     expand = expansion(),
-    limits = c(0, 160)
+    limits = c(0, 80)
   ) +
   scale_colour_identity() +
   scale_size_manual(values = c(1, 3)) +
@@ -301,9 +302,7 @@ ggsave(
   filename = "Figures/haelisl_saman.png",
   width = 8, height = 0.5 * 8, scale = 1.3
 )
-```
 
-```{r}
 plot_dat <- d |> 
   select(ar, land, value = haelisumsoknir) |> 
   mutate(
@@ -359,7 +358,7 @@ p3 <-plot_dat |>
     expand = expansion()
   ) +
   scale_colour_identity() +
-  coord_cartesian(ylim = c(0, 15)) +
+  coord_cartesian(ylim = c(0, 7.5)) +
   labs(
     x = NULL,
     y = NULL,
@@ -684,7 +683,7 @@ ggsave(
 ```{r}
 plot_dat <- d |> 
   filter(ar < 2021) |> 
-  select(ar, land, value = rikisborgarar) |> 
+  select(ar, land, value = nyir_innlendir_rikisborgarar) |> 
   mutate(
     colour = case_when(
       land == "Ísland" ~ litur_island,
