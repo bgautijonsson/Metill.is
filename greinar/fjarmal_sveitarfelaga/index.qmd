@@ -23,7 +23,8 @@ categories:
     - efnahagur
     - ársreikningar
 href: greinar/fjarmal_sveitarfelaga/index.qmd
-
+execute:
+  eval: false
 ---
 
 

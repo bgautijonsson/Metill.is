@@ -10,6 +10,7 @@
   {
     "listing": "/index.html",
     "items": [
+      "/greinar/flottafolk/Readme.html",
       "/greinar/vinnuafl/index.html",
       "/greinar/visitala_neysluverds/index.html",
       "/greinar/stjornmalaflokkar/index.html",
@@ -24,6 +25,7 @@
   {
     "listing": "/greinar.html",
     "items": [
+      "/greinar/flottafolk/Readme.html",
       "/greinar/vinnuafl/index.html",
       "/greinar/visitala_neysluverds/index.html",
       "/greinar/stjornmalaflokkar/index.html",
@@ -39,8 +41,8 @@
   {
     "listing": "/pyngjan.html",
     "items": [
-      "/pyngjan/fasteignafjoldi/index.html",
       "/pyngjan/haskolar/index.html",
+      "/pyngjan/fasteignafjoldi/index.html",
       "/pyngjan/opinberar_veitingar/index.html",
       "/pyngjan/straeto/index.html"
     ]

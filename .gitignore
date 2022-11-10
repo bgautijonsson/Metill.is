@@ -5,6 +5,7 @@
 .DS_Store
 **/**config**
 **/**.csv
+**/**.tsv
 **/**.feather
 **/** [0-9]**
 **/**.Rdata

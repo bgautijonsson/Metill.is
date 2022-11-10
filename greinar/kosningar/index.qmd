@@ -24,6 +24,8 @@ categories:
     - kosningar
 href: greinar/kosningar/index.qmd
 image: Figures/thingmenn_atkvaedi_tw.png
+execute:
+  eval: false
 ---
 
 
