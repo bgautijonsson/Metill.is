@@ -9,7 +9,7 @@ author:
         url: "https://twitter.com/bggjonsson"
         affiliation: "Tölfræði, Raunvísindadeild Háskóla Íslands"
         affiliation-url: "https://www.hi.is/tolfraedi_0"
-date: "2022/11/10"
+date: "2022/11/11"
 format: 
     html:
         smooth-scroll: true
@@ -211,7 +211,7 @@ Ingvi og Arnar sendu mér eftirfarandi mynd, sem birtist í Stúdentablaðinu á
 
 ![](Figures/hornkerling.png){fig-align="center"}
 
-Þetta er áhugaverð spurning. Til að svara henni skulum við sækja ríkisútgjöld frá [opinberumsvif.is](https://opinberumsvif.is){target="_blank"} og tengja þau gögn við gögn Hagstofunnar um [Nemendur ofan grunnskóla eftir skólum, lögheimili, kennsluformi og kyni 1997-2020](https://px.hagstofa.is/pxis/pxweb/is/Samfelag/Samfelag__skolamal__0_yfirlit__yfirlit/SKO00003b.px){target="_blank"}. Svo skulum við athuga eftirfarandi:
+Þetta er áhugaverð spurning. Til að svara henni skulum við sækja ríkisútgjöld frá [rikisreikningur.is](https://rikisreikningur.is){target="_blank"} og tengja þau gögn við gögn Hagstofunnar um [Nemendur ofan grunnskóla eftir skólum, lögheimili, kennsluformi og kyni 1997-2020](https://px.hagstofa.is/pxis/pxweb/is/Samfelag/Samfelag__skolamal__0_yfirlit__yfirlit/SKO00003b.px){target="_blank"}. Svo skulum við athuga eftirfarandi:
 
 * Hver hafa árleg útgjöld ríkisins til háskólanna á Íslandi verið?
 * Hver var fjöldi nemenda í skólunum á sömu árum?
@@ -536,7 +536,7 @@ p <- d |>
     axis.ticks = element_blank(),
     axis.title.x = element_text(hjust = 0),
     axis.title.y = element_text(hjust = 0)
-    ) +
+  ) +
   labs(
     x = "Fjöldi nemenda",
     y = "Útgjöld á hvern nemanda",
@@ -556,3 +556,273 @@ ggsave(
 ```
 
 ![](Figures/economies_of_scale.png){.column-page}
+
+```{r}
+theme_set(
+  theme_half_open() +
+    theme(legend.position = "top",
+          # legend.text = element_text(size = 10),
+          plot.title = element_text(size = 20),
+          plot.margin = margin(t = 5, r = 35, b = 5, l = 5))
+)
+
+plot_dat <- d |> 
+  select(ar, stofnun, value = utgjold)
+
+hjust <- c(
+  "háskóli íslands" = 0.5,
+  "akureyri" = 0.4,
+  "bifröst" = 0.335,
+  "hólum" = 0.145,
+  "reykjavík" = 0.8,
+  "landbún" = 0.8,
+  "lhí" = 0.95
+)
+
+p <- plot_dat |> 
+  line_plot(
+    title = "Útgjöld ríkisins til íslenskra háskóla",
+    subtitle = "Sýnt á verðlagi hvers árs",
+    caption = "Mynd er á lograkvarða þ.a. fjarlægð milli 1, 10, 100 o.s.f. er sú sama og mismunur milli lína táknar hlutfallslegan mismun",
+    hjust = unname(hjust),
+    ylab = label_isk(scale = 1e-6, accuracy = 1),
+    ybreaks = c(range(plot_dat$value), 3e8, 1e9, 3e9, 1e10, 1e11),
+    trans = "log10"
+  )
+
+ggsave(
+  plot = p,
+  filename = "Figures/utgjold_throun_pyngjan.png",
+  width = 8, height = 0.621 * 8, scale = 1.3,
+  bg = "#fffff8"
+)
+
+plot_dat <- d |> 
+  select(ar, stofnun, value = utgjold_leidrett)
+
+hjust <- c(
+  "háskóli íslands" = 0.5,
+  "akureyri" = 0.4,
+  "bifröst" = 0.335,
+  "hólum" = 0.142,
+  "reykjavík" = 0.8,
+  "landbún" = 0.8,
+  "lhí" = 0.95
+)
+
+p <- plot_dat |> 
+  line_plot(
+    title = "Útgjöld ríkisins til íslenskra háskóla",
+    subtitle = "Sýnt á föstu verðlagi 2022",
+    caption = "Mynd er á lograkvarða þ.a. fjarlægð milli 1, 10, 100 o.s.f. er sú sama og mismunur milli lína táknar hlutfallslegan mismun",
+    hjust = unname(hjust),
+    ylab = label_isk(scale = 1e-6, accuracy = 1),
+    ybreaks = c(range(plot_dat$value), 3e8, 1e9, 3e9, 1e10, 1e11),
+    trans = "log10"
+  )
+
+ggsave(
+  plot = p,
+  filename = "Figures/utgjold_leidrett_throun_pyngjan.png",
+  width = 8, height = 0.621 * 8, scale = 1.3,
+  bg = "#fffff8"
+)
+
+plot_dat <- d |> 
+  select(ar, stofnun, value = nemendur)
+
+hjust <- c(
+  "háskóli íslands" = 0.5,
+  "akureyri" = 0.4,
+  "bifröst" = 0.335,
+  "hólum" = 0.142,
+  "reykjavík" = 0.8,
+  "landbún" = 0.8,
+  "lhí" = 0.95
+)
+
+p <- plot_dat |> 
+  line_plot(
+    title = "Fjöldi nemenda í íslenskum háskólum",
+    caption = "Mynd er á lograkvarða þ.a. fjarlægð milli 1, 10, 100 o.s.f. er sú sama og mismunur milli lína táknar hlutfallslegan mismun",
+    hjust = unname(hjust),
+    ybreaks = c(range(plot_dat$value), 1e2, 3e2, 1e3, 3e3, 1e4),
+    ylab = label_number(accuracy = 1, big.mark = ".", decimal.mark = ","),
+    trans = "log10"
+  )
+
+ggsave(
+  plot = p,
+  filename = "Figures/nemendur_throun_pyngjan.png",
+  width = 8, height = 0.621 * 8, scale = 1.3,
+  bg = "#fffff8"
+)
+
+plot_dat <- d |> 
+  group_by(ar) |> 
+  mutate(value = nemendur / sum(nemendur)) |> 
+  ungroup() |> 
+  select(ar, stofnun, value)
+
+hjust <- c(
+  "háskóli íslands" = 0.5,
+  "akureyri" = 0.4,
+  "bifröst" = 0.335,
+  "hólum" = 0.142,
+  "reykjavík" = 0.8,
+  "landbún" = 0.8,
+  "lhí" = 0.95
+)
+
+p <- plot_dat |> 
+  line_plot(
+    title = "Dreifing nemenda á hvern háskóla",
+    subtitle = "Sýnt sem fjöldi nemenda í skólanum deilt með heildarfjölda nemenda í öllum skólunum",
+    caption = "Mynd er á lograkvarða þ.a. fjarlægð milli 1%, 10%, 100% o.s.f. er sú sama og mismunur milli lína táknar hlutfallslegan mismun",
+    hjust = unname(hjust),
+    ybreaks = c(range(plot_dat$value), 3e-2, 1e-1, 3e-1),
+    ylab = label_percent(accuracy = 1, big.mark = ".", decimal.mark = ","),
+    trans = "log10"
+  )
+
+ggsave(
+  plot = p,
+  filename = "Figures/nemendur_dreifing_pyngjan.png",
+  width = 8, height = 0.621 * 8, scale = 1.3,
+  bg = "#fffff8"
+)
+
+plot_dat <- d |> 
+  select(ar, stofnun, value = utgjold_per_nem)
+
+hjust <- c(
+  "háskóli íslands" = 0.75,
+  "akureyri" = 0.4,
+  "bifröst" = 0.335,
+  "hólum" = 0.43,
+  "reykjavík" = 0.77,
+  "landbún" = 0.75,
+  "lhí" = 0.97
+)
+
+p <- plot_dat |>  
+  line_plot(
+    title = "Útgjöld til háskóla á hvern nemanda",
+    subtitle = "Sýnt á verðlagi hvers árs",
+    hjust = unname(hjust),
+    text_smoothing = 40
+  )
+
+ggsave(
+  plot = p,
+  filename = "Figures/utgjold_per_nem_throun_pyngjan.png",
+  width = 8, height = 0.621 * 8, scale = 1.3,
+  bg = "#fffff8"
+)
+
+plot_dat <- d |> 
+  select(ar, stofnun, value = utgjold_per_nem_leidrett)
+
+hjust <- c(
+  "háskóli íslands" = 0.75,
+  "akureyri" = 0.4,
+  "bifröst" = 0.335,
+  "hólum" = 0.43,
+  "reykjavík" = 0.77,
+  "landbún" = 0.75,
+  "lhí" = 0.99
+)
+
+p <- plot_dat |>  
+  line_plot(
+    title = "Útgjöld til háskóla á hvern nemanda",
+    subtitle = "Sýnt á föstu verðlagi 2022",
+    hjust = unname(hjust),
+    text_smoothing = 40
+  )
+
+ggsave(
+  plot = p,
+  filename = "Figures/utgjold_per_nem_leidrett_throun_pyngjan.png",
+  width = 8, height = 0.621 * 8, scale = 1.3,
+  bg = "#fffff8"
+)
+
+plot_dat <- d |> 
+  select(ar, stofnun, value = utgjold_per_nem_leidrett) |> 
+  filter(ar == max(ar)) |> 
+  mutate(
+    value = vnv_convert(value, obs_date = 2022, date_unity = 2000)
+  )
+
+p <- plot_dat |> 
+  ggplot(aes(fct_reorder(stofnun, -value), value)) +
+  geom_col() +
+  geom_text(
+    aes(label = isk(value)),
+    vjust = -0.5
+  ) +
+  scale_x_discrete(
+    labels = function(x) str_wrap(x, width = 20)
+  ) +
+  scale_y_continuous(
+    labels = label_isk(scale = 1),
+    expand = expansion(),
+    breaks = 1e5 * seq(0, 20, 2),
+    limits = c(0, 1.22e6)
+  ) +
+  scale_fill_brewer(type = "qual", palette = "Dark2") +
+  theme(
+    legend.position = "none"
+  ) +
+  labs(
+    x = NULL,
+    y = NULL,
+    title = "Háskóli Íslands hornkerling?",
+    subtitle = "Framlög ríkissjóðs á hvern nemanda í háskólum á Íslandi árið 2020 (verðlag 2000)"
+  )
+
+ggsave(
+  plot = p,
+  filename = "Figures/utgjold_per_nem_leidrett_2020_pyngjan.png",
+  width = 8, height = 0.621 * 8, scale = 1.3,
+  bg = "#fffff8"
+)
+
+p <- d |> 
+  group_by(stofnun) |> 
+  mutate(nemendur = nemendur / max(nemendur),
+         utgjold_per_nem_leidrett = utgjold_per_nem_leidrett / max(utgjold_per_nem_leidrett)) |> 
+  ungroup() |> 
+  ggplot(aes(nemendur, utgjold_per_nem_leidrett, col = stofnun)) +
+  geom_point(aes(size = ar)) +
+  geom_smooth(se = 0, method = "lm") +
+  scale_colour_brewer(type = "qual", palette = "Dark2") +
+  scale_size_continuous(range = c(1, 4)) +
+  facet_wrap("stofnun", scales = "free", ncol = 2) +
+  theme(
+    legend.position = "none",
+    axis.text = element_blank(),
+    axis.ticks = element_blank(),
+    axis.title.x = element_text(hjust = 0),
+    axis.title.y = element_text(hjust = 0)
+  ) +
+  labs(
+    x = "Fjöldi nemenda",
+    y = "Útgjöld á hvern nemanda",
+    title = "Samband nemendafjölda og útgjalda á hvern nemanda",
+    subtitle = str_c(
+      "Sjáum við margfeldishagkvæmni í útgjöldum til háskólanna?",
+      # "\n",
+      " Stærð punkta er í hækkandi tímaröð"
+    )
+  )
+
+ggsave(
+  plot = p,
+  filename = "Figures/economies_of_scale_pyngjan.png",
+  width = 8, height = 0.9 * 8, scale = 1.3,
+  bg = "#fffff8"
+)
+```
+
