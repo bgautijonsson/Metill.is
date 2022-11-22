@@ -93,17 +93,25 @@ p1 <- d |>
          hlutar = value / verd / 1e6,
          hlutf = hlutar / heildar_hlutar) |> 
   ggplot(aes(verd, value)) +
+  geom_vline(
+    xintercept = 117,
+    lty = 2,
+    alpha = 0.4
+  ) +
+  annotate(
+    x = 117.2, 
+    y = 40e9, 
+    label = "Endanlegt söluverð",
+    geom = "text",
+    hjust = 0,
+    alpha = 0.6
+    ) +
   geom_col(
     aes(fill = name, col = name), 
     position = "stack", 
     width = 1, 
     alpha = 0.9
   ) +
-  # geom_hline(
-  #   yintercept = 1,
-  #   lty = 2,
-  #   alpha = 0.6
-  # ) +
   scale_x_continuous(
     expand = expansion(),
     breaks = 110:125,
@@ -154,14 +162,14 @@ p2 <- plot_dat |>
     lty = 2,
     alpha = 0.4
   ) +
-  annotate(
-    x = 117.2, 
-    y = 320, 
-    label = "Endanlegt söluverð",
-    geom = "text",
-    hjust = 0,
-    alpha = 0.6
-    ) +
+  # annotate(
+  #   x = 117.2, 
+  #   y = 320, 
+  #   label = "Endanlegt söluverð",
+  #   geom = "text",
+  #   hjust = 0,
+  #   alpha = 0.6
+  # ) +
   geom_col(
     aes(fill = name, col = name), 
     position = "stack", 
@@ -198,7 +206,13 @@ p <- p1 / p2 +
   # plot_layout(guides = "collect") +
   plot_annotation(
     title = "Dreifing kauptilboða í Íslandsbankasölunni",
-    caption = "Byggt á mynd 3.3 úr skýrslu Ríkisendurskoðunar\nhttps://www.rikisend.is/reskjol/files/Skyrslur/2022-Islandsbanki-sala.pdf"
+    caption = str_c(
+      "Byggt á mynd 3.3 úr skýrslu Ríkisendurskoðunar",
+      "\n",
+      "https://www.rikisend.is/reskjol/files/Skyrslur/2022-Islandsbanki-sala.pdf",
+      "\n",
+      "Kóði: https://github.com/bgautijonsson/Metill.is/blob/master/greinar/islandsbanki/index.qmd"
+    )
   )
 
 
