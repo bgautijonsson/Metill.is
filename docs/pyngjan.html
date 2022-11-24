@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.1.175">
+<meta name="generator" content="quarto-1.2.269">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -86,6 +86,7 @@ ul.task-list li input[type="checkbox"] {
 <meta name="twitter:title" content="Pyngjan">
 <meta name="twitter:description" content="Hér má finna allar þær greiningar sem ég hef unnið fyrir fréttabréf Pyngjunnar">
 <meta name="twitter:creator" content="@bggjonsson">
+<meta name="twitter:site" content="@bggjonsson">
 <meta name="twitter:card" content="summary_large_image">
 </head><body class="fullcontent"><nav class="navbar m-0 p-0 bg-primary">
 
@@ -134,6 +135,7 @@ ul.task-list li input[type="checkbox"] {
   <div class="quarto-title-meta">
 
       
+    
       
     </div>
     
@@ -151,7 +153,35 @@ ul.task-list li input[type="checkbox"] {
 <p><br></p>
 <div id="listing-posts" class="quarto-listing quarto-listing-container-default">
 <div class="list quarto-listing-default">
-<div class="quarto-post image-right" data-index="0" data-listing-date-sort="1668124800000" data-listing-file-modified-sort="1668169714940" data-listing-reading-time-sort="19.845">
+<div class="quarto-post image-right" data-index="0" data-listing-date-sort="1669334400000" data-listing-file-modified-sort="1669327694896" data-listing-reading-time-sort="12.73">
+<div class="thumbnail">
+<p><a href="./pyngjan/fyrstukaupendur/index.html"> <img src="./pyngjan/fyrstukaupendur/Figures/kaupmattur.png" class="thumnail-image"> </a></p>
+</div>
+<div class="body">
+<a href="./pyngjan/fyrstukaupendur/index.html">
+<h3 class="no-anchor listing-title">
+Fyrstu kaupendur
+</h3>
+<div class="listing-subtitle">
+Hvernig standa fyrstu kaupendur á fasteignamarkaðinum?
+</div>
+<div class="listing-description">
+<p>Skoðum gögn fasteignaskrár, sem flutti nýlega frá Þjóðskrá til HMS, um fyrstu kaupendur og komumst að því hvort meðalaldur þeirra hafi breyst, hversu stór hluti kaupenda eru fyrstu kaupendur, og hvernig kaupverði ber saman við ráðstöfunartekur ungs fólks.</p>
+</div>
+</a>
+</div>
+<div class="metadata">
+<a href="./pyngjan/fyrstukaupendur/index.html">
+<div class="listing-date">
+Nov 25, 2022
+</div>
+<div class="listing-author">
+Brynjólfur Gauti Guðrúnar Jónsson
+</div>
+</a>
+</div>
+</div>
+<div class="quarto-post image-right" data-index="1" data-listing-date-sort="1668124800000" data-listing-file-modified-sort="1668169714940" data-listing-reading-time-sort="19.845">
 <div class="thumbnail">
 <p><a href="./pyngjan/haskolar/index.html"> <img src="./pyngjan/haskolar/Figures/utgjold_per_nem_leidrett_throun.png" class="thumnail-image"> </a></p>
 </div>
@@ -179,7 +209,7 @@ Brynjólfur Gauti Guðrúnar Jónsson
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="1" data-listing-date-sort="1666915200000" data-listing-file-modified-sort="1666911001849" data-listing-reading-time-sort="11.795">
+<div class="quarto-post image-right" data-index="2" data-listing-date-sort="1666915200000" data-listing-file-modified-sort="1666911001849" data-listing-reading-time-sort="11.795">
 <div class="thumbnail">
 <p><a href="./pyngjan/fasteignafjoldi/index.html"> <img src="./pyngjan/fasteignafjoldi/Figures/pop_arnar_page.png" class="thumnail-image"> </a></p>
 </div>
@@ -207,7 +237,7 @@ Brynjólfur Gauti Guðrúnar Jónsson
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="2" data-listing-date-sort="1665705600000" data-listing-file-modified-sort="1666008600331" data-listing-reading-time-sort="10.76">
+<div class="quarto-post image-right" data-index="3" data-listing-date-sort="1665705600000" data-listing-file-modified-sort="1666008600331" data-listing-reading-time-sort="10.76">
 <div class="thumbnail">
 <p><a href="./pyngjan/opinberar_veitingar/index.html"> <img src="./pyngjan/opinberar_veitingar/Figures/veitingastadir.png" class="thumnail-image"> </a></p>
 </div>
@@ -235,7 +265,7 @@ Brynjólfur Gauti Guðrúnar Jónsson
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="3" data-listing-date-sort="1664496000000" data-listing-file-modified-sort="1666008600370" data-listing-reading-time-sort="16.32">
+<div class="quarto-post image-right" data-index="4" data-listing-date-sort="1664496000000" data-listing-file-modified-sort="1666008600370" data-listing-reading-time-sort="16.32">
 <div class="thumbnail">
 <p><a href="./pyngjan/straeto/index.html"> <img src="./pyngjan/straeto/image.png" class="thumnail-image"> </a></p>
 </div>
@@ -314,7 +344,24 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     button.classList.add('code-copy-button-checked');
     var currentTitle = button.getAttribute("title");
     button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
     setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
       button.setAttribute("title", currentTitle);
       button.classList.remove('code-copy-button-checked');
     }, 1000);
@@ -350,24 +397,42 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       return note.innerHTML;
     });
   }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
   var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
   for (var i=0; i<bibliorefs.length; i++) {
     const ref = bibliorefs[i];
-    const cites = ref.parentNode.getAttribute('data-cites').split(' ');
-    tippyHover(ref, function() {
-      var popup = window.document.createElement('div');
-      cites.forEach(function(cite) {
-        var citeDiv = window.document.createElement('div');
-        citeDiv.classList.add('hanging-indent');
-        citeDiv.classList.add('csl-entry');
-        var biblioDiv = window.document.getElementById('ref-' + cite);
-        if (biblioDiv) {
-          citeDiv.innerHTML = biblioDiv.innerHTML;
-        }
-        popup.appendChild(citeDiv);
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
       });
-      return popup.innerHTML;
-    });
+    }
   }
 });
 </script>

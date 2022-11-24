@@ -1,0 +1,508 @@
+---
+title: "Fyrstu kaupendur"
+pagetitle: "Fyrstu kaupendur"
+subtitle: "Hvernig standa fyrstu kaupendur á fasteignamarkaðinum?"
+description: | 
+    Skoðum gögn fasteignaskrár, sem flutti nýlega frá Þjóðskrá til HMS, um fyrstu kaupendur og komumst að því hvort meðalaldur þeirra hafi breyst, hversu stór hluti kaupenda eru fyrstu kaupendur, og hvernig kaupverði ber saman við ráðstöfunartekur ungs fólks.
+author: 
+    -   name: "Brynjólfur Gauti Guðrúnar Jónsson"
+        url: "https://twitter.com/bggjonsson"
+        affiliation: "Tölfræði, Raunvísindadeild Háskóla Íslands"
+        affiliation-url: "https://www.hi.is/tolfraedi_0"
+date: "2022/11/25"
+format: 
+    html:
+        smooth-scroll: true
+        link-external-newwindow: true
+        code-fold: true
+        
+editor: source
+image: Figures/kaupmattur.png
+twitter-card:
+    image: Figures/kaupmattur.png
+execute:
+  eval: true
+---
+
+Nýlega var [umsjón fasteignaskrár flutt frá Þjóðskrá til Húsnæðis- og mannvirkjastofnunar (HMS)](https://hms.is/frettir/flutningur-kerfa-fasteignaskrar-fra-%C3%BEjo%C3%B0skra-til-hmsloki%C3%B0){target="_blank"}. Núna er því hægt að nálgast öll gögn sem tengjast henni á [fasteignaskra.is](https://fasteignaskra.is/){target="_blank"}. Hér ætlum við að skoða [gögnin um fyrstu kaupendur](https://fasteignaskra.is/gogn/fasteignagattin/fasteignavidskipti/fyrstu-kaupendur/){target="_blank"}. Með því að skoða "page source" getum við púslað saman hlekki á JSON skrárnar á bak við myndirnar á síðunni.
+
+Fyrst sjáum við að fleiri kaupendur eru fyrstu kaupendur en áður og að þau eignast sína fyrstu fasteign fyrr, en það varð smá stöðnun í þessari þróun síðasta árið.
+
+![](Figures/hlutf_aldur.png){.column-page}
+
+Næst sjáum við að fyrsta fasteign fólks er aðeins minni en hún var fyrir 15 árum. Á móti kemur að kaupverðið *(leiðrétt fyrir vísitölu fasteignaverðs)* hefur lækkað, og fermetraverðið *(leiðrétt fyrir vísitölu fasteignaverðs)* því haldist nokkuð stöðugt.
+
+![](Figures/fm_verd_fmverd.png){.column-page}
+
+En leiðrétting fyrir vísitölu fasteignaverðs sýnir okkur ekki endilega hvernig ungt fólk er stætt þegar kemur að því að kaupa fasteign. Til þess viljum við frekar sækja gögn [Hagstofu um tekjur eftir kyni og aldri](https://px.hagstofa.is/pxis/pxweb/is/Samfelag/Samfelag__launogtekjur__3_tekjur__1_tekjur_skattframtol/TEK01001.px/?rxid=680f1f28-2647-4534-ba70-09b10137aeed){target="_blank"}. Hér notum við miðgildi ráðstöfunartekna 25 - 29 ára einstaklinga og skoðum meðalkaupverð fyrstu fasteigna sem hlutfall af ráðstöfunartekjunum. Þá sjáum við að þótt fyrsta fasteignin kostar minna en áður miðað við aðrar fasteignir *(lækkun þegar leiðrétt fyrir vísitölu fasteignaverðs)*, þá kostar hún fleiri ár af tekjum. Nánar tiltekið hefur meðalverðið, talið sem ár af ráðstöfunartekjum, farið úr rétt rúmlega 8 í um það bil 11 ár.
+
+![](Figures/kaupmattur.png){.column-page}
+
+```{r}
+#| include: false
+
+
+library(cowplot)
+library(tidyverse)
+library(scales)
+library(pxweb)
+library(ggthemes)
+library(kableExtra)
+library(gganimate)
+library(lubridate)
+library(plotly)
+library(metill)
+library(ggtext)
+library(feather)
+library(patchwork)
+library(rjson)
+library(arrow)
+library(visitalaneysluverds)
+library(geomtextpath)
+library(mgcv)
+
+theme_set(theme_metill())
+```
+
+
+```{r}
+if (!file.exists("data/data.csv")) {
+  url <- "https://talnaefni.fasteignaskra.is/talnaefni/v1/fyrstukaupsveitarfelogmedalaldur"
+  aldur <- rjson::fromJSON(file = url) |> 
+    as_tibble() |> 
+    separate(date, into = c("ar", "man"), sep = "-") |> 
+    mutate(
+      ar = parse_number(ar),
+      man = parse_number(man),
+      man = 1 + (man - 1) * 3,
+      dags = clock::date_build(year = ar, month = man)
+    ) |> 
+    select(dags, sveitarfélög) |> 
+    unnest_wider(sveitarfélög) |> 
+    mutate(dags = list(dags)) |> 
+    unnest_longer(everything()) |> 
+    select(
+      svf = name, 
+      dags, 
+      aldur_fyrstu = fyrstu, 
+      aldur_adrir = ekki_fyrstu, 
+      aldur_allir = allir,
+      fjoldi_fyrstu, 
+      fjoldi_adrir = fjoldi_ekki_fyrstu, 
+      fjoldi_allir
+    ) |> 
+    mutate_at(vars(-svf, -dags), parse_number) |> 
+    pivot_longer(c(-svf, -dags), names_to = c("breyta", "hopur"), values_to = "value", names_sep = "_") |> 
+    pivot_wider(names_from = "breyta", values_from = "value")
+  
+  url <- "https://talnaefni.fasteignaskra.is/talnaefni/v1/fyrstukaupsveitarfelogmedalstaerd"
+  staerd <- rjson::fromJSON(file = url) |> 
+    as_tibble() |> 
+    separate(date, into = c("ar", "man"), sep = "-") |> 
+    mutate(
+      ar = parse_number(ar),
+      man = parse_number(man),
+      man = 1 + (man - 1) * 3,
+      dags = clock::date_build(year = ar, month = man)
+    ) |> 
+    select(dags, sveitarfélög) |> 
+    unnest_wider(sveitarfélög) |> 
+    mutate(dags = list(dags)) |> 
+    unnest_longer(everything()) |> 
+    select(svf = name, dags, fyrstu, adrir = ekki_fyrstu, allir) |> 
+    pivot_longer(c(-dags, -svf), names_to = "hopur", values_to = "staerd")
+  
+  url <- "https://talnaefni.fasteignaskra.is/talnaefni/v1/fyrstukaupsveitarfelogmedalverd"
+  verd <- rjson::fromJSON(file = url) |> 
+    as_tibble() |> 
+    separate(date, into = c("ar", "man"), sep = "-")  |> 
+    mutate(
+      ar = parse_number(ar),
+      man = parse_number(man),
+      man = 1 + (man - 1) * 3,
+      dags = clock::date_build(year = ar, month = man)
+    ) |> 
+    select(dags, sveitarfélög) |> 
+    unnest_wider(sveitarfélög) |> 
+    mutate(dags = list(dags)) |> 
+    unnest_longer(everything()) |> 
+    select(svf = name, dags, fyrstu, adrir = ekki_fyrstu, allir) |> 
+    pivot_longer(c(-dags, -svf), names_to = "hopur", values_to = "verd")
+  
+  url <- "https://talnaefni.fasteignaskra.is/talnaefni/v1/ibudavisitala"
+  
+  vst <- tibble(
+    data = rjson::fromJSON(file = url)
+  ) |> 
+    unnest_wider(data) |> 
+    select(dags = date, vst = Vst_heild) |> 
+    mutate(
+      dags = as_date(dags),
+      vst = parse_number(vst),
+      vst = vst / vst[dags == max(dags)]
+    )
+  
+  url <- "https://px.hagstofa.is:443/pxis/api/v1/is/Samfelag/launogtekjur/3_tekjur/1_tekjur_skattframtol/TEK01001.px"
+  
+  tekjur <- pxweb_get(
+    url = url,
+    query = list(
+      "Tekjur og skattar" = "5",
+      "Eining" = "3",
+      "Kyn" = "0",
+      "Aldur" = "25",
+      "Ár" = "*"
+    )
+  )  |>
+    as.data.frame() |>
+    as_tibble() |>
+    janitor::clean_names() |>
+    select(ar, tekjur = tekjur_eftir_kyni_og_aldri) |>
+    crossing(
+      man = c(1, 4, 7, 10)
+    ) |>
+    mutate(
+      ar = parse_number(ar),
+      dags = clock::date_build(year = ar, month = man)
+    ) |>
+    mutate(
+      tekjur = ifelse(man == 1, tekjur, NA_real_),
+      tekjur = approx(dags, tekjur, dags)$y
+    ) |> 
+    select(-man, -ar) |> 
+    fill(tekjur, .direction = "down")
+  
+  d <- aldur |> 
+    inner_join(
+      staerd,
+      by = c("svf", "dags", "hopur")
+    ) |> 
+    inner_join(
+      verd,
+      by = c("svf", "dags", "hopur")
+    ) |> 
+    inner_join(
+      vst,
+      by = "dags"
+    ) |> 
+    inner_join(
+      tekjur,
+      by = "dags"
+    ) |> 
+    select(svf, dags, hopur, aldur, staerd, verd, fjoldi, vst, tekjur) |> 
+    mutate_at(vars(staerd, verd), parse_number)
+  
+  d |> 
+    write_csv("data/data.csv")
+} else {
+  d <- read_csv("data/data.csv")
+}
+```
+
+```{r}
+make_plot <- function(
+    plot_dat,
+    title,
+    subtitle,
+    labels, 
+    limits,
+    min_n = 5,
+    span = 0.2
+) {
+  heild <- plot_dat |> 
+    drop_na() |> 
+    group_by(dags) |> 
+    summarise(
+      value = sum(n * value, na.rm = T) / sum(n, na.rm = T),
+      n = sum(n, na.rm = T)
+    ) |> 
+    mutate(svf = "Heild")
+  
+  plot_dat <- bind_rows(
+    plot_dat,
+    heild
+  ) |> 
+    drop_na() |> 
+    mutate(timi = scale(as.numeric(dags))) |> 
+    group_by(svf) |> 
+    filter(all(n > min_n),
+           length(!is.na(value)) > 10)
+  
+  plot_dat |> 
+    ggplot(aes(dags, value)) +
+    geom_smooth(
+      data = plot_dat |> 
+        filter(svf == "Heild"),
+      colour = "black",
+      se = 0,
+      span = span
+    ) +
+    stat_smooth(
+      data = plot_dat |> 
+        filter(svf != "Heild") ,
+      aes(group = svf),
+      geom = "line",
+      alpha = 0.1,
+      col = "black",
+      span = span
+    ) +
+    scale_x_date(
+      breaks = breaks_width("2 year"),
+      labels = label_date_short(),
+      expand = expansion()
+    ) +
+    scale_y_continuous(
+      labels = labels,
+      limits = limits,
+      expand = expansion()
+    ) +
+    labs(
+      x = NULL,
+      y = NULL,
+      title = title,
+      subtitle = subtitle
+    )
+}
+```
+
+
+```{r}
+plot_dat <- d |> 
+  select(svf, dags, hopur, fjoldi) |> 
+  pivot_wider(names_from = hopur, values_from = fjoldi) |> 
+  mutate(value = fyrstu / allir) |> 
+  select(svf, dags, n = allir, value)
+
+p1 <- plot_dat |> 
+  make_plot(
+    title = "Hlutfall fyrstu kaupenda af öllum kaupendum",
+    subtitle = "Sýnt fyrir landið í heild sinni (svart) og stærri sveitarfélög (grátt)",
+    labels = label_hlutf(),
+    limits = c(0, 0.4)
+  )
+
+ggsave(
+  plot = p1,
+  filename = "Figures/hlutfall.png",
+  width = 8, height = 0.5 * 8, scale = 1.5
+)
+```
+
+
+```{r}
+plot_dat <- d |> 
+  filter(hopur == "fyrstu") |> 
+  select(svf, dags, value = aldur, n = fjoldi) |> 
+  mutate(n = sqrt(n))
+
+p2 <- plot_dat |> 
+  make_plot(
+    title = "Meðalaldur fyrstu kaupenda",
+    subtitle = "Sýnt fyrir landið í heild sinni (svart) og stærri sveitarfélög (grátt)",
+    labels = label_number(suffix = " ár", big.mark = ".", decimal.mark = ","),
+    limits = c(NA, NA),
+    min_n = 1,
+    span = 0.4
+  ) +
+  coord_cartesian(
+    ylim = c(25, 35)
+  )
+
+ggsave(
+  plot = p2,
+  filename = "Figures/aldur.png",
+  width = 8, height = 0.5 * 8, scale = 1.5
+)
+```
+
+
+
+```{r}
+p <- (p1 + labs(
+  title = NULL,
+  subtitle = "% af öllum kaupendum"
+)) + 
+  (p2 + labs(
+    title = NULL,
+    subtitle = "Meðalaldur"
+  )) +
+  plot_annotation(
+    title = "Fyrstu kaupendum fjölgar og þau eru yngri en fyrir 15 árum",
+    subtitle = "Sýnt fyrir Ísland (svart) og stærri sveitarfélög (grátt)"
+  )
+
+ggsave(
+  plot = p,
+  filename = "Figures/hlutf_aldur.png",
+  width = 8, height = 0.4 * 8, scale = 1.5
+)
+
+theme_set(theme_half_open())
+ggsave(
+  plot = p,
+  filename = "Figures/hlutf_aldur_pyngjan.png",
+  width = 8, height = 0.4 * 8, scale = 1.5,
+  bg = "#fffff8"
+)
+theme_set(theme_metill(type = "standalone"))
+```
+
+
+```{r}
+plot_dat <- d |> 
+  filter(hopur == "fyrstu") |> 
+  select(svf, dags, value = staerd, n = fjoldi)
+
+p3 <- plot_dat |> 
+  make_plot(
+    title = "Meðalstærð fasteigna fyrstu kaupenda",
+    subtitle = "Sýnt fyrir landið í heild sinni (svart) og stærri sveitarfélög (grátt)",
+    labels = label_math(expr = ~ .x~m^2),
+    limits = c(NA, NA),
+    min_n = 1,
+    span = 0.2
+  ) +
+  coord_cartesian(
+    ylim = c(90, 140)
+  )
+
+ggsave(
+  plot = p3,
+  filename = "Figures/staerd.png",
+  width = 8, height = 0.5 * 8, scale = 1.5
+)
+```
+
+
+```{r}
+plot_dat <- d |> 
+  filter(hopur == "fyrstu") |> 
+  mutate(verd = verd / vst * 1e6) |> 
+  select(svf, dags, value = verd, n = fjoldi) 
+
+p4 <- plot_dat |> 
+  make_plot(
+    title = "Meðalverð fasteigna fyrstu kaupenda (leiðrétt fyrir vísitölu fasteignaverðs)",
+    subtitle = "Sýnt fyrir landið í heild sinni (svart) og stærri sveitarfélög (grátt)",
+    labels = label_isk(scale = 1e-6),
+    limits = c(NA, NA),
+    min_n = 1,
+    span = 0.2
+  ) +
+  coord_cartesian(
+    ylim = c(30, 90) * 1e6
+  )
+
+ggsave(
+  plot = p4,
+  filename = "Figures/verd.png",
+  width = 8, height = 0.5 * 8, scale = 1.5
+)
+```
+
+
+```{r}
+plot_dat <- d |> 
+  filter(hopur == "fyrstu") |> 
+  mutate(verd = verd / vst,
+         verd = verd / staerd * 1e6) |> 
+  select(svf, dags, value = verd, n = fjoldi) 
+
+p5 <- plot_dat |> 
+  make_plot(
+    title = "Meðalfermetraverð fasteigna fyrstu kaupenda (leiðrétt fyrir vísitölu fasteignaverðs)",
+    subtitle = "Sýnt fyrir landið í heild sinni (svart) og stærri sveitarfélög (grátt)",
+    labels = label_isk(),
+    limits = c(NA, NA),
+    min_n = 1,
+    span = 0.2
+  ) +
+  coord_cartesian(
+    ylim = c(300, 800) * 1e3
+  )
+
+ggsave(
+  plot = p5,
+  filename = "Figures/fmverd.png",
+  width = 8, height = 0.5 * 8, scale = 1.5
+)
+```
+
+
+```{r}
+p <- (p4 + labs(
+  title = NULL,
+  subtitle = "Kaupverð (Leiðrétt fyrir vísitölu fasteignaverðs)"
+)) + 
+  (p5 + labs(
+    title = NULL,
+    subtitle = "Fermetraverð (Leiðrétt fyrir vísitölu fasteignaverðs)"
+  )) 
+
+design <-  "
+#AAAAAA#
+BBBBBBBB
+"
+
+p <- (p3 + labs(
+  title = NULL,
+  subtitle = "Stærð"
+)) / p +
+  plot_layout(design = design) +
+  plot_annotation(
+    title = "Fyrstu eignir hafa minnkað en fermetraverð haldist nokkuð stöðugt",
+    subtitle = "Sýnt fyrir Ísland (svart) og stærri sveitarfélög (grátt)"
+  )
+
+ggsave(
+  plot = p,
+  filename = "Figures/fm_verd_fmverd.png",
+  width = 8, height = 0.621 * 8, scale = 1.5
+)
+
+theme_set(theme_half_open())
+
+ggsave(
+  plot = p,
+  filename = "Figures/fm_verd_fmverd_pyngjan.png",
+  width = 8, height = 0.621 * 8, scale = 1.5,
+  bg = "#fffff8"
+)
+
+theme_set(theme_metill(type = "standalone"))
+```
+
+
+```{r}
+plot_dat <- d |> 
+  filter(hopur == "fyrstu") |> 
+  mutate(verd = (verd * 1e6) / (tekjur * 1e3)) |> 
+  select(svf, dags, value = verd, n = fjoldi) 
+
+p6 <- plot_dat |> 
+  make_plot(
+    title = "Meðalkaupverð fyrstu kaupenda sem hlutfall af ráðstöfunartekjum 25 - 29 ára",
+    subtitle = "Sýnt fyrir landið í heild sinni (svart) og stærri sveitarfélög (grátt)",
+    labels = label_number(suffix = "x"),
+    limits = c(NA, NA),
+    min_n = 1,
+    span = 0.2
+  ) +
+  coord_cartesian(
+    # ylim = c(20, 90)
+  )
+
+ggsave(
+  plot = p6,
+  filename = "Figures/kaupmattur.png",
+  width = 8, height = 0.5 * 8, scale = 1.5
+)
+
+theme_set(theme_half_open())
+ggsave(
+  plot = p6,
+  filename = "Figures/kaupmattur_pyngjan.png",
+  width = 8, height = 0.5 * 8, scale = 1.5,
+  bg = "#fffff8"
+)
+```

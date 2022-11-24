@@ -65,42 +65,42 @@ theme_set(theme_metill())
 
 
 ```{r}
-# if (!file.exists("data/data.feather")) {
-#   init_db()
-#   
-#   d <- mtl_fjoldi_fasteigna() |> 
-#     collect() |> 
-#     count(ar, sveitarfelag, wt = fjoldi, name = "fjoldi") |> 
-#     arrange(ar, sveitarfelag) |> 
-#     group_by(sveitarfelag) |> 
-#     mutate(cum_fjoldi = cumsum(fjoldi)) |> 
-#     ungroup()
-#   
-#   mannfjoldi <- mtl_mannfjoldi_svf() |> 
-#     mutate(vinnualdur = ifelse((aldur >= 20) & (aldur <= 64), 1, 0),
-#            heild = 1,
-#            fullordin = ifelse(aldur >= 20, 1, 0)) |> 
-#     group_by(sveitarfelag, ar) |> 
-#     summarise(
-#       mannfjoldi_vinnualdur = sum(mannfjoldi * vinnualdur),
-#       mannfjoldi_fullordin = sum(mannfjoldi * fullordin),
-#       mannfjoldi = sum(mannfjoldi * heild)
-#     ) |> 
-#     collect()
-# 
-#   
-#   d <- d |> 
-#     inner_join(
-#       mannfjoldi,
-#       by = c("ar", "sveitarfelag")
-#     ) 
-#   
-#   d |> 
-#     write_feather("data/data.feather")
-#   
-# } else {
-#   d <- read_feather("data/data.feather")
-# }
+if (!file.exists("data/data.feather")) {
+  init_db()
+
+  d <- mtl_fjoldi_fasteigna() |>
+    collect() |>
+    count(ar, sveitarfelag, wt = fjoldi, name = "fjoldi") |>
+    arrange(ar, sveitarfelag) |>
+    group_by(sveitarfelag) |>
+    mutate(cum_fjoldi = cumsum(fjoldi)) |>
+    ungroup()
+
+  mannfjoldi <- mtl_mannfjoldi_svf() |>
+    mutate(vinnualdur = ifelse((aldur >= 20) & (aldur <= 64), 1, 0),
+           heild = 1,
+           fullordin = ifelse(aldur >= 20, 1, 0)) |>
+    group_by(sveitarfelag, ar) |>
+    summarise(
+      mannfjoldi_vinnualdur = sum(mannfjoldi * vinnualdur),
+      mannfjoldi_fullordin = sum(mannfjoldi * fullordin),
+      mannfjoldi = sum(mannfjoldi * heild)
+    ) |>
+    collect()
+
+
+  d <- d |>
+    inner_join(
+      mannfjoldi,
+      by = c("ar", "sveitarfelag")
+    )
+
+  d |>
+    write_feather("data/data.feather")
+
+} else {
+  d <- read_feather("data/data.feather")
+}
 ```
 
 

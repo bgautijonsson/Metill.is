@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.1.175">
+<meta name="generator" content="quarto-1.2.269">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -53,15 +53,16 @@ ul.task-list li input[type="checkbox"] {
 }</script>
 <style>html{ scroll-behavior: smooth; }</style>
 <meta property="og:title" content="Fólksflutningar og hælisleitendur">
-<meta property="og:description" content="Hér eru gögn um fjölda hælisleitenda, fjölda samþykktra verndarumsókna og fjölda innflytjenda á höfðatölu tekin saman úr gögnum OECD og Eurostat. Auk þess er þátttaka innflytjenda á atvinnumarkaði skoðuð.">
+<meta property="og:description" content="Hér eru gögn um fjölda hælisleitenda, fjölda samþykktra verndarumsókna og fjölda innflytjenda á höfðatölu tekin saman úr gögnum OECD og Eurostat.">
 <meta property="og:image" content="https://metill.is/greinar/flottafolk/Figures/haelisl_uppsafnad.png">
 <meta property="og:site-name" content="Metill">
 <meta property="og:image:height" content="1560">
 <meta property="og:image:width" content="3120">
 <meta name="twitter:title" content="Fólksflutningar og hælisleitendur">
-<meta name="twitter:description" content="Hér eru gögn um fjölda hælisleitenda, fjölda samþykktra verndarumsókna og fjölda innflytjenda á höfðatölu tekin saman úr gögnum OECD og Eurostat. Auk þess er þátttaka innflytjenda á atvinnumarkaði skoðuð.">
+<meta name="twitter:description" content="Hér eru gögn um fjölda hælisleitenda, fjölda samþykktra verndarumsókna og fjölda innflytjenda á höfðatölu tekin saman úr gögnum OECD og Eurostat.">
 <meta name="twitter:image" content="https://metill.is/greinar/flottafolk/Figures/haelisl_uppsafnad.png">
 <meta name="twitter:creator" content="@bggjonsson">
+<meta name="twitter:site" content="@bggjonsson">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image-height" content="1560">
 <meta name="twitter:image-width" content="3120">
@@ -136,6 +137,7 @@ ul.task-list li input[type="checkbox"] {
         <p class="date">November 10, 2022</p>
       </div>
     </div>
+    
       
     </div>
     
@@ -153,6 +155,11 @@ ul.task-list li input[type="checkbox"] {
   <li><a href="#samþykktar-umsóknir" id="toc-samþykktar-umsóknir" class="nav-link" data-scroll-target="#samþykktar-umsóknir">Samþykktar umsóknir</a></li>
   <li><a href="#innflytjendur-og-vinnumarkaður" id="toc-innflytjendur-og-vinnumarkaður" class="nav-link" data-scroll-target="#innflytjendur-og-vinnumarkaður">Innflytjendur og vinnumarkaður</a></li>
   <li><a href="#veitingar-ríkisborgararéttar" id="toc-veitingar-ríkisborgararéttar" class="nav-link" data-scroll-target="#veitingar-ríkisborgararéttar">Veitingar ríkisborgararéttar</a></li>
+  <li><a href="#fjöldi-flóttafólks-í-landinu" id="toc-fjöldi-flóttafólks-í-landinu" class="nav-link" data-scroll-target="#fjöldi-flóttafólks-í-landinu">Fjöldi flóttafólks í landinu</a>
+  <ul class="collapse">
+  <li><a href="#án-úkraínu" id="toc-án-úkraínu" class="nav-link" data-scroll-target="#án-úkraínu">Án Úkraínu</a></li>
+  <li><a href="#alls" id="toc-alls" class="nav-link" data-scroll-target="#alls">Alls</a></li>
+  </ul></li>
   </ul>
 </nav>
     </div>
@@ -199,8 +206,29 @@ ul.task-list li input[type="checkbox"] {
 <div class="cell">
 
 </div>
+<div class="cell">
+
+</div>
+</section>
+<section id="fjöldi-flóttafólks-í-landinu" class="level1">
+<h1>Fjöldi flóttafólks í landinu</h1>
+<section id="án-úkraínu" class="level2">
+<h2 class="anchored" data-anchor-id="án-úkraínu">Án Úkraínu</h2>
+<div class="cell">
+
+</div>
+<div class="cell">
+
+</div>
+</section>
+<section id="alls" class="level2">
+<h2 class="anchored" data-anchor-id="alls">Alls</h2>
+<div class="cell">
+
+</div>
 
 
+</section>
 </section>
 
 </main> <!-- /main -->
@@ -245,7 +273,24 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     button.classList.add('code-copy-button-checked');
     var currentTitle = button.getAttribute("title");
     button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
     setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
       button.setAttribute("title", currentTitle);
       button.classList.remove('code-copy-button-checked');
     }, 1000);
@@ -281,24 +326,42 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       return note.innerHTML;
     });
   }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
   var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
   for (var i=0; i<bibliorefs.length; i++) {
     const ref = bibliorefs[i];
-    const cites = ref.parentNode.getAttribute('data-cites').split(' ');
-    tippyHover(ref, function() {
-      var popup = window.document.createElement('div');
-      cites.forEach(function(cite) {
-        var citeDiv = window.document.createElement('div');
-        citeDiv.classList.add('hanging-indent');
-        citeDiv.classList.add('csl-entry');
-        var biblioDiv = window.document.getElementById('ref-' + cite);
-        if (biblioDiv) {
-          citeDiv.innerHTML = biblioDiv.innerHTML;
-        }
-        popup.appendChild(citeDiv);
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
       });
-      return popup.innerHTML;
-    });
+    }
   }
     var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
       var filterRegex = new RegExp(/https:\/\/metill\.is/);
@@ -306,7 +369,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
         return filterRegex.test(href) || localhostRegex.test(href);
     }
     // Inspect non-navigation links and adorn them if external
-    var links = window.document.querySelectorAll('a:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external)');
+    var links = window.document.querySelectorAll('a:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item)');
     for (var i=0; i<links.length; i++) {
       const link = links[i];
       if (!isInternal(link.href)) {
