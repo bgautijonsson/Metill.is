@@ -9,7 +9,7 @@ author:
         url: "https://twitter.com/bgautijonsson"
         affiliation: "Tölfræði, Raunvísindadeild Háskóla Íslands"
         affiliation-url: "https://www.hi.is/tolfraedi_0"
-date: "2022/10/27"
+date: "2022/11/29"
 format: 
     html:
         code-fold: true
@@ -587,6 +587,11 @@ plot_dat <- d_undir |>
   )
 
 
+lvls <- plot_dat |> 
+  distinct(undirvisitala) |> 
+  filter(undirvisitala != "Vísitala neysluverðs")
+
+
 p2 <- plot_dat |> 
   mutate(flokkur_3 = fct_reorder(flokkur_3, year_ahrif)) |> 
   ggplot(aes(year_ahrif, flokkur_3, text = text)) +
@@ -673,6 +678,113 @@ ggplotly(
 
 # Samræmd vísitala neysluverðs
 
+> Tilgangur: Að mæla á samræmdan hátt breytingar á verðlagi innan EES og auðvelda með því samanburð á verðbólgu milli ríkjanna.
+>
+> Samræmda vísitalan er að mestu leyti undirvísitala þeirrar íslensku þó munur sé á umfangi þeirra. Mestu munar að eigið húsnæði er ekki með í samræmdu vísitölunni. Útgjöld erlendra ferðamanna og útgjöld þeirra sem búa á stofnunum eru með í vog samræmdu vísitölunnar en ekki í íslensku neysluverðsvísitölunni.
+>
+> [Hagstofa Íslands](https://hagstofa.is/utgafur/lysigogn/lysigogn?fileId=19542){target="_blank"}
+
+## Þróun eftir löndum
+
+```{r}
+d_sam <- pxweb_get(
+  url = "https://px.hagstofa.is:443/pxis/api/v1/is/Efnahagur/visitolur/2_samraemdvnv/samraemdvnv/VIS02002.px", 
+  query = list(
+    "Tegund" = "*",
+    "Mánuður" = "*",
+    "Land" = "*"
+  ),
+  verbose = FALSE
+) |> 
+  as.data.frame() |> 
+  as_tibble() |> 
+  janitor::clean_names()|> 
+  separate(manudur, into = c("ar", "man"), sep = "M", convert = T) |> 
+  mutate(dags = clock::date_build(ar, man)) |> 
+  rename(visitala = verdlag_og_neysla) |> 
+  filter(tegund == "Mánaðarvísitölur") |> 
+  select(dags, land, visitala)
+```
+
+```{r}
+#| fig.asp: 1
+#| column: page
+
+
+litir <- tribble(
+  ~land, ~litur, ~nudge_y,
+  "Ísland", "#084594", 0,
+  "Danmörk", "#990000", 0,
+  "Noregur", "#cb181d", -0.005,
+  "Svíþjóð", "#fe9929", 0,
+  "Finnland", "#74a9cf", 0.005
+)
+
+plot_dat <- d_sam |> 
+  group_by(man = month(dags), land) |> 
+  mutate(breyting = exp(c(0, diff(log(visitala))))) |> 
+  ungroup() |> 
+  mutate(
+    text = str_c(
+      "<b>", land, "</b>", "\n",
+      "Dagsetning: ", dags, "\n",
+      "Vísitala (2015 == 100): ", visitala, "\n",
+      "Árleg breyting: ", hlutf(breyting - 1)
+    )
+  ) |> 
+  filter(year(dags) > min(year(dags)),
+         land != "Tyrkland") |> 
+  left_join(
+    litir,
+    by = "land"
+  ) |> 
+  mutate(litur = ifelse(is.na(litur), "#969696", litur),
+         linewidth = ifelse(litur == "#969696", 0, 1),
+         alpha = ifelse(litur == "#969696", 0.5, 1))
+
+p <- plot_dat |> 
+  ggplot(aes(dags, breyting, text = text)) +
+  geom_hline(yintercept = 1, lty = 2, alpha = 0.6) +
+  geom_line(
+    data = plot_dat |> filter(alpha == 0.5),
+    aes(group = land, col = litur, alpha = alpha),
+    linewidth = 0.5
+  ) +
+  geom_line(
+    data = plot_dat |> filter(alpha != 0.5),
+    aes(group = land, col = litur, alpha = alpha),
+    linewidth = 1
+  ) +
+  geom_text(
+    data = plot_dat |> filter(alpha != 0.5, dags == max(dags)),
+    aes(col = litur, label = land, y = breyting + nudge_y),
+    hjust = 1, nudge_x = 100
+  ) +
+  scale_y_continuous(
+    labels = function(x) hlutf(x - 1)
+  ) +
+  scale_colour_identity() +
+  scale_alpha_identity() +
+  coord_cartesian(clip = "off") +
+  theme(
+    legend.position = "none",
+    plot.margin = margin(t = 5, r = 35, b = 5, l = 5)
+  ) +
+  labs(
+    x = NULL,
+    y = NULL,
+    title = "Árleg breyting samræmdrar vísitölu neysluverðs eftir landi"
+  )
+
+metill_ggplotly(
+  p,
+  tooltip = "text"
+)
+```
+
+
+## Samanburður við vægi í vísitölu neysluverðs
+
 ```{r}
 d_sam <- pxweb_get(
   url ="https://px.hagstofa.is:443/pxis/api/v1/is/Efnahagur/visitolur/2_samraemdvnv/samraemdvnv/VIS02201.px", 
@@ -697,10 +809,6 @@ d_sam <- pxweb_get(
 #| fig.asp: 1
 #| out-width: "100%"
 #| column: page
-
-lvls <- plot_dat |> 
-  distinct(undirvisitala) |> 
-  filter(undirvisitala != "Vísitala neysluverðs")
 
 plot_dat <- d |> 
   filter(undirvisitala != "Vísitala neysluverðs") |> 
@@ -753,10 +861,6 @@ ggplotly(
   ) |> 
   config(displayModeBar = FALSE)
 ```
-
-
-
-
 
 
 
