@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.2.269">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Brynjólfur Gauti Guðrúnar Jónsson">
+<meta name="dcterms.date" content="2022-11-10">
+<meta name="description" content="Hér eru gögn um fjölda hælisleitenda, fjölda samþykktra verndarumsókna og fjölda innflytjenda á höfðatölu tekin saman úr gögnum OECD og Eurostat. Auk þess er þátttaka innflytjenda á atvinnumarkaði skoðuð.">
+
+<title>Fólksflutningar og hælisleitendur</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1.6em;
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<link href="../../favicon/favicon-32x32.png" rel="icon" type="image/png">
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit"
+  }
+}</script>
+<style>html{ scroll-behavior: smooth; }</style>
+<meta property="og:title" content="Fólksflutningar og hælisleitendur">
+<meta property="og:description" content="Hér eru gögn um fjölda hælisleitenda, fjölda samþykktra verndarumsókna og fjölda innflytjenda á höfðatölu tekin saman úr gögnum OECD og Eurostat.">
+<meta property="og:image" content="https://metill.is/greinar/flottafolk/Figures/haelisl_uppsafnad.png">
+<meta property="og:site-name" content="Metill">
+<meta property="og:image:height" content="1560">
+<meta property="og:image:width" content="3120">
+<meta name="twitter:title" content="Fólksflutningar og hælisleitendur">
+<meta name="twitter:description" content="Hér eru gögn um fjölda hælisleitenda, fjölda samþykktra verndarumsókna og fjölda innflytjenda á höfðatölu tekin saman úr gögnum OECD og Eurostat.">
+<meta name="twitter:image" content="https://metill.is/greinar/flottafolk/Figures/haelisl_uppsafnad.png">
+<meta name="twitter:creator" content="@bggjonsson">
+<meta name="twitter:site" content="@bggjonsson">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image-height" content="1560">
+<meta name="twitter:image-width" content="3120">
+</head><body><nav class="navbar m-0 p-0 bg-primary">
+
+  <div class="container bg-primary text-secondary justify-content-center flex-wrap align-items-baseline">
+    <div class="d-flex flex-row">
+      <header class="blog-header m-0 p-0 justify-content-center">
+          <div class="col-12 d-flex">
+            <a href="../../index.html" style="text-decoration: none;">
+              <h1 class="navbar-brand text-secondary m-3 pb-0 mb-0">
+                Metill
+              </h1>
+            </a>
+          </div>   
+      </header>
+    </div>  
+        <div class="col-12 d-flex justify-content-center">
+          <a class="p-2 pt-0 link-secondary navbar-link text-secondary" href="../../greinar.html" style="text-decoration: none;">Greinar</a>
+          <a class="p-2 pt-0 link-secondary navbar-link text-secondary" href="../../um_metil.html" style="text-decoration: none;">Um Metil</a>
+        </div>
+  </div>
+</nav>
+
+
+<link rel="stylesheet" href="../../style.css">
+
+
+
+
+<div id="quarto-search-results"></div>
+<!-- content -->
+<header id="title-block-header" class="quarto-title-block default page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-body">
+      <h1 class="title">Fólksflutningar og hælisleitendur</h1>
+            <p class="subtitle lead">Hvað segja gögnin um fjölda hælisleitenda og fólksflutninga til Íslands?</p>
+                  <div>
+        <div class="description">
+          <p>Hér eru gögn um fjölda hælisleitenda, fjölda samþykktra verndarumsókna og fjölda innflytjenda á höfðatölu tekin saman úr gögnum OECD og Eurostat. Auk þess er þátttaka innflytjenda á atvinnumarkaði skoðuð.</p>
+        </div>
+      </div>
+                          <div class="quarto-categories">
+                <div class="quarto-category">stjórnmál</div>
+                <div class="quarto-category">fólksflutningar</div>
+              </div>
+                  </div>
+  </div>
+    
+  <div class="quarto-title-meta-author">
+    <div class="quarto-title-meta-heading">Höfundur</div>
+    <div class="quarto-title-meta-heading">Stofnun</div>
+    
+      <div class="quarto-title-meta-contents">
+      <a href="https://twitter.com/bgautijonsson">Brynjólfur Gauti Guðrúnar Jónsson</a> 
+    </div>
+      <div class="quarto-title-meta-contents">
+          <p class="affiliation">
+              <a href="https://www.hi.is/tolfraedi_0">
+              Tölfræði, Raunvísindadeild Háskóla Íslands
+              </a>
+            </p>
+        </div>
+      </div>
+
+  <div class="quarto-title-meta">
+
+        
+      <div>
+      <div class="quarto-title-meta-heading">Síðast uppfært</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">November 10, 2022</p>
+      </div>
+    </div>
+    
+      
+    </div>
+    
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Efnisyfirlit</h2>
+   
+  <ul>
+  <li><a href="#gögn" id="toc-gögn" class="nav-link active" data-scroll-target="#gögn">Gögn</a></li>
+  <li><a href="#umsóknir-um-hæli" id="toc-umsóknir-um-hæli" class="nav-link" data-scroll-target="#umsóknir-um-hæli">Umsóknir um hæli</a></li>
+  <li><a href="#samþykktar-umsóknir" id="toc-samþykktar-umsóknir" class="nav-link" data-scroll-target="#samþykktar-umsóknir">Samþykktar umsóknir</a></li>
+  <li><a href="#innflytjendur-og-vinnumarkaður" id="toc-innflytjendur-og-vinnumarkaður" class="nav-link" data-scroll-target="#innflytjendur-og-vinnumarkaður">Innflytjendur og vinnumarkaður</a></li>
+  <li><a href="#veitingar-ríkisborgararéttar" id="toc-veitingar-ríkisborgararéttar" class="nav-link" data-scroll-target="#veitingar-ríkisborgararéttar">Veitingar ríkisborgararéttar</a></li>
+  <li><a href="#fjöldi-flóttafólks-í-landinu" id="toc-fjöldi-flóttafólks-í-landinu" class="nav-link" data-scroll-target="#fjöldi-flóttafólks-í-landinu">Fjöldi flóttafólks í landinu</a>
+  <ul class="collapse">
+  <li><a href="#án-úkraínu" id="toc-án-úkraínu" class="nav-link" data-scroll-target="#án-úkraínu">Án Úkraínu</a></li>
+  <li><a href="#alls" id="toc-alls" class="nav-link" data-scroll-target="#alls">Alls</a></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content quarto-banner-title-block page-columns page-full" id="quarto-document-content">
+
+
+
+
+<div class="cell">
+
+</div>
+<div class="cell">
+
+</div>
+<div class="cell">
+
+</div>
+<div class="cell">
+
+</div>
+<div class="cell">
+
+</div>
+<section id="gögn" class="level1">
+<h1>Gögn</h1>
+<p>Gögnin sem eru notuð í þessari greiningu <a href="https://stats.oecd.org/viewhtml.aspx?datasetcode=MIG&amp;lang=en" target="_blank">koma frá gögnum OECD um fólksflutninga</a>og <a href="https://ec.europa.eu/eurostat/databrowser/404-product?lang=en" target="_blank">gögnum Eurostat um ákvarðanir í verndarumsóknum</a>. Hægt er að nálgast unnin gögn sem eru notuð í þessari greiningu <a href="https://flatgithub.com/bgautijonsson/Metill.is/blob/master/greinar/flottafolk/data/data.csv?filename=greinar%2Fflottafolk%2Fdata%2Fdata.csv&amp;filters=&amp;sha=ae169374ae234cb43981623ef8e61a0083ff4fe8&amp;sort=ar%2Casc&amp;stickyColumnName=ar" target="_blank">hér</a>.</p>
+</section>
+<section id="umsóknir-um-hæli" class="level1 page-columns page-full">
+<h1>Umsóknir um hæli</h1>
+<div class="cell">
+
+</div>
+<p class="page-columns page-full"><img src="Figures/haelisl_saman_2.png" class="column-page img-fluid"></p>
+</section>
+<section id="samþykktar-umsóknir" class="level1 page-columns page-full">
+<h1>Samþykktar umsóknir</h1>
+<div class="cell">
+
+</div>
+<p class="page-columns page-full"><img src="Figures/samthykkt_saman_3.png" class="column-page img-fluid"></p>
+</section>
+<section id="innflytjendur-og-vinnumarkaður" class="level1 page-columns page-full">
+<h1>Innflytjendur og vinnumarkaður</h1>
+<div class="cell">
+
+</div>
+<p class="page-columns page-full"><img src="Figures/vinnandi_saman.png" class="column-page img-fluid"></p>
+</section>
+<section id="veitingar-ríkisborgararéttar" class="level1 page-columns page-full">
+<h1>Veitingar ríkisborgararéttar</h1>
+<div class="cell">
+
+</div>
+<p class="page-columns page-full"><img src="Figures/rikisborgarar.png" class="column-page img-fluid"></p>
+<div class="cell">
+
+</div>
+<div class="cell">
+
+</div>
+</section>
+<section id="fjöldi-flóttafólks-í-landinu" class="level1">
+<h1>Fjöldi flóttafólks í landinu</h1>
+<section id="án-úkraínu" class="level2">
+<h2 class="anchored" data-anchor-id="án-úkraínu">Án Úkraínu</h2>
+<div class="cell">
+
+</div>
+<div class="cell">
+
+</div>
+</section>
+<section id="alls" class="level2">
+<h2 class="anchored" data-anchor-id="alls">Alls</h2>
+<div class="cell">
+
+</div>
+<div class="cell">
+
+</div>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    target: function(trigger) {
+      return trigger.previousElementSibling;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var filterRegex = new RegExp(/https:\/\/metill\.is/);
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+    var links = window.document.querySelectorAll('a:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+          // target, if specified
+          link.setAttribute("target", "_blank");
+      }
+    }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+<script src="../../site_libs/quarto-html/zenscroll-min.js"></script>
+</body></html>

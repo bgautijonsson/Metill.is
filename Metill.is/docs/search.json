@@ -1,0 +1,282 @@
+[
+  {
+    "objectID": "pyngjan/opinberar_veitingar/index.html",
+    "href": "pyngjan/opinberar_veitingar/index.html",
+    "title": "Opinberar veitingar",
+    "section": "",
+    "text": "Á opnirreikningar.is stendur:\nÞað er hægt að leita og fletta upp reikningum á þessari síðu, en ég tók mig bara til og skrifaði R kóða til að sækja gögnin, hreinsa þau aðeins og geyma í PostgreSQL gagnagrunni. Ef þið hafið áhuga á að læra meira um hvernig ég sæki og geymi opinber gögn mun ég reglulega birta greinar um það fyrir áskrifendur að Patreon síðu minni."
+  },
+  {
+    "objectID": "pyngjan/opinberar_veitingar/index.html#rekstraraðilar",
+    "href": "pyngjan/opinberar_veitingar/index.html#rekstraraðilar",
+    "title": "Opinberar veitingar",
+    "section": "Rekstraraðilar",
+    "text": "Rekstraraðilar\nTil að fletta upp veitingastöðum þurfum við að leita að fyrirtækjunum sem hjá um reksturinn, ekki veitingastöðunum sjálfum. Ég fékk frábærar hugmyndir frá ykkur á Twitter og framkvæmdi svo smá rannsóknarvinnu til að finna nöfnin á rekstraraðilunum.\n\n\n\n\n \n  \n    Fyrirtæki \n    Veitingastaðir \n  \n \n\n  \n    Pizza-Pizza ehf. \n    Domino's Piza \n  \n  \n    Jómfrúin veitingahús ehf \n    Jómfrúin \n  \n  \n    FoodCo hf. \n    Aktu taktu, Eldsmiðjan, Saffran, Pítan o.fl. \n  \n  \n    KFC ehf. \n    KFC \n  \n  \n    Stjarnan ehf. \n    Subway \n  \n  \n    HALAL ehf. \n    Mandi \n  \n  \n    Hlöllabátar ehf. \n    Hlöllabátar \n  \n  \n    Hamborgarab Tómasar Geirsg ehf \n    Hamborgarabúlla Tómasar \n  \n\n\n\nNokkrir valdir rekstraraðilar og nöfn veitingastaðanna"
+  },
+  {
+    "objectID": "pyngjan/opinberar_veitingar/index.html#árleg-útgjöld-frá-ríkinu",
+    "href": "pyngjan/opinberar_veitingar/index.html#árleg-útgjöld-frá-ríkinu",
+    "title": "Opinberar veitingar",
+    "section": "Árleg útgjöld frá ríkinu",
+    "text": "Árleg útgjöld frá ríkinu\nÞað er skemmtilegt að sjá að tveir styrktaraðilar Pyngjunnar, Domino’s og Jómfrúin, eru vinsælustu veitingastaðirnir hjá ríkinu. Eins og vitur maður mælti við mig:\n\nÞetta er hringrás. Þegar öllu er á botninn hvolft erum við sponsaðir af ríkinu.\nArnar Þór Ólafsson"
+  },
+  {
+    "objectID": "pyngjan/opinberar_veitingar/index.html#heildarútgjöld-eftir-stofnun",
+    "href": "pyngjan/opinberar_veitingar/index.html#heildarútgjöld-eftir-stofnun",
+    "title": "Opinberar veitingar",
+    "section": "Heildarútgjöld eftir stofnun",
+    "text": "Heildarútgjöld eftir stofnun\nEf við skoðum svo útgjöld hverrar ríkisstofnanar fyrir sig sjáum við mikinn smekksmun innámilli. Til dæmis vinnur greinilega einungis hugsjónafólk með gourmet smekk hjá Lögreglustjóranum á Suðurnesjum því sú stofnun kaupir bara KFC!\nBarnaverndarstofa gengur sömuleiðis ótroðnar slóðir og borðar fjölbreytta blöndu af Mandi og Subway með smá Domino’s inná milli.\n\n\n\n\n\n\nFrumkvöðlaráðgjöf Pyngjunnar og Metils\n\n\n\n\n\nEf þú ert frumkvöðull að hugsa um að opna hamborgarastað og þig vantar stóran reglulegan kúnna væri best að hafa samband við Umhverfisstofnun, Mennta- og menningamálaráðuneytið og Ríkisskattstjóra, og reyna að stela smá bissness frá Tomma. Ef þú kannt að djúpsteikta kjúkling fyrir burgerinn er Lögreglustjórinn á Suðurnesjum þinn mikilvægasti kúnni."
+  },
+  {
+    "objectID": "pyngjan/fyrstukaupendur/index.html",
+    "href": "pyngjan/fyrstukaupendur/index.html",
+    "title": "Fyrstu kaupendur",
+    "section": "",
+    "text": "Nýlega var umsjón fasteignaskrár flutt frá Þjóðskrá til Húsnæðis- og mannvirkjastofnunar (HMS). Núna er því hægt að nálgast öll gögn sem tengjast henni á fasteignaskra.is. Hér ætlum við að skoða gögnin um fyrstu kaupendur. Með því að skoða “page source” getum við púslað saman hlekki á JSON skrárnar á bak við myndirnar á síðunni.\nFyrst sjáum við að fleiri kaupendur eru fyrstu kaupendur en áður og að þau eignast sína fyrstu fasteign fyrr, en það varð smá stöðnun í þessari þróun síðasta árið.\n\nNæst sjáum við að fyrsta fasteign fólks er aðeins minni en hún var fyrir 15 árum. Á móti kemur að kaupverðið (leiðrétt fyrir vísitölu fasteignaverðs) hefur lækkað, og fermetraverðið (leiðrétt fyrir vísitölu fasteignaverðs) því haldist nokkuð stöðugt.\n\nEn leiðrétting fyrir vísitölu fasteignaverðs sýnir okkur ekki endilega hvernig ungt fólk er stætt þegar kemur að því að kaupa fasteign. Til þess viljum við frekar sækja gögn Hagstofu um tekjur eftir kyni og aldri. Hér notum við miðgildi ráðstöfunartekna 25 - 29 ára einstaklinga og skoðum meðalkaupverð fyrstu fasteigna sem hlutfall af ráðstöfunartekjunum. Þá sjáum við að þótt fyrsta fasteignin kostar minna en áður miðað við aðrar fasteignir (lækkun þegar leiðrétt fyrir vísitölu fasteignaverðs), þá kostar hún fleiri ár af tekjum. Nánar tiltekið hefur meðalverðið, talið sem ár af ráðstöfunartekjum, farið úr rétt rúmlega 8 í um það bil 11 ár."
+  },
+  {
+    "objectID": "pyngjan/straeto/index.html",
+    "href": "pyngjan/straeto/index.html",
+    "title": "Strætó",
+    "section": "",
+    "text": "Í ársreikningi Strætó bs. frá 2021 má finna þessar tvær myndir:\nÞetta er áhugaverð leið til að birta tímaröð af tölum. Vanalega viljum við að tíminn á x-ás byrji vinstra megin og fari svo hækkandi til hægri. Ég myndi t.d. vanalega teikna þessar myndir svona:\nÞað er hins vegar frekar leitt við mína framsetningu að það sést of vel hvað reksturinn gengur illa. Hin framsetningin er því bara frekar góð.\nGetum við notað það sem við höfum lært frá ársreikningi Strætó bs. til að teikna betri mynd af verði staks fargjalds? Skoðum mismunandi framsetningar á gögnunum."
+  },
+  {
+    "objectID": "pyngjan/straeto/index.html#framsetningar",
+    "href": "pyngjan/straeto/index.html#framsetningar",
+    "title": "Strætó",
+    "section": "Framsetningar",
+    "text": "Framsetningar\n\nRéttX-ás öfugurY-ás öfugurFyrir hugsjónafólk?\n\n\nHér er venjuleg framsetning sem endurspeglar gögnin. Við erum hinsvegar hugsjónafólk og viljum ekki að fólk hætti að kaupa strætómiða. Hvernig getum við hjálpað fólki að misskilja gögnin svo það haldi áfram að kaupa miða?\n\nVerð strætófargjalds á föstu verðlagi  og  verðlagi hvers árs\n\n\n\n\n\n\n\n\n\n\n\n\nByrjum á því að snúa x-ásinum við. Nú heldur fólk við fýrstu sýn að miðaverðinu fari lækkandi, en ef einhver skoðar myndina nánar sést að x-ásinn er öfugur. Það er því ekki hægt að saka okkur um að ljúga, við erum jú að sýna gögnin!\n\nVerð strætófargjalds á föstu verðlagi  og  verðlagi hvers árs\n\n\n\n\n\n\n\n\n\nKannski höfum við beitt x-ás brögðunum nokkrum sinnum og fólk því á varðbergi. Ekkert mál! Við bara snúum y-ásinum við. Þá virðist miðaverðið ennþá vera að lækka.\n\nVerð strætófargjalds á föstu verðlagi  og  verðlagi hvers árs\n\n\n\n\n\n\n\n\n\nEn hvað ef fólk væri svo mikið á varðbergi að það fylgdist með báðum ásunum til að taka eftir snúningum? Síðasta bragðið sem við getum beitt er þá að snúa báðum ásunum við. Þá virðist reyndar verðið ekki vera að lækka, en ef við treystum á það að fólk sjái að ásarnir séu öfugir er eina vonin okkar að rugla það svo mikið að það viti ekki hvort verðið hafi hækkað eða lækkað og haldi því áfram að kaupa!\n\nVerð strætófargjalds á föstu verðlagi  og  verðlagi hvers árs"
+  },
+  {
+    "objectID": "pyngjan/fasteignafjoldi/index.html",
+    "href": "pyngjan/fasteignafjoldi/index.html",
+    "title": "Fasteignauppbygging",
+    "section": "",
+    "text": "Þjóðskrá heldur úti gögnum um fjölda íbúða eftir byggingarári, sem ná alveg aftur til ársins 1900. Skoðum þessi gögn og berum þau saman við gögn Hagstofunnar um mannfjölda eftir kyni og aldri. Við ætlum reyndar ekki að skoða þetta eftir kyni, en það er lítið mál að súmmera upp þessar tölur.\n\n\n\nVið sjáum að neðan að hreinn fjöldi nýrra fasteigna hækkaði stöðugt frá 1900 þangað til hann náði hámarki rétt fyrir 1980. Árlegur fjöldi var svo aðeins lægri þangað til að öðru hámarki var náð rétt fyrir fjármálahrunið.\nEn fólki er alltaf að fjölga svo það er ekki nóg að horfa bara á hreinan fjölda, við viljum skoða fjöldann á þúsund íbúa. Á þeim skala sjáum við að þótt það voru byggðar fleiri fasteignir alls eftir 2000 heldur en kringum 1970 þá voru íslendingar mun fleiri og fasteignafjöldinn á þúsund íbúa því minni.\n\n\n\n\nEn það er heldur ekki nóg að skoða fjöldann út frá íbúum alls. Það eru fá börn og unglingar sem þurfa að eiga fasteign og því er betra að horfa á fjölda nýrra fasteigna á hverja þúsund fullorðna íbúa (20 ára og eldri). Á þeim skala verður munurinn á uppbyggingunni kringum 1970 og 2006 ennþá meiri, enda sjáum við hér að neðan að fullorðnum hefur fjölgað hraðar en börnum síðustu 60 árin.\n\n\n\n\nHvenær hefði hentað Arnari að vera að leita sér að íbúð? Ef við skoðum fjölda nýbyggðra fasteigna per 1.000 íbúa jafngamlir og Arnar er í dag sjáum við að árið 2021 voru byggðar 940 íbúðir á hverja 1.000 jafnaldra, það er næstum ein á mann! En sú tala náði hápunkti árið 1973 þegar það voru byggðar 2139 íbúðir á hverja 1.000, það eru rúmlega tvær á mann! Það er því augljóst að Arnar hefði viljað vera ungur maður árið 1973 til að geta staðið í almennilegu fasteignabraski."
+  },
+  {
+    "objectID": "pyngjan/haskolar/index.html",
+    "href": "pyngjan/haskolar/index.html",
+    "title": "Háskóli Íslands: Hornkerling?",
+    "section": "",
+    "text": "Ingvi og Arnar sendu mér eftirfarandi mynd, sem birtist í Stúdentablaðinu árið 2000.\n\n\n\n\n\nÞetta er áhugaverð spurning. Til að svara henni skulum við sækja ríkisútgjöld frá rikisreikningur.is og tengja þau gögn við gögn Hagstofunnar um Nemendur ofan grunnskóla eftir skólum, lögheimili, kennsluformi og kyni 1997-2020. Svo skulum við athuga eftirfarandi:\n\nHver hafa árleg útgjöld ríkisins til háskólanna á Íslandi verið?\nHver var fjöldi nemenda í skólunum á sömu árum?\nHvernig hafa útgjöld á hvern nemanda þróast?\n\nSem bónus skulum við skoða stærðarhagkvæmni háskólanna:\n\nMunu útgjöld á hvern nemanda minnka þegar nemendum fjölgar?\n\n\nÚtgjöld\nAð neðan sjáum við þróun útgjöldanna á verðlagi hvers árs og á föstu verðlagi 2022 (leiðrétt fyrir hækkun vísitölu neysluverðs). Myndirnar eru sýndar á lograkvarða, sem þýðir að fjarlægðin milli 1, 10 og 100 er jafnmikil. Annað sem á við um lograkvarða er að ef mismunurinn á línum er alltaf sá sami er hlutfallslegur munur á útgjöldunum alltaf sá sami.\n\nVerðlag hvers ársFast verðlag\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nNemendur\nVið sjáum svo nemendafjöldann hér að neðan. Þar sem það er svona mikill munur á stærð skólanna þurfum við að teikna þessar myndir á lograkvarða líka, annars myndu minni skólarnir allir þjappast saman við botninn á myndunum.\nDreifing nemenda á stærri skólana hefur haldist frekar stöðug með uþb 70% í Háskóla Íslands, 8-10% í Háskólann á Akureyri og 15-20% í Háskólann í Reykjavík. Hinir skólanir eru svo með 1-5% af nemendum hver.\n\nFjöldiDreifing\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nÚtgjöld á nemanda\nHér byrjum við svo að baka köku úr gögnunum. Með því að tengja saman þessi tvö gagnasöfn getum við þæginlega teiknað upp þróun ríkisútgjalda á hvern nemanda í öllum Íslensku háskólunum.\nÍ upphafi tímabilsins eru útgjöldin per nemandi langhæst hjá Háskólanum á Hólum og Landbúnaðarháskóla Íslands. Þar hefur þó farið fram mikil hagræðing síðan þá og eru þessir skólar komnir með útgjöld á nemanda í kringum Listaháskóla Íslands. Fyrir utan þessa þrjá skóla er svo langt stökk niður til Háskólans á Akureyri, Háskóla Íslands og Háskólans í Reykjavík.\nEf við lítum á Staðan 2020 sjáum við útgjöld á hvern nemanda árið 2020, en sett fram á verðlagi 2000 samkvæmt vísitölu neysluverðs. Þar sjáum við að útgjöldin til HÍ og HR eru nánast nákvæmlega þau sömu og árið 2000, en framlög til HA hafa lækkað töluvert miðað við myndina í Stúdentablaðinu að ofan.\n\nVerðlag hvers ársFast verðlagStaðan 2020\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nBónus: Stærðarhagkvæmni\nHér að neðan sjáum við að það er einhver stærðarhagkvæmni í mörgum háskólunum, þ.e. útgjöld á hvern nemanda minnka þegar heildarfjöldi nemenda hækkar. Það er reyndar gott að hafa í huga að gæði náms og rannsókna, og kostnaður við rekstur þess vegna, eru ekki fönguð í þessari mynd heldur bara útgjöldin frá ríkissjóði."
+  },
+  {
+    "objectID": "maelabord.html",
+    "href": "maelabord.html",
+    "title": "Metill",
+    "section": "",
+    "text": "Fjármál sveitarfélaga \n                 Gagnvirk samantekt á ársreikningum sveitarfélaga úr gögnum Sambands Íslenskra Sveitarfélaga \n              \n            \n              \n                \n                  \n                \n                \n                   Eignir, skuldir og skattar \n                   Gagnvirkt tól til að skoða eignir, tekjur og skuldir Íslendinga í skattframtalsgögnum Hagstofunnar \n                \n              \n              \n                \n                  \n                \n                \n                   Verðbólga (í vinnslu) \n                   Reiknaðu þína persónulega verðbólgu með þessari gagnvirku framsetningu á vísitölu neysluverðs \n                \n              \n      \n    \n          \n            \n            Previous\n          \n          \n            \n            Next"
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Metill",
+    "section": "",
+    "text": "Vísitala neysluverðs \n             Vísitalan og áhrif undirtalna á heildina unnið úr nýjustu gögnum Hagstofu hverju sinni \n          \n        \n        \n          \n            \n          \n          \n             Verðbólga er ekki alltaf það sama og verðbólga. Stundum er stór hluti af henni hækkun á húsnæðisverði, stundum ferðir og flutningar. Það er því gott að skoða undirvísitölurnar og áhrif þeirra á heildina.\n \n          \n        \n      \n      \n  \n  \n      \n        \n          \n          \n             Vinnumarkaður \n             Dec 2, 2022 \n             Hver er fjöldi starfandi einstaklinga og hvernig skiptast þeir á vinnumarkaði? \n            \n          \n          \n      \n      \n        \n          \n          \n             Fjármál stjórnmálaflokkanna \n             Oct 17, 2022 \n             Greining á ársreikningum stjórnmálaflokka úr gögnum Ríkisendurskoðunar \n            \n          \n          \n      \n      \n        \n          \n          \n             Leikskólar \n             Oct 5, 2022 \n             Hvernig gengur sveitarfélögum landsins að brúa bilið? \n            \n          \n          \n      \n  \n\n\nNo matching items\n\n\nMælaborð\n\n\n  \n    \n        \n          \n          \n          \n        \n        \n            \n              \n                \n              \n              \n                 Fjármál sveitarfélaga \n                 Gagnvirk samantekt á ársreikningum sveitarfélaga úr gögnum Sambands Íslenskra Sveitarfélaga \n              \n            \n              \n                \n                  \n                \n                \n                   Eignir, skuldir og skattar \n                   Gagnvirkt tól til að skoða eignir, tekjur og skuldir Íslendinga í skattframtalsgögnum Hagstofunnar \n                \n              \n              \n                \n                  \n                \n                \n                   Verðbólga (í vinnslu) \n                   Reiknaðu þína persónulega verðbólgu með þessari gagnvirku framsetningu á vísitölu neysluverðs \n                \n              \n      \n    \n          \n            \n            Previous\n          \n          \n            \n            Next"
+  },
+  {
+    "objectID": "greinar/stjornmalaflokkar/index.html#opinber-framlög",
+    "href": "greinar/stjornmalaflokkar/index.html#opinber-framlög",
+    "title": "Fjármál stjórnmálaflokkanna",
+    "section": "Opinber framlög",
+    "text": "Opinber framlög\n\nStjórnmálasamtök sem hafa fengið a.m.k. einn mann kjörinn á þing eða náð að lágmarki 2,5% atkvæða eiga rétt til framlaga. Það framlag skiptist hlutfallslega milli flokka eftir atkvæðamagni í næstliðnum kosningum. Fjármála- og efnahagsráðuneytið fer með framkvæmd greiðslna á þessu framlagi.\nStjórnarráð Íslands\nSveitarfélag skal veita stjórnmálasamtökum, sem fengið hafa a.m.k. einn mann kjörinn í sveitarstjórn eða hlotið hið minnsta 5% atkvæða í næstliðnum sveitarstjórnarkosningum, árleg fjárframlög til starfsemi sinnar. Gilda hér um ákvæði 2. mgr. 5.gr. laga nr. 162/2006. Skal framlögum úthlutað í hlutfalli við atkvæðamagn. Miða skal við að greiða 175 kr. á hvern íbúa sem lögheimili á í sveitarfélaginu 1. janúar á ári hverju. Þessi fjárhæð tekur breytingum árlega miðað við vísitölu neysluverðs í október ár hvert og er grunnvísitalan 472,2 stig, m.v. október 2019.\nSamband íslenskra sveitarfélaga\n\n\nMagnDreifing\n\n\n\nFramlög hins opinbera til stjórnmálaflokka lækkuðu stöðugt frá 2007 til 2017 en hækkuðu svo aftur árið 2018."
+  },
+  {
+    "objectID": "greinar/stjornmalaflokkar/index.html#fyrirtækilögaðilar-og-einstaklingar",
+    "href": "greinar/stjornmalaflokkar/index.html#fyrirtækilögaðilar-og-einstaklingar",
+    "title": "Fjármál stjórnmálaflokkanna",
+    "section": "Fyrirtæki/lögaðilar og einstaklingar",
+    "text": "Fyrirtæki/lögaðilar og einstaklingar\n\nVenjulegir aðilar (fólk og fyrirtæki) mega styrkja hvern flokk um 550.000 krónur ár hvert, heimildin var hækkuð úr 400.000 með lagabreytingu árið 2018.\nBaldur S. Blöndal, Vísindavefurinn\n\n\nMagnDreifing\n\n\nMeð því að færa músina yfir y-ás er hægt að þysja inn og sjá betur þróun áranna eftir 2007."
+  },
+  {
+    "objectID": "greinar/stjornmalaflokkar/index.html#aðrar-tekjur",
+    "href": "greinar/stjornmalaflokkar/index.html#aðrar-tekjur",
+    "title": "Fjármál stjórnmálaflokkanna",
+    "section": "Aðrar tekjur",
+    "text": "Aðrar tekjur\nAðrar tekjur eru meðal annars útleiga á fasteignum (t.d. veislusölum), miðasala á viðburði, sala á auglýsingaplássi, eða önnur útseld þjónusta. Örfáir flokkar hafa slíkar tekjur, en Sjálfstæðisflokkur fær langmestar slíkar tekjur. Við munum líka sjá neðar að flokkurinn á meirihluta allra eigna flokkanna, þar á meðal fasteignir.\n\n\n\n\n\n\n\n\n\n\n\n\nÞað er áhugavert að sjá að tekjur Sjálfstæðisflokks af útleigu eru svo miklar að þær myndu nægja til að fjármagna allt starf Flokks fólksins. Ef við tökum með miðasölu á viðburði, auglýsingapláss og selda þjónustu gætu aðrar tekjur Sjálfstæðisflokks fjármagnað flokk Pírata."
+  },
+  {
+    "objectID": "greinar/stjornmalaflokkar/index.html#eignir",
+    "href": "greinar/stjornmalaflokkar/index.html#eignir",
+    "title": "Fjármál stjórnmálaflokkanna",
+    "section": "Eignir",
+    "text": "Eignir\nEignir geta verið tvenns konar:\n\nVeltufjármunir Þetta er handbært fé eða eignir sem er auðvelt að breyta í peninga. Hjá flestum flokkum eru eignirnar að mestu leyti veltufjármunir, þ.e. uppsafnaðir peningar frá ríkinu og styrktaraðilum.\nFastafjármunir Þetta eru eignir sem er ekki jafn auðvelt að breyta í peninga. Sjálfstæðisflokkur hefur átt kringum 65% allra fastafjármuna flokkanna og eru þeir að mestu leyti fasteignir.\n\n\n\n\n\n\n\n\n\nVið sjáum að margir flokkar hafa talsverða veltufjármuni, en örfáir flokkar hafa einhverja fastafjármuni."
+  },
+  {
+    "objectID": "greinar/stjornmalaflokkar/index.html#skuldir",
+    "href": "greinar/stjornmalaflokkar/index.html#skuldir",
+    "title": "Fjármál stjórnmálaflokkanna",
+    "section": "Skuldir",
+    "text": "Skuldir\nÞað er ekki nóg að vita bara hverjar eignir flokkanna eru, við viljum líka vita hvort þær séu fjármagnaðar með lántöku eða hreinum eignum."
+  },
+  {
+    "objectID": "greinar/stjornmalaflokkar/index.html#eigið-fé",
+    "href": "greinar/stjornmalaflokkar/index.html#eigið-fé",
+    "title": "Fjármál stjórnmálaflokkanna",
+    "section": "Eigið fé",
+    "text": "Eigið fé\nMeð þekkingu okkar um eignir og skuldir að vopni getum við skoðað eigið fé flokkanna og fengið svör við spurningunni\n\nHverjar eru eignirnar umfram skuldirnar?\n\n\nMagnDreifing\n\n\nVið sjáum til dæmis að Framsóknarflokkur hefur haft neikvætt eigið fé frá 2007 til 2020.\n\n\n\n\n\n\n\n\nAuk þess sjáum við að árið 2007 átti Sjálfstæðisflokkur 100% alls eigin fjár stjórnmálaflokka, en árið 2020 er sú tala dottin niður í 43,5%."
+  },
+  {
+    "objectID": "greinar/visitala_neysluverds/index.html",
+    "href": "greinar/visitala_neysluverds/index.html",
+    "title": "Vísitala neysluverðs",
+    "section": "",
+    "text": "Hér notum við gögn um Hlutfallslega skiptingu og áhrifaþætti vísitölu neysluverðs frá Hagstofu Íslands."
+  },
+  {
+    "objectID": "greinar/visitala_neysluverds/index.html#reiknuð-húsaleiga",
+    "href": "greinar/visitala_neysluverds/index.html#reiknuð-húsaleiga",
+    "title": "Vísitala neysluverðs",
+    "section": "Reiknuð húsaleiga",
+    "text": "Reiknuð húsaleiga\n\nReiknuð húsaleiga er mat á virði þeirrar þjónustu sem eigendur hafa af notkun eigin húsnæðis\nHagstofa Íslands"
+  },
+  {
+    "objectID": "greinar/visitala_neysluverds/index.html#þróun-eftir-löndum",
+    "href": "greinar/visitala_neysluverds/index.html#þróun-eftir-löndum",
+    "title": "Vísitala neysluverðs",
+    "section": "Þróun eftir löndum",
+    "text": "Þróun eftir löndum"
+  },
+  {
+    "objectID": "greinar/visitala_neysluverds/index.html#samanburður-við-vægi-í-vísitölu-neysluverðs",
+    "href": "greinar/visitala_neysluverds/index.html#samanburður-við-vægi-í-vísitölu-neysluverðs",
+    "title": "Vísitala neysluverðs",
+    "section": "Samanburður við vægi í vísitölu neysluverðs",
+    "text": "Samanburður við vægi í vísitölu neysluverðs"
+  },
+  {
+    "objectID": "greinar/landspitali/index.html",
+    "href": "greinar/landspitali/index.html",
+    "title": "Landspítalinn",
+    "section": "",
+    "text": "Gögnin eru fengin úr starfsemisupplýsingum Landspítala. Þar sem þetta er allt í PDF skjölum er ég ekki búinn að sækja öll gögnin, en ég birti hérna yfirlit yfir það helsta sem ég hef náð að safna saman. Það er kannski óþarfi að segja það, en það væri mikill kostur ef Landspítali myndi birta töflurnar úr þessum PDF skýrslum t.d. á csv formi, eða sem excel skrár. Seðlabankinn birtir t.d. excel skrár með viðeigandi gögnum samhliða PDF skýrslum sínum.\nEitt það besta sem yfirvöld geta gert til að auka traust á rekstri spítalans eða ákvarðanir í kringum hann er að auðvelda almenningi að nálgast upplýsingar um reksturinn. Það er ekki nóg að lesa/heyra í fjölmiðlum að einhver klár manneskja segir eitthvað um reksturinn, það verður að vera hægt að sannreyna þetta."
+  },
+  {
+    "objectID": "greinar/landspitali/index.html#læknar-hjúkrunarfræðingar-og-sjúkraliðar",
+    "href": "greinar/landspitali/index.html#læknar-hjúkrunarfræðingar-og-sjúkraliðar",
+    "title": "Landspítalinn",
+    "section": "Læknar, Hjúkrunarfræðingar og Sjúkraliðar",
+    "text": "Læknar, Hjúkrunarfræðingar og Sjúkraliðar\nÍ fréttum hefur verið talað um að of mikið starfsfólk sé ekki beintengt umönnun sjúklinga. Ein tilraun til að sannreyna þetta er að reikna hlutfall stöðugilda sem eru ekki hjúkrunarfræðingar, læknar eða sjúkraliðar. Þess ber þó að geta að meðlimir þessara stéttarfélaga geta líka sinnt stjórnenda/skrifstofustörfum að hluta til eða öllu leyti. Aðrar fagstéttir tengjast líka sjúklingum beint (t.d. sálfræðingar, lyfjafræðingar, meinafræðingar og sjúkraþjálfararar), en til einföldunar skoðum við hérna þessar þrjár stóru stéttir."
+  },
+  {
+    "objectID": "greinar/landspitali/index.html#stéttarfélög",
+    "href": "greinar/landspitali/index.html#stéttarfélög",
+    "title": "Landspítalinn",
+    "section": "Stéttarfélög",
+    "text": "Stéttarfélög\nHér má sjá fjölda og hlutföll stöðugilda fyrir fleiri stéttarfélög. Þar sem Sameyki varð ekki til fyrr en 2019 lagði ég saman fjölda stöðugilda hjá viðeigandi stéttarfélögum fyrir þann tíma.\n\nHlutföllFjöldi"
+  },
+  {
+    "objectID": "greinar/landspitali/index.html#stoðþjónusta-yfirstjórnstjórnsýsla",
+    "href": "greinar/landspitali/index.html#stoðþjónusta-yfirstjórnstjórnsýsla",
+    "title": "Landspítalinn",
+    "section": "Stoðþjónusta (Yfirstjórn/stjórnsýsla)",
+    "text": "Stoðþjónusta (Yfirstjórn/stjórnsýsla)\nTexti og gögn frá Spurt og svarað um Landspítala þar sem er m.a. vitnað í skýrslu McKinsey frá 2020.\n\nStjórnendur við Landspítala eru ríflega 200 talsins en starfsmenn um 6000 í rúmlega 4500 stöðugildum, að meðaltali einn stjórnandi á hverja 26 starfsmenn. Samkvæmt hinu erlenda ráðgjafarfyrirtæki McKinsey er „yfirstjórn/stjórnsýsla“ hlutfallslega minnst á Landspítala (13,2%) borið saman við Sjúkrahúsið á Akureyri (15,5%) og erlend samanburðarsjúkrahús (allt að 21,2%).\n\n\nÍ stoðþjónustu á Landspítala voru 602 stöðugildi árið 2020 sem gerir 13,5% af heildarfjölda stöðugilda það árið (4462 stg). Þetta er sambærilegt hlutfall og á Sjúkrahúsinu á Akureyri og einnig því samanburðarsjúkrahúsi sem valið var til samanburðar í skýrslu McKinsey frá árinu 2020.\n\n\nÞrátt fyrir að koma ekki beint að þjónustu við sjúklinga gegnir þetta starfsfólk engu að síður mikilvægu hlutverki. Þannig verður spítali ekki rekinn án fólks sem býr til mat handa sjúklingum, útvegar fatnað handa hjúkrunarfræðingum, reiknar laun handa sjúkraliðum, tæknifólks sem viðheldur öndunarvélum, forriturum sem passa upp á sjúkraskrár og svo framvegis. Þess má geta að á árunum eftir hrun var sérstaklega skorið niður í hópi þessara starfsmanna.\n\n\nÞannig var hlutfall starfsmanna í stoðþjónustu af heildarfjölda stöðugilda 16,3% árið 2008 en er sem fyrr segir 13,5% árið 2021. Það er sérstakt markmið stjórnenda Landspítala að fjölga starfsfólki í stoðþjónustu svo faglært starfsfólk geti einbeitt sér að beinni þjónustu við sjúklinga og starfað í samræmi við menntun sína (e. Working from the top of your licence).\n\n\nHlutfallFjöldi"
+  },
+  {
+    "objectID": "greinar/landspitali/index.html#stjórnendur",
+    "href": "greinar/landspitali/index.html#stjórnendur",
+    "title": "Landspítalinn",
+    "section": "Stjórnendur",
+    "text": "Stjórnendur\nFyrir tæpu ári síðan birti Landspítali Samantekt um stjórnendur á Landspítala og laun þeirra. Þar getum við séð hlutfall stjórnenda af öllum stöðugildum og notað svo gögnin um heildarfjölda stöðugilda til að reikna fjölda stöðugilda stjórnenda. Eins og sést að neðan hefur hlutfallið farið stöðugt lækkandi frá 2008 til 2020, og fjöldi stöðugilda stjórnenda lækkað eða haldist í stað.\n\nHlutfallFjöldi"
+  },
+  {
+    "objectID": "greinar/landspitali/index.html#skrifstofa",
+    "href": "greinar/landspitali/index.html#skrifstofa",
+    "title": "Landspítalinn",
+    "section": "Skrifstofa",
+    "text": "Skrifstofa\nFyrir nokkrum árum endurskilgreindi Landspítali starfsemissviðin sín og tók að nota færri yfirsvið í starfsemisupplýsingum sínum. Í starfemisupplýsingum má sjá að stöðugildum hefur fjölgað á Skrifstofusviði, en þessi fjölgun þýðir ekki að skrifstofufólki hefur fjölgað heldur hefur verið að færa starfsemi á milli sviða. Ég bendi áhugasömum á Spurt og svarað um Landspítala.\n\n\n\n\n\nTilkynning vegna skrifstofustöðugilda"
+  },
+  {
+    "objectID": "greinar/landspitali/index.html#á-höfðatölu",
+    "href": "greinar/landspitali/index.html#á-höfðatölu",
+    "title": "Landspítalinn",
+    "section": "Á höfðatölu",
+    "text": "Á höfðatölu\n\n\n\nVið getum svo notað tölur Hagstofu um mannfjölda eftir aldri til að reikna launaútgjöld á höfðatölu, bæði fyrir alla íbúa og fyrir íbúa sem hafa náð 65 ára aldri.\nUpphæðirnar að neðan eru leiðréttar fyrir verðbólgu með vísitölu neysluverðs.\n\nAllir65+\n\n\nEf við skoðum launaútgjöld á hvern íbúa sýnist okkur að launaútgjöldin hafa aldrei verið hærri.\n\n\n\n\n\n\n\n\nEn þegar við skoðum launaútgjöld á hvern íbúa sem hefur náð 65 ára aldri eru við rétt að komast upp í sömu fjárhæð og árið 2007."
+  },
+  {
+    "objectID": "greinar/leikskolar/index.html",
+    "href": "greinar/leikskolar/index.html",
+    "title": "Leikskólar",
+    "section": "",
+    "text": "Hagstofan gefur árlega út gögn um fjölda nemenda í leikskólum landsins. Tölurnar eiga við um fjöldann í desembermánuði árið á undan. Til að fá sem raunsæsta mynd á hlutfall barna með leikskólapláss er best að bera þann fjölda saman við stærð árgangsins í janúar mánuði síðar.\n\nEins árs gömul börn\n\n\n\nMest er talað um fjölda eins árs barna svo við byrjum á að skoða þær tölur\n\n\n\n\nEn hvernig hefur þetta hlutfall þróast undanfarin ár? Skoðum þróunina hjá þeim 16 sveitarfélögum sem hafa haft stærstu árgangana síðustu árin\n\n\n\nHeildarfjöldi leikskólaplássa\nEndurtökum þetta nú fyrir leikskólana í heild sinni. Þá skoðum við heildarfjölda nemenda í leikskólum sem hlutfall af fjölda barna á aldrinum 1 árs til 5 ára. Við sjáum að neðan að stundum benda gögnin til þess að fleiri börn eru í leikskólum heldur en eru í árganginum. Þetta getur alltaf gerst þar sem við erum að skoða fjöldatölur í árgangi mánuði seinna en fjöldatölur í leikskólum.\n\n\n\n\n\n\n\nSkoðum þróunina núna fyrir sömu 16 sveitarfélög og að ofan."
+  },
+  {
+    "objectID": "greinar/skattagogn/index.html",
+    "href": "greinar/skattagogn/index.html",
+    "title": "Tekjur, skattar og kaupmáttur",
+    "section": "",
+    "text": "Það er fátt jafn sexý og þegar einhver talar um tekjutíundir, en hvað þýðir það? Í gögnum Hagstofunnar um tekjur eru samtals 230.401 einstaklingar og þau fengu samtals tekjur upp á 2.182.908 milljónir króna, eða 9 milljónir króna á mann á ári (0,8 milljónir á mánuði).\nEn þessir einstaklingar höfðu ekki allir sömu tekjur, heldur er tekjum dreift ójafnt. Sum hafa hærri tekjur og aðrir lægri. Ímyndum að við tökum þessa 230.401 einstaklinga, röðum þeim í vaxandi röð eftir tekjum þeirra og skiptum svo í tíu jafnstóra hópa. Þá erum við komin með það sem kallast tekjutíundir! Í töflu I að neðan sjáum við hvernig heildartekjur skiptust í tekjutíundir árið 2021.\nHér ber að hafa í huga að allir einstaklingar sem náð hafa 16 ára aldri teljast með í þessum gögnum. Því þýða mánaðartekjur upp á 37 þúsund kr í lægstu tíundinni ekki að fjölskyldur þurfi að lifa á þeim tekjum, heldur eru þarna margir einstaklingar með engar eða mjög litlar tekjur.\n\n\n\n\nTafla I. Skipting heildartekna á tekjutíundir árið 2021\n \n  \n    Tekjutíund \n    Tekjur á mann(á mánuði) \n    Tekjur alls \n    Hlutfall allra tekna \n  \n \n\n  \n    1 \n    37.203 kra \n    10.286 mkr \n    0,5% \n  \n  \n    2 \n    169.083 kr \n    46.748 mkr \n    2,1% \n  \n  \n    3 \n    303.747 kr \n    83.980 mkr \n    3,8% \n  \n  \n    4 \n    402.825 kr \n    111.373 mkr \n    5,1% \n  \n  \n    5 \n    490.488 kr \n    135.610 mkr \n    6,2% \n  \n  \n    6 \n    614.343 kr \n    169.861 mkr \n    7,8% \n  \n  \n    7 \n    780.465 kr \n    215.783 mkr \n    9,9% \n  \n  \n    8 \n    1.011.961 kr \n    279.787 mkr \n    12,8% \n  \n  \n    9 \n    1.370.797 kr \n    378.998 mkr \n    17,4% \n  \n  \n    10 \n    2.714.417 kr \n    750.482 mkr \n    34,4% \n  \n\n\na Einstaklingar á aldrinum 16-17 hafa oft engar eða litlar tekjur meirihluta árs.\n\n\n\n\nVið getum skipt öðrum breytum en tekjum í tíundir. Í mælaborðinu mínu um skattahögn Hagstofunnar er hægt að skoða ýmsar breytur eftir tíundum heildartekna, ráðstöfunartekna, eigna og annarra breytna!"
+  },
+  {
+    "objectID": "greinar/skattagogn/index.html#hversu-hátt-hlutfall-af-öllum-sköttum-borgar-hver-tekjuhópur",
+    "href": "greinar/skattagogn/index.html#hversu-hátt-hlutfall-af-öllum-sköttum-borgar-hver-tekjuhópur",
+    "title": "Tekjur, skattar og kaupmáttur",
+    "section": "Hversu hátt hlutfall af öllum sköttum borgar hver tekjuhópur?",
+    "text": "Hversu hátt hlutfall af öllum sköttum borgar hver tekjuhópur?\nÞað ætti ekki að koma á óvart að efri tekjutíundir borgi hærra hlutfall af öllum sköttum heldur en lægri tíundir. Fjármálaráðuneytið benti á það í tilkynningu þann 23. júní 2021 að efstu fimm tekjutíundirnar borgi 83% af öllum sköttum. Er þetta eftirtektarvert? Út frá töflunni okkar að ofan getum við séð að efstu fimm tíundirnar fá\n\\[\n34.4\\% + 17.4\\% + 12.8\\% + 9.9\\% + 7.8\\% = 82.3\\%\n\\]\naf öllum tekjum, og því ætti það alls ekki að koma okkur á óvart að þau borgi það hátt hlutfall af öllum sköttum. Þessi tala, 83%, þýðir því ekki að það sé vegið að þeim tekuhærri á óréttlátan hátt.\nEn hvað borgar hver tekjutíund mikið í skatta og hvernig ber því saman við heildartekjur þeirra? Á myndinni að neðan ber ég þetta tvennt saman. Hægt er að smella á Play til að sjá þróunina frá 1997 til 2021 eða velja ár til að skoða. Ef allir tekjuhópar borguðu jafnt hlutfall í skatta væru allir punktarnir á brotnu línunni."
+  },
+  {
+    "objectID": "greinar/skattagogn/index.html#skattbyrði",
+    "href": "greinar/skattagogn/index.html#skattbyrði",
+    "title": "Tekjur, skattar og kaupmáttur",
+    "section": "Skattbyrði",
+    "text": "Skattbyrði\nVið getum líka skoðað skattbyrði, eða hversu hátt hlutfall af tekjum sínum hver hópur borgar í skatta. Eins og að ofan er hægt að smella á Play til að sjá þróunina frá 1997 til 2021 eða velja ár sjálf til að skoða. Í sömu tilkynningu frá fjármálaráðuneytinu og ég nefndi að ofan var bent á að skattbyrði allra tekjutíunda nema þeirri efstu hefði lækkað frá 2019 til 2021. Það er rétt, en það er gott að hafa í huga að skattbyrði sömu tíunda hækkaði flestöll árin frá 1997 til 2019.\nNeðar í færslunni mun ég svo sýna hvernig skattbyrði hefur hækkað síðan 1997 hjá öllum tekjutíundum nema þeirri efstu."
+  },
+  {
+    "objectID": "greinar/skattagogn/index.html#kaupmáttur-heildartekna",
+    "href": "greinar/skattagogn/index.html#kaupmáttur-heildartekna",
+    "title": "Tekjur, skattar og kaupmáttur",
+    "section": "Kaupmáttur heildartekna",
+    "text": "Kaupmáttur heildartekna\nKaupmáttur er einfaldlega hækkun á tekjum umfram verðbólgu (hækkun á verðlagi, mælt með vísitölu neysluverðs). Hér sjáum við hækkun kaupmáttar frá 1997 hjá meðaleinstakling úr hverru tekjutíund."
+  },
+  {
+    "objectID": "greinar/skattagogn/index.html#kaupmáttur-ráðstöfunartekna",
+    "href": "greinar/skattagogn/index.html#kaupmáttur-ráðstöfunartekna",
+    "title": "Tekjur, skattar og kaupmáttur",
+    "section": "Kaupmáttur ráðstöfunartekna",
+    "text": "Kaupmáttur ráðstöfunartekna\nVið höfum frekar áhuga á kaupmætti ráðstöfunartekna (heildartekjur að frádegnum sköttum)."
+  },
+  {
+    "objectID": "greinar/skattagogn/index.html#skattbyrði-1",
+    "href": "greinar/skattagogn/index.html#skattbyrði-1",
+    "title": "Tekjur, skattar og kaupmáttur",
+    "section": "Skattbyrði",
+    "text": "Skattbyrði\nÞað er líka áhugavert að skoða breytingu í skattbyrði milli 1997 og 2021. Hér þýðir jákvæð prósenta að skattbyrði hefur aukist, en neikvæð prósenta að hún sé minni. Við sjáum að skattbyrði hefur aukist hjá öllum tekjutíundunum nema þeirri efstu. Hér erum við að skoða skattbyrði hvers hóps í heild sinni, þannig að það getur alltaf verið að þetta passi ekki við hvern og einn einstakling, heldur á þetta við um meðaltal allra einstaklinganna."
+  },
+  {
+    "objectID": "greinar/vinnuafl/index.html",
+    "href": "greinar/vinnuafl/index.html",
+    "title": "Vinnumarkaður",
+    "section": "",
+    "text": "Árstíðaleiðrétt hlutfall opinbers starfsfólks\n\nMyndAðferð\n\n\n\n\n\n\n\n\n\nLeiðrétting fyrir árstíðarsveiflumTeljarinn og nefnarinn\n\n\nVið getum hugsað að þetta séu tvö ferli:\n\nLangtímaferli sem breytist án mjög ákveðins mynsturs\nÁrstíðabundnar sveiflur sem eru að mestu leyti svipaðar frá ári til árs\n\nNotum GAM (Generalized Additive Models) til að meta bæði ferlin saman. Splæsibrúunin (e. splines) metur ferlið í tveimur hlutum, línulegum og ólínulegum, og notar stika til að toga ólínulega hlutann í átt að línulegu ferli.\n\nÞar sem hæga þróunin getur verið að breytast mishratt á mismunandi árabilum notum við aðlögunarsplæsibrúun (e. adaptive smoother) þar sem ólínulegi stikinn fær að breytast með tíma. Í kóðanum er þetta táknað með s(timi, bs = \"ad\")\nÁrstíðarferlið hefur þær skorður að frávikið í upphafi og byrjun ársins á að stefna í sömu tölu, þ.e. \\(\\text{31. desember} \\approx \\text{1. janúar}\\). Pakkinn mgcv býður upp á slíka hringrásarsplæsara (e. cyclic smooths) [alveg í ruglinu með íslenskuna núna]. Í kóðanum er þetta táknað með s(manudur, bs = \"cc\")\n\nÞegar við erum komin með mat á þessi tvö ferli er lítið mál að heilda yfir árstíðarbundnu sveiflurnar. Við vigtum árstíðarbundna matið eftir nákvæmni matsins í hverjum mánuði (einum deilt með staðalvillu matsins) og reiknum svo meðaltal eftir því.\nAllt í allt metum við þá líkanið svona (einfölduð útgáfa af kóða):\ngam(Opinbert ~ s(manudur, bs = \"cc\") + s(timi, bs = \"ad\"), offset = log(Heild), family = nb())\nFjöldi opinbers starfsfólks er jákvæð fjöldatala svo fyrsta ágískunin er alltaf neikvæða tvíkostadreifingin. Við metum líkanið á lograkvarða, bæði því það er náttúrulega matið fyrir dreifinguna, en líka því við búumst við því að útkoman breytist hlutfallslega milli ára.\nHér fyrir neðan sjáum við svo matið á árstíðaráhrifum:\n\n\n\n\n\n\n\nHlutall (p) opinbers starfsfólks (O) af heildarfjölda starfsfólks (H) má skrifa\n\\[\np = \\frac{O}{H},\n\\]\nÞar sem \\(H\\) inniheldur líka starfsfólk á almennum vinnumarkaði (A), s.s. \\(H = O + A\\).\nSkoðum hlutfallið á tveimur mismunandi tímapunktum, \\(p_1\\) og \\(p_2\\).\n\\[\n\\frac{p_2}{p_1} = \\frac{O_2/H_2}{O_1/H_1} = \\frac{O_2/O_1}{H_2/H_1}.\n\\]\nEf \\(p_2 > p_1\\) og \\(p_1 \\neq 0\\) gildir að \\(p_2/p_1 > 1\\) og því\n\\[\n\\begin{aligned}\n\\frac{O_2/O_1}{H_2/H_1} &> 1 \\\\\n\\rightarrow \\frac{O_2}{O_1} &> \\frac{H_2}{H_1},\n\\end{aligned}\n\\]\nþ.e. fjöldi opinbers starfsfólks hefur vaxið hlutfallslega hraðar en fjöldi starfsfólks alls.\nÞetta er kannski augljóst, en það er gott að hafa þetta í huga þegar hlutfallið hækkar og athuga hvort það sé vegna mikilla opinberra ráðninga eða fækkunar starfa á almennum vinnumarkaði.\nHér nota ég GAM til að smootha gögnin og nota svo árstíðaleiðrétt smooth gögn til að reikna stöðugar mánaðarlegar breytingar og teiknum þær svo.\n\n\n\n\n\n\n\nHrein breytingEftir bakgrunniHlutfallsleg breytingEftir bakgrunni"
+  },
+  {
+    "objectID": "um_metil.html",
+    "href": "um_metil.html",
+    "title": "Metill",
+    "section": "",
+    "text": "metill no kk\nTölfræðileg uppskrift þar sem innihaldið er gögn og útkoman er einhver ákveðin stærð sem við höfum áhuga á að meta.\n\n\nOrðið metill lýsir markmiði þessarar síðu: Að nota réttu gögnin og góðar uppskriftir til að fá út mat á ýmsum stærðum sem eru partur af umræðunni hverju sinni.\n\nHöfundar\n\n\n\n\n\n\n\n\nBrynjólfur Gauti Guðrúnar Jónsson\nPhD nemandi í tölfræði við HÍ"
+  },
+  {
+    "objectID": "greinar.html",
+    "href": "greinar.html",
+    "title": "Metill",
+    "section": "",
+    "text": "Vísitala neysluverðs\n\n\nVísitalan og áhrif undirtalna á heildina unnið úr nýjustu gögnum Hagstofu hverju sinni\n\n\nVerðbólga er ekki alltaf það sama og verðbólga. Stundum er stór hluti af henni hækkun á húsnæðisverði, stundum ferðir og flutningar. Það er því gott að skoða undirvísitölurnar og áhrif þeirra á heildina.\n\n\n\n\n\n\nDec 22, 2022\n\n\nBrynjólfur Gauti Guðrúnar Jónsson\n\n\n\n\n\n\n  \n\n\n\n\nVinnumarkaður\n\n\nHver er fjöldi starfandi einstaklinga og hvernig skiptast þeir á vinnumarkaði?\n\n\nReglulega sjást fyrirsagnir þar sem talað er um að opinbert starfsfólk sé allt of margt og að hlutfall þess af heildarfjölda vinnandi fólks sé of hátt. Hér kryf ég reglulega nýjustu gögnin til að geta vitað hvort slíkar fullyrðingar séu teknar úr samhengi eða endurspegli raunveruleikann.\n\n\n\n\n\n\nDec 2, 2022\n\n\nBrynjólfur Gauti Guðrúnar Jónsson\n\n\n\n\n\n\n  \n\n\n\n\nFjármál stjórnmálaflokkanna\n\n\nGreining á ársreikningum stjórnmálaflokka úr gögnum Ríkisendurskoðunar\n\n\nHversu miklar tekjur hafa stjórnmálaflokkarnir og hvaðan koma þær? Hækka útgjöld þeirra sjáanlega í kringum kosningar og eiga þeir einhverjar eignir? Hér köfum við ofan í ársreikninga stjórnmálaflokkanna.\n\n\n\n\n\n\nOct 17, 2022\n\n\nBrynjólfur Gauti Guðrúnar Jónsson\n\n\n\n\n\n\n  \n\n\n\n\nLeikskólar\n\n\nHvernig gengur sveitarfélögum landsins að brúa bilið?\n\n\nHvernig gengur sveitarfélögum að útbúa leikskólapláss? Hvernig ber fjölda nemenda í leikskólum saman við heildarfjölda barna í hverjum árgangi? Hér skoðum við gögn Hagstofunnar um leikskóla og berum saman við mannfjöldatölur eftir aldri.\n\n\n\n\n\n\nOct 5, 2022\n\n\nBrynjólfur Gauti Guðrúnar Jónsson\n\n\n\n\n\n\n  \n\n\n\n\nTekjur, skattar og kaupmáttur\n\n\nGreining á tekjuskattsgögnum sem Hagstofan vinnur úr skattframtölum Íslendinga\n\n\nStundum les maður að skattakerfið ýti undir ójöfnuð, eða að það séu of háir skattar á þeim efnameiru. Hvort er það? Hér nota ég skattagögn Hagstofunnar til að skoða tekjur og skatta eftir tekjutíundum. Ég get ekki sagt hvort það sé sanngjarnt, en ég get sýnt hvernig það hefur breyst með tímanum.\n\n\n\n\n\n\nSep 11, 2022\n\n\nBrynjólfur Gauti Guðrúnar Jónsson\n\n\n\n\n\n\n  \n\n\n\n\nLandspítalinn\n\n\nHvaða upplýsingar eru til um rekstur Landspítalans og hvar má finna þær?\n\n\nHvernig er nýting legurýma á Landspítala? Hvaða hlutfall launa fer í þessi margræddu millistjórnendastörf? Hér ætla ég aðeins að skoða hvaða gögn eru til um rekstur landspítalans, hvar má finna þau og hvað mætti betur fara í birtingu þeirra gagna.\n\n\n\n\n\n\nAug 24, 2022\n\n\nBrynjólfur Gauti Guðrúnar Jónsson\n\n\n\n\n\n\nNo matching items"
+  },
+  {
+    "objectID": "learn.html",
+    "href": "learn.html",
+    "title": "Færslur",
+    "section": "",
+    "text": "No matching items"
+  },
+  {
+    "objectID": "pyngjan.html",
+    "href": "pyngjan.html",
+    "title": "Pyngjuhornið",
+    "section": "",
+    "text": "Fyrstu kaupendur\n\n\nHvernig standa fyrstu kaupendur á fasteignamarkaðinum?\n\n\nSkoðum gögn fasteignaskrár, sem flutti nýlega frá Þjóðskrá til HMS, um fyrstu kaupendur og komumst að því hvort meðalaldur þeirra hafi breyst, hversu stór hluti kaupenda eru fyrstu kaupendur, og hvernig kaupverði ber saman við ráðstöfunartekur ungs fólks.\n\n\n\n\n\n\nNov 25, 2022\n\n\nBrynjólfur Gauti Guðrúnar Jónsson\n\n\n\n\n\n\n  \n\n\n\n\nHáskóli Íslands: Hornkerling?\n\n\nHver eru útgjöld ríkisins til fimm háskóla á Íslandi?\n\n\nVið vitum öll að Háskóli Íslands fær mest útgjöld frá ríkinu, en hvernig ber honum saman við aðra háskóla á hvern nemanda?\n\n\n\n\n\n\nNov 11, 2022\n\n\nBrynjólfur Gauti Guðrúnar Jónsson\n\n\n\n\n\n\n  \n\n\n\n\nFasteignauppbygging\n\n\nHvað byggjum við mikið af fasteignum? Er það nóg fyrir vaxandi mannfjöldann?\n\n\nStundum er talað um að við byggjum of mikið af fasteignum en oftast vill fólk meina að það sé mikill skortur. Hvað byggjum við mikið af fasteignum og hvað erum við mörg? Eru þetta nógu margar fasteignir?\n\n\n\n\n\n\nOct 28, 2022\n\n\nBrynjólfur Gauti Guðrúnar Jónsson\n\n\n\n\n\n\n  \n\n\n\n\nOpinberar veitingar\n\n\nHvaða veitingar eru vinsælastar á fundum og viðburðum ríkisins?\n\n\nAlþingi, ríkisstjórn og ríkið á helst að endurspegla þjóðina í öllum sínum kostum og göllum. Eitt málefni sem er okkur öllum mikilvægt er matur. Hvað finnst okkur gott að borða? Hvar finnst okkur gott að borða? Er ríkið sammála okkur í þessum málum? Hér skoða ég útgjöld ríkisins til veitingastaða, veisluþjónusta og mötuneyta.\n\n\n\n\n\n\nOct 14, 2022\n\n\nBrynjólfur Gauti Guðrúnar Jónsson\n\n\n\n\n\n\n  \n\n\n\n\nStrætó\n\n\nHvað getum við lært af því hvernig Strætó bs. birtir tölurnar sínar?\n\n\nÍ ársreikningi Strætó bs. frá 2021 má finna áhugaverða myndræna framsetningu á tölum. Hér skoða ég hvað við getum lært af þessu og hvernig við getum hjálpað þeim að koma gögnunum ennþá betur til skila.\n\n\n\n\n\n\nSep 30, 2022\n\n\nBrynjólfur Gauti Guðrúnar Jónsson\n\n\n\n\n\n\nNo matching items"
+  }
+]
