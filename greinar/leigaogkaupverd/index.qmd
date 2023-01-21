@@ -58,6 +58,7 @@ library(feather)
 library(gganimate)
 library(metill)
 library(patchwork)
+library(arrow)
 theme_set(theme_metill())
 
 
@@ -71,15 +72,14 @@ if (!file.exists("data/kaupskra_data.feather")) {
   init_db()
   
   kaupskra <- mtl_kaupskra() |>
-    collect() |>
     filter(tegund %in% c("Fjölbýli", "Einbýli", "Sérbýli")) |> 
     select(fastnum, utgdag, kaupverd) |>
-    mutate(utgdag = as_date(utgdag)) |> 
     arrange(fastnum, utgdag) |>
     group_by(fastnum) |>
     mutate(n_obs = n()) |>
     ungroup() |>
-    filter(n_obs > 1) 
+    filter(n_obs > 1) |> 
+    collect() 
   
   
   
@@ -128,20 +128,20 @@ if (!file.exists("data/kaupskra_data.feather")) {
            y = sample(c(y1, y2), size = n())) |> 
     select(-data)
   
-  d |> write_feather("data/kaupskra_data.feather")
+  d |> write_parquet("data/kaupskra_data.parquet")
   
   
   leiguskra <- mtl_leiguskra() |>
-    collect()
-  
-  d <- leiguskra |>
     select(fastnum, utgdag, heildarverd) |>
     arrange(fastnum, utgdag) |>
     group_by(fastnum) |>
     mutate(n_obs = n()) |>
     ungroup() |>
     filter(n_obs > 1) |> 
-    mutate(heildarverd = vnv_convert(heildarverd, floor_date(utgdag, "month"), include_housing = FALSE))
+    collect()
+  
+  d <- leiguskra |>
+    mutate(heildarverd = vnv_convert(heildarverd, utgdag, include_housing = FALSE))
   
   plot_dat <- d |>
     distinct() |>
@@ -186,11 +186,17 @@ if (!file.exists("data/kaupskra_data.feather")) {
     select(-data)
   
   plot_dat |> 
-    write_feather("data/leiguskra_data.feather")
+    write_parquet("data/leiguskra_data.parquet")
   
 } else {
-  kaupskra <- read_feather("data/kaupskra_data.feather")
-  leiguskra <- read_feather("data/leiguskra_data.feather")
+  kaupskra <- read_parquet("data/kaupskra_data.parquet") |> 
+    mutate(
+      dags = as_date(dags)
+    )
+  leiguskra <- read_parquet("data/leiguskra_data.parquet") |> 
+    mutate(
+      dags = as_date(dags)
+    )
 }
 ```
 

@@ -1493,7 +1493,7 @@ plot_dat <- d |>
     per_pers = per_pop
     ) |> 
   mutate(land_fra = "TOTAL") |> 
-  filter(month(dags) < 12,
+  filter(month(dags) <= 12,
          land_fra == "TOTAL") |> 
   drop_na(per_pers) |> 
   select(dags, land, value = per_pers) |> 
@@ -1527,7 +1527,9 @@ p3 <- plot_dat |>
   ) +
   geom_text(
     data = plot_dat |> 
+      group_by(land) |> 
       filter(colour != litur_annad, dags == max(dags)) |> 
+      ungroup() |> 
       mutate(
         value = case_when(
           land == "Svíþjóð" ~ value - 0.8,
@@ -1545,7 +1547,10 @@ p3 <- plot_dat |>
   scale_x_date(
     breaks = unique(plot_dat$dags),
     labels = c(
-      "Mars", "Apríl", "Maí", "Júní", "Júlí", "Ágúst", "September", "Október", "Nóvember"
+      "Mars", "Apríl", "Maí", 
+      "Júní", "Júlí", 
+      "Ágúst", "September", 
+      "Október", "Nóvember", "Desember"
     )
   ) +
   geom_rangeframe(sides = "b") +
