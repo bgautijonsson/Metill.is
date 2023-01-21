@@ -291,7 +291,7 @@ m <- gam(Opinbert ~ s(manudur, bs = "cc") + s(timi, bs = "ad"),
          data = model_dat, offset = log(Heild), family = nb(), method = "REML")
 
 plot_dat <- emmeans(m, ~ timi + manudur, at = list(timi = model_dat$timi,
-                                                   manudur = 1:12)) |> 
+                                                   manudur = 1:12), offset = 0) |> 
   tidy(type = "response") |> 
   group_by(timi) |> 
   mutate(wt = 1 / std.error,
