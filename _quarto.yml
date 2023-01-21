@@ -33,6 +33,8 @@ format:
     css: style.css
     execute: 
       freeze: auto
+      echo: false
+      warning: false
 
 editor: source
 
