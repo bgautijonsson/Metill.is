@@ -1,0 +1,47 @@
+---
+title: "Loftgæði"
+pagetitle: "Loftgæði"
+subtitle: "Samantekt á mælingum köfnunarefnisdíoxíðs (NO2) við Grensásveg"
+description: | 
+    Nýlega var fjallað um óvenjulega háar mælingar á NO2 í Reykjavíkurborg. Hversu algeng eru slík tilvik? Hér ber ég mælingar ársins 2023 saman við fyrri ár.
+author: 
+    -   name: "Brynjólfur Gauti Guðrúnar Jónsson"
+        url: "https://twitter.com/bgautijonsson"
+        affiliation: "Tölfræði, Raunvísindadeild Háskóla Íslands"
+        affiliation-url: "https://www.hi.is/tolfraedi_0"
+date: "2023/01/21"
+format: 
+    html:
+        code-fold: true
+        page-layout: full
+        smooth-scroll: true
+        link-external-newwindow: true
+editor: source
+categories:
+    - loftgæði
+    - umhverfi
+href: greinar/loftgaedi/index.qmd
+image: https://raw.githubusercontent.com/bgautijonsson/loftgaedimyndir/master/Figures/combined_image_page.png
+twitter-card:
+    image: https://raw.githubusercontent.com/bgautijonsson/loftgaedimyndir/master/Figures/combined_image_page.png
+---
+
+```{r setup}
+#| include: false
+#| echo: false
+
+
+library(metill)
+```
+
+
+Á [vef Umhverfisstofnunar](https://ust.is/loft/loftgaedi/kofnunarefnisdioxid/) er skrifað:
+
+>Í stórum þéttbýliskjörnum getur styrkur köfnunarefnisoxíða nálgast mörkin þar sem áhrifa á heilsu manna fer að gæta. Köfnunarefnisdíoxíð (NO2) ertir lungu manna og dýra og meðal annars er talið að langvarandi álag á lungu af völdum NO2 geti valdið lungnaskemmdum síðar á ævinni. Enn fremur getur hár styrkur köfnunarefnisoxíða orsakað plöntuskemmdir.
+
+> Vegna legu Reykjavíkur við hafið og hve vindasamt er þar, er meðalstyrkur köfnunarefnisdíoxíðs sjaldan meiri en 20 µg/m3 á veturna. En þegar logn er á veturna getur myndast mjög greinilegt slör af menguðu lofti yfir borginni og þá fer magn köfnunarefnisdíoxíðs á sólarhring stundum yfir viðmiðunarmörkin sem eru 75 µg/m3.
+
+Á myndinni að neðan sjáum við hversu oft og hvenær mælingar köfnunarefnisdíoxíðs (NO2) hafa farið yfir hættumörkin, bæði hvað varðar klukkustundarmörk og dagsmörk, síðan 2019.
+
+![](https://raw.githubusercontent.com/bgautijonsson/loftgaedimyndir/master/Figures/combined_image.png){.column-screen}
+

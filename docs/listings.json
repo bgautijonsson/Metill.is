@@ -10,6 +10,7 @@
   {
     "listing": "/index.html",
     "items": [
+      "/greinar/loftgaedi/index.html",
       "/greinar/vinnuafl/index.html",
       "/greinar/visitala_neysluverds/index.html",
       "/greinar/stjornmalaflokkar/index.html",
@@ -24,6 +25,7 @@
   {
     "listing": "/greinar.html",
     "items": [
+      "/greinar/loftgaedi/index.html",
       "/greinar/vinnuafl/index.html",
       "/greinar/visitala_neysluverds/index.html",
       "/greinar/stjornmalaflokkar/index.html",
