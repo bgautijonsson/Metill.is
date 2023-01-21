@@ -26,6 +26,15 @@ twitter-card:
     image: https://raw.githubusercontent.com/bgautijonsson/loftgaedimyndir/master/Figures/combined_image_page.png
 ---
 
+```{r setup}
+#| include: false
+#| echo: false
+
+
+library(metill)
+```
+
+
 Á [vef Umhverfisstofnunar](https://ust.is/loft/loftgaedi/kofnunarefnisdioxid/) er skrifað:
 
 >Í stórum þéttbýliskjörnum getur styrkur köfnunarefnisoxíða nálgast mörkin þar sem áhrifa á heilsu manna fer að gæta. Köfnunarefnisdíoxíð (NO2) ertir lungu manna og dýra og meðal annars er talið að langvarandi álag á lungu af völdum NO2 geti valdið lungnaskemmdum síðar á ævinni. Enn fremur getur hár styrkur köfnunarefnisoxíða orsakað plöntuskemmdir.
