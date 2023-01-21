@@ -2,6 +2,7 @@ project:
   type: website
   resources: 
     - "*.png"
+    - "*.js"
   output-dir: docs
   preview:
     port: 4200
