@@ -32,7 +32,7 @@ format:
     theme: [flatly, theme.scss]
     css: style.css
     execute: 
-      freeze: auto
+      freeze: false
       echo: false
       warning: false
 
