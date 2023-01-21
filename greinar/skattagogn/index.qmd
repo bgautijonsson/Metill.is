@@ -50,15 +50,9 @@ theme_set(theme_metill())
 
 if (!file.exists("data/data.csv")) {
   
-  usr <- config::get("postgres_user")
-  con <- dbConnect(RPostgres::Postgres(), 
-                   dbname = usr$dbname, 
-                   host = usr$host,
-                   port = usr$port, 
-                   user = usr$username, 
-                   password = usr$password)
+  init_db()
   
-  d <- tbl(con, "tiundamork_1997_2021") |> 
+  d <- `mtl_tiundamork_1997-2021`() |> 
     collect()
   
   d |> 

@@ -65,22 +65,27 @@ theme_set(theme_metill())
 ```
 
 
+
+
+
 ```{r}
 if (!file.exists("data/data.csv")) {
   url <- "https://talnaefni.fasteignaskra.is/talnaefni/v1/fyrstukaupsveitarfelogmedalaldur"
-  aldur <- rjson::fromJSON(file = url) |> 
-    as_tibble() |> 
+  content <- rjson::fromJSON(file = url)
+  aldur <- tibble(
+    date = list(content$date),
+    svf = list(content$sveitarfélög)
+  ) |> 
+    unnest_longer(svf) |> 
+    unnest_wider(svf) |> 
+    unnest_longer(everything()) |> 
     separate(date, into = c("ar", "man"), sep = "-") |> 
     mutate(
       ar = parse_number(ar),
       man = parse_number(man),
       man = 1 + (man - 1) * 3,
       dags = clock::date_build(year = ar, month = man)
-    ) |> 
-    select(dags, sveitarfélög) |> 
-    unnest_wider(sveitarfélög) |> 
-    mutate(dags = list(dags)) |> 
-    unnest_longer(everything()) |> 
+    )  |> 
     select(
       svf = name, 
       dags, 
@@ -96,8 +101,14 @@ if (!file.exists("data/data.csv")) {
     pivot_wider(names_from = "breyta", values_from = "value")
   
   url <- "https://talnaefni.fasteignaskra.is/talnaefni/v1/fyrstukaupsveitarfelogmedalstaerd"
-  staerd <- rjson::fromJSON(file = url) |> 
-    as_tibble() |> 
+  content <- rjson::fromJSON(file = url)
+  staerd <- tibble(
+    date = list(content$date),
+    svf = list(content$sveitarfélög)
+  ) |> 
+    unnest_longer(svf) |> 
+    unnest_wider(svf) |> 
+    unnest_longer(everything()) |> 
     separate(date, into = c("ar", "man"), sep = "-") |> 
     mutate(
       ar = parse_number(ar),
@@ -105,28 +116,31 @@ if (!file.exists("data/data.csv")) {
       man = 1 + (man - 1) * 3,
       dags = clock::date_build(year = ar, month = man)
     ) |> 
-    select(dags, sveitarfélög) |> 
-    unnest_wider(sveitarfélög) |> 
-    mutate(dags = list(dags)) |> 
-    unnest_longer(everything()) |> 
     select(svf = name, dags, fyrstu, adrir = ekki_fyrstu, allir) |> 
     pivot_longer(c(-dags, -svf), names_to = "hopur", values_to = "staerd")
   
   url <- "https://talnaefni.fasteignaskra.is/talnaefni/v1/fyrstukaupsveitarfelogmedalverd"
-  verd <- rjson::fromJSON(file = url) |> 
-    as_tibble() |> 
-    separate(date, into = c("ar", "man"), sep = "-")  |> 
+  content <- rjson::fromJSON(file = url)
+  verd <- tibble(
+    date = list(content$date),
+    svf = list(content$sveitarfélög)
+  ) |> 
+    unnest_longer(svf) |> 
+    unnest_wider(svf) |> 
+    unnest_longer(everything()) |> 
+    separate(date, into = c("ar", "man"), sep = "-") |> 
     mutate(
       ar = parse_number(ar),
       man = parse_number(man),
       man = 1 + (man - 1) * 3,
       dags = clock::date_build(year = ar, month = man)
     ) |> 
-    select(dags, sveitarfélög) |> 
-    unnest_wider(sveitarfélög) |> 
-    mutate(dags = list(dags)) |> 
-    unnest_longer(everything()) |> 
-    select(svf = name, dags, fyrstu, adrir = ekki_fyrstu, allir) |> 
+    select(
+      svf = name, 
+      dags, fyrstu,
+      adrir = ekki_fyrstu,
+      allir
+    ) |> 
     pivot_longer(c(-dags, -svf), names_to = "hopur", values_to = "verd")
   
   url <- "https://talnaefni.fasteignaskra.is/talnaefni/v1/ibudavisitala"

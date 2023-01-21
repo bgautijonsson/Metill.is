@@ -66,15 +66,9 @@ theme_set(theme_metill())
 
 if (!file.exists("data/data.csv")) {
   
-  usr <- config::get("postgres_user")
-  con <- dbConnect(RPostgres::Postgres(), 
-                   dbname = usr$dbname, 
-                   host = usr$host,
-                   port = usr$port, 
-                   user = usr$username, 
-                   password = usr$password)
+  init_db()
   
-  d <- tbl(con, "arsreikningar_stjornmalaflokka") |> 
+  d <- mtl_arsreikningar_stjornmalaflokka() |> 
     collect() |> 
     mutate_all(~ ifelse(is.na(.), 0, .)) |> 
     inner_join(
@@ -98,14 +92,14 @@ if (!file.exists("data/data.csv")) {
       by = "flokkur"
     ) |> 
     left_join(
-      tbl(con, "atkvaedi_stjornmalaflokka") |> 
+      mtl_atkvaedi_stjornmalaflokka() |> 
         filter(ar >= 2007) |> 
         collect() |> 
         mutate(ar = ifelse(ar == 2021, 2020, ar)),
       by = c("flokkur", "ar")
     ) |> 
     left_join(
-      tbl(con, "thingmenn_stjornmalaflokka") |> 
+      mtl_thingmenn_stjornmalaflokka() |> 
         filter(ar >= 2007) |> 
         collect() |> 
         mutate(ar = ifelse(ar == 2021, 2020, ar)),
