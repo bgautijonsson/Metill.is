@@ -3,10 +3,10 @@
 .Rdata
 .httr-oauth
 .DS_Store
-**/**config**
 **/**.csv
 **/**.tsv
 **/**.feather
 **/**.Rdata
+
 
 /.quarto/
