@@ -20,7 +20,6 @@ editor: source
 image: Figures/pop_arnar_page.png
 twitter-card:
     image: Figures/pop_arnar_page.png
-embed-resources: true
 ---
 
 ```{r}

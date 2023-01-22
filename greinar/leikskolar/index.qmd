@@ -25,7 +25,6 @@ href: greinar/leikskolar/index.qmd
 image: Figures/ordered_2021_fp.png
 twitter-card:
     image: Figures/ordered_2021_fp.png
-embed-resources: true
 ---
 
 

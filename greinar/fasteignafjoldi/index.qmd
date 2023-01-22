@@ -27,7 +27,6 @@ href: greinar/fasteignafjoldi/index.qmd
 image: Figures/throun_fast_per_einst_fp.png
 execute:
   eval: true
-embed-resources: true
 ---
 
 

@@ -24,7 +24,6 @@ href: greinar/loftgaedi/index.qmd
 image: https://raw.githubusercontent.com/bgautijonsson/loftgaedimyndir/master/Figures/combined_image_page.png
 twitter-card:
     image: https://raw.githubusercontent.com/bgautijonsson/loftgaedimyndir/master/Figures/combined_image_page.png
-embed-resources: true
 ---
 
 ```{r setup}
@@ -44,5 +43,5 @@ library(metill)
 
 Á myndinni að neðan sjáum við hversu oft og hvenær mælingar köfnunarefnisdíoxíðs (NO2) hafa farið yfir hættumörkin, bæði hvað varðar klukkustundarmörk og dagsmörk, síðan 2019.
 
-![](https://raw.githubusercontent.com/bgautijonsson/loftgaedimyndir/master/Figures/combined_image.png){.column-screen}
+![](https://raw.githubusercontent.com/bgautijonsson/loftgaedimyndir/master/Figures/combined_image_page.png){.column-screen}
 

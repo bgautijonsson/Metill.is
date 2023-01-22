@@ -20,7 +20,6 @@ editor: source
 image: image.png
 twitter-card:
     image: image.png
-embed-resources: true
 ---
 
 ```{r}
