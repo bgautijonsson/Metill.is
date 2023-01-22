@@ -9,14 +9,14 @@ author:
         url: "https://twitter.com/bgautijonsson"
         affiliation: "Tölfræði, Raunvísindadeild Háskóla Íslands"
         affiliation-url: "https://www.hi.is/tolfraedi_0"
-date: "2022/10/17"
+date: "2023/01/22"
 format: 
     html:
         code-fold: true
         smooth-scroll: true
         link-external-newwindow: true
 editor: source
-draft: false
+draft: true
 title-block-banner: true
 categories:
     - stjórnmál
@@ -57,9 +57,6 @@ library(gganimate)
 library(metill)
 library(patchwork)
 theme_set(theme_metill())
-
-
-
 ```
 
 ```{r}
@@ -94,15 +91,13 @@ if (!file.exists("data/data.csv")) {
     left_join(
       mtl_atkvaedi_stjornmalaflokka() |> 
         filter(ar >= 2007) |> 
-        collect() |> 
-        mutate(ar = ifelse(ar == 2021, 2020, ar)),
+        collect(),
       by = c("flokkur", "ar")
     ) |> 
     left_join(
       mtl_thingmenn_stjornmalaflokka() |> 
         filter(ar >= 2007) |> 
-        collect() |> 
-        mutate(ar = ifelse(ar == 2021, 2020, ar)),
+        collect(),
       by = c("flokkur", "ar")
     )
   
@@ -112,16 +107,12 @@ if (!file.exists("data/data.csv")) {
 } else {
   d <- read_csv("data/data.csv")
 }
-
-isk <- function(x, scale = 1e6, suffix = " m.kr") number(x / scale, suffix = suffix, big.mark = ".", decimal.mark = ",")
-hlutf <- label_percent(accuracy = 0.1, big.mark = ".", decimal.mark = ",")
-
 ```
 
 
 ```{r}
 
-dreifing_plot <- function(data, title, breaks = 2007:2020, labels = 2007:2020) {
+dreifing_plot <- function(data, title, breaks = 2007:2021, labels = 2007:2021) {
   plot_dat <- data |> 
     select(ar, flokkur, value, litur) |> 
     group_by(ar) |> 
@@ -142,7 +133,7 @@ dreifing_plot <- function(data, title, breaks = 2007:2020, labels = 2007:2020) {
     ggplot(aes(ar, value, text = text)) +
     geom_col(aes(fill = flokkur), position = "fill", colour = "grey95", width = 1) +
     scale_x_continuous(breaks = breaks, labels = labels) +
-    scale_y_continuous(labels = hlutf) +
+    scale_y_continuous(labels = label_hlutf()) +
     scale_fill_manual(
       values = c(
         plot_dat |> arrange(flokkur) |> distinct(litur) |> pull(litur)
@@ -183,7 +174,7 @@ dreifing_plot <- function(data, title, breaks = 2007:2020, labels = 2007:2020) {
   
 }
 
-magn_plot <- function(data, title, breaks = 2007:2020, labels = 2007:2020) {
+magn_plot <- function(data, title, breaks = 2007:2021, labels = 2007:2021) {
   plot_dat <- data |> 
     select(ar, flokkur, value, litur) |> 
     group_by(ar) |> 
@@ -204,7 +195,7 @@ magn_plot <- function(data, title, breaks = 2007:2020, labels = 2007:2020) {
     ggplot(aes(ar, value, text = text)) +
     geom_col(aes(fill = flokkur), position = "stack", colour = "grey95", width = 1) +
     scale_x_continuous(breaks = breaks, labels = labels) +
-    scale_y_continuous(labels = isk) +
+    scale_y_continuous(labels = label_isk(scale = 1e-6)) +
     scale_fill_manual(
       values = c(
         plot_dat |> arrange(flokkur) |> distinct(litur) |> pull(litur)
@@ -295,8 +286,8 @@ p <- plot_dat |>
   geom_col(aes(fill = flokkur), width = 1, colour = "grey95", position = "stack") +
   scale_x_continuous(
     expand = expansion(),
-    breaks = 2007:2020
-    ) +
+    breaks = 2007:2021
+  ) +
   scale_y_continuous(
     expand = expansion(),
     labels = label_isk(scale = 1e-6)
@@ -306,7 +297,7 @@ p <- plot_dat |>
   ) +
   theme(
     legend.position = "top"
-    ) +
+  ) +
   labs(
     x = NULL,
     y = NULL,
@@ -327,8 +318,8 @@ p <- plot_dat |>
   geom_col(aes(fill = flokkur), width = 1, colour = "grey95", position = "fill") +
   scale_x_continuous(
     expand = expansion(),
-    breaks = 2007:2020
-    ) +
+    breaks = 2007:2021
+  ) +
   scale_y_continuous(
     expand = expansion(),
     labels = label_hlutf()
@@ -338,7 +329,7 @@ p <- plot_dat |>
   ) +
   theme(
     legend.position = "top"
-    ) +
+  ) +
   labs(
     x = NULL,
     y = NULL,
@@ -373,22 +364,22 @@ Með því að færa músina yfir y-ás er hægt að þysja inn og sjá betur þ
 #| layout-nrow: 1
 #| column: screen-inset
 
-breaks <- seq(2008, 2020, by = 2)
+breaks <- seq(2007, 2021, by = 2)
 labels <- breaks
 
 d |> 
   mutate(value = framlog_fyrirtaekja,
          value = value / cpi) |> 
   magn_plot(title = "Framlög fyrirtækja",
-            breaks =  seq(2008, 2020, by = 2),
-            labels =  seq(2008, 2020, by = 2))
+            breaks =  seq(2007, 2021, by = 2),
+            labels =  seq(2007, 2021, by = 2))
 
 d |> 
   mutate(value = framlog_einstaklinga,
          value = value / cpi) |> 
   magn_plot(title = "Framlög einstaklinga",
-            breaks =  seq(2008, 2020, by = 2),
-            labels =  seq(2008, 2020, by = 2))
+            breaks =  seq(2007, 2021, by = 2),
+            labels =  seq(2007, 2021, by = 2))
 ```
 
 ### Dreifing
@@ -402,15 +393,15 @@ d |>
   mutate(value = framlog_fyrirtaekja,
          value = value / cpi) |> 
   dreifing_plot(title = "Dreifing framlaga fyrirtækja/lögaðila",
-                breaks =  seq(2008, 2020, by = 2),
-                labels =  seq(2008, 2020, by = 2))
+                breaks =  seq(2007, 2021, by = 2),
+                labels =  seq(2007, 2021, by = 2))
 
 d |> 
   mutate(value = framlog_einstaklinga,
          value = value / cpi) |> 
   dreifing_plot(title = "Dreifing framlaga einstaklinga",
-                breaks =  seq(2008, 2020, by = 2),
-                labels =  seq(2008, 2020, by = 2))
+                breaks =  seq(2007, 2021, by = 2),
+                labels =  seq(2007, 2021, by = 2))
 
 ```
 
@@ -434,8 +425,8 @@ p <- plot_dat |>
   geom_col(aes(fill = flokkur), width = 1, colour = "grey95", position = "fill") +
   scale_x_continuous(
     expand = expansion(),
-    breaks = 2007:2020
-    ) +
+    breaks = 2007:2021
+  ) +
   scale_y_continuous(
     expand = expansion(),
     labels = label_hlutf()
@@ -445,7 +436,7 @@ p <- plot_dat |>
   ) +
   theme(
     legend.position = "top"
-    ) +
+  ) +
   labs(
     x = NULL,
     y = NULL,
@@ -463,7 +454,7 @@ ggsave(
 
 ## Aðrar tekjur
 
-Aðrar tekjur eru meðal annars útleiga á fasteignum *(t.d. veislusölum)*, miðasala á viðburði, sala á auglýsingaplássi, eða önnur útseld þjónusta. Örfáir flokkar hafa slíkar tekjur, en Sjálfstæðisflokkur fær langmestar slíkar tekjur. Við munum líka sjá neðar að flokkurinn á meirihluta allra eigna flokkanna, þar á meðal fasteignir.
+Aðrar tekjur eru meðal annars útleiga á fasteignum *(t.d. veislusölum)*, miðasala á viðburði, sala á auglýsingaplássi, eða önnur útseld þjónusta.Örfáir flokkar hafa slíkar tekjur, en Sjálfstæðisflokkur fær meirihluta slíkra tekna.  Árið 2021 voru tekjur flokksins af sölu byggingarréttar 340 milljónir króna sem telja hér inn í *aðrar tejur*.
 
 ```{r}
 #| fig-asp: 0.8
@@ -474,15 +465,15 @@ d |>
   mutate(value = adrar_tekjur,
          value = value / cpi) |> 
   dreifing_plot(title = "Dreifing annarra tekna",
-                breaks = seq(2008, 2020, by = 2),
-                labels = seq(2008, 2020, by = 2))
+                breaks = seq(2007, 2021, by = 2),
+                labels = seq(2007, 2021, by = 2))
 
 d |> 
   mutate(value = adrar_tekjur,
          value = value / cpi) |> 
   magn_plot(title = "Aðrar tekjur",
-            breaks = seq(2008, 2020, by = 2),
-            labels = seq(2008, 2020, by = 2))
+            breaks = seq(2007, 2021, by = 2),
+            labels = seq(2007, 2021, by = 2))
 
 
 ```
@@ -542,13 +533,17 @@ p <- plot_dat |>
     size = 4.5,
     fill = NA, label.color = NA
   ) +
-  scale_x_continuous(limits = c(2014.8, 2021.2),
-                     expand = expansion(),
-                     breaks = c(2015:2020)) +
-  scale_y_continuous(labels = isk,
-                     breaks = pretty_breaks(4),
-                     limits = c(0, 82e6),
-                     expand = expansion()) +
+  scale_x_continuous(
+    limits = c(2014.8, 2021.2),
+    expand = expansion(),
+    breaks = c(2015:2021)
+  ) +
+  scale_y_continuous(
+    labels = label_isk(scale = 1e-6),
+    breaks = pretty_breaks(4),
+    limits = c(0, NA),
+    expand = expansion()
+  ) +
   scale_colour_manual(
     values = flokkar_palette() |> slice(8, 1, 5) |> pull(litur)
   ) +
@@ -556,7 +551,7 @@ p <- plot_dat |>
   labs(x = NULL,
        y = NULL,
        title = "Leigutekjur Sjálfstæðisflokks og útgjöld minni flokka",
-       subtitle = "Sjálfstæðisflokkur fengi nægar tekjur af útleigu fasteigna til að fjármagna Flokk floksins",
+       subtitle = "Útleigutekjur Sjálfstæðisflokks gætu fjármagnað Flokk fólksins fram til ársins 2021",
        caption = "Metill.is")
 
 ggsave(
@@ -595,7 +590,7 @@ plot_dat <- d |>
   mutate(
     value = ifelse(
       flokkur == "Sjálfstæðisflokkur", 
-      adrar_tekjur,
+      leigutekjur + auglysingar_og_thjonusta,
       gjold
     ),
     value = value / cpi
@@ -638,13 +633,17 @@ p <- plot_dat |>
     size = 4.5,
     fill = NA, label.color = NA
   ) +
-  scale_x_continuous(limits = c(2014.8, 2021.3),
-                     expand = expansion(),
-                     breaks = c(2015:2020)) +
-  scale_y_continuous(labels = isk,
-                     breaks = pretty_breaks(4),
-                     limits = c(0, NA),
-                     expand = expansion()) +
+  scale_x_continuous(
+    limits = c(2014.8, 2021.3),
+    expand = expansion(),
+    breaks = c(2015:2021)
+  ) +
+  scale_y_continuous(
+    labels = label_isk(scale = 1e-6),
+    breaks = pretty_breaks(4),
+    limits = c(0, NA),
+    expand = expansion()
+  ) +
   scale_colour_manual(
     values = flokkar_palette() |> slice(8, 6, 1, 5) |> pull(litur)
   ) +
@@ -695,7 +694,7 @@ Við sjáum að útgjöld flokkanna aukast á árum sem kosningar fara fram. Var
 ```{r}
 #| fig-asp: 0.8
 #| column: page
-breaks <- 2007:2020
+breaks <- 2007:2021
 labels <- c(
   "2007\nKosningar",
   "2008",
@@ -705,7 +704,8 @@ labels <- c(
   2014:2015,
   "2016\nKosningar",
   "2017\nKosningar",
-  2018:2020
+  2018:2020,
+  "2021\n"
 )
 
 
@@ -730,7 +730,7 @@ Eignir geta verið tvenns konar:
 
 * **Veltufjármunir** Þetta er handbært fé eða eignir sem er auðvelt að breyta í peninga. Hjá flestum flokkum eru eignirnar að mestu leyti veltufjármunir, þ.e. uppsafnaðir peningar frá ríkinu og styrktaraðilum.
 
-* **Fastafjármunir** Þetta eru eignir sem er ekki jafn auðvelt að breyta í peninga. Sjálfstæðisflokkur hefur átt kringum 65% allra fastafjármuna flokkanna og eru þeir að mestu leyti fasteignir.
+* **Fastafjármunir** Þetta eru eignir sem er ekki jafn auðvelt að breyta í peninga. Sjálfstæðisflokkur hefur átt kringum 70% allra fastafjármuna flokkanna og eru þeir að mestu leyti fasteignir.
 
 
 ```{r}
@@ -742,8 +742,8 @@ d |>
   mutate(value = eignir,
          value = value / cpi) |> 
   magn_plot(title = "Eignir",
-            breaks = seq(2008, 2020, by = 2),
-            labels = seq(2008, 2020, by = 2))
+            breaks = seq(2007, 2021, by = 2),
+            labels = seq(2007, 2021, by = 2))
 
 
 
@@ -763,15 +763,15 @@ d |>
   mutate(value = veltufjarmunir,
          value = value / cpi) |> 
   magn_plot(title = "Veltufjármunir",
-            breaks = seq(2008, 2020, by = 2),
-            labels = seq(2008, 2020, by = 2))
+            breaks = seq(2007, 2021, by = 2),
+            labels = seq(2007, 2021, by = 2))
 
 d |> 
   mutate(value = eignir - veltufjarmunir,
          value = value / cpi) |> 
   magn_plot(title = "Fastafjármunir",
-            breaks = seq(2008, 2020, by = 2),
-            labels = seq(2008, 2020, by = 2))
+            breaks = seq(2007, 2021, by = 2),
+            labels = seq(2007, 2021, by = 2))
 ```
 
 ```{r}
@@ -799,8 +799,8 @@ p <- plot_dat |>
       trans = ~ . / sum(plot_dat$fasteignir),
       labels = label_hlutf(),
       breaks = tufte_breaks(plot_dat$hlutf)
-      )
-    ) +
+    )
+  ) +
   scale_fill_identity() +
   theme(
     plot.margin = margin(t = 5, r = 50, b = 5, l = 5)
@@ -887,8 +887,8 @@ d |>
   mutate(value = eignir - skuldir,
          value = value / cpi) |>
   magn_plot(title = "Eigið fé íslenskra stjórnmálaflokka",
-            breaks = seq(2008, 2020, by = 2),
-            labels = seq(2008, 2020, by = 2))
+            breaks = seq(2007, 2021, by = 2),
+            labels = seq(2007, 2021, by = 2))
 
 ```
 
@@ -897,7 +897,7 @@ d |>
 
 ### Dreifing
 
-Auk þess sjáum við að árið 2007 átti Sjálfstæðisflokkur 100% alls eigin fjár stjórnmálaflokka, en árið 2020 er sú tala dottin niður í 43,5%.
+Auk þess sjáum við að árið 2007 átti Sjálfstæðisflokkur 100% alls eigin fjár stjórnmálaflokka, minnkaði hægt niður í 43,5% árið 2020, en með sölu byggingarréttar árið 2021 hefur hlutfallið hækkað aftur upp í 79,2%.
 
 ```{r}
 #| fig-asp: 1
@@ -909,8 +909,8 @@ d |>
          value = value / cpi) |>
   mutate(value = value * (value >= 0)) |>
   dreifing_plot(title = "Dreifing eigin fjár íslenskra stjórnmálaflokka",
-                breaks = seq(2008, 2020, by = 2),
-                labels = seq(2008, 2020, by = 2)) 
+                breaks = seq(2007, 2021, by = 2),
+                labels = seq(2007, 2021, by = 2)) 
 
 ```
 
@@ -934,7 +934,7 @@ plot_dat <- d |>
 p <- plot_dat |> 
   ggplot(aes(ar, value)) +
   geom_col(aes(fill = flokkur), position = "stack", colour = "grey95", width = 1) +
-  scale_x_continuous(breaks = 2007:2020) +
+  scale_x_continuous(breaks = 2007:2021) +
   scale_y_continuous(labels = isk) +
   scale_fill_manual(
     values = c(
@@ -948,7 +948,7 @@ p <- plot_dat |>
   ) +
   labs(x = NULL, y = NULL, fill = NULL,
        title = "Eigið fé íslenskra stjórnmálaflokka",
-       subtitle = "Árið 2007 átti Sjálfstæðisflokkur 100% alls eigin fjár flokkanna en 2020 á hann 43,5%",
+       subtitle = "Árið 2007 átti Sjálfstæðisflokkur 100% alls eigin fjár flokkanna en 2021 á hann 79,2%",
        caption = "Mynd frá metill.is unnin úr ársreikningum stjórnmálaflokka frá Ríkisendurskoðun")
 
 ggsave(
