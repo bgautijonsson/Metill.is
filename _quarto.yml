@@ -2,7 +2,6 @@ project:
   type: website
   resources: 
     - "*.png"
-    - "*.js"
   output-dir: docs
   preview:
     port: 4200
@@ -33,7 +32,7 @@ format:
     theme: [flatly, theme.scss]
     css: style.css
     execute: 
-      freeze: false
+      freeze: auto
       echo: false
       warning: false
 
