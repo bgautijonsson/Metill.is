@@ -1,0 +1,49 @@
+[
+  {
+    "listing": "/maelabord.html",
+    "items": [
+      "/maelabord/sveitarfelog/index.html",
+      "/maelabord/skattagogn/index.html",
+      "/maelabord/verdbolga/index.html"
+    ]
+  },
+  {
+    "listing": "/index.html",
+    "items": [
+      "/greinar/loftgaedi/index.html",
+      "/greinar/vinnuafl/index.html",
+      "/greinar/visitala_neysluverds/index.html",
+      "/greinar/leikskolar/index.html",
+      "/greinar/skattagogn/index.html",
+      "/greinar/landspitali/index.html",
+      "/maelabord/sveitarfelog/index.html",
+      "/maelabord/skattagogn/index.html",
+      "/maelabord/verdbolga/index.html"
+    ]
+  },
+  {
+    "listing": "/greinar.html",
+    "items": [
+      "/greinar/loftgaedi/index.html",
+      "/greinar/vinnuafl/index.html",
+      "/greinar/visitala_neysluverds/index.html",
+      "/greinar/leikskolar/index.html",
+      "/greinar/skattagogn/index.html",
+      "/greinar/landspitali/index.html"
+    ]
+  },
+  {
+    "listing": "/learn.html",
+    "items": []
+  },
+  {
+    "listing": "/pyngjan.html",
+    "items": [
+      "/pyngjan/fyrstukaupendur/index.html",
+      "/pyngjan/haskolar/index.html",
+      "/pyngjan/fasteignafjoldi/index.html",
+      "/pyngjan/opinberar_veitingar/index.html",
+      "/pyngjan/straeto/index.html"
+    ]
+  }
+]
