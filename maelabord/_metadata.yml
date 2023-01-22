@@ -1,5 +1,4 @@
 # options specified here will apply to all posts in this folder
-embed-resources: false
 
 execute: 
   echo: false

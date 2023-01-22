@@ -25,6 +25,7 @@ href: greinar/landspitali/index.qmd
 image: hjukthyngd_fp.png
 twitter-card:
   image: hjukthyngd.png
+embed-resources: true
 ---
 
 

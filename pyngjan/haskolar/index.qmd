@@ -22,6 +22,7 @@ twitter-card:
     image: Figures/utgjold_per_nem_leidrett_throun.png
 execute:
   eval: false
+embed-resources: true
 ---
 
 ```{r}

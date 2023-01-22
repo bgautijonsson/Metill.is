@@ -22,6 +22,7 @@ twitter-card:
     image: Figures/kaupmattur.png
 execute:
   eval: true
+embed-resources: true
 ---
 
 Nýlega var [umsjón fasteignaskrár flutt frá Þjóðskrá til Húsnæðis- og mannvirkjastofnunar (HMS)](https://hms.is/frettir/flutningur-kerfa-fasteignaskrar-fra-%C3%BEjo%C3%B0skra-til-hmsloki%C3%B0){target="_blank"}. Núna er því hægt að nálgast öll gögn sem tengjast henni á [fasteignaskra.is](https://fasteignaskra.is/){target="_blank"}. Hér ætlum við að skoða [gögnin um fyrstu kaupendur](https://fasteignaskra.is/gogn/fasteignagattin/fasteignavidskipti/fyrstu-kaupendur/){target="_blank"}. Með því að skoða "page source" getum við púslað saman hlekki á JSON skrárnar á bak við myndirnar á síðunni.

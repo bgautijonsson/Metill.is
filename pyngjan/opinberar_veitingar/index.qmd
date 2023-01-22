@@ -22,6 +22,7 @@ twitter-card:
     image: Figures/veitingastadir.png
 fig-cap-location: margin
 tbl-cap-location: margin
+embed-resources: true
 ---
 
 ```{r}

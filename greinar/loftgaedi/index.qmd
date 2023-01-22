@@ -24,6 +24,7 @@ href: greinar/loftgaedi/index.qmd
 image: https://raw.githubusercontent.com/bgautijonsson/loftgaedimyndir/master/Figures/combined_image_page.png
 twitter-card:
     image: https://raw.githubusercontent.com/bgautijonsson/loftgaedimyndir/master/Figures/combined_image_page.png
+embed-resources: true
 ---
 
 ```{r setup}

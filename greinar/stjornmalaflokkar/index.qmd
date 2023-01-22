@@ -24,7 +24,7 @@ categories:
     - ársreikningar
 href: greinar/stjornmalaflokkar/index.qmd
 image: Figures/eigidfe_page.png
-
+embed-resources: true
 ---
 
 

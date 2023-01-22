@@ -25,6 +25,7 @@ href: greinar/vinnuafl/index.qmd
 image: figures/hlutf_opinbert_fp.png
 twitter-card:
     image: figures/hlutf_opinbert.png
+embed-resources: true
 ---
 
 
