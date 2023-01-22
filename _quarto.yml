@@ -29,7 +29,6 @@ website:
         
 format:
   html:
-    embed-resources: true
     include-in-header: header/header.html
     theme: [flatly, theme.scss]
     css: style.css

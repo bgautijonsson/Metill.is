@@ -9,6 +9,6 @@ pagedate: "2022/09/18"
 
 ::: {.column-screen}
 <iframe
-  src="https://bggj.shinyapps.io/shiny_sveitarfelog/">
+  src="https://bggj.shinyapps.io/sveitarfelog_maelabord/">
 </iframe>
 :::
