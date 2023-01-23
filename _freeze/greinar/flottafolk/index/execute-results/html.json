@@ -1,0 +1,14 @@
+{
+  "hash": "ee542f9bcd965c7fc96d628aabf30bce",
+  "result": {
+    "markdown": "---\ntitle: \"Fólksflutningar og hælisleitendur\"\npagetitle: \"Fólksflutningar og hælisleitendur\"\nsubtitle: \"Hvað segja gögnin um fjölda hælisleitenda og fólksflutninga til Íslands?\"\ndescription: |\n  Hér eru gögn um fjölda hælisleitenda, fjölda samþykktra verndarumsókna og fjölda innflytjenda á höfðatölu tekin saman úr gögnum OECD og Eurostat. Auk þess er þátttaka innflytjenda á atvinnumarkaði skoðuð.\nauthor: \n    -   name: \"Brynjólfur Gauti Guðrúnar Jónsson\"\n        url: \"https://twitter.com/bgautijonsson\"\n        affiliation: \"Tölfræði, Raunvísindadeild Háskóla Íslands\"\n        affiliation-url: \"https://www.hi.is/tolfraedi_0\"\ndate: \"2022/11/10\"\nformat: \n    html:\n        code-fold: true\n        smooth-scroll: true\n        link-external-newwindow: true\n        toc: true\n        toc-location: right\n        toc-title: Efnisyfirlit\neditor: source\ndraft: true\ntitle-block-banner: true\ncategories:\n    - stjórnmál\n    - fólksflutningar\nhref: greinar/flottafolk/index.qmd\nimage: Figures/haelisl_uppsafnad.png\nexecute: \n  eval: false\n---\n\n\n\n::: {.cell}\n\n:::\n\n::: {.cell}\n\n:::",
+    "supporting": [],
+    "filters": [
+      "rmarkdown/pagebreak.lua"
+    ],
+    "includes": {},
+    "engineDependencies": {},
+    "preserve": {},
+    "postProcess": true
+  }
+}

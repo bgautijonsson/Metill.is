@@ -51,30 +51,55 @@ library(metill)
 library(patchwork)
 library(gt)
 library(plotly)
+library(hagstofa)
 
 theme_set(theme_metill(type = "standalone"))
 caption <- "Mynd frá metill.is byggð á gögnum Hagstofu um vinnuafl frá skráargögnum"
 ```
 
 ```{r}
-if (!file.exists("data/vinnuafl.csv")) {
-  url <- "https://px.hagstofa.is:443/pxis/api/v1/is/Samfelag/vinnumarkadur/vinnuaflskraargogn/VIN10052.px"
-  
-  px_vars <- pxweb_get(url)
-  
-  query_list <- list(  
-    "Mánuður" = c("*"),  
-    "Aldur" = c("0"),  
-    "Rekstrarform" = c("*"),  
-    "Kyn" = c("0"),  
-    "Bakgrunnur" = c("*"),  
-    "Lögheimili" = c("0")
-    
+url <- "https://px.hagstofa.is:443/pxis/api/v1/is/Samfelag/vinnumarkadur/vinnuaflskraargogn/VIN10052.px"
+
+hg_date <- hagstofa::hg_data(url) |> 
+  pull(Mánuður) |> 
+  str_c("D01") |> 
+  as.Date(format = "%YM%mD%d") |> 
+  max()
+
+data_date <- read_csv("data/vinnuafl.csv") |> 
+  pull(dags) |> 
+  max()
+
+
+```
+
+
+```{r}
+url <- "https://px.hagstofa.is:443/pxis/api/v1/is/Samfelag/vinnumarkadur/vinnuaflskraargogn/VIN10052.px"
+
+hg_dat <- hg_data(url) |> 
+  filter(
+    Aldur == "Alls",
+    Kyn == "Alls",
+    Lögheimili == "Alls"
   )
+
+hg_date <- hg_dat |> 
+  pull(Mánuður) |> 
+  str_c("D01") |> 
+  as.Date(format = "%YM%mD%d") |> 
+  max()
+
+data_date <- read_csv("data/vinnuafl.csv") |> 
+  pull(dags) |> 
+  max()
+
+new_data <- hg_date > data_date
+
+if (!file.exists("data/vinnuafl.csv") | new_data) {
   
-  d <- pxweb_get(url, query = pxweb_query(query_list), verbose = FALSE) |>  
-    as.data.frame() |>  
-    as_tibble() |>  
+  d <- hg_dat |>  
+    collect() |> 
     janitor::clean_names() |>  
     separate(manudur, into = c("ar", "manudur"), sep = "M") |>  
     mutate(dags = str_c(ar, "-", manudur, "-01") |> ymd()) |>  
@@ -98,6 +123,9 @@ if (!file.exists("data/vinnuafl.csv")) {
 
 
 ```{r}
+#| eval: false
+
+
 plot_dat <-  d |>  
   filter(rekstrarform != "Alls starfandi", bakgrunnur == "Alls") |>  
   count(dags, tegund, wt = starfandi) |>  
@@ -189,7 +217,7 @@ ggsave(
 #| fig-asp: 0.621
 #| out-width: "100%"
 #| column: page
-
+#| eval: false
 
 plot_dat <- d |>  
   filter(rekstrarform != "Alls starfandi", bakgrunnur == "Alls") |>  
@@ -273,6 +301,8 @@ ggsave(
 #| fig-asp: 0.621
 #| out-width: "100%"
 #| column: screen-inset
+#| eval: false
+
 
 theme_set(theme_metill(type = "standalone"))
 
@@ -474,7 +504,7 @@ Hér fyrir neðan sjáum við svo matið á árstíðaráhrifum:
 #| fig-asp: 0.6
 #| out-width: "100%"
 #| column: page
-
+#| eval: false
 
 plot_dat <- emmeans(m, ~ manudur, at = list(manudur = seq(1, 12, length.out = 100))) |> 
   tidy(type = "response") |> 
@@ -545,7 +575,7 @@ Hér nota ég *GAM* til að smootha gögnin og nota svo árstíðaleiðrétt smo
 #| fig-asp: 0.621
 #| out-width: "100%"
 #| column: page
-
+#| eval: false
 
 plot_dat <- d |>  
   filter(rekstrarform != "Alls starfandi", bakgrunnur == "Alls") |>  
@@ -608,6 +638,7 @@ ggsave(
 #| fig-asp: 0.8
 #| out-width: "100%"
 #| column: page
+#| eval: false
 
 plot_dat <- d |>  
   filter(rekstrarform != "Alls starfandi") |>  
@@ -624,7 +655,7 @@ plot_dat <- d |>
   filter(year(dags) > min(year(dags))) |> 
   mutate(tegund = fct_recode(tegund,
                              "Almennur" = "Annad",
-                             "Opinber" = "Opinbert")|> 
+                             "Opinber" = "Opinbert") |> 
            fct_relevel("Almennur", "Opinber"),
          y = breyting)
 
@@ -738,7 +769,7 @@ ggsave(
 #| fig-asp: 0.621
 #| out-width: "100%"
 #| column: page
-
+#| eval: false
 
 plot_dat <- d |>  
   filter(rekstrarform != "Alls starfandi", bakgrunnur == "Alls") |>  
@@ -802,6 +833,7 @@ ggsave(
 #| fig-asp: 0.8
 #| out-width: "100%"
 #| column: page
+#| eval: false
 
 plot_dat <- d |>  
   filter(rekstrarform != "Alls starfandi") |>  
@@ -924,6 +956,78 @@ ggsave(
 
 :::
 
+## Hlutfall af erlendum uppruna
+
+```{r}
+#| column: page
+#| fig-asp: 0.8
+
+plot_dat <- d |> 
+  filter(
+    rekstrarform != "Alls starfandi"
+  ) |> 
+  select(dags, rekstrarform, bakgrunnur, starfandi) |> 
+  pivot_wider(names_from = bakgrunnur, values_from = starfandi, values_fill = 0) |> 
+  janitor::clean_names() |> 
+  mutate(
+    hlutf = innflytjendur / alls,
+    rekstrarform = str_replace(rekstrarform, "^[A-Z& 0-9,og]+: ", "") |> 
+      str_to_sentence(),
+    rekstrarform = fct_reorder(rekstrarform, hlutf, .fun = max)
+  ) |> 
+  filter(
+    !rekstrarform %in% c(
+      "Erlend félög",
+      "Samvinnufélög"
+    )
+  ) |> 
+  mutate(
+    text = str_c(
+      "<b>", rekstrarform, "</b>","\n",
+      "Dagsetning: ", dags
+    )
+  )
+
+pd <- highlight_key(plot_dat, ~rekstrarform, "Veldu rekstrarform")
+
+
+p <- pd |> 
+  ggplot(aes(dags, hlutf, text = text)) +
+  geom_line(
+    data = plot_dat |> rename(reks = rekstrarform),
+    aes(group = reks),
+    alpha = 0.05
+  ) +
+  geom_line(size = 0.5, aes(group = rekstrarform)) +
+  scale_x_date(
+    date_breaks = "3 year",
+    date_labels = "%Y"
+  ) +
+  scale_y_continuous(
+    labels = label_hlutf(),
+    limits = c(0, 0.301),
+    expand = expansion()
+  ) +
+  labs(
+    x = NULL,
+    y = NULL,
+    # title = "Hlutfall starfsfólks af erlendum uppruna",
+    # subtitle = "Sýnt eftir rekstrarformi án erlendra félaga og samvinnufélaga",
+    caption = caption
+  )
+
+
+highlight(
+  metill_ggplotly(p, tooltip = "text"),
+  selectize = TRUE,
+  persistent = FALSE,
+  defaultValues = "Ríkisstofnun",
+  on = "plotly_click",
+  off = "plotly_doubleclick"
+)
+```
+
+
 ```{r}
 plot_dat <- d |> 
   filter(
@@ -967,8 +1071,8 @@ p <- plot_dat |>
   labs(
     x = NULL,
     y = NULL,
-    title = "Hlutfall starfsfólks af erlendum uppruna",
-    subtitle = "Sýnt eftir rekstrarformi án erlendra félaga og samvinnufélaga",
+    # title = "Hlutfall starfsfólks af erlendum uppruna",
+    # subtitle = "Sýnt eftir rekstrarformi án erlendra félaga og samvinnufélaga",
     caption = caption
   )
 
@@ -980,4 +1084,4 @@ ggsave(
 ```
 
 
-![](figures/hlutf_erlent.png){.column-page padding=20}
+<!-- ![](figures/hlutf_erlent.png){.column-page padding=20} -->
