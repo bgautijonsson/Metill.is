@@ -58,6 +58,7 @@ library(feather)
 library(gganimate)
 library(metill)
 library(patchwork)
+library(slider)
 theme_set(theme_metill())
 
 
@@ -104,6 +105,71 @@ if (!file.exists("data/data.feather")) {
   d <- read_feather("data/data.feather")
 }
 ```
+
+```{r}
+plot_dat <- d |> 
+  mutate(
+    bygg_per_pers = fjoldi / mannfjoldi * 1e3,
+    fullordin_per_bygg = mannfjoldi_fullordin / cum_fjoldi
+  ) |> 
+  select(ar, sveitarfelag, bygg_per_pers, fullordin_per_bygg) |> 
+  mutate(
+    order_var = fullordin_per_bygg[ar == max(ar)],
+    bygg_per_pers = slide_dbl(bygg_per_pers, sum, .before = 5, .complete = T),
+    .by = sveitarfelag
+  ) |> 
+  mutate(
+    sveitarfelag = fct_reorder(sveitarfelag, order_var)
+  ) |> 
+  drop_na(bygg_per_pers)
+
+pd <- highlight_key(plot_dat, ~sveitarfelag, "Veldu sveitarfélag")
+
+p1 <- pd |>
+  ggplot(aes(fullordin_per_bygg, sveitarfelag)) +
+  geom_point(
+    size = 2
+  ) +
+  geom_segment(
+    aes(yend = sveitarfelag, xend = 0),
+    alpha = 1,
+    size = 0.1
+  ) +
+  scale_x_continuous(
+    labels = label_number(),
+    limits = c(0, 2.45),
+    expand = expansion()
+  ) +
+  coord_cartesian(clip = "off") +
+  theme(
+    axis.line.y = element_blank(),
+    axis.ticks.y = element_blank()
+  ) +
+  labs(
+    x = NULL,
+    y = NULL,
+    title = "Fjöldi fullorðinna einstaklinga á hverja íbúð eftir sveitarfélagi",
+    subtitle = "Reiknað sem fjöldi 20 ára og eldri deilt með fjölda fasteigna í sama sveitarfélagi",
+    caption = "Mynd eftir @bggjonsson byggð á gögnum Þjóðskrár um fasteignafjölda eftir byggingarári og mannfjöldagögnum Hagstofu"
+  )
+
+p2 <- pd |> 
+  ggplot(aes(ar, bygg_per_pers)) +
+  geom_line(aes(group = sveitarfelag))
+
+
+subplot(
+  metill_ggplotly(p1),
+  metill_ggplotly(p2),
+  widths = c(0.3, 0.7)
+) |> 
+  highlight(
+    on = "plotly_selected",
+    dynamic = TRUE,
+    selectize = TRUE
+  )
+```
+
 
 ```{r}
 plot_dat <- d |> 
