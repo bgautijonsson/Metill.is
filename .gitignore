@@ -7,6 +7,6 @@
 **/**.tsv
 **/**.feather
 **/**.Rdata
-
+**/**.rds
 
 /.quarto/

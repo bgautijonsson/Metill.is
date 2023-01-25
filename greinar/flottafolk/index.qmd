@@ -1,15 +1,15 @@
 ---
-title: "Fólksflutningar og hælisleitendur"
-pagetitle: "Fólksflutningar og hælisleitendur"
+title: "Tímabundin vernd"
+pagetitle: "Tímabundin vernd"
 subtitle: "Hvað segja gögnin um fjölda hælisleitenda og fólksflutninga til Íslands?"
 description: |
-  Hér eru gögn um fjölda hælisleitenda, fjölda samþykktra verndarumsókna og fjölda innflytjenda á höfðatölu tekin saman úr gögnum OECD og Eurostat. Auk þess er þátttaka innflytjenda á atvinnumarkaði skoðuð.
+  Hér eru gögn um fjölda einstaklinga sem njóta tímabundinnar verndar, fjölda samþykktra verndarumsókna og fjölda umsókna í bið tekin saman úr gögnum  Eurostat.
 author: 
     -   name: "Brynjólfur Gauti Guðrúnar Jónsson"
         url: "https://twitter.com/bgautijonsson"
         affiliation: "Tölfræði, Raunvísindadeild Háskóla Íslands"
         affiliation-url: "https://www.hi.is/tolfraedi_0"
-date: "2022/11/10"
+date: "2023/01/18"
 format: 
     html:
         code-fold: true
@@ -19,13 +19,13 @@ format:
         toc-location: right
         toc-title: Efnisyfirlit
 editor: source
-draft: true
+draft: false
 title-block-banner: true
 categories:
     - stjórnmál
     - fólksflutningar
 href: greinar/flottafolk/index.qmd
-image: Figures/haelisl_uppsafnad.png
+image: Figures/vernd_saman_2_page.png
 execute: 
   eval: false
 ---
@@ -78,10 +78,11 @@ litur_annad <- "#737373"
 ```
 
 
-```{r data}
+```{r data_beneficiaries}
 beneficiaries <- get_eurostat(
   "migr_asytpsm", 
   cache = T,
+  # update_cache = T,
   cache_dir = "data"
 ) |>
   filter(
@@ -90,8 +91,11 @@ beneficiaries <- get_eurostat(
     citizen == "TOTAL"
   ) |> 
   select(-unit, -sex, -age, -citizen) |> 
-  label_eurostat() 
+  label_eurostat()
+```
 
+
+```{r data_pop}
 pop <- get_eurostat(
   "demo_pjan",
   cache = T,
@@ -102,8 +106,63 @@ pop <- get_eurostat(
     sex == "T"
   ) |> 
   select(-unit, -age, -sex) |> 
-  label_eurostat() 
+  label_eurostat()
+```
 
+```{r data_applicants}
+applicants <- get_eurostat(
+  "migr_asypenctzm",
+  cache = T,
+  cache_dir = "data"
+) |>
+  janitor::remove_constant() |> 
+  filter(
+    age == "TOTAL",
+    sex == "T",
+    citizen == "TOTAL"
+  ) |> 
+  select(-citizen, -sex, -age) |> 
+  label_eurostat()
+
+applicants
+```
+
+```{r data_grants}
+grants <- get_eurostat(
+  "migr_asytpfm",
+  cache = T,
+  cache_dir = "data"
+) |> 
+  filter(
+    sex == "T",
+    age == "TOTAL",
+    citizen == "TOTAL"
+  ) |> 
+  select(-unit, -citizen, -sex, -age) |> 
+  label_eurostat()
+```
+
+```{r data_decisions}
+decisions <- get_eurostat(
+  "migr_asydcfstq",
+  cache = TRUE,
+  cache_dir = "data"
+)  |> 
+  filter(
+    citizen == "TOTAL",
+    sex == "T",
+    age == "TOTAL",
+    decision %in% c("TOTAL", "TOTAL_POS")
+  ) |> 
+  select(-citizen, -sex, -age, -unit) |> 
+  label_eurostat() |> 
+  pivot_wider(names_from = decision, values_from = values) |> 
+  mutate(perc = `Total positive decisions` / Total) |> 
+  select(geo, time, perc)
+```
+
+
+```{r data_merge}
 d <- beneficiaries |> 
   mutate(
     year = year(time)
@@ -117,25 +176,539 @@ d <- beneficiaries |>
       select(geo, pop = values),
     by = c("geo")
   ) |> 
+  full_join(
+    applicants |> 
+      rename(applicants = values),
+    by = c("geo", "time")
+  ) |> 
+  inner_join(
+    grants |> 
+      rename(grants = values),
+    by = c("geo", "time")
+  ) |> 
   rename(country = geo) |> 
+  mutate(
+    country = ifelse(str_detect(country, "Germany"), "Germany", country)
+  ) |> 
   inner_join(
     metill::country_names(),
     by = "country"
   ) |> 
   select(
-    land,
-    time,
-    pop,
-    beneficiaries
+    -year, -country
   ) |> 
   pivot_longer(
-    c(beneficiaries)
+    c(-land, -time, -pop)
   ) |> 
+  group_by(land) |> 
+  mutate(pop = max(pop, na.rm = T)) |> 
+  ungroup() |> 
   mutate(per_pop = value / pop * 1e3)
+
+d |> 
+  select(-value, -pop) |> 
+  pivot_wider(names_from = name, values_from = per_pop) |> 
+  rename(
+    "Mánuður" = time,
+    "Land" = land,
+    "Fjöldi með vernd" = beneficiaries,
+    "Umsækjendur" = applicants,
+    "Veitt vernd í mánuði" = grants
+  ) |> 
+  write_csv("data/timabundin_vernd.csv")
 ```
 
-```{r}
+# Um gögnin
 
+Gögn þessarar úrvinnslu koma frá [Eurostat](https://ec.europa.eu/eurostat/en/), nánar tiltekið eru þetta þrjú gagnasöfn:
+
+* [Ákvarðanir í málum um tímabundnavernd eftir mánuði](https://ec.europa.eu/eurostat/databrowser/view/MIGR_ASYTPFM/default/table?lang=en&category=migr.migr_asy.migr_asytp)
+* [Umsækjendur í bið eftir niðurstöðu í lok mánaðar](https://ec.europa.eu/eurostat/databrowser/view/TPS00190/default/table?lang=en&category=migr.migr_asy.migr_asyapp)
+* [Einstaklingar sem njóta tímabundinnar verndar í lok mánaðar](https://ec.europa.eu/eurostat/databrowser/view/MIGR_ASYTPSM/default/table?lang=en&category=migr.migr_asy.migr_asytp)
+
+Þessari upplýsingar eru svo tengdar við [gögn um mannfjölda hvers lands](https://ec.europa.eu/eurostat/databrowser/view/demo_pjan/default/table?lang=en).
+
+Til að auðvelda samanburð milli landa eru allar tölur sýndar sem fjöldi á hverja 1.000 íbúa hvers lands.
+
+## Umsækjendur
+
+Fyrst skoðum við hversu margir umsækjendur eru að bíða eftir niðurstöðu í sínu máli á hverri stundu.
+
+```{r umsaek}
+p1 <- d |> 
+  filter(
+    name == "applicants"
+  ) |> 
+  rename(
+    dags = time, 
+    flottafjoldi = value,
+    per_pers = per_pop
+  ) |> 
+  filter(dags == min(dags)) |> 
+  drop_na(flottafjoldi) |> 
+  mutate(
+    colour = case_when(
+      land == "Ísland" ~ litur_island,
+      land == "Danmörk" ~ litur_danmork,
+      land == "Finnland" ~ litur_finnland,
+      land == "Noregur" ~ litur_noregur,
+      land == "Svíþjóð" ~ litur_svithjod,
+      TRUE ~ litur_annad
+    ),
+    linewidth = 1 * (land == "Ísland"),
+    size = as_factor(linewidth),
+    land = glue("<i style='color:{colour}'>{land}</i>"),
+    land = fct_reorder(land, per_pers)
+  ) |> 
+  ggplot(aes(per_pers, land, col = colour, size = size)) +
+  geom_point() +
+  geom_segment(aes(yend = land, xend = 0, linewidth = linewidth), lty = 2, alpha = 0.5) +
+  scale_x_continuous(
+    expand = expansion(),
+    breaks = breaks_extended(),
+    limits = c(0, 3.2)
+  ) +
+  scale_colour_identity() +
+  scale_size_manual(values = c(1, 3)) +
+  scale_linewidth(
+    range = c(0.2, 0.4)
+  ) +
+  theme(
+    plot.margin = margin(t = 5, r = 25, b = 5, l = 5),
+    axis.text.y = element_markdown(size = 10, family = "Lato"),
+    legend.position = "none"
+  ) +
+  labs(
+    x = NULL,
+    y = NULL,
+    title = "Hvar bíða flestir einstaklingar eftir niðurstöðu umsóknar sinnar?",
+    subtitle = "Fjöldi í mars 2022",
+    caption = caption
+  )
+
+
+ggsave(
+  plot = p1,
+  filename = "Figures/umsaek_mars.png",
+  width = 8, height = 0.5 * 8, scale = 1.3
+)
+
+p2 <- d |> 
+  filter(name == "applicants") |> 
+  rename(
+    dags = time, 
+    flottafjoldi = value,
+    per_pers = per_pop
+  ) |> 
+  filter(month(dags) == 11) |> 
+  drop_na(per_pers) |> 
+  mutate(
+    colour = case_when(
+      land == "Ísland" ~ litur_island,
+      land == "Danmörk" ~ litur_danmork,
+      land == "Finnland" ~ litur_finnland,
+      land == "Noregur" ~ litur_noregur,
+      land == "Svíþjóð" ~ litur_svithjod,
+      TRUE ~ litur_annad
+    ),
+    linewidth = 1 * (land == "Ísland"),
+    size = as_factor(linewidth),
+    land = glue("<i style='color:{colour}'>{land}</i>"),
+    land = fct_reorder(land, per_pers)
+  ) |> 
+  ggplot(aes(per_pers, land, col = colour, size = size)) +
+  geom_point() +
+  geom_segment(
+    aes(yend = land, xend = 0, linewidth = linewidth),
+    lty = 2, 
+    alpha = 0.5
+  ) +
+  scale_x_continuous(
+    expand = expansion(),
+    limits = c(0, 5.5)
+  ) +
+  scale_colour_identity() +
+  scale_size_manual(values = c(1, 3)) +
+  scale_linewidth(
+    range = c(0.2, 0.4)
+  ) +
+  theme(
+    plot.margin = margin(t = 5, r = 25, b = 5, l = 5),
+    axis.text.y = element_markdown(size = 10),
+    legend.position = "none"
+  ) +
+  labs(
+    x = NULL,
+    y = NULL,
+    title = "Hvar bíða flestir einstaklingar eftir niðurstöðu umsóknar sinnar?",
+    subtitle = "Fjöldi í nóvember 2022",
+    caption = caption
+  )
+
+ggsave(
+  plot = p2,
+  filename = "Figures/umsaek_nóvember.png",
+  width = 8, height = 0.5 * 8, scale = 1.3
+)
+
+p <- (p1 + labs(title = NULL, caption = NULL)) + 
+  (p2 + labs(title = NULL, caption = NULL)) +
+  plot_annotation(
+    title = "Hvar bíða flestir einstaklingar eftir niðurstöðu umsóknar sinnar?",
+    caption = caption
+  )
+
+ggsave(
+  plot = p,
+  filename = "Figures/umsaek_saman.png",
+  width = 8, height = 0.5 * 8, scale = 1.3
+)
+
+plot_dat <- d |> 
+  filter(name == "applicants") |> 
+  arrange(time) |> 
+  rename(
+    dags = time, 
+    flottafjoldi = value,
+    per_pers = per_pop
+  ) |>  
+  filter(month(dags) <= 11) |> 
+  drop_na(per_pers) |> 
+  select(dags, land, value = per_pers) |> 
+  mutate(
+    colour = case_when(
+      land == "Ísland" ~ litur_island,
+      land == "Danmörk" ~ litur_danmork,
+      land == "Finnland" ~ litur_finnland,
+      land == "Noregur" ~ litur_noregur,
+      land == "Svíþjóð" ~ litur_svithjod,
+      TRUE ~ litur_annad
+    ),
+    linewidth = 1 * (land == "Ísland"),
+    size = as_factor(linewidth)
+  )
+
+p3 <- plot_dat |> 
+  ggplot(aes(dags, value)) +
+  geom_line(
+    data = plot_dat |> 
+      filter(colour == litur_annad),
+    aes(group = land, colour = litur_annad),
+    alpha = 0.3,
+    col = litur_annad
+  ) +
+  geom_line(
+    data = plot_dat |> 
+      filter(colour != litur_annad),
+    aes(group = land, colour = colour),
+    linewidth = 1
+  ) +
+  ggrepel::geom_text_repel(
+    data = plot_dat |> 
+      group_by(land) |> 
+      filter(colour != litur_annad, dags == max(dags)) |> 
+      ungroup() |> 
+      mutate(
+        value = case_when(
+          # land == "Svíþjóð" ~ value - 0.8,
+          # land == "Ísland" ~ value - 0.2,
+          # land == "Noregur" ~ value + 0.3,
+          # land == "Danmörk" ~ value + 1,
+          # land == "Finnland" ~ value + 0.5,
+          TRUE ~ value
+        )
+      ),
+    aes(label = land, colour = colour),
+    hjust = 0,
+    nudge_x = 10,
+    box.padding = 0.1,
+    direction = "y"
+  ) +
+  scale_x_date(
+    breaks = unique(plot_dat$dags),
+    labels = label_date(format = "%B")
+  ) +
+  geom_rangeframe(sides = "b") +
+  scale_y_tufte(
+    breaks = tufte_breaks(plot_dat$value),
+    labels = label_number(accuracy = 1),
+    limits = c(0, NA),
+    expand = expansion()
+  ) +
+  scale_colour_identity() +
+  coord_cartesian(ylim = c(0, NA), clip = "off") +
+  theme(
+    axis.line.x = element_blank(),
+    plot.margin = margin(t = 5, r = 35, b = 5, l = 5)
+  ) +
+  labs(
+    x = NULL,
+    y = NULL,
+    subtitle = "Fjöldi eftir mánuði"
+  )
+
+p <- (
+  (p1 + labs(title = NULL, caption = NULL)) + 
+    (p2 + labs(title = NULL, caption = NULL))
+) / 
+  p3 +
+  plot_annotation(
+    title = "Hvar bíða flestir einstaklingar eftir niðurstöðu umsóknar sinnar?",
+    subtitle = "Sýnt sem fjöldi á 1.000 íbúa hvers lands",
+    caption = caption
+  )
+
+ggsave(
+  plot = p,
+  filename = "Figures/umsaek_saman_2.png",
+  width = 8, height = 1 * 8, scale = 1.3
+)
+```
+
+![](Figures/umsaek_saman_2.png){.column-page}
+
+## Veitingar
+
+Skoðum svo hversu mörgum er veitt tímabundin vernd í hverjum mánuði.
+
+```{r akvard}
+p1 <- d |> 
+  filter(
+    name == "grants"
+  ) |> 
+  rename(
+    dags = time, 
+    flottafjoldi = value,
+    per_pers = per_pop
+  ) |> 
+  filter(dags == min(dags)) |> 
+  drop_na(flottafjoldi) |> 
+  mutate(
+    colour = case_when(
+      land == "Ísland" ~ litur_island,
+      land == "Danmörk" ~ litur_danmork,
+      land == "Finnland" ~ litur_finnland,
+      land == "Noregur" ~ litur_noregur,
+      land == "Svíþjóð" ~ litur_svithjod,
+      TRUE ~ litur_annad
+    ),
+    linewidth = 1 * (land == "Ísland"),
+    size = as_factor(linewidth),
+    land = glue("<i style='color:{colour}'>{land}</i>"),
+    land = fct_reorder(land, per_pers)
+  ) |>
+  ggplot(aes(per_pers, land, col = colour, size = size)) +
+  geom_point() +
+  geom_segment(aes(yend = land, xend = 0, linewidth = linewidth), lty = 2, alpha = 0.5) +
+  scale_x_continuous(
+    expand = expansion(),
+    breaks = breaks_extended(),
+    limits = c(0, NA)
+  ) +
+  scale_colour_identity() +
+  scale_size_manual(values = c(1, 3)) +
+  scale_linewidth(
+    range = c(0.2, 0.4)
+  ) +
+  theme(
+    plot.margin = margin(t = 5, r = 25, b = 5, l = 5),
+    axis.text.y = element_markdown(size = 10, family = "Lato"),
+    legend.position = "none"
+  ) +
+  labs(
+    x = NULL,
+    y = NULL,
+    title = "Hvað er mörgum veitt tímabundin vernd?",
+    subtitle = "Fjöldi í mars 2022",
+    caption = caption
+  )
+
+
+ggsave(
+  plot = p1,
+  filename = "Figures/akvard_mars.png",
+  width = 8, height = 0.5 * 8, scale = 1.3
+)
+
+p2 <- d |> 
+  filter(name == "grants") |> 
+  rename(
+    dags = time, 
+    flottafjoldi = value,
+    per_pers = per_pop
+  ) |> 
+  filter(month(dags) == 11) |> 
+  drop_na(per_pers) |> 
+  mutate(
+    colour = case_when(
+      land == "Ísland" ~ litur_island,
+      land == "Danmörk" ~ litur_danmork,
+      land == "Finnland" ~ litur_finnland,
+      land == "Noregur" ~ litur_noregur,
+      land == "Svíþjóð" ~ litur_svithjod,
+      TRUE ~ litur_annad
+    ),
+    linewidth = 1 * (land == "Ísland"),
+    size = as_factor(linewidth),
+    land = glue("<i style='color:{colour}'>{land}</i>"),
+    land = fct_reorder(land, per_pers)
+  ) |> 
+  ggplot(aes(per_pers, land, col = colour, size = size)) +
+  geom_point() +
+  geom_segment(
+    aes(yend = land, xend = 0, linewidth = linewidth),
+    lty = 2, 
+    alpha = 0.5
+  ) +
+  scale_x_continuous(
+    expand = expansion(),
+    limits = c(0, 1.1)
+  ) +
+  scale_colour_identity() +
+  scale_size_manual(values = c(1, 3)) +
+  scale_linewidth(
+    range = c(0.2, 0.4)
+  ) +
+  theme(
+    plot.margin = margin(t = 5, r = 25, b = 5, l = 5),
+    axis.text.y = element_markdown(size = 10),
+    legend.position = "none"
+  ) +
+  labs(
+    x = NULL,
+    y = NULL,
+    title = "Hvað er mörgum veitt tímabundin vernd?",
+    subtitle = "Fjöldi í nóvember 2022",
+    caption = caption
+  )
+
+ggsave(
+  plot = p2,
+  filename = "Figures/akvard_nóvember.png",
+  width = 8, height = 0.5 * 8, scale = 1.3
+)
+
+p <- (p1 + labs(title = NULL, caption = NULL)) + 
+  (p2 + labs(title = NULL, caption = NULL)) +
+  plot_annotation(
+    title = "Hvað er mörgum veitt tímabundin vernd?",
+    caption = caption
+  )
+
+ggsave(
+  plot = p,
+  filename = "Figures/akvard_saman.png",
+  width = 8, height = 0.5 * 8, scale = 1.3
+)
+
+plot_dat <- d |> 
+  filter(name == "grants") |> 
+  arrange(time) |> 
+  rename(
+    dags = time, 
+    flottafjoldi = value,
+    per_pers = per_pop
+  ) |>  
+  filter(month(dags) <= 11) |> 
+  drop_na(per_pers) |> 
+  select(dags, land, value = per_pers) |> 
+  mutate(
+    colour = case_when(
+      land == "Ísland" ~ litur_island,
+      land == "Danmörk" ~ litur_danmork,
+      land == "Finnland" ~ litur_finnland,
+      land == "Noregur" ~ litur_noregur,
+      land == "Svíþjóð" ~ litur_svithjod,
+      TRUE ~ litur_annad
+    ),
+    linewidth = 1 * (land == "Ísland"),
+    size = as_factor(linewidth)
+  )
+
+p3 <- plot_dat |> 
+  ggplot(aes(dags, value)) +
+  geom_line(
+    data = plot_dat |> 
+      filter(colour == litur_annad),
+    aes(group = land, colour = litur_annad),
+    alpha = 0.3,
+    col = litur_annad
+  ) +
+  geom_line(
+    data = plot_dat |> 
+      filter(colour != litur_annad),
+    aes(group = land, colour = colour),
+    linewidth = 1
+  ) +
+  ggrepel::geom_text_repel(
+    data = plot_dat |> 
+      group_by(land) |> 
+      filter(colour != litur_annad, dags == max(dags)) |> 
+      ungroup() |> 
+      mutate(
+        value = case_when(
+          # land == "Svíþjóð" ~ value - 0.8,
+          # land == "Ísland" ~ value - 0.2,
+          # land == "Noregur" ~ value + 0.3,
+          # land == "Danmörk" ~ value + 1,
+          # land == "Finnland" ~ value + 0.5,
+          TRUE ~ value
+        )
+      ),
+    aes(label = land, colour = colour),
+    hjust = 0,
+    nudge_x = 10,
+    box.padding = 0.1,
+    direction = "y"
+  ) +
+  scale_x_date(
+    breaks = unique(plot_dat$dags),
+    labels = label_date(format = "%B")
+  ) +
+  geom_rangeframe(sides = "b") +
+  scale_y_tufte(
+    breaks = tufte_breaks(plot_dat$value),
+    labels = label_number(accuracy = 1),
+    limits = c(0, NA),
+    expand = expansion()
+  ) +
+  scale_colour_identity() +
+  coord_cartesian(ylim = c(0, 5), clip = "on") +
+  theme(
+    axis.line.x = element_blank(),
+    plot.margin = margin(t = 5, r = 35, b = 5, l = 5)
+  ) +
+  labs(
+    x = NULL,
+    y = NULL,
+    subtitle = "Fjöldi eftir mánuði"
+  )
+
+p <- (
+  (p1 + labs(title = NULL, caption = NULL)) + 
+    (p2 + labs(title = NULL, caption = NULL))
+) / 
+  p3 +
+  plot_annotation(
+    title = "Hvað er mörgum veitt tímabundin vernd?",
+    subtitle = "Sýnt sem fjöldi á 1.000 íbúa hvers lands",
+    caption = caption
+  )
+
+ggsave(
+  plot = p,
+  filename = "Figures/akvard_saman_2.png",
+  width = 8, height = 1 * 8, scale = 1.3
+)
+```
+
+![](Figures/akvard_saman_2.png){.column-page}
+
+## Vernd
+
+Hér skoðum við svo fjölda fólks í landinu sem nýtur tímabundinnar verndar hverri stundu.
+
+```{r vernd}
 p1 <- d |> 
   filter(
     name == "beneficiaries"
@@ -319,7 +892,7 @@ p3 <- plot_dat |>
         )
       ),
     aes(label = land, colour = colour),
-    hjust = 1,
+    hjust = 0,
     nudge_x = 10,
     box.padding = 0.1,
     direction = "y"
@@ -363,4 +936,18 @@ ggsave(
   filename = "Figures/vernd_saman_2.png",
   width = 8, height = 1 * 8, scale = 1.3
 )
+
+ggsave(
+  plot = p &
+    theme(
+      plot.background = element_blank(),
+      panel.background = element_blank()
+    ),
+  filename = "Figures/vernd_saman_2_page.png",
+  width = 8, height = 0.621 * 8, scale = 1.3
+)
 ```
+
+![](Figures/vernd_saman_2.png){.column-page}
+
+
