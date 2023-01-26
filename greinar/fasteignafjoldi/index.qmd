@@ -146,7 +146,7 @@ plot_dat <- d |>
   ) |> 
   mutate(
     order_var = fullordin_per_bygg[ar == max(ar)],
-    bygg_per_pers = slide_dbl(bygg_per_pers, sum, .before = 5, .complete = T),
+    bygg_per_pers = slide_dbl(bygg_per_pers, mean, .before = 5, .complete = T),
     .by = sveitarfelag
   ) |> 
   mutate(
@@ -176,7 +176,7 @@ plot_dat <- d |>
       "</b>en fasteignum"
     ),
     var1 = "Fullorðnir á hverja íbúð",
-    var2 = "Nýjar fasteignir á 1.000 fullorðna síðustu 5 ár",
+    var2 = "Nýjar fasteignir á 1.000 fullorðna (5 ára hlaupandi meðaltal)",
     var3 = "Samanburður á fólksfjölgun og íbúðabyggingu"
   )
 
