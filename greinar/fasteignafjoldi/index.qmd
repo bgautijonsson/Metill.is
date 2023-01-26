@@ -59,6 +59,7 @@ library(gganimate)
 library(metill)
 library(patchwork)
 library(slider)
+library(crosstalk)
 theme_set(theme_metill())
 
 
@@ -108,11 +109,8 @@ if (!file.exists("data/data.feather")) {
 
 # Samanburður á stöðu og þróun
 
-:::{.column-page}
 
 ```{r}
-#| fig-asp: 1.2
-#| out-width: 100%
 
 plotly_color <- "#b30000"
   
@@ -122,7 +120,7 @@ plot_dat <- d |>
   filter(
     str_detect(
       str_to_lower(sveitarfelag),
-      "reykjaví|garðab|kópav|hafnarf|mosf|seltjar|akrane|akureyr|fjarðab|árbo|múlaþ|vestman|hverage|borgarbygg|ísafjarð|suðurnes"
+      "reykjaví|garðab|kópav|hafnarf|mosf|seltjar|akrane|akureyr|fjarðab|árbo|múlaþ|vestman|borgarbygg|ísafjarð|suðurnes|grindaví|norðurþ|hverag|ölfus|hornafj"
     )
   ) |> 
   mutate(
@@ -182,8 +180,14 @@ plot_dat <- d |>
     var3 = "Samanburður á fólksfjölgun og íbúðabyggingu"
   )
 
-pd <- highlight_key(plot_dat, ~sveitarfelag, "Veldu sveitarfélag með nafni eða smelltu á myndirnar (Haltu inni SHIFT til að velja fleiri)")
+pd <- highlight_key(
+  plot_dat, 
+  ~sveitarfelag, 
+  "Veldu sveitarfélag með nafni eða smelltu á myndirnar <i>(Haltu inni SHIFT til að velja fleiri)</i>"
+)
+```
 
+```{r}
 p1 <- pd |>
   ggplot(aes(fullordin_per_bygg, sveitarfelag, text = text1)) +
   geom_point(
@@ -199,17 +203,17 @@ p1 <- pd |>
     limits = c(0, 2.45),
     expand = expansion()
   ) +
-  coord_cartesian(clip = "off") +
   theme(
-    plot.margin = margin(),
-    axis.text.x = element_text(margin = margin(b = 5))
+    strip.text = element_text(margin = margin(3, 3, 3, 3))
   ) +
   labs(
     x = NULL,
     y = NULL
   ) +
   facet_wrap("var1")
+```
 
+```{r}
 p2 <- pd |> 
   ggplot(aes(ar, bygg_per_pers, text = text2)) +
   geom_line(aes(group = sveitarfelag)) +
@@ -219,15 +223,17 @@ p2 <- pd |>
   scale_y_continuous(
     expand = expansion()
   ) +
-  theme(
-    axis.text.x = element_text(margin = margin(b = 5))
+   theme(
+    strip.text = element_text(margin = margin(3, 3, 3, 3))
   ) +
   labs(
     x =  "",
     y = NULL
   ) +
   facet_wrap("var2")
+```
 
+```{r}
 p3 <- pd |> 
   ggplot(aes(mannf_index, bygg_index, text = text3)) +
   geom_abline(intercept = 0, slope = 1, lty = 2, linewidth = 0.5, colour = "grey50") +
@@ -242,7 +248,14 @@ p3 <- pd |>
     x = glue::glue("Mannfjöldabreyting síðan {start_year}"),
     y = glue::glue("Fjölgun fasteigna síðan {start_year}")
   )
+```
 
+
+
+<div class='column-screen-inset' style='position:relative;left:10%;width:80%;'>
+
+```{r}
+#| fig-asp: 1.2
 
 subplot(
   subplot(
@@ -254,7 +267,7 @@ subplot(
     shareY = F,
     titleX = T,
     titleY = T
-  ) |> 
+  ) |>
     layout(
       margin = list(
         b = 5000
@@ -262,23 +275,27 @@ subplot(
     ),
   metill_ggplotly(p3, tooltip = "text"),
   nrows = 2,
-  heights = c(0.5, 0.5), 
-  shareX = T, 
+  heights = c(0.5, 0.5),
+  shareX = T,
   shareY = T,
   titleX = T,
   titleY = T
-) |> 
-  highlight(
-    on = "plotly_click",
-    defaultValues = "Reykjavíkurborg",
-    persistent = FALSE,
-    color = plotly_color,
-    selectize = TRUE
-  )
+) |>
+  layout(
+    margin = list(
+      l = 100
+    )
+  ) |> 
+highlight(
+  on = "plotly_click",
+  defaultValues = "Reykjavíkurborg",
+  persistent = FALSE,
+  color = plotly_color,
+  selectize = TRUE
+)
 ```
 
-
-:::
+</div>
 
 ```{r dreifing_fast_per_einst}
 #| eval: false
