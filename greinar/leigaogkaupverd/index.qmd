@@ -75,7 +75,16 @@ if (!file.exists("data/kaupskra_data.feather")) {
     mutate(n_obs = n()) |>
     ungroup() |>
     filter(n_obs > 1) |> 
-    collect() 
+    collect() |> 
+    mutate(
+      utgdag = as_date(utgdag),
+      kaupverd = vnv_convert(
+        kaupverd, 
+        utgdag,
+        include_housing = FALSE, 
+        date_unity = clock::date_build(2022, 12, 01)
+      )
+    )
   
   
   
@@ -134,12 +143,13 @@ if (!file.exists("data/kaupskra_data.feather")) {
     mutate(n_obs = n()) |>
     ungroup() |>
     filter(n_obs > 1) |> 
-    collect()
+    collect() |>
+    mutate(
+      utgdag = as_date(utgdag),
+      heildarverd = vnv_convert(heildarverd, utgdag, include_housing = FALSE)
+    )
   
-  d <- leiguskra |>
-    mutate(heildarverd = vnv_convert(heildarverd, utgdag, include_housing = FALSE))
-  
-  plot_dat <- d |>
+  plot_dat <- leiguskra |>
     distinct() |>
     group_by(fastnum) |>
     mutate(breyting = c(NA, exp(diff(log(heildarverd)))) - 1,
@@ -156,7 +166,7 @@ if (!file.exists("data/kaupskra_data.feather")) {
     nest(data = ars_breyting) |>
     inner_join(
       crossing(
-        dags = unique(d$utgdag),
+        dags = unique(leiguskra$utgdag),
         size = c(0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9)
       ),
       by = "dags"
