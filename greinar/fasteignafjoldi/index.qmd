@@ -169,7 +169,7 @@ plot_dat <- d |>
     ),
     text3 = str_c(
       "<b>", sveitarfelag, "</b>", "\n",
-      "Fjölgin fullorðinna: ", hlutf(mannf_index), "\n",
+      "Fjölgun fullorðinna: ", hlutf(mannf_index), "\n",
       "Fjölgun fasteigna: ", hlutf(bygg_index), "\n",
       "Fullorðnum hefur fjölgað<b>", 
       ifelse(mism > 0, " hraðar ", " hægar "),
