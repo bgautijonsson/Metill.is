@@ -4,6 +4,7 @@ editor: source
 listing:
     - id: posts
       type: default
+      categories: true
       sort: "date desc"
       contents: greinar
 ---

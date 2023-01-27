@@ -3,7 +3,7 @@ title: "Loftgæði"
 pagetitle: "Loftgæði"
 subtitle: "Samantekt á mælingum köfnunarefnisdíoxíðs (NO2) við Grensásveg"
 description: | 
-    Nýlega var fjallað um óvenjulega háar mælingar á NO2 í Reykjavíkurborg. Hversu algeng eru slík tilvik? Hér ber ég mælingar ársins 2023 saman við fyrri ár.
+    Nýlega var fjallað um óvenjulega háar mælingar á NO2 í Reykjavíkurborg. Hversu algeng eru slík tilvik? Hér ber ég mælingar ársins 2023 saman við fyrri ár og birti daglega uppfært yfirlit yfir NO2 við Grensásveg.
 author: 
     -   name: "Brynjólfur Gauti Guðrúnar Jónsson"
         url: "https://twitter.com/bgautijonsson"

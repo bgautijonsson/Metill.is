@@ -44,6 +44,7 @@ library(patchwork)
 library(arrow)
 library(visitalaneysluverds)
 library(geomtextpath)
+library(hagstofa)
 
 theme_set(theme_metill())
 
@@ -62,10 +63,10 @@ if (!file.exists("data/data.csv")) {
   init_db()
   
   
-  d <- mtl_opinber_umsvif() |> 
+  d <- mtl_rikisreikningur() |> 
     mutate(filter = str_detect(stofnun, skolar)) |>
     filter(filter == TRUE) |> 
-    collect()
+    dplyr::collect()
   
   
   d <- d |> 
@@ -89,23 +90,17 @@ if (!file.exists("data/data.csv")) {
   
   url <- "https://px.hagstofa.is:443/pxis/api/v1/is/Samfelag/skolamal/0_yfirlit/yfirlit/SKO00003.px"
   
-  
-  nemendur <- pxweb_get(
-    url = url,
-    query = list(
-      "Ár" = "*",
-      "Skólastig" = "Alls",
-      "Skóli" = "*",
-      "Lögheimili nemenda" = "Alls",
-      "Kyn" = "Alls",
-      "Kennsluform" = "Alls"
-    )
-  )
+  nemendur <- hg_data(url) |> 
+    filter(
+      Skólastig == "Alls",
+      `Lögheimili nemenda` == "Alls",
+      Kyn == "Alls",
+      Kennsluform == "Alls"
+    ) |> 
+    collect()
   
   
   nemendur <- nemendur |> 
-    as.data.frame() |> 
-    as_tibble() |> 
     janitor::clean_names() |> 
     rename(value = 7) |> 
     select(-skolastig, -kyn, -logheimili_nemenda, -kennsluform)
@@ -127,7 +122,7 @@ if (!file.exists("data/data.csv")) {
       d
     ) |> 
     rename(nemendur = value, utgjold = samtals) |> 
-    mutate(utgjold_leidrett = vnv_convert(utgjold, obs_date = ar),
+    mutate(utgjold_leidrett = vnv_convert(utgjold, obs_date = ar, date_unity = 2022),
            utgjold_per_nem = utgjold / nemendur,
            utgjold_per_nem_leidrett = utgjold_leidrett / nemendur) |> 
     filter(
@@ -168,9 +163,13 @@ line_plot <- function(
     ylab = label_isk(scale = 1e-6, accuracy = 0.1),
     ybreaks = tufte_breaks(plot_dat$value),
     trans = "identity",
-    palette = "Dark2",
+    palette = "default",
     text_smoothing = 60
 ) {
+  
+  if (palette == "default") {
+    colour_scale <- scale_colour_brewer(type = "qual", palette = "Dark2")
+  }
   
   plot_dat |>  
     ggplot(aes(ar, value)) +
@@ -186,7 +185,7 @@ line_plot <- function(
       labels = ylab,
       trans = trans
     ) +
-    scale_colour_brewer(type = "qual", palette = palette) +
+    colour_scale +
     scale_hjust_manual(
       values = hjust
     ) +
@@ -448,6 +447,15 @@ hjust <- c(
   "landbún" = 0.75,
   "lhí" = 0.99
 )
+
+plot_dat |> 
+  mutate(
+    litur = ifelse(
+      stofnun == "Háskóli Íslands",
+      "black",
+      "grey50"
+    )
+  )
 
 p <- plot_dat |>  
   line_plot(

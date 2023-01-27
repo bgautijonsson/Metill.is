@@ -110,6 +110,7 @@ if (!file.exists("data/data.feather")) {
 # Samanburður á stöðu og þróun
 
 
+
 ```{r}
 
 plotly_color <- "#b30000"
