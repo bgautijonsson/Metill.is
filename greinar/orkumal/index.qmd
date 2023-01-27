@@ -850,7 +850,7 @@ min_gdp <- d |> filter(year >= 1980) |> pull(gdp_per_capita) |> min(na.rm = T)
 max_gdp <- d |> filter(year >= 1980) |> pull(gdp_per_capita) |> max(na.rm = T)
 
 plot_dat <- crossing(
-  energy_per_capita = seq(log(start), log(end), length = 20) |> exp(),
+  energy_per_capita = seq(log(start), log(end), length = 10) |> exp(),
   ratio = c(0.25, 0.5, 1, 2, 4)
 ) |> 
   mutate(gdp_per_capita = ratio * energy_per_capita) |> 
@@ -878,6 +878,11 @@ pd <- d |>
   drop_na() |> 
   filter(year >= 1980, country != "World") |> 
   group_by(country) |>
+  filter(
+    !any(is.na(gdp_per_capita) | is.na(energy_per_capita)),
+    any(year == 2018),
+    any(year == 1980)
+  ) |> 
   ungroup() |> 
   group_by(year) |> 
   group_modify(add_preds) |> 
@@ -949,7 +954,7 @@ max_gdp <- d |>
   max(na.rm = T)
 
 plot_dat <- crossing(
-  fossil_energy_per_capita = seq(log(start), log(end),  length = 20) |> exp(),
+  fossil_energy_per_capita = seq(log(start), log(end),  length = 10) |> exp(),
   ratio = c(1/4, 1/2, 1, 2, 4)
 ) |> 
   mutate(gdp_per_capita = ratio * fossil_energy_per_capita) |> 
@@ -978,8 +983,13 @@ pd <- d |>
   drop_na() |> 
   filter(year >= 1980, country != "World") |> 
   group_by(country) |>
-  filter(gdp_per_capita > 0, 
-         fossil_energy_per_capita > 0) |> 
+ group_by(country) |>
+  filter(
+    !any(is.na(gdp_per_capita) | is.na(fossil_energy_per_capita)),
+    any(year == 2018),
+    any(year == 1980)
+  ) |> 
+  ungroup() |> 
   ungroup() |>
   group_by(year) |> 
   group_modify(add_preds) |> 
@@ -1053,7 +1063,7 @@ max_gdp <- d |>
   max(na.rm = T)
 
 plot_dat <- crossing(
-  greenhouse_per_capita = seq(log(start), log(end), length = 20) |> exp(),
+  greenhouse_per_capita = seq(log(start), log(end), length = 10) |> exp(),
   ratio = c(1/16, 1/8, 1/4, 1/2, 1, 2, 4)
 ) |> 
   mutate(gdp_per_capita = ratio * greenhouse_per_capita) |> 
@@ -1080,9 +1090,13 @@ add_preds <- function(data, ...) {
 pd <- d |> 
   select(gdp_per_capita, greenhouse_per_capita, country, year) |> 
   drop_na() |> 
-  filter(year >= 2000, country != "World") |> 
+  filter(year >= 2000, country != "World", greenhouse_per_capita > 0) |> 
   group_by(country) |>
-  filter(greenhouse_per_capita > 0, gdp_per_capita > 0) |>
+  filter(
+    !any(is.na(gdp_per_capita) | is.na(greenhouse_per_capita)),
+    any(year == 2018),
+    any(year == 2000),
+  ) |> 
   ungroup() |> 
   group_by(year) |> 
   group_modify(add_preds) |> 
