@@ -520,8 +520,8 @@ plot_dat <- d_undir |>
       "Vægi í vísitölu: ", percent(vaegi, accuracy = 0.01), "\n",
       "Áhrif á vísitölu (ár): ", percent(year_ahrif, accuracy = 0.01), "\n",
       "Áhrif á vísitölu (mánuður): ", percent(ahrif, accuracy = 0.01), "\n",
-      "% af vísitöluhækkun (ár): ", hlutf(hlutf), "\n",
-      "% af vísitöluhækkun (mánuður): ", hlutf(year_hlutf)
+      "% af vísitöluhækkun (ár): ", hlutf(year_hlutf), "\n",
+      "% af vísitöluhækkun (mánuður): ", hlutf(hlutf)
     )
   )
 
@@ -572,8 +572,8 @@ plot_dat <- d_undir |>
       "Vægi í vísitölu: ", percent(vaegi, accuracy = 0.01), "\n",
       "Áhrif á vísitölu (ár): ", percent(year_ahrif, accuracy = 0.01), "\n",
       "Áhrif á vísitölu (mánuður): ", percent(ahrif, accuracy = 0.01), "\n",
-      "% af vísitöluhækkun (ár): ", hlutf(hlutf), "\n",
-      "% af vísitöluhækkun (mánuður): ", hlutf(year_hlutf)
+      "% af vísitöluhækkun (ár): ", hlutf(year_hlutf), "\n",
+      "% af vísitöluhækkun (mánuður): ", hlutf(hlutf)
     )
   )
 
