@@ -27,7 +27,7 @@ categories:
 href: greinar/flottafolk/index.qmd
 image: Figures/vernd_saman_2_page.png
 execute: 
-  eval: false
+  eval: true
 ---
 
 
@@ -58,8 +58,11 @@ library(patchwork)
 library(arrow)
 library(glue)
 library(eurostat)
+library(hagstofa)
+library(crosstalk)
 theme_set(theme_metill())
 Sys.setlocale("LC_ALL", "is_IS.UTF-8")
+
 
 caption <- "Mynd eftir @bggjonsson hjá metill.is byggð á gögnum OECD um fólksflutninga: https://stats.oecd.org/Index.aspx?DataSetCode=MIG\nGögn og kóði: https://github.com/bgautijonsson/Metill.is/tree/master/greinar/flottafolk"
 
@@ -79,6 +82,7 @@ litur_annad <- "#737373"
 
 
 ```{r data_beneficiaries}
+#| eval: false
 beneficiaries <- get_eurostat(
   "migr_asytpsm", 
   cache = T,
@@ -96,6 +100,7 @@ beneficiaries <- get_eurostat(
 
 
 ```{r data_pop}
+#| eval: false
 pop <- get_eurostat(
   "demo_pjan",
   cache = T,
@@ -110,6 +115,7 @@ pop <- get_eurostat(
 ```
 
 ```{r data_applicants}
+#| eval: false
 applicants <- get_eurostat(
   "migr_asypenctzm",
   cache = T,
@@ -124,10 +130,10 @@ applicants <- get_eurostat(
   select(-citizen, -sex, -age) |> 
   label_eurostat()
 
-applicants
 ```
 
 ```{r data_grants}
+#| eval: false
 grants <- get_eurostat(
   "migr_asytpfm",
   cache = T,
@@ -143,6 +149,7 @@ grants <- get_eurostat(
 ```
 
 ```{r data_decisions}
+#| eval: false
 decisions <- get_eurostat(
   "migr_asydcfstq",
   cache = TRUE,
@@ -163,6 +170,7 @@ decisions <- get_eurostat(
 
 
 ```{r data_merge}
+#| eval: false
 d <- beneficiaries |> 
   mutate(
     year = year(time)
@@ -235,6 +243,7 @@ Til að auðvelda samanburð milli landa eru allar tölur sýndar sem fjöldi á
 Fyrst skoðum við hversu margir umsækjendur eru að bíða eftir niðurstöðu í sínu máli á hverri stundu.
 
 ```{r umsaek}
+#| eval: false
 p1 <- d |> 
   filter(
     name == "applicants"
@@ -472,6 +481,7 @@ ggsave(
 Skoðum svo hversu mörgum er veitt tímabundin vernd í hverjum mánuði.
 
 ```{r akvard}
+#| eval: false
 p1 <- d |> 
   filter(
     name == "grants"
@@ -709,6 +719,7 @@ ggsave(
 Hér skoðum við svo fjölda fólks í landinu sem nýtur tímabundinnar verndar hverri stundu.
 
 ```{r vernd}
+#| eval: false
 p1 <- d |> 
   filter(
     name == "beneficiaries"
@@ -949,5 +960,243 @@ ggsave(
 ```
 
 ![](Figures/vernd_saman_2.png){.column-page}
+
+# Hlutfall erlendra ríkisborgara eftir sveitarfélagi
+
+Hér getum við notað gögn Hagstofu um [Mannfjöldi eftir sveitarfélögum, kyni, ríkisfangi og ársfjórðungum 2010-2022](https://px.hagstofa.is/pxis/pxweb/is/Ibuar/Ibuar__mannfjoldi__2_byggdir__sveitarfelog/MAN10001.px). Til að vera viss um hvað sé skilgreint sem íslenskur/erlendur ríkisborgari skoðum við [lýsigögn Hagstofu um mannfjölda tölur](https://hagstofa.is/utgafur/lysigogn/lysigogn/?fileId=19525):
+
+> Ríkisfangsland: Með ríkisfangslandi er átt við Ísland ef barn er fætt af íslensku foreldri. Að öðru leyti er miðað við hvaða ríki hefur gefið út vegabréf það eða skilríki sem viðkomandi hefur framvísað við skráningu í Þjóðskrá.
+>
+> - Hagstofa Íslands
+
+```{r}
+url <- "https://px.hagstofa.is:443/pxis/api/v1/is/Ibuar/mannfjoldi/2_byggdir/sveitarfelog/MAN10001.px"
+
+d <- hg_data(url) |> 
+  filter(
+    `Kyn og ríkisfang` %in% c("Alls", "Erl. ríkisborgarar")
+  ) |> 
+  collect() |> 
+  janitor::clean_names() |> 
+  mutate(sveitarfelag = str_squish(sveitarfelag)) |> 
+  rename(value = 4) |> 
+  separate(
+    arsfjordungur, into = c("ar", "man"), sep = "Á", convert = TRUE
+  ) |> 
+  mutate(dags = clock::date_build(ar, man)) |> 
+  select(dags, sveitarfelag, kyn_og_rikisfang, value) |> 
+  pivot_wider(names_from = kyn_og_rikisfang) |> 
+  janitor::clean_names() |>
+  mutate(hlutf = erl_rikisborgarar / alls)
+```
+
+
+```{r}
+plotly_color <- "#b30000"
+  
+start_dags <- min(d$dags)
+
+plot_dat <- d |> 
+  filter(
+    str_detect(
+      str_to_lower(sveitarfelag),
+      "reykjaví|garðab|kópav|hafnarf|mosf|seltjar|akrane|akureyr|fjarðab|árbo|múlaþ|vestman|borgarbygg|ísafjarð|suðurnes|grindaví|norðurþ|hverag|ölfus|hornafj|reykjane"
+    )
+  ) |> 
+  mutate(
+    order_var = hlutf[dags == max(dags)],
+    .by = sveitarfelag
+  ) |> 
+  mutate(
+    sveitarfelag = fct_reorder(sveitarfelag, order_var)
+  ) |> 
+  mutate(
+    hlutf_latest = ifelse(dags == max(dags), hlutf, NA_real_),
+    var1 = glue("% innflytjenda ({format(max(d$dags), '%d. %B %Y')})"),
+    var2 = "% innflytjenda eftir ári",
+    text1 = str_c(
+      "<b>", sveitarfelag, "</b>", "\n",
+      "Innfæddir íbúar: ", number(alls - erl_rikisborgarar, big.mark = ".", decimal.mark = ","), "\n",
+      "Innfluttir íbúar: ", number(erl_rikisborgarar, big.mark = ".", decimal.mark = ","), "\n",
+      "% innflutt: ", hlutf(hlutf_latest, accuracy = 0.1)
+    ),
+    text2 = str_c(
+      "<b>", sveitarfelag, "</b>", "\n",
+      "Dagsetning: ", dags, "\n",
+      "Innfæddir íbúar: ", number(alls - erl_rikisborgarar, big.mark = ".", decimal.mark = ","), "\n",
+      "Innfluttir íbúar: ", number(erl_rikisborgarar, big.mark = ".", decimal.mark = ","), "\n",
+      "% innflutt: ", hlutf(hlutf, accuracy = 0.1)
+    )
+  )
+
+pd <- highlight_key(
+  plot_dat, 
+  ~sveitarfelag, 
+  "Veldu sveitarfélag með nafni eða smelltu á myndirnar <i>(Haltu inni SHIFT til að velja fleiri)</i>"
+)
+```
+
+
+```{r}
+p1 <- pd |>
+  ggplot(aes(hlutf_latest, sveitarfelag, text = text1)) +
+  geom_point(
+    size = 2
+  ) +
+  geom_segment(
+    aes(yend = sveitarfelag, xend = 0),
+    alpha = 1,
+    size = 0.1
+  ) +
+  scale_x_continuous(
+    labels = label_hlutf(accuracy = 1),
+    limits = c(0, 0.31),
+    expand = expansion()
+  ) +
+  theme(
+    strip.text = element_text(margin = margin(3, 3, 3, 3))
+  ) +
+  labs(
+    x = NULL,
+    y = NULL
+  ) +
+  facet_wrap("var1")
+```
+
+```{r}
+p2 <- pd |> 
+  ggplot(aes(dags, hlutf, text = text2)) +
+  geom_line(aes(group = sveitarfelag)) +
+  scale_x_date(
+    expand = expansion()
+  ) +
+  scale_y_continuous(
+    labels = label_hlutf(accuracy = 1),
+    expand = expansion(),
+    limits = c(0, 0.31)
+  ) +
+  theme(
+    strip.text = element_text(margin = margin(3, 3, 3, 3))
+  ) +
+  labs(
+    x =  "",
+    y = NULL
+  ) +
+  facet_wrap("var2")
+
+```
+
+<div class='column-screen-inset' style='position:relative;left:5%;width:90%;'>
+
+```{r}
+#| fig-asp: 1
+
+subplot(
+  metill_ggplotly(p1, tooltip = "text"),
+  metill_ggplotly(p2, tooltip = "text"),
+  widths = c(0.25, 0.75),
+  nrows = 1,
+  shareX = F,
+  shareY = F,
+  titleX = T,
+  titleY = T
+) |>
+  layout(
+    margin = list(
+      l = 100
+    )
+  ) |> 
+  highlight(
+    on = "plotly_click",
+    defaultValues = "Reykjavíkurborg",
+    persistent = FALSE,
+    color = plotly_color,
+    selectize = TRUE
+  )
+```
+
+</div>
+
+
+# Lengd dvalar
+
+```{r}
+url <- "https://px.hagstofa.is:443/pxis/api/v1/is/Ibuar/mannfjoldi/3_bakgrunnur/Uppruni/MAN43007.px"
+
+d <- hg_data(url) |> 
+  filter(
+    Kyn == "Alls",
+    `Lengd dvalar` != "Alls",
+  ) |> 
+  collect() |> 
+  janitor::clean_names() |> 
+  select(-kyn) |> 
+  rename(value = 4) |> 
+  mutate(
+    ar = parse_number(ar),
+    hlutf = value / sum(value),
+    .by = c(ar, sveitarfelag)
+  ) |> 
+  mutate(
+    lengd_dvalar = ifelse(lengd_dvalar == "1-2 tvö ár", "1-2 ár", lengd_dvalar),
+    lengd_dvalar = fct_relevel(
+      lengd_dvalar,
+      "Innan við ár",
+      "1-2 ár",
+      "3-5 ár",
+      "6-10 ár",
+      "11 ár og lengur"
+    )
+  )
+```
+
+```{r}
+#| eval: false
+plot_dat <- d |> 
+  filter(
+    # sveitarfelag == "Alls"
+  )
+
+pd <- highlight_key(plot_dat)
+
+p <- pd |> 
+  ggplot(aes(ar, hlutf, fill = lengd_dvalar, col = lengd_dvalar)) +
+  geom_area(position = "stack") +
+  scale_x_continuous(
+    expand = expansion()
+  ) +
+  scale_y_continuous(
+    expand = expansion(),
+    labels = label_hlutf(accuracy = 1)
+  )
+
+bscols(
+  filter_select(
+    "id", 
+    "Veldu sveitarfélag", 
+    pd,
+    ~sveitarfelag, 
+    allLevels = FALSE,
+    multiple = FALSE
+  ),
+  (
+    pd |> 
+      ggplot(aes(ar, hlutf, fill = lengd_dvalar, col = lengd_dvalar)) +
+      geom_area(position = "fill") +
+      scale_x_continuous(
+        expand = expansion()
+      ) +
+      scale_y_continuous(
+        expand = expansion(),
+        labels = label_hlutf(accuracy = 1)
+      )
+  ) |> 
+    metill_ggplotly(dynamicTicks = FALSE, originalData = FALSE),
+  widths = c(12, 12)
+)
+```
+
+
+
 
 
