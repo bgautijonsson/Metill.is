@@ -55,6 +55,7 @@ library(scales)
 library(visitalaneysluverds)
 library(metill)
 library(arrow)
+library(patchwork)
 theme_set(theme_metill())
 
 
@@ -67,7 +68,7 @@ theme_set(theme_metill())
 if (!file.exists("data/kaupskra_data.feather")) {
   init_db()
   
-  kaupskra <- mtl_kaupskra() |>
+  kaupskra_raw <- mtl_kaupskra() |>
     filter(tegund %in% c("Fjölbýli", "Einbýli", "Sérbýli")) |> 
     select(fastnum, utgdag, kaupverd) |>
     arrange(fastnum, utgdag) |>
@@ -81,15 +82,14 @@ if (!file.exists("data/kaupskra_data.feather")) {
       kaupverd = vnv_convert(
         kaupverd, 
         utgdag,
-        include_housing = FALSE, 
-        date_unity = clock::date_build(2022, 12, 01)
+        include_housing = FALSE
       )
     )
   
   
   
   
-  d <- kaupskra |> 
+  d <- kaupskra_raw |> 
     distinct() |>
     group_by(fastnum) |>
     mutate(breyting = c(NA, exp(diff(log(kaupverd)))) - 1,
@@ -98,8 +98,8 @@ if (!file.exists("data/kaupskra_data.feather")) {
     ungroup() |>
     drop_na()  |>
     filter(
-      ars_breyting < quantile(ars_breyting, 0.95, na.rm = T),
-      ars_breyting > quantile(ars_breyting, 0.05, na.rm = T)
+      ars_breyting < quantile(ars_breyting, 0.995, na.rm = T),
+      ars_breyting > quantile(ars_breyting, 0.005, na.rm = T)
     ) |>
     mutate(dags = floor_date(utgdag, "month")) |>
     select(dags, ars_breyting) |>
@@ -136,7 +136,7 @@ if (!file.exists("data/kaupskra_data.feather")) {
   d |> write_parquet("data/kaupskra_data.parquet")
   
   
-  leiguskra <- mtl_leiguskra() |>
+  leiguskra_raw <- mtl_leiguskra() |>
     select(fastnum, utgdag, heildarverd) |>
     arrange(fastnum, utgdag) |>
     group_by(fastnum) |>
@@ -149,7 +149,7 @@ if (!file.exists("data/kaupskra_data.feather")) {
       heildarverd = vnv_convert(heildarverd, utgdag, include_housing = FALSE)
     )
   
-  plot_dat <- leiguskra |>
+  d <- leiguskra_raw |>
     distinct() |>
     group_by(fastnum) |>
     mutate(breyting = c(NA, exp(diff(log(heildarverd)))) - 1,
@@ -158,15 +158,15 @@ if (!file.exists("data/kaupskra_data.feather")) {
     ungroup() |>
     drop_na()  |>
     filter(
-      ars_breyting < quantile(ars_breyting, 0.95, na.rm = T),
-      ars_breyting > quantile(ars_breyting, 0.05, na.rm = T)
+      ars_breyting < quantile(ars_breyting, 0.995, na.rm = T),
+      ars_breyting > quantile(ars_breyting, 0.005, na.rm = T)
     ) |>
     mutate(dags = floor_date(utgdag, "month")) |>
     select(dags, ars_breyting) |>
     nest(data = ars_breyting) |>
     inner_join(
       crossing(
-        dags = unique(leiguskra$utgdag),
+        dags = unique(leiguskra_raw$utgdag),
         size = c(0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9)
       ),
       by = "dags"
@@ -191,7 +191,7 @@ if (!file.exists("data/kaupskra_data.feather")) {
            y = sample(c(y1, y2), size = n())) |> 
     select(-data)
   
-  plot_dat |> 
+  d |> 
     write_parquet("data/leiguskra_data.parquet")
   
 } else {
@@ -208,18 +208,19 @@ if (!file.exists("data/kaupskra_data.feather")) {
 
 
 ```{r}
-p <- kaupskra |>
-  ggplot(aes(dags, y = y, ymin = lower, ymax = upper)) +
+p1 <- kaupskra |>
+  ggplot(aes(dags, y = y + 1, ymin = lower + 1, ymax = upper + 1)) +
   geom_ribbon(aes(group = group, fill = group, alpha = group), col = "grey70", size = 0.02) +
   scale_x_date(
     date_breaks = "year",
     date_labels = "%Y",
     expand = expansion()
   ) +
-  geom_hline(yintercept = 0, lty = 2, alpha = 1) +
+  geom_hline(yintercept = 1, lty = 2, alpha = 1) +
   scale_y_tufte(
-    labels = label_hlutf(),
-    breaks = tufte_breaks(kaupskra$y)
+    labels = function(x) hlutf(x - 1),
+    breaks = tufte_breaks(kaupskra$y + 1),
+    trans = "log10"
   ) +
   scale_fill_brewer(type = "seq", palette = "PuBu") +
   scale_alpha_discrete(
@@ -247,13 +248,13 @@ p <- kaupskra |>
   )
 
 ggsave(
-  p, 
+  p1, 
   filename = "Figures/kaupverd_breyting.png",
   width = 8, height = 0.621 * 8, scale = 1.3
 )
 
 ggsave(
-  p + 
+  p1 + 
     scale_alpha_discrete(
       range = c(0.1, 1)
     ) +
@@ -271,18 +272,19 @@ ggsave(
 
 
 ```{r}
-p <- leiguskra |> 
-  ggplot(aes(dags, y = y, ymin = lower, ymax = upper)) +
+p2 <- leiguskra |> 
+  ggplot(aes(dags, y = y + 1, ymin = lower + 1, ymax = upper + 1)) +
   geom_ribbon(aes(group = group, fill = group, alpha = group), col = "grey70", size = 0.02) +
   scale_x_date(
     date_breaks = "year",
     date_labels = "%Y",
     expand = expansion()
   ) +
-  geom_hline(yintercept = 0, lty = 2, alpha = 1) +
+  geom_hline(yintercept = 1, lty = 2, alpha = 1) +
   scale_y_tufte(
-    labels = label_hlutf(),
-    breaks = tufte_breaks(leiguskra$y)
+    labels = function(x) hlutf(x - 1),
+    breaks = tufte_breaks(leiguskra$y + 1),
+    trans = "log10"
   ) +
   scale_fill_brewer(type = "seq", palette = "PuBu") +
   scale_alpha_discrete(
@@ -310,13 +312,13 @@ p <- leiguskra |>
   )
 
 ggsave(
-  p, 
+  p2, 
   filename = "Figures/leiguverd_breyting.png",
   width = 8, height = 0.621 * 8, scale = 1.3
 )
 
 ggsave(
-  p + 
+  p2 + 
     scale_alpha_discrete(
       range = c(0.1, 1)
     ) +
@@ -331,3 +333,39 @@ ggsave(
 ```
 
 ![](Figures/leiguverd_breyting.png){.column-page}
+
+
+
+```{r}
+(
+  p1 + 
+    scale_y_tufte(
+      labels = function(x) hlutf(x - 1),
+      breaks = tufte_breaks(leiguskra$y + 1),
+      trans = "log10",
+      limits = c(1 - 0.178, 1 + 0.289)
+    ) +
+    theme(
+      plot.margin = margin()
+    )
+) +
+  (
+    p2 +
+      scale_y_continuous(
+        labels = function(x) hlutf(x - 1),
+        breaks = tufte_breaks(leiguskra$y + 1),
+        trans = "log10",
+        limits = c(1 - 0.178, 1 + 0.289)
+      ) +
+      theme(
+        axis.text.y = element_blank(),
+        axis.line.y = element_blank(),
+        axis.ticks.y = element_blank(),
+        plot.margin = margin()
+      )
+  ) &
+  theme(
+    legend.position = "none"
+  )
+```
+
