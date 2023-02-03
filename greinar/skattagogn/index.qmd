@@ -17,7 +17,6 @@ format:
         link-external-newwindow: true
 editor: source
 title-block-banner: true
-embed-resources: true
 categories:
     - skattar
     - efnahagur
