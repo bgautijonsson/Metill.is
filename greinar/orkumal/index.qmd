@@ -17,6 +17,8 @@ format:
 editor: source
 draft: true
 title-block-banner: true
+execute: 
+  eval: false
 categories:
     - orkumál
     - OurWorldInData
@@ -879,9 +881,8 @@ pd <- d |>
   filter(year >= 1980, country != "World") |> 
   group_by(country) |>
   filter(
-    !any(is.na(gdp_per_capita) | is.na(energy_per_capita)),
-    any(year == 2018),
-    any(year == 1980)
+    !any(is.na(gdp_per_capita) | is.na(energy_per_capita) | (gdp_per_capita <= 0) | (energy_per_capita <= 0)),
+    length(unique(year)) == length(seq(1980, 2018))
   ) |> 
   ungroup() |> 
   group_by(year) |> 
@@ -889,13 +890,15 @@ pd <- d |>
   ungroup() 
 
 p <- pd |> 
-  ggplot(aes(
-    energy_per_capita, gdp_per_capita,
-    colour = (country == "Iceland"),
-    size = (country == "Iceland"),
-    alpha = (country == "Iceland"),
-    frame = year
-  )) +
+  ggplot(
+    aes(
+      energy_per_capita, gdp_per_capita,
+      colour = (country == "Iceland"),
+      size = (country == "Iceland"),
+      alpha = (country == "Iceland"),
+      frame = year
+    )
+  ) +
   geom_line(
     data = plot_dat,
     aes(energy_per_capita, gdp_per_capita, group = ratio),
@@ -915,9 +918,12 @@ p <- pd |>
   ) +
   geom_line(aes(y = pred), lty = 2, col = "black", size = 1) +
   geom_point(aes(group = country)) +
-  # geom_rangeframe() +
-  scale_x_log10(labels = label_number(suffix = " kWh", big.mark = ".", decimal.mark = ",")) +
-  scale_y_log10(labels = label_number(suffix = "$", big.mark = ".", decimal.mark = ",")) +
+  scale_x_log10(
+    labels = label_tala(suffix = " kWh")
+  ) +
+  scale_y_log10(
+    labels = label_tala(suffix = "$")
+  ) +
   scale_colour_manual(values = c("#969696", "#4292c6")) +
   scale_size_manual(values = c(2.5, 4)) +
   scale_alpha_manual(values = c(0.7, 1)) +
@@ -983,7 +989,7 @@ pd <- d |>
   drop_na() |> 
   filter(year >= 1980, country != "World") |> 
   group_by(country) |>
- group_by(country) |>
+  group_by(country) |>
   filter(
     !any(is.na(gdp_per_capita) | is.na(fossil_energy_per_capita)),
     any(year == 2018),
@@ -1024,16 +1030,15 @@ p <- pd |>
   scale_colour_manual(values = c("#969696", "#4292c6")) +
   scale_size_manual(values = c(2.5, 4)) +
   scale_alpha_manual(values = c(0.7, 1)) +
-  theme(legend.position = "none",
-        plot.title = element_markdown()) +
-  labs(x = "Jarðefnaeldsneytisnotkun á mann",
-       y = "Landsframleiðsla á mann",
-       title = "Þróun notkunar jarðefnaeldsneytis og landsframleiðslu á <b style='color:#4292c6'>Íslandi</b> samanborið við <b style='color:#969696'>heiminn</b>",
-       subtitle = str_c("Heilar línur sýna mismunandi hlutföll jarðefnaeldsneytis / landsframleiðslu",
-                        "\n",
-                        "Brotin lína sýnir fylgni stærðanna á heimsvísu",
-                        "\n",
-                        "Ár: {frame_time}"))
+  theme(
+    legend.position = "none",
+    plot.title = element_markdown()
+  ) +
+  labs(
+    x = "Jarðefnaeldsneytisnotkun á mann",
+    y = "Landsframleiðsla á mann",
+    title = "Þróun notkunar jarðefnaeldsneytis og landsframleiðslu á <b style='color:#4292c6'>Íslandi</b> samanborið við <b style='color:#969696'>heiminn</b>"
+  )
 
 metill_ggplotly(
   p
