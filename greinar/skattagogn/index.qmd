@@ -26,7 +26,7 @@ twitter-card:
   image: image.png
 ---
 
-```{r}
+```{r setu}
 #| include: false
 
 library(cowplot)
@@ -47,12 +47,14 @@ library(config)
 library(visitalaneysluverds)
 library(metill)
 theme_set(theme_metill())
+library(hagstofa)
+library(glue)
 
 if (!file.exists("data/data.csv")) {
   
   init_db()
   
-  d <- `mtl_tiundamork_1997-2021`() |> 
+  d <- `mtl_tiundamork_1997_2021`() |> 
     collect()
   
   d |> 
@@ -146,7 +148,6 @@ En hvað borgar hver tekjutíund mikið í skatta og hvernig ber því saman vi�
 
 ```{r}
 #| fig-asp: 1
-#| out-width: "100%"
 #| column: page
 
 plot_dat <- d |>
@@ -185,13 +186,18 @@ plot_dat <- plot_dat |>
   mutate(tekjur_alls = tekjur_alls / visitala,
          skattar_alls = skattar_alls / visitala,
          skattar_hlutf_tekjum = skattar_alls / tekjur_alls) |> 
-  mutate(text = str_c("<b>Tekjutíund: ", tiundarhluti, "</b>", "\n",
-                      "Ár: ", ar, "\n",
-                      "Tekjur (á mann á mánuði): ", number(tekjur_alls * 1e6 / (fjoldi * 12), suffix = " kr", big.mark = ".", decimal.mark = ","), "\n",
-                      "% allra tekna: ", percent(tekjur_hlutf, accuracy = 0.1), "\n",
-                      "Skattar (á mann á mánuði): ", number(skattar_alls * 1e6 / (fjoldi * 12), suffix = " kr", big.mark = ".", decimal.mark = ","), "\n",
-                      "% allra skatta: ", percent(skattar_hlutf, accuracy = 0.1), "\n",
-                      "Skattbyrði (% af tekjum): ", percent(skattar_hlutf_tekjum, accuracy = 0.1)))
+  mutate(
+    text = str_c(
+      "<b>Tekjutíund: ",
+      tiundarhluti, "</b>", "\n",
+      "Ár: ", ar, "\n",
+      "Tekjur (á mann á mánuði): ", isk(tekjur_alls * 1e6 / (fjoldi * 12)), "\n",
+      "% allra tekna: ", hlutf(tekjur_hlutf, accuracy = 0.1), "\n",
+      "Skattar (á mann á mánuði): ", isk(skattar_alls * 1e6 / (fjoldi * 12), suffix = " kr"), "\n",
+      "% allra skatta: ", hlutf(skattar_hlutf, accuracy = 0.1), "\n",
+      "Skattbyrði (% af tekjum): ", hlutf(skattar_hlutf_tekjum, accuracy = 0.1)
+    )
+  )
 
 
 
@@ -209,12 +215,14 @@ p <- plot_dat |>
                      limits = c(min(plot_dat$skattar_hlutf), 0.5),
                      breaks = seq(0, 50, by = 10)/100) +
   theme(plot.margin = margin(t = 5, r = 5, b = 5, l = 5)) +
-  labs(x = "% af öllum tekjum",
-       y = "% af öllum sköttum",
-       title = "Hvað fær hver tekjutíund háa % af öllum tekjum og sköttum?")
+  labs(
+    x = "% af öllum tekjum",
+    y = "% af öllum sköttum",
+    title = "Hvað fær hver tekjutíund háa % af öllum tekjum og sköttum?"
+  )
 
 
-ggplotly(
+metill_ggplotly(
   p,
   tooltip = "text"
 ) |> 
@@ -223,16 +231,9 @@ ggplotly(
     redraw = FALSE
     
   ) |> 
-  animation_slider(currentvalue = list(prefix = "Ár:")) |> 
-  layout(
-    hoverlabel = list(align = "left")
-  ) |> 
-  config(displayModeBar = FALSE)
-
+  animation_slider(currentvalue = list(prefix = "Ár:"))
 ```
 
-<br>
-<br>
 
 ## Skattbyrði
 
@@ -286,8 +287,7 @@ ggplotly(
   config(displayModeBar = FALSE)
 ```
 
-<br>
-<br>
+
 
 # Þróun frá 1997
 
@@ -537,6 +537,142 @@ ggsave(
   height = 0.621 * 8,
   scale = 1.3
 )
+```
+
+# Tekjudreifing eftir aldri
+
+```{r}
+#| column: screen-inset
+#| fig-asp: 1.3
+
+
+
+
+url <- "https://px.hagstofa.is:443/pxis/api/v1/is/Samfelag/launogtekjur/3_tekjur/1_tekjur_skattframtol/TEK01006.px"
+
+heildartekjur <- hg_data(url) |> 
+  filter(
+    Kyn == "Allir",
+    str_detect(Eining, "%|Meðaltal"),
+    Aldur %in% c("16 - 24 ára", "25 - 54 ára", "55 - 74 ára", "75 ára og eldri")
+  ) |> 
+  collect() |> 
+  janitor::clean_names() |> 
+  rename(
+    tekjur = 5
+  ) |> 
+  select(-kyn) |> 
+  pivot_wider(names_from = eining, values_from = tekjur) |> 
+  pivot_longer(c(contains("%")), names_to = "eining", values_to = "tekjur") |> 
+  mutate(
+    ar = parse_number(ar),
+    eining = parse_number(eining),
+    tegund = "heildartekjur"
+  ) |> 
+  janitor::clean_names() |> 
+  rename(
+    medaltal = medaltal_skilyrt
+  ) |> 
+  select(ar, aldur, eining, tegund, everything()) 
+
+url <- "https://px.hagstofa.is:443/pxis/api/v1/is/Samfelag/launogtekjur/3_tekjur/1_tekjur_skattframtol/TEK01007.px"
+
+atvinnutekjur <- hg_data(url) |> 
+  filter(
+    Kyn == "Allir",
+    str_detect(Eining, "%|Meðaltal"),
+    Aldur %in% c("16 - 24 ára", "25 - 54 ára", "55 - 74 ára", "75 ára og eldri")
+  ) |> 
+  collect() |> 
+  janitor::clean_names() |> 
+  rename(
+    tekjur = 5
+  ) |> 
+  select(-kyn) |> 
+  pivot_wider(names_from = eining, values_from = tekjur) |> 
+  pivot_longer(c(contains("%")), names_to = "eining", values_to = "tekjur") |> 
+  mutate(
+    ar = parse_number(ar),
+    eining = parse_number(eining),
+    tegund = "atvinnutekjur"
+  ) |> 
+  janitor::clean_names() |> 
+  rename(
+    medaltal = medaltal_skilyrt
+  ) |> 
+  select(ar, aldur, eining,tegund, everything())  
+
+d <- bind_rows(
+  heildartekjur,
+  atvinnutekjur
+) |> 
+  mutate(
+    tekjur = vnv_convert(tekjur, obs_date = ar),
+    medaltal = vnv_convert(medaltal, obs_date = ar),
+    breyting = tekjur / tekjur[ar == min(ar)] - 1,
+    breyting = breyting / (ar - min(ar)),
+    medaltal_breyting =  medaltal /  medaltal[ar == min(ar)] - 1,
+    medaltal_breyting = medaltal_breyting / (ar - min(ar)),
+    .by = c(aldur, eining, tegund)
+  ) |> 
+  filter(ar > min(ar))
+
+
+(
+  d |> 
+    mutate(
+      tegund = str_to_title(tegund),
+      label = ifelse((eining == 10) & (aldur == "16 - 24 ára") & (tegund == "Atvinnutekjur"),
+                     "Breyting meðaltekna", 
+                     NA_character_),
+      text = glue(str_c(
+        "<b>Tíundamörk: {eining}%</b>", "\n",
+        "Ár: {ar}", "\n",
+        "Tekjur (á ári): {isk(tekjur * 1e3, scale = 1e-6)}", "\n",
+        "Tekjur (á mánuði): {isk(tekjur/12 * 1e3, scale = 1e-3)}"
+      ))
+    ) |> 
+    rename(
+      Ár = ar
+    ) |> 
+    filter(eining != 95) |> 
+    ggplot(aes(eining, breyting + 1, frame = Ár, ids = eining, group = eining, text = text)) + 
+    geom_hline(yintercept = 1, lty = 2, alpha = 0.4, linewidth = 0.4) +
+    geom_hline(
+      aes(yintercept = medaltal_breyting + 1, frame = Ár),
+      alpha = 0.5,
+      lty = 3,
+      colour = "#e41a1c"
+    ) +
+    geom_text(
+      aes(
+        x = 80, 
+        y = (medaltal_breyting + 1) * 1.03,
+        label = label
+      ),
+      hjust = 0, vjust = 1,
+      colour = "#e41a1c"
+    ) +
+    geom_point() +
+    geom_segment(aes(xend = eining, yend = 1), lty = 2, alpha = 0.5) +
+    scale_x_continuous(
+      breaks = c(seq(10, 90, by = 10), 99),
+      labels = label_number(suffix = "%")
+    ) +
+    scale_y_continuous(
+      labels = function(x) hlutf(x - 1),
+      trans = "log10"
+    ) +
+    facet_grid(cols = vars(aldur), rows = vars(tegund)) +
+    labs(
+      x = "Tíundamörk",
+      y = "Meðalbreyting á ári frá 1990",
+      title = "Hvernig hafa atvinnu- og heildartekjur eftir aldurs- og tekjuhópum breyst síðan 1990?"
+    )
+) |> 
+  ggplotly(tooltip = "text") |> 
+  animation_opts(redraw = FALSE)
+
 ```
 
 

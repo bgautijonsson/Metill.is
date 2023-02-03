@@ -1,0 +1,99 @@
+---
+title: "Ofbeldi"
+pagetitle: "Ofbeldi"
+subtitle: "Subtitle"
+description: |
+    Description
+author: 
+    -   name: "Brynjólfur Gauti Guðrúnar Jónsson"
+        url: "bggj.is"
+        affiliation: "Tölfræði, Raunvísindadeild Háskóla Íslands"
+        affiliation-url: "https://www.hi.is/tolfraedi_0"
+date: "2022/08/24"
+draft: true
+execute:
+  eval: false
+format: 
+    html:
+        code-fold: true
+        smooth-scroll: true
+        link-external-newwindow: true
+editor: source
+title-block-banner: true
+categories:
+    - lögregla
+    - R
+    - íslenska
+href: greinar/ofbeldi/index.qmd
+---
+
+```{r setup}
+library(tidyverse)
+library(metill)
+library(readxl)
+library(slider)
+library(clock)
+
+theme_set(theme_metill())
+```
+
+```{r}
+
+if (!file.exists("Data/data.csv")) {
+  
+  init_db()
+  
+  d <- read_excel("Data/ofbeldisbrot.xlsx")
+  
+  pop <- mtl_mannfjoldi_svf() |> 
+    filter(
+      sveitarfelag %in% c(
+        "Reykjavíkurborg",
+        "Garðabær",
+        "Kópavogsbær",
+        "Seltjarnarnesbær",
+        "Mosfellsbær",
+        "Hafnarfjarðarkaupstaður"
+      )
+    ) |> 
+    count(ar, wt = mannfjoldi, name = "pop") |> 
+    collect()
+  
+  d |> 
+    janitor::clean_names() |> 
+    fill(ar) |> 
+    mutate(dags = date_build(ar, manudur)) |> 
+    inner_join(
+      pop,
+      by = "ar",
+    ) |> 
+    mutate(
+      pop = lm(pop ~ row_number()) |> predict()
+    ) |> 
+    select(dags, pop, alvarleg, samtals) |> 
+    pivot_longer(c(alvarleg, samtals), names_to = "tegund", values_to = "fjoldi") |> 
+    mutate(fjoldi_per_pers = fjoldi / pop * 1e5) |> 
+    write_csv("Data/data.csv")
+} else {
+  d <- read_csv("Data/data.csv")
+}
+```
+
+```{r}
+d |> 
+  filter(tegund == "alvarleg") |> 
+  mutate(
+    arlegt_medaltal = slider::slide_dbl(fjoldi_per_pers, sum, .before = 12, .complete = TRUE),
+    .by = tegund
+  ) |> 
+  drop_na() |> 
+  ggplot(aes(dags, arlegt_medaltal)) + 
+  geom_point() +
+  labs(
+    title = "Alvarlegar líkamsárasir á Höfuðborgarsvæðinu",
+    subtitle = "Sýnt sem heildarfjöldi undanfarna 12 mánuði á 100.000 íbúa",
+    x = NULL,
+    y = NULL
+  )
+```
+
