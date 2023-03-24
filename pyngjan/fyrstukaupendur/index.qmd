@@ -60,7 +60,7 @@ library(arrow)
 library(visitalaneysluverds)
 library(geomtextpath)
 library(mgcv)
-
+library(glue)
 theme_set(theme_metill())
 ```
 

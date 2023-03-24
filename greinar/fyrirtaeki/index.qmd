@@ -136,7 +136,7 @@ ggsave(
       plot.margin = margin(t = 5, r = 35, b = 5, l = 35)
     ),
   filename = "Figures/laun_hlutf_tekjur_page.png", 
-  width = 8, height = 0.621 * 8, scale = 1.7
+  width = 8, height = 0.621 * 8, scale = 1.8
 )
 ```
 
@@ -205,7 +205,7 @@ ggsave(
       plot.margin = margin(t = 5, r = 35, b = 5, l = 35)
     ),
   filename = "Figures/laun_per_starfs_page.png",
-  width = 8, height = 0.621 * 8, scale = 1.7
+  width = 8, height = 0.621 * 8, scale = 1.8
 )
 ```
 
@@ -263,7 +263,7 @@ ggsave(
       plot.margin = margin(t = 5, r = 35, b = 5, l = 35)
     ),
   filename = "Figures/afgangur_hlutf_vinnsluvirdi_page.png",
-  width = 8, height = 0.621 * 8, scale = 1.7
+  width = 8, height = 0.621 * 8, scale = 1.8
 )
 ```
 

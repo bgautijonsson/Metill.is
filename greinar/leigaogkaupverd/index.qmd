@@ -65,7 +65,7 @@ theme_set(theme_metill())
 
 
 ```{r}
-if (!file.exists("data/kaupskra_data.feather")) {
+if (!file.exists("data/kaupskra_data.parquet")) {
   init_db()
   
   kaupskra_raw <- mtl_kaupskra() |>
@@ -146,7 +146,11 @@ if (!file.exists("data/kaupskra_data.feather")) {
     collect() |>
     mutate(
       utgdag = as_date(utgdag),
-      heildarverd = vnv_convert(heildarverd, utgdag, include_housing = FALSE)
+      heildarverd = vnv_convert(
+        heildarverd, 
+        utgdag, 
+        include_housing = FALSE
+      )
     )
   
   d <- leiguskra_raw |>
@@ -199,6 +203,7 @@ if (!file.exists("data/kaupskra_data.feather")) {
     mutate(
       dags = as_date(dags)
     )
+  
   leiguskra <- read_parquet("data/leiguskra_data.parquet") |> 
     mutate(
       dags = as_date(dags)
@@ -206,6 +211,7 @@ if (!file.exists("data/kaupskra_data.feather")) {
 }
 ```
 
+# Kaupverð
 
 ```{r}
 p1 <- kaupskra |>
@@ -236,7 +242,8 @@ p1 <- kaupskra |>
   theme(
     legend.position = "top",
     legend.title = element_text(colour = "#525252", family = "Lato"),
-    legend.text = element_text(colour = "#525252", family = "Lato")
+    legend.text = element_text(colour = "#525252", family = "Lato"),
+    plot.margin = margin(t = 5, r = 15, b = 5, l = 5)
   ) +
   labs(
     x = NULL,
@@ -272,6 +279,28 @@ ggsave(
 
 
 ```{r}
+kaupskra |> 
+  slice_max(order_by = dags, n = 1) |> 
+  select(size, lower, upper) |> 
+  pivot_longer(c(-size)) |> 
+  mutate(
+    prob = ifelse(
+      name == "lower",
+      0.5 - size / 2,
+      0.5 + size/2
+    )
+  ) |> 
+  arrange(prob) |> 
+  ggplot(aes(prob, value)) +
+  geom_area() +
+  scale_y_continuous(
+    labels = label_percent()
+  )
+```
+
+# Leiguverð
+
+```{r}
 p2 <- leiguskra |> 
   ggplot(aes(dags, y = y + 1, ymin = lower + 1, ymax = upper + 1)) +
   geom_ribbon(aes(group = group, fill = group, alpha = group), col = "grey70", size = 0.02) +
@@ -300,7 +329,8 @@ p2 <- leiguskra |>
   theme(
     legend.position = "top",
     legend.title = element_text(colour = "#525252", family = "Lato"),
-    legend.text = element_text(colour = "#525252", family = "Lato")
+    legend.text = element_text(colour = "#525252", family = "Lato"),
+    plot.margin = margin(t = 5, r = 15, b = 5, l = 5)
   ) +
   labs(
     x = NULL,
@@ -333,39 +363,4 @@ ggsave(
 ```
 
 ![](Figures/leiguverd_breyting.png){.column-page}
-
-
-
-```{r}
-(
-  p1 + 
-    scale_y_tufte(
-      labels = function(x) hlutf(x - 1),
-      breaks = tufte_breaks(leiguskra$y + 1),
-      trans = "log10",
-      limits = c(1 - 0.178, 1 + 0.289)
-    ) +
-    theme(
-      plot.margin = margin()
-    )
-) +
-  (
-    p2 +
-      scale_y_continuous(
-        labels = function(x) hlutf(x - 1),
-        breaks = tufte_breaks(leiguskra$y + 1),
-        trans = "log10",
-        limits = c(1 - 0.178, 1 + 0.289)
-      ) +
-      theme(
-        axis.text.y = element_blank(),
-        axis.line.y = element_blank(),
-        axis.ticks.y = element_blank(),
-        plot.margin = margin()
-      )
-  ) &
-  theme(
-    legend.position = "none"
-  )
-```
 

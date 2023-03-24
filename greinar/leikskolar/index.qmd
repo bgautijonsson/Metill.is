@@ -31,7 +31,6 @@ twitter-card:
 ```{r}
 #| include: false
 
-library(cowplot)
 library(tidyverse)
 library(scales)
 library(pxweb)
@@ -51,14 +50,10 @@ library(metill)
 library(patchwork)
 library(gt)
 library(plotly)
-library(DBI)
 
 theme_set(theme_metill(type = "standalone"))
 
 
-
-isk <- function(x, scale = 1e6, suffix = " m.kr") number(x / scale, suffix = suffix, big.mark = ".", decimal.mark = ",")
-hlutf <- label_percent(accuracy = 0.1, big.mark = ".", decimal.mark = ",")
 
 
 if (!file.exists("data/leikskolar.csv")) {
@@ -77,6 +72,8 @@ if (!file.exists("data/leikskolar.csv")) {
 ```
 
 Hagstofan gefur árlega út gögn um fjölda nemenda í leikskólum landsins. Tölurnar eiga við um fjöldann í desembermánuði árið á undan. Til að fá sem raunsæsta mynd á hlutfall barna með leikskólapláss er best að bera þann fjölda saman við stærð árgangsins í janúar mánuði síðar.
+
+
 
 # Eins árs gömul börn
 

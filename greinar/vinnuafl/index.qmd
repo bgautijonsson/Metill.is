@@ -9,7 +9,7 @@ author:
         url: "https://twitter.com/bgautijonsson"
         affiliation: "Tölfræði, Raunvísindadeild Háskóla Íslands"
         affiliation-url: "https://www.hi.is/tolfraedi_0"
-date: "2023/02/03"
+date: "2023/03/24"
 format: 
     html:
         code-fold: true
@@ -1034,6 +1034,69 @@ ggsave(
 :::
 
 # Hlutfall starfsfólks af erlendum uppruna
+
+## Opinber og almennur markaður
+
+```{r}
+plot_dat <- d |> 
+  filter(
+    bakgrunnur != "Alls"
+  ) |> 
+  count(dags, bakgrunnur, tegund, wt = starfandi) |> 
+  mutate(
+    p = n / sum(n),
+    .by = c(dags, tegund)
+  ) |> 
+  arrange(dags, tegund, bakgrunnur) |> 
+  filter(
+    bakgrunnur == "Innflytjendur"
+  ) |> 
+  mutate(
+    index = p / p[dags == min(dags)] - 1,
+    .by = c(tegund)
+  ) |> 
+  pivot_longer(c(p, index)) |> 
+  mutate(
+    hline = ifelse(name == "index", 0, NA_real_),
+    name = fct_recode(
+      name,
+      "Erlendir ríkisborgar (%)" = "p",
+      "Breyting frá 2008 (%)" = "index"
+    ) |> 
+      fct_relevel("Erlendir ríkisborgar (%)"),
+    tegund = fct_recode(
+      tegund,
+      "Opinber" = "Opinbert",
+      "Almennur" = "Annad"
+    )
+  )
+
+p <- plot_dat |> 
+  ggplot(aes(dags, value)) +
+  geom_hline(aes(yintercept = hline), lty = 2, alpha = 0.5) +
+  geom_line(aes(col = tegund)) +
+  scale_y_continuous(
+    labels = label_hlutf(accuracy = 1)
+  ) +
+  scale_colour_brewer(palette = "Set1") +
+  facet_wrap("name", scales = "free") +
+  theme(
+    legend.position = c(0.07, 0.91)
+  ) +
+  labs(
+    x = NULL,
+    y = NULL,
+    colour = NULL,
+    title = "Erlent vinnuafl eftir vinnumarkaði"
+  )
+
+ggsave(
+  plot = p,
+  filename = "figures/hlutf_erlent_tegund.png",
+  width = 8, height = 0.5 * 8, scale = 1.3
+)
+```
+
 
 ## Eftir rekstrarformi
 

@@ -667,7 +667,7 @@ d <- bind_rows(
     labs(
       x = "Tíundamörk",
       y = "Hlutfallsleg breyting frá árinu 1990",
-      title = "Hvernig hafa atvinnu- og heildartekjur eftir aldurs- og tekjuhópum breyst síðan 1990?"
+      title = "Hvernig hafa atvinnu- og heildartekjur eftir aldurs- og tekjuhópum breyst síðan 1990? (Fast verðlag 2023)"
     )
 ) |> 
   ggplotly(tooltip = "text") |> 
@@ -679,3 +679,15 @@ d <- bind_rows(
 # Gögn
 
 Hér nota ég gögn Hagstofu um [skuldir, eignir, tekjur og fleira](https://hagstofa.is/talnaefni/samfelag/lifskjor/skuldir-og-eignir/){target="_blank"} sem hún vinnur úr skattframtölum Íslendinga. Ég hef áður sótt þessi gögn og unnið úr þeim svo ég sýni gagnaúrvinnsluna ekki hér. Hins vegar mun ég birta færslu á [Patreon síðunni minni](https://www.patreon.com/bggj){target="_blank"} þar sem ég fer yfir hvernig ég bjó til og uppfæri SQL gagnagrunninn minn, þar á meðal hvernig ég hef unnið úr þessum gögnum.
+
+
+
+
+
+
+
+
+
+
+
+

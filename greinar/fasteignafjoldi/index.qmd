@@ -33,33 +33,17 @@ execute:
 ```{r setup}
 #| include: false
 
-library(cowplot)
 library(tidyverse)
-library(scales)
-library(ggthemes)
-library(kableExtra)
-library(gganimate)
-library(lubridate)
+library(metill)
 library(geomtextpath)
 library(ggtext)
-library(readxl)
-library(janitor)
 library(plotly)
-library(config)
-library(DBI)
-library(visitalaneysluverds)
-library(tidyverse)
-library(lubridate)
-library(ggthemes)
-library(cowplot)
 library(scales)
-library(visitalaneysluverds)
-library(feather)
-library(gganimate)
-library(metill)
+library(arrow)
 library(patchwork)
 library(slider)
 library(crosstalk)
+library(glue)
 theme_set(theme_metill())
 
 
@@ -67,7 +51,7 @@ theme_set(theme_metill())
 
 
 ```{r data}
-if (!file.exists("data/data.feather")) {
+if (!file.exists("data/data.arrow")) {
   init_db()
   
   d <- mtl_fjoldi_fasteigna() |>
@@ -100,16 +84,139 @@ if (!file.exists("data/data.feather")) {
     )
   
   d |>
-    write_feather("data/data.feather")
+    write_parquet("data/data.parquet")
   
 } else {
-  d <- read_feather("data/data.feather")
+  d <- read_parquet("data/data.parquet")
 }
 ```
 
+```{r}
+ar_fyrir <- 2010
+col_fyrir <- "#d73027"
+  
+ar_eftir <- 2022
+col_eftir <- "#4575b4"
+  
+plot_dat <- d |> 
+  filter(
+    ar %in% c(ar_fyrir, ar_eftir),
+    str_detect(
+      str_to_lower(sveitarfelag),
+      "reykjaví|garðab|kópav|hafnarf|mosf|seltjar|akrane|akureyr|fjarðab|árbo|múlaþ|vestman|borgarbygg|ísafjarð|suðurnes|grindaví|norðurþ|hverag|ölfus|hornafj"
+    )
+  ) |> 
+  mutate(
+    full_per_fast = mannfjoldi_fullordin / cum_fjoldi
+  ) |> 
+  select(ar, sveitarfelag, full_per_fast) |> 
+  pivot_wider(names_from = ar, values_from = full_per_fast) |> 
+  rename(
+    fyrir = "2010",
+    eftir = "2022"
+  ) |> 
+  mutate(
+    sveitarfelag = fct_reorder(sveitarfelag, eftir)
+  )
+
+
+upper_lim <- max(plot_dat$eftir)
+lower_lim <- min(plot_dat$fyrir)
+
+p <- plot_dat |> 
+  ggplot(aes(x = eftir, y = sveitarfelag)) + 
+  geom_segment(
+    aes(x = fyrir, xend = eftir, yend = sveitarfelag),
+    alpha = 0.5,
+    col = "grey50",
+    linewidth = 0.3
+  ) +
+  geom_point(aes(x = eftir, colour = "2022"), size = 2.5) +
+  geom_point(aes(x = fyrir, colour = "2010"), size = 2.5) +
+  geom_richtext(
+    data = tibble(x = 1),
+    inherit.aes = FALSE,
+    x = 1.392,
+    y = -0.9,
+    label.colour = NA,
+    fill = NA,
+    label = "&larr; Færri fullorðin / fleiri fasteignir",
+    hjust = 0,
+    size = 3.5,
+    colour = "grey40"
+  ) +
+  geom_richtext(
+    data = tibble(x = 1),
+    inherit.aes = FALSE,
+    x = 2.408, 
+    y = -0.9, 
+    label.colour = NA,
+    fill = NA,
+    label = "Fleiri fullorðin / færri fasteignir &rarr;", 
+    hjust = 1,
+    size = 3.5,
+    colour = "grey40"
+  ) +
+  annotate(
+    x = 1.96,
+    y = 20.3,
+    geom = "text",
+    label = str_c(
+      "Hækkun í Grindavíkurbæ þýðir að\n",
+      "fullorðnum fjölgaði meira en fasteignum"
+    ),
+    vjust = 0,
+    hjust = 0,
+    color = "grey40",
+    size = 2.5
+  ) +
+  annotate(
+    x = 1.69,
+    y = 2.18,
+    geom = "text",
+    label = str_c(
+      "Akureyrarbær er eina sveitarfélagið þar sem",
+      "\nfasteignum fjölgaði hraðar en fullorðnum"
+    ),
+    vjust = 1,
+    hjust = 0,
+    color = "grey40",
+    size = 2.5
+  ) +
+  scale_x_continuous(
+    limits = c(1.4, 2.4001),
+    expand = expansion()
+  ) +
+  scale_colour_manual(
+    values = c(col_fyrir, col_eftir)
+  ) +
+  coord_cartesian(clip = "off") +
+  theme(
+    legend.position = "none",
+    plot.subtitle = element_markdown(size = 12, margin = margin(b = 10)),
+    plot.margin = margin(t = 5, r = 15, b = 25, l = 5)
+  ) +
+  labs(
+    x = NULL,
+    y = NULL,
+    title = "Fasteignum fjölgar almennt hægar en fullorðnum íbúum",
+    subtitle = glue(str_c(
+      "Fjöldi fullorðinna á hverja fasteign sveitarfélags árin ",
+      "<b style=color:{col_fyrir}>{ar_fyrir}</b>",
+      " og ",
+      "<b style=color:{col_eftir}>{ar_eftir}</b>"
+    ))
+  )
+
+ggsave(
+  plot = p,
+  file = "Figures/full_per_fast_dumbbell.png",
+  width = 8, height = 0.5 * 8, scale = 1.5
+)
+```
+
+
 # Samanburður á stöðu og þróun
-
-
 
 ```{r}
 
@@ -224,7 +331,7 @@ p2 <- pd |>
   scale_y_continuous(
     expand = expansion()
   ) +
-   theme(
+  theme(
     strip.text = element_text(margin = margin(3, 3, 3, 3))
   ) +
   labs(
@@ -287,13 +394,13 @@ subplot(
       l = 100
     )
   ) |> 
-highlight(
-  on = "plotly_click",
-  defaultValues = "Reykjavíkurborg",
-  persistent = FALSE,
-  color = plotly_color,
-  selectize = TRUE
-)
+  highlight(
+    on = "plotly_click",
+    defaultValues = "Reykjavíkurborg",
+    persistent = FALSE,
+    color = plotly_color,
+    selectize = TRUE
+  )
 ```
 
 </div>
