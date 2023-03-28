@@ -56,6 +56,22 @@ library(clock)
 
 theme_set(theme_metill(type = "standalone"))
 caption <- "Mynd frá metill.is byggð á gögnum Hagstofu um vinnuafl frá skráargögnum"
+
+# library(knitr)
+# knit_print.gt <- function(x, ...) {
+#   stringr::str_c(
+#     "<div style='all:initial';>\n", 
+#     gt::as_raw_html(x), 
+#     "\n</div>"
+#   ) |> 
+#     knitr::asis_output()
+#     
+# }
+# registerS3method(
+#   "knit_print", 'gt_tbl', knit_print.gt, 
+#   envir = asNamespace("gt") 
+#   # important to overwrite {gt}s knit_print
+# )
 ```
 
 
@@ -90,10 +106,13 @@ if (!file.exists("data/vinnuafl.csv") | new_data) {
     mutate(dags = str_c(ar, "-", manudur, "-01") |> ymd()) |>  
     select(dags, kyn, rekstrarform, starfandi, bakgrunnur) |>  
     drop_na() |>  
-    mutate(tegund = case_when(str_detect(rekstrarform, "^B2") ~ "Opinbert",
-                              str_detect(rekstrarform, "^K1") ~ "Opinbert",  
-                              str_detect(rekstrarform, "^K2") ~ "Opinbert",  
-                              TRUE ~ "Annad")) |> 
+    mutate(
+      tegund = case_when(
+        str_detect(rekstrarform, "^B2") ~ "Opinbert",
+        str_detect(rekstrarform, "^K") ~ "Opinbert",  
+        TRUE ~ "Annad"
+      )
+    ) |> 
     select(-kyn)
   
   d |> 
@@ -102,6 +121,110 @@ if (!file.exists("data/vinnuafl.csv") | new_data) {
   d <- vroom::vroom("data/vinnuafl.csv")
 }
 ```
+
+# Gögnin
+
+::: {.panel-tabset}
+
+## Lýsing
+
+Gagnasafnið á bak við þessa skýrslu er gagnasafn Hagstofu:
+
+* [Fjöldi starfandi í rekstrarformum samkvæmt skrám eftir mánuðum, kyni, aldri og bakgrunni 2008-2023](https://px.hagstofa.is/pxis/pxweb/is/Samfelag/Samfelag__vinnumarkadur__vinnuaflskraargogn/VIN10052.px)
+
+Þar er starfandi einstaklingum skipt upp meðal annars eftir rekstrarformum. Hér eru eftirfarandi rekstrarform talin ná utan um opinbert vinnuafl:
+
+* B2, C2, D4: Opinber fyrirtæki
+* K: Aðrar opinberar stofnanir
+* K1: Ríkisstofnun
+* K2: Stofnun sveitarfélags
+
+Önnur rekstrarform eru talin sem hluti af almennum vinnumarkaði. Þau eru:
+
+* AX og E: Einkahlutafélög
+* B: Einkarekin sameignarfélög
+* C: Einkarekin samlagsfélög
+* D & F: Einkarekin hluta- og samlagshlutafélög
+* G: Samvinnufélög
+* H: Sjálfseignarstofnanir
+* L & M: Spari- og lífeyrissjóðir
+* N & P: Félagasamtök
+* R & Z: Erlend félög
+* Rekstur á eigin kennitölu
+
+## Tafla
+
+```{r}
+table_dat <- d |> 
+  filter(
+    dags == max(dags),
+    bakgrunnur == "Alls",
+    rekstrarform != "Alls starfandi"
+  ) |> 
+  select(tegund, rekstrarform, dags, starfandi) |> 
+  arrange(desc(tegund), rekstrarform) |> 
+  mutate(
+    tegund = case_match(
+      tegund,
+      "Opinbert" ~ "**Opinbert starfsfólk**",
+      "Annad" ~ "**Almennur vinnumarkaður**"
+    ),
+    hlutf = starfandi / sum(starfandi)
+  ) 
+
+table_dat |> 
+  gt(
+    rowname_col = "rekstrarform", 
+    groupname_col = "tegund", 
+    process_md = TRUE,
+    locale = "is"
+  ) |> 
+  tab_header(
+    title = md("**Fjöldatölur eftir rekstrarformum**"),
+    subtitle = md("Samkvæmt nýjustu tölum Hagstofu")
+  ) |> 
+  cols_label(
+    tegund = "Tegund",
+    rekstrarform = "Rekstrarform",
+    dags = "Dagsetning",
+    starfandi = "Fjöldi starfandi",
+    hlutf = "% af starfandi"
+  ) |> 
+  fmt_date(
+    columns = dags, date_style = "day_m_year"
+  ) |> 
+  fmt_number(
+    columns = "starfandi", 
+    decimals = 0
+  ) |> 
+  fmt_percent(
+    columns = "hlutf",
+    decimals = 1
+  ) |> 
+  summary_rows(
+    columns = starfandi,
+    fns = list(
+      "Heildarfjöldi" = ~ sum(.)
+    ),
+    fmt = ~ fmt_number(., decimals = 0)
+  ) |> 
+  summary_rows(
+    columns = hlutf,
+    fns = list(
+      "Heildarfjöldi" = ~ sum(.)
+    ),
+    fmt = ~ fmt_percent(., decimals = 1)
+  ) |> 
+  tab_source_note(
+    md("Heimild: [Gögn Hagstofu um fjölda starfandi samkvæmt skrám](https://px.hagstofa.is/pxis/pxweb/is/Samfelag/Samfelag__vinnumarkadur__vinnuaflskraargogn/VIN10052.px)")
+  ) |> 
+  tab_options(
+    table.background.color = "#faf9f9"
+  )
+```
+
+:::
+
 
 # Fjöldi starfsfólks eftir vinnumarkaði
 
@@ -118,55 +241,91 @@ plot_dat <-  d |>
 p1 <- plot_dat |> 
   ggplot(aes(dags, Annad)) +  
   geom_line() +  
-  scale_x_date(date_breaks = "2 year", date_labels = "%Y",   
-               expand = expansion(add = 31),
-               limits = c(min(plot_dat$dags), max(plot_dat$dags) + 15)) +  
-  scale_y_tufte(breaks = tufte_breaks(plot_dat$Annad),
-                limits = c(1e5, 1.5e5),
-                labels = label_number()) +
-  labs(x = NULL,
-       y = NULL,
-       subtitle = "Almennur") +
-  theme(plot.margin = margin(t = 5, r = 20, b = 5, l = 5))
+  scale_x_date(
+    date_breaks = "2 year", date_labels = "%Y",   
+    expand = expansion(add = 31),
+    limits = c(min(plot_dat$dags), max(plot_dat$dags) + 15)
+  ) +  
+  scale_y_tufte(
+    breaks = tufte_breaks(plot_dat$Annad),
+    limits = c(1e5, NA),
+    labels = label_number()
+  ) +
+  labs(
+    x = NULL,
+    y = NULL,
+    subtitle = "Almennur"
+  ) +
+  theme(
+    plot.margin = margin(t = 5, r = 20, b = 5, l = 5)
+  )
 
 
 plot_dat <-  d |>  
-  filter(rekstrarform != "Alls starfandi", bakgrunnur == "Alls") |>  
+  filter(
+    rekstrarform != "Alls starfandi", 
+    bakgrunnur == "Alls"
+  ) |>  
   count(dags, tegund, wt = starfandi) |>  
   pivot_wider(names_from = tegund, values_from = n)
 
 p2 <- plot_dat |> 
   ggplot(aes(dags, Opinbert)) +  
   geom_line() +  
-  scale_x_date(date_breaks = "2 year", date_labels = "%Y",   
-               expand = expansion(add = 31),
-               limits = c(min(plot_dat$dags), max(plot_dat$dags) + 15)) +  
-  scale_y_tufte(breaks = tufte_breaks(plot_dat$Opinbert),
-                labels = label_number()) +
-  labs(x = NULL,
-       y = NULL,
-       subtitle = "Opinber") +
-  theme(plot.margin = margin(t = 5, r = 20, b = 5, l = 5))
+  scale_x_date(
+    date_breaks = "2 year", date_labels = "%Y",   
+    expand = expansion(add = 31),
+    limits = c(min(plot_dat$dags), max(plot_dat$dags) + 15)
+  ) +  
+  scale_y_tufte(
+    breaks = tufte_breaks(plot_dat$Opinbert),
+    labels = label_number()
+  ) +
+  labs(
+    x = NULL,
+    y = NULL,
+    subtitle = "Opinber"
+  ) +
+  theme(
+    plot.margin = margin(t = 5, r = 20, b = 5, l = 5)
+  )
 
 plot_dat <-  d |>  
-  filter(rekstrarform != "Alls starfandi", bakgrunnur == "Alls") |>  
+  filter(
+    rekstrarform != "Alls starfandi", 
+    bakgrunnur == "Alls"
+  ) |>  
   count(dags, tegund, wt = starfandi) |>  
-  mutate(tegund = fct_recode(as_factor(tegund),
-                             "Opinber" = "Opinbert",
-                             "Almennur" = "Annad"))
+  mutate(
+    tegund = fct_recode(
+      as_factor(tegund),
+      "Opinber" = "Opinbert",
+      "Almennur" = "Annad"
+    )
+  )
 
 p3 <- plot_dat |> 
   ggplot(aes(dags, n)) +  
   geom_line(aes(col = tegund)) +
-  geom_text(data = plot_dat |> filter(dags == max(dags)),
-            aes(label = tegund, col = tegund), hjust = 0, nudge_x = 10) +
-  scale_x_date(date_breaks = "2 year", date_labels = "%Y",  
-               expand = expansion(add = 31),
-               limits = c(min(plot_dat$dags), max(plot_dat$dags) + 15)) +  
-  scale_y_tufte(breaks = tufte_breaks(plot_dat$n),
-                labels = label_number(),
-                limits = c(0, 1.5e5),
-                expand = expansion()) +
+  geom_text(
+    data = plot_dat |> 
+      filter(dags == max(dags)),
+    aes(label = tegund, col = tegund), 
+    hjust = 0, 
+    nudge_x = 10
+  ) +
+  scale_x_date(
+    date_breaks = "2 year",
+    date_labels = "%Y",  
+    expand = expansion(add = 31),
+    limits = c(min(plot_dat$dags), max(plot_dat$dags) + 15)
+  ) +  
+  scale_y_tufte(
+    breaks = tufte_breaks(plot_dat$n),
+    labels = label_number(),
+    limits = c(0, NA),
+    expand = expansion()
+  ) +
   scale_colour_brewer(type = "qual", palette = "Set1") +
   labs(x = NULL,
        y = NULL,
@@ -194,7 +353,11 @@ ggsave(
 
 ![](figures/figure1.png){.column-screen-inset}
 
-# Samanburður við 2018
+# Samanburður við sömu mánuði fyrri ára
+
+::: {.panel-tabset}
+
+## 2018
 
 ```{r}
 #| fig-width: 12
@@ -202,6 +365,8 @@ ggsave(
 #| out-width: "100%"
 #| column: page
 #| eval: false
+
+year_from <- 2018
 
 plot_dat <- d |>  
   filter(
@@ -222,7 +387,7 @@ plot_dat <- d |>
   ) |> 
   ungroup()
 
-year_from <- 2018
+
 
 ylines <- date_build(
   year = seq(from = year_from + 1, to = max(year(plot_dat$dags)))
@@ -274,8 +439,10 @@ p2 <- plot_dat |>
   ) +  
   labs(x = NULL, y = NULL,  
        subtitle = "Hlutfall opinbers starfsfólks") +  
-  theme(plot.margin = margin(t = 5, r = 20, b = 5, l = 5),
-        plot.title = element_text(face = "bold"))
+  theme(
+    plot.margin = margin(t = 5, r = 20, b = 5, l = 5),
+    plot.title = element_text(face = "bold")
+  )
 
 p <- p1 + p2 +
   plot_annotation(
@@ -295,6 +462,272 @@ ggsave(
 ![](figures/figure2.png){.column-screen-inset}
 
 
+```{r}
+#| fig-width: 12
+#| fig-asp: 0.621
+#| out-width: "100%"
+#| column: page
+#| eval: false
+
+year_from <- 2018
+
+plot_dat <- d |>  
+  filter(
+    rekstrarform != "Alls starfandi",
+    bakgrunnur == "Alls"
+  ) |>  
+  count(dags, tegund, wt = starfandi) |>  
+  filter(year(dags) >= year_from) |>  
+  mutate(
+    manudur = month(dags),
+    tegund = case_match(
+      tegund,
+      "Annad" ~ "Almennur",
+      "Opinbert" ~ "Opinber"
+    )
+  )  |> 
+  mutate(
+    index = n / n[dags == min(dags)],
+    .by = c(manudur, tegund)
+  )
+
+p <- plot_dat |> 
+  ggplot(aes(dags, index)) +  
+  geom_vline(
+    xintercept = ylines, 
+    lty = 2,
+    alpha = 0.3
+  ) +
+  geom_hline(yintercept = 1, lty = 2) +  
+  geom_line(aes(col = tegund)) +  
+  geom_text(
+    data = plot_dat |> filter(dags == max(dags)),
+    aes(label = tegund, col = tegund), hjust = 0, nudge_x = 10
+  ) +
+  scale_x_date(
+    breaks = breaks_width("year"),
+    labels = label_date_short(),
+    expand = expansion()
+  ) +  
+  scale_y_tufte(
+    breaks = tufte_breaks(plot_dat$index),
+    labels = function(x) hlutf(x - 1),
+    limits = c(NA, NA)
+  ) +  
+  scale_colour_brewer(
+    palette = "Set1"
+  ) +
+  labs(
+    x = NULL, 
+    y = NULL,  
+    subtitle = "Hlutfallsleg breyting fjölda starfsfólks miðað við við sama mánuð 2018"
+  ) +  
+  coord_cartesian(clip = "off") +
+  theme(
+    plot.margin = margin(t = 5, r = 50, b = 5, l = 5),
+    legend.position = "none"
+  )
+
+ggsave(
+  plot = p,
+  filename = "figures/figure_hlutf_aukning_2018.png",
+  width = 8, height = 0.5 * 8, scale = 1.2,
+  dpi = 300
+)
+
+```
+
+
+![](figures/figure_hlutf_aukning_2018.png){.column-page}
+
+## 2015
+
+```{r}
+#| fig-width: 12
+#| fig-asp: 0.621
+#| out-width: "100%"
+#| column: page
+#| eval: false
+
+year_from <- 2015
+
+plot_dat <- d |>  
+  filter(
+    rekstrarform != "Alls starfandi",
+    bakgrunnur == "Alls"
+  ) |>  
+  count(dags, tegund, wt = starfandi) |>  
+  pivot_wider(names_from = tegund, values_from = n) |>  
+  filter(year(dags) >= year_from) |>  
+  mutate(
+    manudur = month(dags),
+    hlutf = Opinbert / (Annad + Opinbert)
+  ) |>  
+  group_by(manudur) |>  
+  mutate(
+    breyting_fjoldi = Annad - Annad[year(dags) == min(year(dags))],
+    breyting_hlutf = hlutf - hlutf[year(dags) == min(year(dags))]
+  ) |> 
+  ungroup()
+
+
+
+ylines <- date_build(
+  year = seq(from = year_from + 1, to = max(year(plot_dat$dags)))
+)
+
+
+
+p1 <- plot_dat |> 
+  ggplot(aes(dags, breyting_fjoldi)) +  
+  geom_vline(
+    xintercept = ylines, 
+    lty = 2,
+    linewidth = 0.3,
+    alpha = 0.15
+  ) +
+  geom_hline(yintercept = 0, lty = 2) +  
+  geom_line() +  
+  scale_x_date(
+    breaks = breaks_width("year"),
+    labels = label_date_short(),
+    expand = expansion()
+  ) +  
+  scale_y_tufte(
+    breaks = tufte_breaks(plot_dat$breyting_fjoldi),
+    labels = label_number(big.mark = ".", decimal.mark = ","),
+    limits = c(NA, NA)
+  ) +  
+  
+  labs(x = NULL, y = NULL,  
+       subtitle = "Fjöldi starfandi á almennum vinnumarkaði") +  
+  theme(plot.margin = margin(t = 5, r = 20, b = 5, l = 5))
+
+
+
+
+p2 <- plot_dat |> 
+  ggplot(aes(dags, breyting_hlutf)) +  
+  geom_vline(
+    xintercept = ylines, 
+    lty = 2,
+    linewidth = 0.3,
+    alpha = 0.15
+  ) +
+  geom_line() +  
+  scale_x_date(
+    breaks = breaks_width("year"),
+    labels = label_date_short(),
+    expand = expansion()
+  ) +  
+  scale_y_tufte(
+    breaks = tufte_breaks(plot_dat$breyting_hlutf),
+    labels = label_hlutf(suffix = "%-stig")
+  ) +  
+  labs(x = NULL, y = NULL,  
+       subtitle = "Hlutfall opinbers starfsfólks") +  
+  theme(
+    plot.margin = margin(t = 5, r = 20, b = 5, l = 5),
+    plot.title = element_text(face = "bold")
+  )
+
+p <- p1 + p2 +
+  plot_annotation(
+    caption = "Mynd frá metill.is byggð á gögnum Hagstofu um vinnuafl frá skráargögnum"
+  )
+
+ggsave(
+  plot = p,
+  filename = "figures/figure2_2015.png",
+  width = 8, height = 0.3 * 8, scale = 1.8,
+  dpi = 300
+)
+
+
+```
+
+![](figures/figure2_2015.png){.column-screen-inset}
+
+
+```{r}
+#| fig-width: 12
+#| fig-asp: 0.621
+#| out-width: "100%"
+#| column: page
+#| eval: false
+
+year_from <- 2015
+
+plot_dat <- d |>  
+  filter(
+    rekstrarform != "Alls starfandi",
+    bakgrunnur == "Alls"
+  ) |>  
+  count(dags, tegund, wt = starfandi) |>  
+  filter(year(dags) >= year_from) |>  
+  mutate(
+    manudur = month(dags),
+    tegund = case_match(
+      tegund,
+      "Annad" ~ "Almennur",
+      "Opinbert" ~ "Opinber"
+    )
+  )  |> 
+  mutate(
+    index = n / n[dags == min(dags)],
+    .by = c(manudur, tegund)
+  )
+
+p <- plot_dat |> 
+  ggplot(aes(dags, index)) +  
+  geom_vline(
+    xintercept = ylines, 
+    lty = 2,
+    linewidth = 0.3,
+    alpha = 0.15
+  ) +
+  geom_hline(yintercept = 1, lty = 2) +  
+  geom_line(aes(col = tegund)) +  
+  geom_text(
+    data = plot_dat |> filter(dags == max(dags)),
+    aes(label = tegund, col = tegund), hjust = 0, nudge_x = 10
+  ) +
+  scale_x_date(
+    breaks = breaks_width("year"),
+    labels = label_date_short(),
+    expand = expansion()
+  ) +  
+  scale_y_tufte(
+    breaks = tufte_breaks(plot_dat$index),
+    labels = function(x) hlutf(x - 1),
+    limits = c(NA, NA)
+  ) +  
+  scale_colour_brewer(
+    palette = "Set1"
+  ) +
+  labs(
+    x = NULL, 
+    y = NULL,  
+    subtitle = "Hlutfallsleg breyting fjölda starfsfólks miðað við við sama mánuð 2015"
+  ) +  
+  coord_cartesian(clip = "off") +
+  theme(
+    plot.margin = margin(t = 5, r = 50, b = 5, l = 5),
+    legend.position = "none"
+  )
+
+ggsave(
+  plot = p,
+  filename = "figures/figure_hlutf_aukning_2015.png",
+  width = 8, height = 0.5 * 8, scale = 1.2,
+  dpi = 300
+)
+```
+
+
+![](figures/figure_hlutf_aukning_2015.png){.column-page}
+
+:::
 
 # Árstíðaleiðrétt hlutfall opinbers starfsfólks
 
