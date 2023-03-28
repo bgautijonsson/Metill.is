@@ -444,33 +444,6 @@ p2 <- plot_dat |>
     plot.title = element_text(face = "bold")
   )
 
-p <- p1 + p2 +
-  plot_annotation(
-    caption = "Mynd frá metill.is byggð á gögnum Hagstofu um vinnuafl frá skráargögnum"
-  )
-
-ggsave(
-  plot = p,
-  filename = "figures/figure2.png",
-  width = 8, height = 0.3 * 8, scale = 1.8,
-  dpi = 300
-)
-
-
-```
-
-![](figures/figure2.png){.column-screen-inset}
-
-
-```{r}
-#| fig-width: 12
-#| fig-asp: 0.621
-#| out-width: "100%"
-#| column: page
-#| eval: false
-
-year_from <- 2018
-
 plot_dat <- d |>  
   filter(
     rekstrarform != "Alls starfandi",
@@ -491,7 +464,7 @@ plot_dat <- d |>
     .by = c(manudur, tegund)
   )
 
-p <- plot_dat |> 
+p3 <- plot_dat |> 
   ggplot(aes(dags, index)) +  
   geom_vline(
     xintercept = ylines, 
@@ -528,17 +501,26 @@ p <- plot_dat |>
     legend.position = "none"
   )
 
+p <- (p1 + p2) / p3 +
+  plot_layout(
+    heights = c(1, 1.2)) +
+  plot_annotation(
+    caption = "Mynd frá metill.is byggð á gögnum Hagstofu um vinnuafl frá skráargögnum"
+  )
+
 ggsave(
   plot = p,
-  filename = "figures/figure_hlutf_aukning_2018.png",
-  width = 8, height = 0.5 * 8, scale = 1.2,
+  filename = "figures/figure2_2018.png",
+  width = 8, height = 0.6 * 8, scale = 1.8,
   dpi = 300
 )
 
+
 ```
 
+![](figures/figure2_2018.png){.column-screen-inset}
 
-![](figures/figure_hlutf_aukning_2018.png){.column-page}
+
 
 ## 2015
 
@@ -610,7 +592,7 @@ p2 <- plot_dat |>
   ggplot(aes(dags, breyting_hlutf)) +  
   geom_vline(
     xintercept = ylines, 
-    lty = 2,
+    lty = 2, 
     linewidth = 0.3,
     alpha = 0.15
   ) +
@@ -630,33 +612,6 @@ p2 <- plot_dat |>
     plot.margin = margin(t = 5, r = 20, b = 5, l = 5),
     plot.title = element_text(face = "bold")
   )
-
-p <- p1 + p2 +
-  plot_annotation(
-    caption = "Mynd frá metill.is byggð á gögnum Hagstofu um vinnuafl frá skráargögnum"
-  )
-
-ggsave(
-  plot = p,
-  filename = "figures/figure2_2015.png",
-  width = 8, height = 0.3 * 8, scale = 1.8,
-  dpi = 300
-)
-
-
-```
-
-![](figures/figure2_2015.png){.column-screen-inset}
-
-
-```{r}
-#| fig-width: 12
-#| fig-asp: 0.621
-#| out-width: "100%"
-#| column: page
-#| eval: false
-
-year_from <- 2015
 
 plot_dat <- d |>  
   filter(
@@ -678,7 +633,7 @@ plot_dat <- d |>
     .by = c(manudur, tegund)
   )
 
-p <- plot_dat |> 
+p3 <- plot_dat |> 
   ggplot(aes(dags, index)) +  
   geom_vline(
     xintercept = ylines, 
@@ -700,7 +655,8 @@ p <- plot_dat |>
   scale_y_tufte(
     breaks = tufte_breaks(plot_dat$index),
     labels = function(x) hlutf(x - 1),
-    limits = c(NA, NA)
+    limits = c(NA, NA),
+    expand = expansion(mult = 0.02)
   ) +  
   scale_colour_brewer(
     palette = "Set1"
@@ -716,16 +672,25 @@ p <- plot_dat |>
     legend.position = "none"
   )
 
+p <- (p1 + p2) / p3 +
+  plot_layout(
+    heights = c(1, 1.2)) +
+  plot_annotation(
+    caption = "Mynd frá metill.is byggð á gögnum Hagstofu um vinnuafl frá skráargögnum"
+  )
+
 ggsave(
   plot = p,
-  filename = "figures/figure_hlutf_aukning_2015.png",
-  width = 8, height = 0.5 * 8, scale = 1.2,
+  filename = "figures/figure2_2015.png",
+  width = 8, height = 0.6 * 8, scale = 1.8,
   dpi = 300
 )
+
+
 ```
 
+![](figures/figure2_2015.png){.column-screen-inset}
 
-![](figures/figure_hlutf_aukning_2015.png){.column-page}
 
 :::
 
