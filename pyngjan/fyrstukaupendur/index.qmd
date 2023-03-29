@@ -9,7 +9,7 @@ author:
         url: "https://twitter.com/bggjonsson"
         affiliation: "Tölfræði, Raunvísindadeild Háskóla Íslands"
         affiliation-url: "https://www.hi.is/tolfraedi_0"
-date: "2022/11/25"
+date: "2023/03/29"
 format: 
     html:
         smooth-scroll: true
@@ -26,11 +26,11 @@ execute:
 
 Nýlega var [umsjón fasteignaskrár flutt frá Þjóðskrá til Húsnæðis- og mannvirkjastofnunar (HMS)](https://hms.is/frettir/flutningur-kerfa-fasteignaskrar-fra-%C3%BEjo%C3%B0skra-til-hmsloki%C3%B0){target="_blank"}. Núna er því hægt að nálgast öll gögn sem tengjast henni á [fasteignaskra.is](https://fasteignaskra.is/){target="_blank"}. Hér ætlum við að skoða [gögnin um fyrstu kaupendur](https://fasteignaskra.is/gogn/fasteignagattin/fasteignavidskipti/fyrstu-kaupendur/){target="_blank"}. Með því að skoða "page source" getum við púslað saman hlekki á JSON skrárnar á bak við myndirnar á síðunni.
 
-Fyrst sjáum við að fleiri kaupendur eru fyrstu kaupendur en áður og að þau eignast sína fyrstu fasteign fyrr, en það varð smá stöðnun í þessari þróun síðasta árið.
+Fyrst sjáum við hlutfall fyrstu kaupenda af öllum kaupendum og meðalaldur fyrstu kaupenda.
 
 ![](Figures/hlutf_aldur.png){.column-page}
 
-Næst sjáum við að fyrsta fasteign fólks er aðeins minni en hún var fyrir 15 árum. Á móti kemur að kaupverðið *(leiðrétt fyrir vísitölu fasteignaverðs)* hefur lækkað, og fermetraverðið *(leiðrétt fyrir vísitölu fasteignaverðs)* því haldist nokkuð stöðugt.
+Næst sjáum við að fyrsta fasteign fólks er aðeins minni en hún var fyrir 15 árum. Á móti kemur að kaupverðið *(leiðrétt fyrir vísitölu fasteignaverðs)* hefur lækkað, og fermetraverðið *(leiðrétt fyrir vísitölu fasteignaverðs)* því haldist nokkuð stöðugt (fram til ársins 2022).
 
 ![](Figures/fm_verd_fmverd.png){.column-page}
 
@@ -199,7 +199,7 @@ if (!file.exists("data/data.csv")) {
       vst,
       by = "dags"
     ) |> 
-    inner_join(
+    left_join(
       tekjur,
       by = "dags"
     ) |> 
