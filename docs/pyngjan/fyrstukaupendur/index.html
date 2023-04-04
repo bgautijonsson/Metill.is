@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.3.264">
+<meta name="generator" content="quarto-1.2.475">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -20,7 +20,7 @@ div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
 ul.task-list{list-style: none;}
 ul.task-list li input[type="checkbox"] {
   width: 0.8em;
-  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  margin: 0 0.8em 0.2em -1.6em;
   vertical-align: middle;
 }
 </style>
@@ -53,13 +53,13 @@ ul.task-list li input[type="checkbox"] {
 }</script>
 <style>html{ scroll-behavior: smooth; }</style>
 <meta property="og:title" content="Fyrstu kaupendur">
-<meta property="og:description" content="Skoðum gögn fasteignaskrár, sem flutti nýlega frá Þjóðskrá til HMS, um fyrstu kaupendur og komumst að því hvort meðalaldur þeirra hafi breyst, hversu stór hluti kaupenda eru fyrstu kaupendur, og hvernig kaupverði ber saman við ráðstöfunartekur ungs fólks.">
+<meta property="og:description" content="Skoðum gögn fasteignaskrár, sem flutti nýlega frá Þjóðskrá til HMS, um fyrstu kaupendur og komumst að því hvort meðalaldur þeirra hafi breyst, hversu stór hluti kaupenda eru fyrstu kaupendur, og…">
 <meta property="og:image" content="https://metill.is/pyngjan/fyrstukaupendur/Figures/kaupmattur.png">
 <meta property="og:site-name" content="Metill">
 <meta property="og:image:height" content="1800">
 <meta property="og:image:width" content="3600">
 <meta name="twitter:title" content="Fyrstu kaupendur">
-<meta name="twitter:description" content="Skoðum gögn fasteignaskrár, sem flutti nýlega frá Þjóðskrá til HMS, um fyrstu kaupendur og komumst að því hvort meðalaldur þeirra hafi breyst, hversu stór hluti kaupenda eru fyrstu kaupendur, og hvernig kaupverði ber saman við ráðstöfunartekur ungs fólks.">
+<meta name="twitter:description" content="Skoðum gögn fasteignaskrár, sem flutti nýlega frá Þjóðskrá til HMS, um fyrstu kaupendur og komumst að því hvort meðalaldur þeirra hafi breyst, hversu stór hluti kaupenda eru fyrstu kaupendur, og…">
 <meta name="twitter:image" content="https://metill.is/pyngjan/fyrstukaupendur/Figures/kaupmattur.png">
 <meta name="twitter:creator" content="@bggjonsson">
 <meta name="twitter:site" content="@bggjonsson">
@@ -114,7 +114,7 @@ ul.task-list li input[type="checkbox"] {
     <div class="quarto-title-meta-heading">Affiliation</div>
     
       <div class="quarto-title-meta-contents">
-      <p class="author"><a href="https://twitter.com/bggjonsson">Brynjólfur Gauti Guðrúnar Jónsson</a> </p>
+      <a href="https://twitter.com/bggjonsson">Brynjólfur Gauti Guðrúnar Jónsson</a> 
     </div>
       <div class="quarto-title-meta-contents">
           <p class="affiliation">
@@ -151,11 +151,41 @@ ul.task-list li input[type="checkbox"] {
 
 <p>Nýlega var <a href="https://hms.is/frettir/flutningur-kerfa-fasteignaskrar-fra-%C3%BEjo%C3%B0skra-til-hmsloki%C3%B0" target="_blank">umsjón fasteignaskrár flutt frá Þjóðskrá til Húsnæðis- og mannvirkjastofnunar (HMS)</a>. Núna er því hægt að nálgast öll gögn sem tengjast henni á <a href="https://fasteignaskra.is/" target="_blank">fasteignaskra.is</a>. Hér ætlum við að skoða <a href="https://fasteignaskra.is/gogn/fasteignagattin/fasteignavidskipti/fyrstu-kaupendur/" target="_blank">gögnin um fyrstu kaupendur</a>. Með því að skoða “page source” getum við púslað saman hlekki á JSON skrárnar á bak við myndirnar á síðunni.</p>
 <p>Fyrst sjáum við hlutfall fyrstu kaupenda af öllum kaupendum og meðalaldur fyrstu kaupenda.</p>
-<p class="page-columns page-full"><img src="Figures/hlutf_aldur.png" class="quarto-discovered-preview-image column-page img-fluid"></p>
+<p class="page-columns page-full"><img src="Figures/hlutf_aldur.png" class="column-page img-fluid"></p>
 <p>Næst sjáum við að fyrsta fasteign fólks er aðeins minni en hún var fyrir 15 árum. Á móti kemur að kaupverðið <em>(leiðrétt fyrir vísitölu fasteignaverðs)</em> hefur lækkað, og fermetraverðið <em>(leiðrétt fyrir vísitölu fasteignaverðs)</em> því haldist nokkuð stöðugt (fram til ársins 2022).</p>
 <p class="page-columns page-full"><img src="Figures/fm_verd_fmverd.png" class="column-page img-fluid"></p>
 <p>En leiðrétting fyrir vísitölu fasteignaverðs sýnir okkur ekki endilega hvernig ungt fólk er stætt þegar kemur að því að kaupa fasteign. Til þess viljum við frekar sækja gögn <a href="https://px.hagstofa.is/pxis/pxweb/is/Samfelag/Samfelag__launogtekjur__3_tekjur__1_tekjur_skattframtol/TEK01001.px/?rxid=680f1f28-2647-4534-ba70-09b10137aeed" target="_blank">Hagstofu um tekjur eftir kyni og aldri</a>. Hér notum við miðgildi ráðstöfunartekna 25 - 29 ára einstaklinga og skoðum meðalkaupverð fyrstu fasteigna sem hlutfall af ráðstöfunartekjunum. Þá sjáum við að þótt fyrsta fasteignin kostar minna en áður miðað við aðrar fasteignir <em>(lækkun þegar leiðrétt fyrir vísitölu fasteignaverðs)</em>, þá kostar hún fleiri ár af tekjum. Nánar tiltekið hefur meðalverðið, talið sem ár af ráðstöfunartekjum, farið úr rétt rúmlega 8 í um það bil 11 ár.</p>
 <p class="page-columns page-full"><img src="Figures/kaupmattur.png" class="column-page img-fluid"></p>
+<div class="cell">
+
+</div>
+<div class="cell">
+
+</div>
+<div class="cell">
+
+</div>
+<div class="cell">
+
+</div>
+<div class="cell">
+
+</div>
+<div class="cell">
+
+</div>
+<div class="cell">
+
+</div>
+<div class="cell">
+
+</div>
+<div class="cell">
+
+</div>
+<div class="cell">
+
+</div>
 
 
 
@@ -190,23 +220,9 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     icon: icon
   };
   anchorJS.add('.anchored');
-  const isCodeAnnotation = (el) => {
-    for (const clz of el.classList) {
-      if (clz.startsWith('code-annotation-')) {                     
-        return true;
-      }
-    }
-    return false;
-  }
   const clipboard = new window.ClipboardJS('.code-copy-button', {
-    text: function(trigger) {
-      const codeEl = trigger.previousElementSibling.cloneNode(true);
-      for (const childEl of codeEl.children) {
-        if (isCodeAnnotation(childEl)) {
-          childEl.remove();
-        }
-      }
-      return codeEl.innerText;
+    target: function(trigger) {
+      return trigger.previousElementSibling;
     }
   });
   clipboard.on('success', function(e) {
@@ -271,92 +287,6 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       return note.innerHTML;
     });
   }
-      let selectedAnnoteEl;
-      const selectorForAnnotation = ( cell, annotation) => {
-        let cellAttr = 'data-code-cell="' + cell + '"';
-        let lineAttr = 'data-code-annotation="' +  annotation + '"';
-        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
-        return selector;
-      }
-      const selectCodeLines = (annoteEl) => {
-        const doc = window.document;
-        const targetCell = annoteEl.getAttribute("data-target-cell");
-        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
-        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
-        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
-        const lineIds = lines.map((line) => {
-          return targetCell + "-" + line;
-        })
-        let top = null;
-        let height = null;
-        let parent = null;
-        if (lineIds.length > 0) {
-            //compute the position of the single el (top and bottom and make a div)
-            const el = window.document.getElementById(lineIds[0]);
-            top = el.offsetTop;
-            height = el.offsetHeight;
-            parent = el.parentElement.parentElement;
-          if (lineIds.length > 1) {
-            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
-            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
-            height = bottom - top;
-          }
-          if (top !== null && height !== null && parent !== null) {
-            // cook up a div (if necessary) and position it 
-            let div = window.document.getElementById("code-annotation-line-highlight");
-            if (div === null) {
-              div = window.document.createElement("div");
-              div.setAttribute("id", "code-annotation-line-highlight");
-              div.style.position = 'absolute';
-              parent.appendChild(div);
-            }
-            div.style.top = top - 2 + "px";
-            div.style.height = height + 4 + "px";
-            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
-            if (gutterDiv === null) {
-              gutterDiv = window.document.createElement("div");
-              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
-              gutterDiv.style.position = 'absolute';
-              const codeCell = window.document.getElementById(targetCell);
-              const gutter = codeCell.querySelector('.code-annotation-gutter');
-              gutter.appendChild(gutterDiv);
-            }
-            gutterDiv.style.top = top - 2 + "px";
-            gutterDiv.style.height = height + 4 + "px";
-          }
-          selectedAnnoteEl = annoteEl;
-        }
-      };
-      const unselectCodeLines = () => {
-        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
-        elementsIds.forEach((elId) => {
-          const div = window.document.getElementById(elId);
-          if (div) {
-            div.remove();
-          }
-        });
-        selectedAnnoteEl = undefined;
-      };
-      // Attach click handler to the DT
-      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
-      for (const annoteDlNode of annoteDls) {
-        annoteDlNode.addEventListener('click', (event) => {
-          const clickedEl = event.target;
-          if (clickedEl !== selectedAnnoteEl) {
-            unselectCodeLines();
-            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
-            if (activeEl) {
-              activeEl.classList.remove('code-annotation-active');
-            }
-            selectCodeLines(clickedEl);
-            clickedEl.classList.add('code-annotation-active');
-          } else {
-            // Unselect the line
-            unselectCodeLines();
-            clickedEl.classList.remove('code-annotation-active');
-          }
-        });
-      }
   const findCites = (el) => {
     const parentEl = el.parentElement;
     if (parentEl) {
@@ -395,12 +325,12 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }
   }
     var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
-      var filterRegex = new RegExp("https:\/\/metill\.is");
+      var filterRegex = new RegExp(/https:\/\/metill\.is/);
     var isInternal = (href) => {
         return filterRegex.test(href) || localhostRegex.test(href);
     }
     // Inspect non-navigation links and adorn them if external
- 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item)');
+    var links = window.document.querySelectorAll('a:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item)');
     for (var i=0; i<links.length; i++) {
       const link = links[i];
       if (!isInternal(link.href)) {
@@ -411,23 +341,6 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 });
 </script>
 </div> <!-- /content -->
-<footer class="footer">
-  <div class="nav-footer">
-    <div class="nav-footer-left">
-      &nbsp;
-    </div>   
-    <div class="nav-footer-center">
-      <ul class="footer-items list-unstyled">
-    <li class="nav-item">
-    <a class="nav-link" href="../../um_metil.html">Um Metil</a>
-  </li>  
-</ul>
-    </div>
-    <div class="nav-footer-right">
-      &nbsp;
-    </div>
-  </div>
-</footer>
 
 
 
