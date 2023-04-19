@@ -142,6 +142,8 @@ Gagnasafnið á bak við þessa skýrslu er gagnasafn Hagstofu:
 ## Tafla
 
 ```{r}
+heimild <- md("Heimild: [Gögn Hagstofu um fjölda starfandi samkvæmt skrám](https://px.hagstofa.is/pxis/pxweb/is/Samfelag/Samfelag__vinnumarkadur__vinnuaflskraargogn/VIN10052.px)")
+
 table_dat <- d |> 
   filter(
     dags == max(dags),
@@ -160,9 +162,9 @@ table_dat <- d |>
   ) 
 
 table_dat |> 
+  group_by(tegund) |> 
   gt(
-    rowname_col = "rekstrarform", 
-    groupname_col = "tegund", 
+    rowname_col = "rekstrarform",
     process_md = TRUE,
     locale = "is"
   ) |> 
@@ -177,17 +179,9 @@ table_dat |>
     starfandi = "Fjöldi starfandi",
     hlutf = "% af starfandi"
   ) |> 
-  fmt_date(
-    columns = dags, date_style = "day_m_year"
-  ) |> 
-  fmt_number(
-    columns = "starfandi", 
-    decimals = 0
-  ) |> 
-  fmt_percent(
-    columns = "hlutf",
-    decimals = 1
-  ) |> 
+  fmt_date(columns = dags, date_style = "day_m_year") |> 
+  fmt_number(columns = starfandi, decimals = 0) |> 
+  fmt_percent(columns = hlutf, decimals = 1) |> 
   summary_rows(
     columns = starfandi,
     fns = list(
@@ -202,12 +196,10 @@ table_dat |>
     ),
     fmt = ~ fmt_percent(., decimals = 1)
   ) |> 
-  tab_source_note(
-    md("Heimild: [Gögn Hagstofu um fjölda starfandi samkvæmt skrám](https://px.hagstofa.is/pxis/pxweb/is/Samfelag/Samfelag__vinnumarkadur__vinnuaflskraargogn/VIN10052.px)")
-  ) |> 
+  tab_source_note(heimild) |> 
   tab_options(
     table.background.color = "#faf9f9"
-  )
+  ) 
 ```
 
 :::

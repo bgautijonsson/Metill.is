@@ -65,150 +65,155 @@ theme_set(theme_metill())
 
 
 ```{r}
-if (!file.exists("data/kaupskra_data.parquet")) {
-  init_db()
-  
-  kaupskra_raw <- mtl_kaupskra() |>
-    filter(tegund %in% c("Fjölbýli", "Einbýli", "Sérbýli")) |> 
-    select(fastnum, utgdag, kaupverd) |>
-    arrange(fastnum, utgdag) |>
-    group_by(fastnum) |>
-    mutate(n_obs = n()) |>
-    ungroup() |>
-    filter(n_obs > 1) |> 
-    collect() |> 
-    mutate(
-      utgdag = as_date(utgdag),
-      kaupverd = vnv_convert(
-        kaupverd, 
-        utgdag,
-        include_housing = FALSE
-      )
+kaupskra_url <- "https://objectstorage.eu-frankfurt-1.oraclecloud.com/n/frs3o1zldvgn/b/public_data_for_download/o/kaupskra.csv"
+leiguskra_url <- "https://objectstorage.eu-frankfurt-1.oraclecloud.com/n/frs3o1zldvgn/b/public_data_for_download/o/leiguskra.csv"
+kaupskra_raw <-  vroom::vroom(
+  kaupskra_url,
+  locale = locale(encoding = "ISO-8859-1")
+) |> 
+  filter(
+    tegund %in% c(
+      "Fjölbýli",
+      "Einbýli",
+      "Sérbýli"
+    ),
+    onothaefur_samningur == 0,
+    fullbuid == 1
+  ) |>
+  filter(tegund %in% c("Fjölbýli", "Einbýli", "Sérbýli")) |> 
+  select(fastnum, utgdag, kaupverd) |>
+  arrange(fastnum, utgdag) |>
+  group_by(fastnum) |>
+  mutate(n_obs = n()) |>
+  ungroup() |>
+  filter(n_obs > 1) |> 
+  collect() |> 
+  mutate(
+    utgdag = as_date(utgdag),
+    kaupverd = vnv_convert(
+      kaupverd, 
+      utgdag,
+      include_housing = FALSE
     )
-  
-  
-  
-  
-  d <- kaupskra_raw |> 
-    distinct() |>
-    group_by(fastnum) |>
-    mutate(breyting = c(NA, exp(diff(log(kaupverd)))) - 1,
-           timi = c(NA, diff(utgdag)) / 365.25,
-           ars_breyting = breyting / timi) |>
-    ungroup() |>
-    drop_na()  |>
-    filter(
-      ars_breyting < quantile(ars_breyting, 0.995, na.rm = T),
-      ars_breyting > quantile(ars_breyting, 0.005, na.rm = T)
-    ) |>
-    mutate(dags = floor_date(utgdag, "month")) |>
-    select(dags, ars_breyting) |>
-    nest(data = ars_breyting)
-  
-  d <- d |> 
-    inner_join(
-      crossing(
-        dags = unique(d$dags),
-        size = c(0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9)
-      ),
-      by = "dags"
-    ) |>
-    mutate(
-      lower = 0.5 - size/2,
-      upper = 0.5 + size/2,
-      lower = map2_dbl(data, lower, ~ quantile(.x$ars_breyting, probs = .y)),
-      upper = map2_dbl(data, upper, ~ quantile(.x$ars_breyting, probs = .y)),
-      mean = map_dbl(data, ~ median(.x$ars_breyting))
-    )  |>
-    # filter(year(dags) >= 2013) |>
-    group_by(size) |> 
-    mutate(
-      upper = loess(upper ~ as.numeric(dags), span = 0.15) |> predict(),
-      lower = loess(lower ~ as.numeric(dags), span = 0.15) |> predict()
-    ) |> 
-    ungroup() |> 
-    mutate(group = hlutf(size, accuracy = 1) |> fct_reorder(-size),
-           y1 = min(lower),
-           y2 = max(upper),
-           y = sample(c(y1, y2), size = n())) |> 
-    select(-data)
-  
-  d |> write_parquet("data/kaupskra_data.parquet")
-  
-  
-  leiguskra_raw <- mtl_leiguskra() |>
-    select(fastnum, utgdag, heildarverd) |>
-    arrange(fastnum, utgdag) |>
-    group_by(fastnum) |>
-    mutate(n_obs = n()) |>
-    ungroup() |>
-    filter(n_obs > 1) |> 
-    collect() |>
-    mutate(
-      utgdag = as_date(utgdag),
-      heildarverd = vnv_convert(
-        heildarverd, 
-        utgdag, 
-        include_housing = FALSE
-      )
+  )
+
+
+
+
+kaupskra <- kaupskra_raw |> 
+  distinct() |>
+  group_by(fastnum) |>
+  mutate(breyting = c(NA, exp(diff(log(kaupverd)))) - 1,
+         timi = c(NA, diff(utgdag)) / 365.25,
+         ars_breyting = breyting / timi) |>
+  ungroup() |>
+  drop_na()  |>
+  filter(
+    ars_breyting < quantile(ars_breyting, 0.995, na.rm = T),
+    ars_breyting > quantile(ars_breyting, 0.005, na.rm = T)
+  ) |>
+  mutate(dags = floor_date(utgdag, "month")) |>
+  select(dags, ars_breyting) |>
+  nest(data = ars_breyting)
+
+kaupskra <- kaupskra |> 
+  inner_join(
+    crossing(
+      dags = unique(d$dags),
+      size = c(0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9)
+    ),
+    by = "dags"
+  ) |>
+  mutate(
+    lower = 0.5 - size/2,
+    upper = 0.5 + size/2,
+    lower = map2_dbl(data, lower, ~ quantile(.x$ars_breyting, probs = .y)),
+    upper = map2_dbl(data, upper, ~ quantile(.x$ars_breyting, probs = .y)),
+    mean = map_dbl(data, ~ median(.x$ars_breyting))
+  )  |>
+  # filter(year(dags) >= 2013) |>
+  group_by(size) |> 
+  mutate(
+    upper = loess(upper ~ as.numeric(dags), span = 0.15) |> predict(),
+    lower = loess(lower ~ as.numeric(dags), span = 0.15) |> predict()
+  ) |> 
+  ungroup() |> 
+  mutate(group = hlutf(size, accuracy = 1) |> fct_reorder(-size),
+         y1 = min(lower),
+         y2 = max(upper),
+         y = sample(c(y1, y2), size = n())) |> 
+  select(-data)
+
+kaupskra |> write_parquet("data/kaupskra_data.parquet")
+
+
+leiguskra_raw <- vroom::vroom(
+  leiguskra_url,
+  locale = locale(encoding = "ISO-8859-1")
+) |> 
+  janitor::clean_names() |> 
+  mutate_at(vars(onothaefur_samningur, otimabundid), replace_na, replace = 0) |> 
+  mutate_at(vars(utgdag, thinglystdags, dagsfra, dagstil), as_date)  |>
+  select(fastnum, utgdag, heildarverd) |>
+  arrange(fastnum, utgdag) |>
+  group_by(fastnum) |>
+  mutate(n_obs = n()) |>
+  ungroup() |>
+  filter(n_obs > 1) |> 
+  collect() |>
+  mutate(
+    utgdag = as_date(utgdag),
+    heildarverd = vnv_convert(
+      heildarverd, 
+      utgdag, 
+      include_housing = FALSE
     )
-  
-  d <- leiguskra_raw |>
-    distinct() |>
-    group_by(fastnum) |>
-    mutate(breyting = c(NA, exp(diff(log(heildarverd)))) - 1,
-           timi = c(NA, diff(utgdag)) / 365.25,
-           ars_breyting = breyting / timi) |>
-    ungroup() |>
-    drop_na()  |>
-    filter(
-      ars_breyting < quantile(ars_breyting, 0.995, na.rm = T),
-      ars_breyting > quantile(ars_breyting, 0.005, na.rm = T)
-    ) |>
-    mutate(dags = floor_date(utgdag, "month")) |>
-    select(dags, ars_breyting) |>
-    nest(data = ars_breyting) |>
-    inner_join(
-      crossing(
-        dags = unique(leiguskra_raw$utgdag),
-        size = c(0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9)
-      ),
-      by = "dags"
-    ) |>
-    mutate(
-      lower = 0.5 - size/2,
-      upper = 0.5 + size/2,
-      lower = map2_dbl(data, lower, ~ quantile(.x$ars_breyting, probs = .y)),
-      upper = map2_dbl(data, upper, ~ quantile(.x$ars_breyting, probs = .y)),
-      mean = map_dbl(data, ~ median(.x$ars_breyting))
-    )  |>
-    # filter(year(dags) >= 2013) |>
-    group_by(size) |> 
-    mutate(
-      upper = loess(upper ~ as.numeric(dags), span = 0.15) |> predict(),
-      lower = loess(lower ~ as.numeric(dags), span = 0.15) |> predict()
-    ) |> 
-    ungroup() |> 
-    mutate(group = hlutf(size, accuracy = 1) |> fct_reorder(-size),
-           y1 = min(lower),
-           y2 = max(upper),
-           y = sample(c(y1, y2), size = n())) |> 
-    select(-data)
-  
-  d |> 
-    write_parquet("data/leiguskra_data.parquet")
-  
-} else {
-  kaupskra <- read_parquet("data/kaupskra_data.parquet") |> 
-    mutate(
-      dags = as_date(dags)
-    )
-  
-  leiguskra <- read_parquet("data/leiguskra_data.parquet") |> 
-    mutate(
-      dags = as_date(dags)
-    )
-}
+  )
+
+leiguskra <- leiguskra_raw |>
+  distinct() |>
+  group_by(fastnum) |>
+  mutate(
+    breyting = c(NA, exp(diff(log(heildarverd)))) - 1,
+    timi = c(NA, diff(utgdag)) / 365.25,
+    ars_breyting = breyting / timi
+  ) |>
+  ungroup() |>
+  drop_na()  |>
+  filter(
+    ars_breyting < quantile(ars_breyting, 0.995, na.rm = T),
+    ars_breyting > quantile(ars_breyting, 0.005, na.rm = T)
+  ) |>
+  mutate(dags = floor_date(utgdag, "month")) |>
+  select(dags, ars_breyting) |>
+  nest(data = ars_breyting) |>
+  inner_join(
+    crossing(
+      dags = unique(leiguskra_raw$utgdag),
+      size = c(0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9)
+    ),
+    by = "dags"
+  ) |>
+  mutate(
+    lower = 0.5 - size/2,
+    upper = 0.5 + size/2,
+    lower = map2_dbl(data, lower, ~ quantile(.x$ars_breyting, probs = .y)),
+    upper = map2_dbl(data, upper, ~ quantile(.x$ars_breyting, probs = .y)),
+    mean = map_dbl(data, ~ median(.x$ars_breyting))
+  )  |>
+  filter(year(dags) >= 2013) |>
+  group_by(size) |> 
+  mutate(
+    upper = loess(upper ~ as.numeric(dags), span = 0.15) |> predict(),
+    lower = loess(lower ~ as.numeric(dags), span = 0.15) |> predict()
+  ) |> 
+  ungroup() |> 
+  mutate(group = hlutf(size, accuracy = 1) |> fct_reorder(-size),
+         y1 = min(lower),
+         y2 = max(upper),
+         y = sample(c(y1, y2), size = n())) |> 
+  select(-data)
+
 ```
 
 # Kaupverð
@@ -364,3 +369,28 @@ ggsave(
 
 ![](Figures/leiguverd_breyting.png){.column-page}
 
+
+
+
+```{r}
+p <- leiguskra |> 
+  filter(year(dags) > 2020) |> 
+  select(dags, size, lower, upper) |> 
+  pivot_longer(c(-size, -dags)) |> 
+  mutate(
+    prob = ifelse(
+      name == "lower",
+      0.5 - size / 2,
+      0.5 + size/2
+    ),
+    dags = as.numeric(as.factor(dags))
+  ) |> 
+  arrange(prob) |> 
+  ggplot(aes(prob, value, frame = dags)) +
+  geom_line() +
+  scale_y_continuous(
+    labels = label_percent()
+  )
+
+ggplotly(p)
+```

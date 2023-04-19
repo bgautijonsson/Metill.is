@@ -1,0 +1,338 @@
+---
+title: "Ársreikningar sveitarfélaga"
+subtitle: "Hvernig eru ársreikningagögn sveitarfélaga undirbúin fyrir birtingu í mælaborði Metils um?"
+author: 
+    -   name: "Brynjólfur Gauti Guðrúnar Jónsson"
+        url: "https://twitter.com/bgautijonsson"
+        affiliation: "Tölfræði, Raunvísindadeild Háskóla Íslands"
+        affiliation-url: "https://www.hi.is/tolfraedi_0"
+date: "2023/04/13"
+format: 
+    html:
+        code-fold: show
+        smooth-scroll: true
+        link-external-newwindow: true
+editor: source
+draft: false
+title-block-banner: true
+categories:
+    - stjórnmál
+    - efnahagur
+    - ársreikningar
+    - sveitarfélög
+execute: 
+  echo: true
+---
+
+
+```{r}
+library(tidyverse)
+library(readxl)
+library(janitor)
+library(visitalaneysluverds)
+library(hagstofa)
+```
+
+## Mannfjöldi
+
+```{r}
+url <- "https://px.hagstofa.is:443/pxis/api/v1/is/Ibuar/mannfjoldi/2_byggdir/sveitarfelog/MAN02005.px"
+mannfjoldi <- hg_data(url) |> 
+  filter(
+    Aldur == "Alls",
+    Kyn == "Alls",
+    Sveitarfélag != "Alls"
+  ) |> 
+  collect() |> 
+  clean_names() |> 
+  rename(mannfjoldi = 5) |> 
+  select(-aldur, -kyn) |> 
+  mutate(ar = parse_number(ar))
+```
+
+## Efnahagur
+
+```{r}
+efnahagur <- read_excel("net-efnahagsreikningur.xlsx", skip = 4) |> 
+  clean_names() |> 
+  fill(ar, sveitarfelag, hluti) |> 
+  filter(
+    tegund2 %in% c(
+      "Veltufjármunir Total", 
+      "Varanlegir rekstrarfjármunir", 
+      "Áhættufjármunir og langtímakröfur",
+      "Skuldbindingar", 
+      "Langtímaskuldir",
+      "Skammtímaskuldir", 
+      "Eigið fé"
+    ) | tegund %in% c(
+      "Skammtímakröfur á eigin fyrirtæki",
+      "Aðrir veltufjármunir"
+    )
+  ) |> 
+  mutate(
+    tegund2 = ifelse(is.na(tegund2), tegund, tegund2) |>
+      str_replace(" Total", "")
+  ) |> 
+  select(-tegund) |> 
+  mutate(
+    ar = parse_number(ar),
+    sveitarfelag = str_sub(sveitarfelag, start = 6)
+  )
+
+efnahagur
+```
+
+
+## Rekstur
+
+```{r}
+rekstur <- read_excel("net-rekstrarreikningur.xlsx", skip = 4) |> 
+  clean_names() |> 
+  fill(ar, sveitarfelag, hluti) |> 
+  filter(
+    tegund2 %in% c(
+      "Gjöld Total", 
+      "Tekjur Total",
+      "Rekstrarniðurstaða Total"
+    ) | tegund %in% c(
+      "Afskriftir", 
+      "Breyting lífeyrisskuldbindinga",
+      "Fjármagnsliðir",
+      "Óreglulegir liðir",
+      "Framlag Jöfnunarsjóðs", 
+      "Skatttekjur án Jöfnunarsjóðs",
+      "Laun og launatengd gjöld"
+    )
+  ) |> 
+  mutate(
+    tegund2 = ifelse(is.na(tegund2), tegund, tegund2) |> 
+      str_replace(" Total", "")
+  ) |> 
+  select(-tegund) |> 
+  mutate(
+    ar = parse_number(ar),
+    sveitarfelag = str_sub(sveitarfelag, start = 6)
+  )
+```
+
+
+
+## Sjóðsstreymi
+
+```{r}
+sjodsstreymi <- read_excel("net-sjodsstreymi.xlsx", skip = 4) |> 
+  clean_names() |> 
+  fill(ar, sveitarfelag, hluti, tegund2) |> 
+  mutate(
+    ar = parse_number(ar),
+    sveitarfelag = str_sub(sveitarfelag, start = 6)
+  ) |> 
+  filter(
+    tegund2 %in% c(
+      "Veltufé frá rekstri Total", 
+      "Fjárfestingarhreyfingar Total") | tegund %in% c(
+        "Afborganir langtímalána",
+        "Aðrar fjármögnunarhreyfingar",
+        "Tekin ný langtímalán"
+      )
+  ) |>
+  mutate(
+    tegund2 = ifelse(is.na(tegund), tegund2, tegund) |>
+      str_replace(" Total", "")
+  ) |> 
+  select(-tegund)
+```
+
+
+## Tenging
+
+```{r}
+d <- efnahagur |> 
+  select(-tegund3) |> 
+  pivot_wider(names_from = tegund2, values_from = total) |> 
+  inner_join(
+    rekstur |> 
+      pivot_wider(names_from = tegund2, values_from = total),
+    by = c("ar", "sveitarfelag", "hluti")
+  ) |> 
+  inner_join(
+    sjodsstreymi |> 
+      pivot_wider(names_from = tegund2, values_from = total),
+    by = c("ar", "sveitarfelag", "hluti")
+  )
+```
+
+
+```{r}
+d |> 
+  skimr::skim()
+```
+
+### Sameining sveitarfélaga 
+
+```{r}
+mulathing <- c(
+  "Múlaþing", 
+  "Fljótsdalshérað", 
+  "Seyðisfjarðarkaupstaður",
+  "Borgarfjarðarhreppur",
+  "Djúpavogshreppur"
+)
+
+sudurnesjabaer <- c(
+  "Sandgerðisbær", 
+  "Sveitarfélagið Garður"
+)
+
+fjardabyggd <- c(
+  "Breiðdalshreppur",
+  "Fjarðabyggð"
+)
+
+gardabaer <- c(
+  "Sveitarfélagið Álftanes", 
+  "Garðabær"
+)
+
+d <- d |> 
+  mutate(
+    sveitarfelag = case_match(
+      sveitarfelag,
+      mulathing ~ "Múlaþing",
+      sudurnesjabaer ~ "Suðurnesjabær",
+      fjardabyggd ~ "Fjarðabyggð",
+      gardabaer ~ "Garðabær",
+      sveitarfelag ~ sveitarfelag
+    )
+  )
+```
+
+
+
+```{r}
+d <- d |> mutate(
+  heildarskuldir = `Skuldbindingar` + `Langtímaskuldir` + `Skammtímaskuldir`,
+  eignir = `Varanlegir rekstrarfjármunir` + `Áhættufjármunir og langtímakröfur` + `Veltufjármunir`
+)
+```
+
+
+
+```{r}
+d <- d |> 
+  select(
+    ar, 
+    sveitarfelag,
+    hluti,
+    heildarskuldir,
+    eignir,
+    tekjur = "Tekjur", 
+    skatttekjur_an_jofnundarsjóðs = "Skatttekjur án Jöfnunarsjóðs",
+    framlag_jofnunarsjods = "Framlag Jöfnunarsjóðs",
+    gjold = "Gjöld", 
+    afskriftir = "Afskriftir",
+    fjarmagnslidir = "Fjármagnsliðir", 
+    oreglulegir_lidir = "Óreglulegir liðir",
+    rekstrarnidurstada = "Rekstrarniðurstaða",
+    breyting_lifeyrisskuldbindinga = "Breyting lífeyrisskuldbindinga",
+    afborganir_langtimalana = "Afborganir langtímalána",
+    adrar_fjarmognunarhreyfingar = "Aðrar fjármögnunarhreyfingar",
+    eigid_fe = "Eigið fé", 
+    veltufjarmunir = "Veltufjármunir", 
+    skammtimakrofur_eigin_fyrirtaeki = "Skammtímakröfur á eigin fyrirtæki",
+    handbaert_fe = "Aðrir veltufjármunir",
+    skammtimaskuldir = "Skammtímaskuldir", 
+    fjarfestingarhreyfingar = "Fjárfestingarhreyfingar", 
+    nyjar_langtimaskuldir = "Tekin ný langtímalán",
+    launagjold = "Laun og launatengd gjöld",
+    veltufe = "Veltufé frá rekstri"
+  )
+```
+
+
+```{r}
+d <- d |> 
+  group_by(sveitarfelag, ar, hluti) |> 
+  summarise_at(
+    vars(heildarskuldir:veltufe), 
+    ~ 1000 * sum(.x)
+  ) |> 
+  ungroup()
+```
+
+
+```{r}
+d <- d |> 
+  mutate(
+    hluti = fct_recode(
+      hluti,
+      "A-hluti" = "A_hluti",
+      "A og B-hluti" = "A_og_B_hluti"
+    )
+  )
+```
+
+
+
+```{r}
+d <- d |> 
+  inner_join(
+    mannfjoldi,
+    by = join_by(ar, sveitarfelag)
+  )
+```
+
+
+
+```{r}
+# d <- d |> 
+#   mutate(
+#     eiginfjarhlutfall = eigid_fe / eignir,
+#     framlegd = tekjur - gjold + afskriftir,
+#     framlegd_hlutf = framlegd / tekjur,
+#     handbaert_fe_per_ibui = handbaert_fe / mannfjoldi,
+#     heildarskuldir = heildarskuldir,
+#     hlutf_jofnunarsjods_skottum = framlag_jofnunarsjods / (framlag_jofnunarsjods + skatttekjur_an_jofnundarsjóðs),
+#     jofnunarsjodur_a_ibua = framlag_jofnunarsjods / mannfjoldi,
+#     launagjold_per_ibui = launagjold / mannfjoldi,
+#     launagjold_hlutf_gjold = launagjold / gjold,
+#     utgjold_jofnunarsjod = (0.0077 + 0.0099) * tekjur,
+#     netto_jofnunarsjod = framlag_jofnunarsjods - utgjold_jofnunarsjod,
+#     netto_jofnunarsjod_per_ibui = netto_jofnunarsjod / mannfjoldi,
+#     nettoskuldir = heildarskuldir - veltufjarmunir + skammtimakrofur_eigin_fyrirtaeki,
+#     nettoskuldir_hlutf_tekjur = nettoskuldir / tekjur,
+#     rekstrarnidurstada_hlutf = rekstrarnidurstada / tekjur,
+#     rekstur_3_ar = rekstrarnidurstada + lag(rekstrarnidurstada, 1) + lag(rekstrarnidurstada, 2),
+#     tekjur_3_ar = tekjur + lag(tekjur, 1) + lag(tekjur, 2),
+#     rekstur_3_ar_hlutf_tekjur = rekstur_3_ar / tekjur_3_ar,
+#     skattur_a_ibua = skatttekjur_an_jofnundarsjóðs / mannfjoldi,
+#     skuldahlutfall = 1 - eiginfjarhlutfall,
+#     skuldir_hlutf_tekjur = heildarskuldir / tekjur,
+#     skuldir_per_ibui = heildarskuldir / mannfjoldi,
+#     timi_borga_skuldir = nettoskuldir / veltufe,
+#     timi_borga_skuldir = pmax(timi_borga_skuldir, 0),
+#     timi_borga_skuldir = ifelse(veltufe <= 0, 1e5, timi_borga_skuldir),
+#     veltufe_hlutf_tekjur = veltufe / tekjur,
+#     veltufjarhlutfall = veltufjarmunir / skammtimaskuldir
+#   ) |> 
+#   inner_join(
+#     visitala,
+#     by = "ar"
+#   ) |> 
+#   group_by(ar) |> 
+#   mutate(hlutf_jofnunarsjod_utgjold = utgjold_jofnunarsjod / sum(utgjold_jofnunarsjod)) |> 
+#   ungroup() |> 
+#   arrange(ar, sveitarfelag, hluti) |> 
+#   group_by(sveitarfelag, hluti) |> 
+#   mutate(
+#     skuldaaukning_2021 = ifelse(sveitarfelag != "Múlaþing" & ar >= 2018, (heildarskuldir / cpi) / (heildarskuldir[ar == 2018] / cpi[ar == 2018]) - 1, NA),
+#     skuldaaukning = heildarskuldir / heildarskuldir[ar == max(ar)],
+#     rekstrarnidurstada_kjortimabil = sum(rekstrarnidurstada * (ar >= 2018)),
+#     tekjur_kjortimabil = sum(tekjur * (ar >= 2018)),
+#     rekstrarnidurstada_hlutf_kjortimabil = rekstrarnidurstada_kjortimabil / tekjur_kjortimabil,
+#     rekstrarnidurstada_per_ibui_kjortimabil = rekstrarnidurstada_kjortimabil / mean(mannfjoldi[ar %in% 2018:2021])
+#   ) |> 
+#   ungroup() 
+```
+

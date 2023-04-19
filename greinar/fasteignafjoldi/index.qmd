@@ -44,25 +44,71 @@ library(patchwork)
 library(slider)
 library(crosstalk)
 library(glue)
+library(rjson)
+library(pxweb)
 theme_set(theme_metill())
+
+get_tables <- function(data, years) {
+  tibble(
+    ar = years,
+    svfn = data$svfn,
+    sveitarfelag = data$name,
+    fjolbyli_fjoldi = data$fjolbyli_fjoldi,
+    fjolbyli_medaltal = data$fjolbyli_medaltal,
+    fjolbyli_midgildi = data$fjolbyli_midgildi,
+    serbyli_fjoldi = data$serbyli_fjoldi,
+    serbyli_medaltal = data$serbyli_medaltal,
+    serbyli_midgildi = data$serbyli_midgildi,
+  ) |> 
+    pivot_longer(c(-svfn, -sveitarfelag, -ar), names_to = c("tegund", "breyta"), names_sep = "_") |> 
+    mutate(value = ifelse(value == "None", "0", value)) |> 
+    pivot_wider(names_from = breyta, values_from = value)
+}
+
 
 
 ```
 
 
 ```{r data}
-if (!file.exists("data/data.arrow")) {
-  init_db()
+if (!file.exists("data/data.parquet")) {
+  d <- fromJSON(file = "https://talnaefni.fasteignaskra.is/talnaefni/v1/staerdibudasveitarfelog")
   
-  d <- mtl_fjoldi_fasteigna() |>
-    collect() |>
+  d <- d$sveitarfélög |> 
+    map(get_tables, years = d$date) |> 
+    reduce(bind_rows) |> 
+    mutate_at(vars(ar, svfn, fjoldi, medaltal, midgildi), parse_number) |> 
+    select(ar, sveitarfelag, tegund, fjoldi)
+  
+  d <- d |>
     count(ar, sveitarfelag, wt = fjoldi, name = "fjoldi") |>
     arrange(ar, sveitarfelag) |>
     group_by(sveitarfelag) |>
     mutate(cum_fjoldi = cumsum(fjoldi)) |>
     ungroup()
   
-  mannfjoldi <- mtl_mannfjoldi_svf() |>
+  mannfjoldi <- pxweb_get(
+    url = "https://px.hagstofa.is:443/pxis/api/v1/is/Ibuar/mannfjoldi/2_byggdir/sveitarfelog/MAN02005.px", 
+    query = list(
+      "Sveitarfélag" = c("*"),
+      "Aldur" = c("*"),
+      "Ár" = c("*"),
+      "Kyn" = c("0")
+    ),
+    verbose = FALSE
+  ) |> 
+    as.data.frame() |> 
+    as_tibble() |> 
+    janitor::clean_names() |> 
+    rename(mannfjoldi = mannfjoldi_eftir_sveitarfelagi_kyni_og_aldri_1_januar_1998_2023) |> 
+    mutate(ar = parse_number(ar)) |> 
+    filter(sveitarfelag != "Alls",
+           aldur != "Alls") |> 
+    mutate(
+      aldur = ifelse(aldur == "Á 1. ári", 0, aldur),
+      aldur = parse_number(aldur)
+    ) |> 
+    select(-kyn) |> 
     mutate(
       vinnualdur = ifelse((aldur >= 20) & (aldur <= 64), 1, 0),
       heild = 1,
@@ -73,8 +119,7 @@ if (!file.exists("data/data.arrow")) {
       mannfjoldi_vinnualdur = sum(mannfjoldi * vinnualdur),
       mannfjoldi_fullordin = sum(mannfjoldi * fullordin),
       mannfjoldi = sum(mannfjoldi * heild)
-    ) |>
-    collect()
+    )
   
   
   d <- d |>
@@ -83,8 +128,7 @@ if (!file.exists("data/data.arrow")) {
       by = c("ar", "sveitarfelag")
     )
   
-  d |>
-    write_parquet("data/data.parquet")
+  d |> write_parquet(("data/data.parquet"))
   
 } else {
   d <- read_parquet("data/data.parquet")
@@ -94,10 +138,10 @@ if (!file.exists("data/data.arrow")) {
 ```{r}
 ar_fyrir <- 2010
 col_fyrir <- "#d73027"
-  
-ar_eftir <- 2022
+
+ar_eftir <- 2023
 col_eftir <- "#4575b4"
-  
+
 plot_dat <- d |> 
   filter(
     ar %in% c(ar_fyrir, ar_eftir),
@@ -113,7 +157,7 @@ plot_dat <- d |>
   pivot_wider(names_from = ar, values_from = full_per_fast) |> 
   rename(
     fyrir = "2010",
-    eftir = "2022"
+    eftir = "2023"
   ) |> 
   mutate(
     sveitarfelag = fct_reorder(sveitarfelag, eftir)
@@ -131,7 +175,7 @@ p <- plot_dat |>
     col = "grey50",
     linewidth = 0.3
   ) +
-  geom_point(aes(x = eftir, colour = "2022"), size = 2.5) +
+  geom_point(aes(x = eftir, colour = "2023"), size = 2.5) +
   geom_point(aes(x = fyrir, colour = "2010"), size = 2.5) +
   geom_richtext(
     data = tibble(x = 1),
@@ -171,12 +215,13 @@ p <- plot_dat |>
     size = 2.5
   ) +
   annotate(
-    x = 1.69,
-    y = 2.18,
+    x = 2.03,
+    y = 14.18,
     geom = "text",
     label = str_c(
-      "Akureyrarbær er eina sveitarfélagið þar sem",
-      "\nfasteignum fjölgaði hraðar en fullorðnum"
+      "Seltjarnarnesbær er eina sveitarfélagið þar sem",
+      "\nfasteignum fjölgaði hraðar en fullorðnum, en",
+      "\nfullorðnum fækkaði um 67 frá 2020 til 2023."
     ),
     vjust = 1,
     hjust = 0,
@@ -221,23 +266,24 @@ ggsave(
 ```{r}
 
 plotly_color <- "#b30000"
-  
-start_year <- min(d$ar)
+
+start_year <- 2010
 
 plot_dat <- d |> 
   filter(
     str_detect(
       str_to_lower(sveitarfelag),
       "reykjaví|garðab|kópav|hafnarf|mosf|seltjar|akrane|akureyr|fjarðab|árbo|múlaþ|vestman|borgarbygg|ísafjarð|suðurnes|grindaví|norðurþ|hverag|ölfus|hornafj"
-    )
+    ),
+    ar >= start_year - 5
   ) |> 
   mutate(
     bygg_per_pers = fjoldi / mannfjoldi_fullordin * 1e3,
     fullordin_per_bygg = mannfjoldi_fullordin / cum_fjoldi
   ) |> 
   mutate(
-    bygg_index = cum_fjoldi / cum_fjoldi[ar == min(ar)] - 1,
-    mannf_index = mannfjoldi_fullordin / mannfjoldi_fullordin[ar == min(ar)] - 1,
+    bygg_index = cum_fjoldi / cum_fjoldi[ar == start_year] - 1,
+    mannf_index = mannfjoldi_fullordin / mannfjoldi_fullordin[ar == start_year] - 1,
     mism = mannf_index / bygg_index - 1,
     .by = sveitarfelag
   ) |> 
@@ -262,7 +308,13 @@ plot_dat <- d |>
   ) |> 
   drop_na(bygg_per_pers) |> 
   mutate(
-    fullordin_per_bygg = ifelse(ar == 2022, fullordin_per_bygg, NA_real_),
+    bygg_index = cum_fjoldi / cum_fjoldi[ar == min(ar)] - 1,
+    mannf_index = mannfjoldi_fullordin / mannfjoldi_fullordin[ar == min(ar)] - 1,
+    mism = mannf_index / bygg_index - 1,
+    .by = sveitarfelag
+  ) |> 
+  mutate(
+    fullordin_per_bygg = ifelse(ar == 2023, fullordin_per_bygg, NA_real_),
     text1 = str_c(
       "<b>", sveitarfelag, "</b>", "\n",
       "Fullorðnir íbúar: ", number(mannfjoldi_fullordin, big.mark = ".", decimal.mark = ","), "\n",
@@ -277,6 +329,7 @@ plot_dat <- d |>
     ),
     text3 = str_c(
       "<b>", sveitarfelag, "</b>", "\n",
+      "Ár: ", ar, "\n",
       "Fjölgun fullorðinna: ", hlutf(mannf_index), "\n",
       "Fjölgun fasteigna: ", hlutf(bygg_index), "\n",
       "Fullorðnum hefur fjölgað<b>", 
@@ -326,7 +379,8 @@ p2 <- pd |>
   ggplot(aes(ar, bygg_per_pers, text = text2)) +
   geom_line(aes(group = sveitarfelag)) +
   scale_x_continuous(
-    expand = expansion()
+    expand = expansion(),
+    breaks = breaks_pretty()
   ) +
   scale_y_continuous(
     expand = expansion()
@@ -345,12 +399,18 @@ p2 <- pd |>
 p3 <- pd |> 
   ggplot(aes(mannf_index, bygg_index, text = text3)) +
   geom_abline(intercept = 0, slope = 1, lty = 2, linewidth = 0.5, colour = "grey50") +
-  geom_line(aes(group = sveitarfelag)) +
+  geom_path(aes(group = sveitarfelag)) +
   scale_x_continuous(
-    labels = label_hlutf()
+    labels = label_hlutf(),
+    breaks = breaks_width(0.2)
   ) +
   scale_y_continuous(
-    labels = label_hlutf()
+    labels = label_hlutf(),
+    breaks = breaks_width(0.2)
+  ) +
+  coord_cartesian(
+    xlim = c(0, 0.7),
+    ylim = c(0, 0.7)
   ) +
   labs(
     x = glue::glue("Mannfjöldabreyting síðan {start_year}"),
@@ -641,6 +701,7 @@ ggsave(
 )
 ```
 
+![](Figures/full_per_fast_dumbbell.png){.column-page}
 
 ![](Figures/throun_fast_per_einst_page.png){.column-screen .between-content .p-5}
 
