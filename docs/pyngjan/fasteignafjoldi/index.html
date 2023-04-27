@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.2.475">
+<meta name="generator" content="quarto-1.3.340">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -20,7 +20,7 @@ div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
 ul.task-list{list-style: none;}
 ul.task-list li input[type="checkbox"] {
   width: 0.8em;
-  margin: 0 0.8em 0.2em -1.6em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
 </style>
@@ -53,13 +53,13 @@ ul.task-list li input[type="checkbox"] {
 }</script>
 <style>html{ scroll-behavior: smooth; }</style>
 <meta property="og:title" content="Fasteignauppbygging">
-<meta property="og:description" content="Stundum er talað um að við byggjum of mikið af fasteignum en oftast vill fólk meina að það sé mikill skortur. Hvað byggjum við mikið af fasteignum og hvað erum við mörg?">
+<meta property="og:description" content="Stundum er talað um að við byggjum of mikið af fasteignum en oftast vill fólk meina að það sé mikill skortur. Hvað byggjum við mikið af fasteignum og hvað erum við mörg? Eru þetta nógu margar fasteignir?">
 <meta property="og:image" content="https://metill.is/pyngjan/fasteignafjoldi/Figures/pop_arnar_page.png">
 <meta property="og:site-name" content="Metill">
 <meta property="og:image:height" content="1440">
 <meta property="og:image:width" content="3600">
 <meta name="twitter:title" content="Fasteignauppbygging">
-<meta name="twitter:description" content="Stundum er talað um að við byggjum of mikið af fasteignum en oftast vill fólk meina að það sé mikill skortur. Hvað byggjum við mikið af fasteignum og hvað erum við mörg?">
+<meta name="twitter:description" content="Stundum er talað um að við byggjum of mikið af fasteignum en oftast vill fólk meina að það sé mikill skortur. Hvað byggjum við mikið af fasteignum og hvað erum við mörg? Eru þetta nógu margar fasteignir?">
 <meta name="twitter:image" content="https://metill.is/pyngjan/fasteignafjoldi/Figures/pop_arnar_page.png">
 <meta name="twitter:creator" content="@bggjonsson">
 <meta name="twitter:site" content="@bggjonsson">
@@ -114,7 +114,7 @@ ul.task-list li input[type="checkbox"] {
     <div class="quarto-title-meta-heading">Affiliation</div>
     
       <div class="quarto-title-meta-contents">
-      <a href="https://twitter.com/bgautijonsson">Brynjólfur Gauti Guðrúnar Jónsson</a> 
+      <p class="author"><a href="https://twitter.com/bgautijonsson">Brynjólfur Gauti Guðrúnar Jónsson</a> </p>
     </div>
       <div class="quarto-title-meta-contents">
           <p class="affiliation">
@@ -150,28 +150,13 @@ ul.task-list li input[type="checkbox"] {
 
 
 <p>Þjóðskrá heldur úti gögnum um <a href="https://www.skra.is/gogn/fasteignagattin/fjoldatolur-ur-fasteignaskra/fjoldi-ibuda-eftir-byggingarari/">fjölda íbúða eftir byggingarári</a>, sem ná alveg aftur til ársins 1900. Skoðum þessi gögn og berum þau saman við gögn Hagstofunnar um <a href="https://px.hagstofa.is/pxis/pxweb/is/Ibuar/Ibuar__mannfjoldi__1_yfirlit__Yfirlit_mannfjolda/MAN00101.px">mannfjölda eftir kyni og aldri</a>. Við ætlum reyndar ekki að skoða þetta eftir kyni, en það er lítið mál að súmmera upp þessar tölur.</p>
-<div class="cell">
-
-</div>
 <p>Við sjáum að neðan að hreinn fjöldi nýrra fasteigna hækkaði stöðugt frá 1900 þangað til hann náði hámarki rétt fyrir 1980. Árlegur fjöldi var svo aðeins lægri þangað til að öðru hámarki var náð rétt fyrir fjármálahrunið.</p>
 <p>En fólki er alltaf að fjölga svo það er ekki nóg að horfa bara á hreinan fjölda, við viljum skoða fjöldann á þúsund íbúa. Á þeim skala sjáum við að þótt það voru byggðar fleiri fasteignir alls eftir 2000 heldur en kringum 1970 þá voru íslendingar mun fleiri og fasteignafjöldinn á þúsund íbúa því minni.</p>
 <p class="page-columns page-full"><img src="Figures/pop_total_page.png" class="between-content column-screen img-fluid"></p>
-<div class="cell">
-
-</div>
 <p>En það er heldur ekki nóg að skoða fjöldann út frá íbúum alls. Það eru fá börn og unglingar sem þurfa að eiga fasteign og því er betra að horfa á fjölda nýrra fasteigna á hverja þúsund fullorðna íbúa (20 ára og eldri). Á þeim skala verður munurinn á uppbyggingunni kringum 1970 og 2006 ennþá meiri, enda sjáum við hér að neðan að fullorðnum hefur fjölgað hraðar en börnum síðustu 60 árin.</p>
 <p class="page-columns page-full"><img src="Figures/pop_fullordin.png" class="column-page img-fluid"></p>
-<div class="cell">
-
-</div>
 <p>Hvenær hefði hentað Arnari að vera að leita sér að íbúð? Ef við skoðum fjölda nýbyggðra fasteigna per 1.000 íbúa jafngamlir og Arnar er í dag sjáum við að árið 2021 voru byggðar 940 íbúðir á hverja 1.000 jafnaldra, það er næstum ein á mann! En sú tala náði hápunkti árið 1973 þegar það voru byggðar 2139 íbúðir á hverja 1.000, það eru rúmlega tvær á mann! Það er því augljóst að Arnar hefði viljað vera ungur maður árið 1973 til að geta staðið í almennilegu fasteignabraski.</p>
 <p class="page-columns page-full"><img src="Figures/pop_arnar_page.png" class="column-page img-fluid"></p>
-<div class="cell">
-
-</div>
-<div class="cell">
-
-</div>
 
 
 
@@ -206,9 +191,23 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     icon: icon
   };
   anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
   const clipboard = new window.ClipboardJS('.code-copy-button', {
-    target: function(trigger) {
-      return trigger.previousElementSibling;
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
     }
   });
   clipboard.on('success', function(e) {
@@ -273,6 +272,92 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       return note.innerHTML;
     });
   }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
   const findCites = (el) => {
     const parentEl = el.parentElement;
     if (parentEl) {
@@ -311,12 +396,12 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }
   }
     var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
-      var filterRegex = new RegExp(/https:\/\/metill\.is/);
+      var filterRegex = new RegExp("https:\/\/metill\.is");
     var isInternal = (href) => {
         return filterRegex.test(href) || localhostRegex.test(href);
     }
     // Inspect non-navigation links and adorn them if external
-    var links = window.document.querySelectorAll('a:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item)');
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item)');
     for (var i=0; i<links.length; i++) {
       const link = links[i];
       if (!isInternal(link.href)) {
@@ -327,6 +412,23 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 });
 </script>
 </div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+      &nbsp;
+    </div>   
+    <div class="nav-footer-center">
+      <ul class="footer-items list-unstyled">
+    <li class="nav-item">
+    <a class="nav-link" href="../../um_metil.html">Um Metil</a>
+  </li>  
+</ul>
+    </div>
+    <div class="nav-footer-right">
+      &nbsp;
+    </div>
+  </div>
+</footer>
 
 
 

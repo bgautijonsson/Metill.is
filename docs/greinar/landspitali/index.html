@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.2.475">
+<meta name="generator" content="quarto-1.3.340">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -20,7 +20,7 @@ div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
 ul.task-list{list-style: none;}
 ul.task-list li input[type="checkbox"] {
   width: 0.8em;
-  margin: 0 0.8em 0.2em -1.6em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
 </style>
@@ -53,13 +53,13 @@ ul.task-list li input[type="checkbox"] {
 }</script>
 <style>html{ scroll-behavior: smooth; }</style>
 <meta property="og:title" content="Landspítalinn">
-<meta property="og:description" content="Hvernig er nýting legurýma á Landspítala? Hvaða hlutfall launa fer í þessi margræddu millistjórnendastörf?">
+<meta property="og:description" content="Hvernig er nýting legurýma á Landspítala? Hvaða hlutfall launa fer í þessi margræddu millistjórnendastörf? Hér ætla ég aðeins að skoða hvaða gögn eru til um rekstur landspítalans, hvar má finna þau og hvað mætti betur fara í birtingu þeirra gagna.">
 <meta property="og:image" content="https://metill.is/greinar/landspitali/hjukthyngd_fp.png">
 <meta property="og:site-name" content="Metill">
 <meta property="og:image:height" content="1490">
 <meta property="og:image:width" content="2400">
 <meta name="twitter:title" content="Landspítalinn">
-<meta name="twitter:description" content="Hvernig er nýting legurýma á Landspítala? Hvaða hlutfall launa fer í þessi margræddu millistjórnendastörf?">
+<meta name="twitter:description" content="Hvernig er nýting legurýma á Landspítala? Hvaða hlutfall launa fer í þessi margræddu millistjórnendastörf? Hér ætla ég aðeins að skoða hvaða gögn eru til um rekstur landspítalans, hvar má finna þau og hvað mætti betur fara í birtingu þeirra gagna.">
 <meta name="twitter:image" content="https://metill.is/greinar/landspitali/hjukthyngd.png">
 <meta name="twitter:creator" content="@bggjonsson">
 <meta name="twitter:site" content="@bggjonsson">
@@ -127,7 +127,7 @@ ul.task-list li input[type="checkbox"] {
     <div class="quarto-title-meta-heading">Stofnun</div>
     
       <div class="quarto-title-meta-contents">
-      <a href="bggj.is">Brynjólfur Gauti Guðrúnar Jónsson</a> 
+      <p class="author"><a href="bggj.is">Brynjólfur Gauti Guðrúnar Jónsson</a> </p>
     </div>
       <div class="quarto-title-meta-contents">
           <p class="affiliation">
@@ -166,9 +166,6 @@ ul.task-list li input[type="checkbox"] {
 <h1>Gögn</h1>
 <p>Gögnin eru fengin úr <a href="https://www.landspitali.is/um-landspitala/spitalinn-i-tolum/starfsemisupplysingar-lsh/?branch=7ae95bda-92f7-11ec-a2e6-005056865b13" target="_blank">starfsemisupplýsingum Landspítala</a>. Þar sem þetta er allt í PDF skjölum er ég ekki búinn að sækja öll gögnin, en ég birti hérna yfirlit yfir það helsta sem ég hef náð að safna saman. Það er kannski óþarfi að segja það, en það væri mikill kostur ef Landspítali myndi birta töflurnar úr þessum PDF skýrslum t.d. á csv formi, eða sem excel skrár. Seðlabankinn birtir t.d. excel skrár með viðeigandi gögnum samhliða PDF skýrslum sínum.</p>
 <p>Eitt það besta sem yfirvöld geta gert til að auka traust á rekstri spítalans eða ákvarðanir í kringum hann er að auðvelda almenningi að nálgast upplýsingar um reksturinn. Það er ekki nóg að lesa/heyra í fjölmiðlum að einhver klár manneskja segir eitthvað um reksturinn, það verður að vera hægt að sannreyna þetta.</p>
-<div class="cell">
-
-</div>
 </section>
 <section id="veikindahlutfall" class="level1 page-columns page-full">
 <h1>Veikindahlutfall</h1>
@@ -185,7 +182,7 @@ ul.task-list li input[type="checkbox"] {
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="veikindi_kjarnar.png" class="img-fluid figure-img" style="width:60.0%"></p>
-<p></p><figcaption class="figure-caption">Munur á Jan-Mars veikindahlutföllum 2021 og 2022</figcaption><p></p>
+<figcaption class="figure-caption">Munur á Jan-Mars veikindahlutföllum 2021 og 2022</figcaption>
 </figure>
 </div>
 </div>
@@ -205,7 +202,7 @@ ul.task-list li input[type="checkbox"] {
 <section id="atvik" class="level1 page-columns page-full">
 <h1>Atvik</h1>
 <p>Höfum í huga að atvikaskráning er ófullkomin mæling á raunverulegum fjölda atvika, bæði sjúklinga og starfsfólks. Því gæti aukning verið að hluta útskýrð af aukinni atvikaskráningu jafnt sem fjölgun atvika. Á hinn bóginn gæti flókið kerfi atvikaskráninga líka haft letjandi áhrif svo að atvikum hafi fjölgað meira en virðist vera.</p>
-<div class="panel-tabset page-columns page-full">
+<div class="tabset-margin-container"></div><div class="panel-tabset page-columns page-full">
 <ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true">Atvik sjúklinga</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false">Ofbeldisatvik gegn starfsfólki</a></li></ul>
 <div class="tab-content page-columns page-full">
 <div id="tabset-1-1" class="tab-pane active page-columns page-full" role="tabpanel" aria-labelledby="tabset-1-1-tab">
@@ -229,7 +226,7 @@ ul.task-list li input[type="checkbox"] {
 </section>
 <section id="starfsmannavelta" class="level1 page-columns page-full">
 <h1>Starfsmannavelta</h1>
-<div class="panel-tabset page-columns page-full">
+<div class="tabset-margin-container"></div><div class="panel-tabset page-columns page-full">
 <ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-2-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-1" role="tab" aria-controls="tabset-2-1" aria-selected="true">Læknar</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-2" role="tab" aria-controls="tabset-2-2" aria-selected="false">Hjúkrunarfræðingar</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-3" role="tab" aria-controls="tabset-2-3" aria-selected="false">Sjúkraliðar</a></li></ul>
 <div class="tab-content page-columns page-full">
 <div id="tabset-2-1" class="tab-pane active page-columns page-full" role="tabpanel" aria-labelledby="tabset-2-1-tab">
@@ -266,7 +263,7 @@ ul.task-list li input[type="checkbox"] {
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="nyting_ryma.png" class="img-fluid figure-img"></p>
-<p></p><figcaption class="figure-caption">Tafla frá: Bréf til blaðsins. Skortur á legurými fyrir bráðveika á Landspítala (Læknablaðið 12. tölublað, 107. árgangur 2021)</figcaption><p></p>
+<figcaption class="figure-caption">Tafla frá: Bréf til blaðsins. Skortur á legurými fyrir bráðveika á Landspítala (Læknablaðið 12. tölublað, 107. árgangur 2021)</figcaption>
 </figure>
 </div>
 </section>
@@ -286,7 +283,7 @@ ul.task-list li input[type="checkbox"] {
 <section id="stéttarfélög" class="level2 page-columns page-full">
 <h2 class="anchored" data-anchor-id="stéttarfélög">Stéttarfélög</h2>
 <p>Hér má sjá fjölda og hlutföll stöðugilda fyrir fleiri stéttarfélög. Þar sem Sameyki varð ekki til fyrr en 2019 lagði ég saman fjölda stöðugilda hjá viðeigandi stéttarfélögum fyrir þann tíma.</p>
-<div class="panel-tabset page-columns page-full">
+<div class="tabset-margin-container"></div><div class="panel-tabset page-columns page-full">
 <ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-3-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-3-1" role="tab" aria-controls="tabset-3-1" aria-selected="true">Hlutföll</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-3-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-3-2" role="tab" aria-controls="tabset-3-2" aria-selected="false">Fjöldi</a></li></ul>
 <div class="tab-content page-columns page-full">
 <div id="tabset-3-1" class="tab-pane active page-columns page-full" role="tabpanel" aria-labelledby="tabset-3-1-tab">
@@ -323,7 +320,7 @@ ul.task-list li input[type="checkbox"] {
 <blockquote class="blockquote">
 <p>Þannig var hlutfall starfsmanna í stoðþjónustu af heildarfjölda stöðugilda 16,3% árið 2008 en er sem fyrr segir 13,5% árið 2021. Það er sérstakt markmið stjórnenda Landspítala að fjölga starfsfólki í stoðþjónustu svo faglært starfsfólk geti einbeitt sér að beinni þjónustu við sjúklinga og starfað í samræmi við menntun sína (e. Working from the top of your licence).</p>
 </blockquote>
-<div class="panel-tabset page-columns page-full">
+<div class="tabset-margin-container"></div><div class="panel-tabset page-columns page-full">
 <ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-4-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-4-1" role="tab" aria-controls="tabset-4-1" aria-selected="true">Hlutfall</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-4-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-4-2" role="tab" aria-controls="tabset-4-2" aria-selected="false">Fjöldi</a></li></ul>
 <div class="tab-content page-columns page-full">
 <div id="tabset-4-1" class="tab-pane active page-columns page-full" role="tabpanel" aria-labelledby="tabset-4-1-tab">
@@ -348,7 +345,7 @@ ul.task-list li input[type="checkbox"] {
 <section id="stjórnendur" class="level2 page-columns page-full">
 <h2 class="anchored" data-anchor-id="stjórnendur">Stjórnendur</h2>
 <p>Fyrir tæpu ári síðan birti Landspítali <a href="https://www.landspitali.is/um-landspitala/fjolmidlatorg/frettir/stok-frett/2021/08/20/Samantekt-um-stjornendur-a-Landspitala-og-laun-theirra/" target="_blank">Samantekt um stjórnendur á Landspítala og laun þeirra</a>. Þar getum við séð hlutfall stjórnenda af öllum stöðugildum og notað svo gögnin um heildarfjölda stöðugilda til að reikna fjölda stöðugilda stjórnenda. Eins og sést að neðan hefur hlutfallið farið stöðugt lækkandi frá 2008 til 2020, og fjöldi stöðugilda stjórnenda lækkað eða haldist í stað.</p>
-<div class="panel-tabset page-columns page-full">
+<div class="tabset-margin-container"></div><div class="panel-tabset page-columns page-full">
 <ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-5-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-5-1" role="tab" aria-controls="tabset-5-1" aria-selected="true">Hlutfall</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-5-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-5-2" role="tab" aria-controls="tabset-5-2" aria-selected="false">Fjöldi</a></li></ul>
 <div class="tab-content page-columns page-full">
 <div id="tabset-5-1" class="tab-pane active page-columns page-full" role="tabpanel" aria-labelledby="tabset-5-1-tab">
@@ -378,7 +375,7 @@ ul.task-list li input[type="checkbox"] {
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="skrifstof_landsp.png" class="img-fluid figure-img" style="width:100.0%"></p>
-<p></p><figcaption class="figure-caption">Tilkynning vegna skrifstofustöðugilda</figcaption><p></p>
+<figcaption class="figure-caption">Tilkynning vegna skrifstofustöðugilda</figcaption>
 </figure>
 </div>
 </div>
@@ -389,16 +386,10 @@ ul.task-list li input[type="checkbox"] {
 <h1>Launaútgjöld</h1>
 <p>Á <a href="https://rikisreikningur.is" target="_blank">rikisreikningur.is</a> eru gögn um bókhald ríkisstjórnarinnar. Með þeim gögnum getum við skoðað launaútgjöldin til Landspítala og skipt þeim upp eftir dagvinnulaunum, yfirvinnulaunum o.s.f.</p>
 <p>Eitt sem mér finnst vanta í þessu gögn er að sjá launaútgjöldin eftir starfsstétt eða einhverskonar flokkun eftir starfsheitum.</p>
-<div class="cell">
-
-</div>
-<div class="panel-tabset page-columns page-full">
+<div class="tabset-margin-container"></div><div class="panel-tabset page-columns page-full">
 <ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-6-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-6-1" role="tab" aria-controls="tabset-6-1" aria-selected="true">Hlutföll</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-6-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-6-2" role="tab" aria-controls="tabset-6-2" aria-selected="false">Mánaðarleg launagjöld per stöðugildi</a></li></ul>
 <div class="tab-content page-columns page-full">
 <div id="tabset-6-1" class="tab-pane active page-columns page-full" role="tabpanel" aria-labelledby="tabset-6-1-tab">
-<div class="cell">
-
-</div>
 <p>Á tímabilinu fóru 16.3% launaútgjalda í yfirvinnu, 9.7% í vaktaálagsgreiðslur, 18.3% í launatengd gjöld og 55.7% í dagvinnulaun.</p>
 <div class="cell page-columns page-full" data-fig.asp="1">
 <div class="cell-output-display column-page">
@@ -423,12 +414,9 @@ ul.task-list li input[type="checkbox"] {
 </div>
 <section id="á-höfðatölu" class="level2 page-columns page-full">
 <h2 class="anchored" data-anchor-id="á-höfðatölu">Á höfðatölu</h2>
-<div class="cell">
-
-</div>
 <p>Við getum svo notað tölur Hagstofu um mannfjölda eftir aldri til að reikna launaútgjöld á höfðatölu, bæði fyrir alla íbúa og fyrir íbúa sem hafa náð 65 ára aldri.</p>
 <p>Upphæðirnar að neðan eru leiðréttar fyrir verðbólgu með vísitölu neysluverðs.</p>
-<div class="panel-tabset page-columns page-full">
+<div class="tabset-margin-container"></div><div class="panel-tabset page-columns page-full">
 <ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-7-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-7-1" role="tab" aria-controls="tabset-7-1" aria-selected="true">Allir</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-7-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-7-2" role="tab" aria-controls="tabset-7-2" aria-selected="false">65+</a></li></ul>
 <div class="tab-content page-columns page-full">
 <div id="tabset-7-1" class="tab-pane active page-columns page-full" role="tabpanel" aria-labelledby="tabset-7-1-tab">
@@ -490,9 +478,23 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     icon: icon
   };
   anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
   const clipboard = new window.ClipboardJS('.code-copy-button', {
-    target: function(trigger) {
-      return trigger.previousElementSibling;
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
     }
   });
   clipboard.on('success', function(e) {
@@ -557,6 +559,92 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       return note.innerHTML;
     });
   }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
   const findCites = (el) => {
     const parentEl = el.parentElement;
     if (parentEl) {
@@ -595,12 +683,12 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }
   }
     var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
-      var filterRegex = new RegExp(/https:\/\/metill\.is/);
+      var filterRegex = new RegExp("https:\/\/metill\.is");
     var isInternal = (href) => {
         return filterRegex.test(href) || localhostRegex.test(href);
     }
     // Inspect non-navigation links and adorn them if external
-    var links = window.document.querySelectorAll('a:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item)');
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item)');
     for (var i=0; i<links.length; i++) {
       const link = links[i];
       if (!isInternal(link.href)) {
@@ -611,6 +699,23 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 });
 </script>
 </div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+      &nbsp;
+    </div>   
+    <div class="nav-footer-center">
+      <ul class="footer-items list-unstyled">
+    <li class="nav-item">
+    <a class="nav-link" href="../../um_metil.html">Um Metil</a>
+  </li>  
+</ul>
+    </div>
+    <div class="nav-footer-right">
+      &nbsp;
+    </div>
+  </div>
+</footer>
 
 
 

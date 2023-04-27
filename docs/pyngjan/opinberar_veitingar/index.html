@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.2.475">
+<meta name="generator" content="quarto-1.3.340">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -20,7 +20,7 @@ div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
 ul.task-list{list-style: none;}
 ul.task-list li input[type="checkbox"] {
   width: 0.8em;
-  margin: 0 0.8em 0.2em -1.6em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
 </style>
@@ -53,13 +53,13 @@ ul.task-list li input[type="checkbox"] {
 }</script>
 <style>html{ scroll-behavior: smooth; }</style>
 <meta property="og:title" content="Opinberar veitingar">
-<meta property="og:description" content="Alþingi, ríkisstjórn og ríkið á helst að endurspegla þjóðina í öllum sínum kostum og göllum. Eitt málefni sem er okkur öllum mikilvægt er matur. Hvað finnst okkur gott að borða?">
+<meta property="og:description" content="Alþingi, ríkisstjórn og ríkið á helst að endurspegla þjóðina í öllum sínum kostum og göllum. Eitt málefni sem er okkur öllum mikilvægt er matur. Hvað finnst okkur gott að borða? Hvar finnst okkur gott að borða? Er ríkið sammála okkur í þessum málum? Hér skoða ég útgjöld ríkisins til veitingastaða, veisluþjónusta og mötuneyta.">
 <meta property="og:image" content="https://metill.is/pyngjan/opinberar_veitingar/Figures/veitingastadir.png">
 <meta property="og:site-name" content="Metill">
 <meta property="og:image:height" content="1937">
 <meta property="og:image:width" content="3120">
 <meta name="twitter:title" content="Opinberar veitingar">
-<meta name="twitter:description" content="Alþingi, ríkisstjórn og ríkið á helst að endurspegla þjóðina í öllum sínum kostum og göllum. Eitt málefni sem er okkur öllum mikilvægt er matur. Hvað finnst okkur gott að borða?">
+<meta name="twitter:description" content="Alþingi, ríkisstjórn og ríkið á helst að endurspegla þjóðina í öllum sínum kostum og göllum. Eitt málefni sem er okkur öllum mikilvægt er matur. Hvað finnst okkur gott að borða? Hvar finnst okkur gott að borða? Er ríkið sammála okkur í þessum málum? Hér skoða ég útgjöld ríkisins til veitingastaða, veisluþjónusta og mötuneyta.">
 <meta name="twitter:image" content="https://metill.is/pyngjan/opinberar_veitingar/Figures/veitingastadir.png">
 <meta name="twitter:creator" content="@bggjonsson">
 <meta name="twitter:site" content="@bggjonsson">
@@ -117,7 +117,7 @@ ul.task-list li input[type="checkbox"] {
     <div class="quarto-title-meta-heading">Affiliation</div>
     
       <div class="quarto-title-meta-contents">
-      <a href="https://twitter.com/bgautijonsson">Brynjólfur Gauti Guðrúnar Jónsson</a> 
+      <p class="author"><a href="https://twitter.com/bgautijonsson">Brynjólfur Gauti Guðrúnar Jónsson</a> </p>
     </div>
       <div class="quarto-title-meta-contents">
           <p class="affiliation">
@@ -167,7 +167,7 @@ ul.task-list li input[type="checkbox"] {
 <div class="quarto-figure quarto-figure-center page-columns page-full">
 <figure class="figure page-columns page-full">
 <p><img src="Figures/database_R.png" class="between-content p-0 img-fluid figure-img"></p>
-<p></p><figcaption class="figure-caption margin-caption">Svona birtast opnir reikningar í gagnagrunninum mínum</figcaption><p></p>
+<figcaption class="figure-caption margin-caption">Svona birtast opnir reikningar í gagnagrunninum mínum</figcaption>
 </figure>
 </div>
 <section id="veitingastaðir" class="level1 page-columns page-full">
@@ -177,51 +177,52 @@ ul.task-list li input[type="checkbox"] {
 <p>Til að fletta upp veitingastöðum þurfum við að leita að fyrirtækjunum sem hjá um reksturinn, ekki veitingastöðunum sjálfum. Ég <a href="https://twitter.com/bggjonsson/status/1579780373298696192" target="_blank">fékk frábærar hugmyndir frá ykkur á Twitter</a> og framkvæmdi svo smá rannsóknarvinnu til að finna nöfnin á rekstraraðilunum.</p>
 <div class="cell page-columns page-full">
 <div class="cell-output-display column-body page-columns page-full">
+<table class="table table-striped table-hover table-sm small" data-quarto-postprocess="true">
 
-<table class="table table-striped table-hover" style="width: auto !important; margin-left: auto; margin-right: auto;">
- <thead>
-  <tr>
-   <th style="text-align:left;"> Fyrirtæki </th>
-   <th style="text-align:left;"> Veitingastaðir </th>
-  </tr>
- </thead>
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">Fyrirtæki</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">Veitingastaðir</th>
+</tr>
+</thead>
 <tbody>
-  <tr>
-   <td style="text-align:left;"> Pizza-Pizza ehf. </td>
-   <td style="text-align:left;"> Domino's Piza </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> Jómfrúin veitingahús ehf </td>
-   <td style="text-align:left;"> Jómfrúin </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> FoodCo hf. </td>
-   <td style="text-align:left;"> Aktu taktu, Eldsmiðjan, Saffran, Pítan o.fl. </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> KFC ehf. </td>
-   <td style="text-align:left;"> KFC </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> Stjarnan ehf. </td>
-   <td style="text-align:left;"> Subway </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> HALAL ehf. </td>
-   <td style="text-align:left;"> Mandi </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> Hlöllabátar ehf. </td>
-   <td style="text-align:left;"> Hlöllabátar </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> Hamborgarab Tómasar Geirsg ehf </td>
-   <td style="text-align:left;"> Hamborgarabúlla Tómasar </td>
-  </tr>
+<tr class="odd">
+<td style="text-align: left;">Pizza-Pizza ehf.</td>
+<td style="text-align: left;">Domino's Piza</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Jómfrúin veitingahús ehf</td>
+<td style="text-align: left;">Jómfrúin</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">FoodCo hf.</td>
+<td style="text-align: left;">Aktu taktu, Eldsmiðjan, Saffran, Pítan o.fl.</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">KFC ehf.</td>
+<td style="text-align: left;">KFC</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Stjarnan ehf.</td>
+<td style="text-align: left;">Subway</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">HALAL ehf.</td>
+<td style="text-align: left;">Mandi</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Hlöllabátar ehf.</td>
+<td style="text-align: left;">Hlöllabátar</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Hamborgarab Tómasar Geirsg ehf</td>
+<td style="text-align: left;">Hamborgarabúlla Tómasar</td>
+</tr>
 </tbody>
 </table>
 
-<div class="quarto-table-caption margin-caption">Nokkrir valdir rekstraraðilar og nöfn veitingastaðanna</div></div>
+
+<div class="quarto-table-caption margin-caption">Nokkrir valdir rekstraraðilar og nöfn veitingastaðanna </div></div>
 </div>
 </section>
 <section id="árleg-útgjöld-frá-ríkinu" class="level2 page-columns page-full">
@@ -240,12 +241,12 @@ ul.task-list li input[type="checkbox"] {
 <h2 class="anchored" data-anchor-id="heildarútgjöld-eftir-stofnun">Heildarútgjöld eftir stofnun</h2>
 <p>Ef við skoðum svo útgjöld hverrar ríkisstofnanar fyrir sig sjáum við mikinn smekksmun innámilli. Til dæmis vinnur greinilega einungis hugsjónafólk með gourmet smekk hjá <em>Lögreglustjóranum á Suðurnesjum</em> því sú stofnun kaupir <strong>bara KFC!</strong></p>
 <p><em>Barnaverndarstofa</em> gengur sömuleiðis ótroðnar slóðir og borðar fjölbreytta blöndu af Mandi og Subway með smá Domino’s inná milli.</p>
-<div class="callout-tip callout callout-style-default callout-captioned">
+<div class="callout callout-style-default callout-tip callout-titled">
 <div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
-<div class="callout-caption-container flex-fill">
+<div class="callout-title-container flex-fill">
 Frumkvöðlaráðgjöf Pyngjunnar og Metils
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
@@ -304,9 +305,23 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     icon: icon
   };
   anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
   const clipboard = new window.ClipboardJS('.code-copy-button', {
-    target: function(trigger) {
-      return trigger.previousElementSibling;
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
     }
   });
   clipboard.on('success', function(e) {
@@ -371,6 +386,92 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       return note.innerHTML;
     });
   }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
   const findCites = (el) => {
     const parentEl = el.parentElement;
     if (parentEl) {
@@ -409,12 +510,12 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }
   }
     var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
-      var filterRegex = new RegExp(/https:\/\/metill\.is/);
+      var filterRegex = new RegExp("https:\/\/metill\.is");
     var isInternal = (href) => {
         return filterRegex.test(href) || localhostRegex.test(href);
     }
     // Inspect non-navigation links and adorn them if external
-    var links = window.document.querySelectorAll('a:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item)');
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item)');
     for (var i=0; i<links.length; i++) {
       const link = links[i];
       if (!isInternal(link.href)) {
@@ -425,6 +526,23 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 });
 </script>
 </div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+      &nbsp;
+    </div>   
+    <div class="nav-footer-center">
+      <ul class="footer-items list-unstyled">
+    <li class="nav-item">
+    <a class="nav-link" href="../../um_metil.html">Um Metil</a>
+  </li>  
+</ul>
+    </div>
+    <div class="nav-footer-right">
+      &nbsp;
+    </div>
+  </div>
+</footer>
 
 
 
