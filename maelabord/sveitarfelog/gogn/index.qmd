@@ -34,6 +34,8 @@ library(janitor)
 library(visitalaneysluverds)
 library(hagstofa)
 library(arrow)
+library(googledrive)
+library(googlesheets4)
 ```
 
 ## Mannfjöldi
@@ -134,17 +136,22 @@ sjodsstreymi <- read_excel("net-sjodsstreymi.xlsx", skip = 4) |>
   filter(
     tegund2 %in% c(
       "Veltufé frá rekstri Total", 
-      "Fjárfestingarhreyfingar Total") | tegund %in% c(
+      "Fjárfestingarhreyfingar Total") | 
+      tegund %in% c(
         "Afborganir langtímalána",
         "Aðrar fjármögnunarhreyfingar",
-        "Tekin ný langtímalán"
+        "Tekin ný langtímalán",
+        "Fjárfesting í varanlegum rekstrarfjármunum"
       )
   ) |>
   mutate(
     tegund2 = ifelse(is.na(tegund), tegund2, tegund) |>
       str_replace(" Total", "")
   ) |> 
-  select(-tegund)
+  select(-tegund) |> 
+  mutate(
+    total = coalesce(total, 0)
+  )
 ```
 
 
@@ -219,7 +226,10 @@ d <- d |> mutate(
   heildarskuldir = `Skuldbindingar` + `Langtímaskuldir` + `Skammtímaskuldir`,
   eignir = `Varanlegir rekstrarfjármunir` + `Áhættufjármunir og langtímakröfur` + `Veltufjármunir`
 )
+
+d
 ```
+
 
 
 
@@ -241,7 +251,9 @@ d <- d |>
     rekstrarnidurstada = "Rekstrarniðurstaða",
     breyting_lifeyrisskuldbindinga = "Breyting lífeyrisskuldbindinga",
     afborganir_langtimalana = "Afborganir langtímalána",
+    tekin_ny_langtimalan = "Tekin ný langtímalán",
     adrar_fjarmognunarhreyfingar = "Aðrar fjármögnunarhreyfingar",
+    ny_fjarfesting = "Fjárfesting í varanlegum rekstrarfjármunum",
     eigid_fe = "Eigið fé", 
     veltufjarmunir = "Veltufjármunir", 
     skammtimakrofur_eigin_fyrirtaeki = "Skammtímakröfur á eigin fyrirtæki",
@@ -278,6 +290,28 @@ d <- d |>
 ```
 
 
+```{r}
+gdrive_data <- read_sheet("https://docs.google.com/spreadsheets/d/1g4aY4ZDhB2NgvgqTwAS33NgVNbhkitcs3fJLQHWEi6E/edit#gid=0")
+```
+
+
+```{r}
+d <- gdrive_data |> 
+  mutate_at(
+    vars(-ar, -sveitarfelag, -hluti),
+    ~ 1000 * .x
+  ) |> 
+  mutate(
+    gjold = gjold + afskriftir
+  ) |> 
+  bind_rows(
+    d
+  ) |> 
+  arrange(
+    ar, sveitarfelag, hluti
+  )
+```
+
 
 ```{r}
 d <- d |> 
@@ -309,7 +343,11 @@ d <- d |>
     skuldir_hlutf_tekjur = heildarskuldir / tekjur,
     skuldir_per_ibui = heildarskuldir / mannfjoldi,
     veltufe_hlutf_tekjur = veltufe / tekjur,
-    veltufjarhlutfall = veltufjarmunir / skammtimaskuldir
+    veltufjarhlutfall = veltufjarmunir / skammtimaskuldir,
+    veltufe_hlutf_afborganir = veltufe / afborganir_langtimalana,
+    fjarf_nylan = tekin_ny_langtimalan - ny_fjarfesting,
+    fjarfesting_hlutf_skuldir = fjarf_nylan / heildarskuldir,
+    .by = c(sveitarfelag, hluti)
   )
 
 names(d)
@@ -322,13 +360,13 @@ percent_vars <- c(
   "Eiginfjárhlutfall",
   "Framlegð sem hlutfall af tekjum",
   "Handbært fé á íbúa",
-  "Launagjöld sem hlutfall af gjöldum",
+  "Launa- og launatengd gjöld sem hlutfall af útgjöldum",
   "Nettóskuldir sem hlutfall af tekjum",
   "Rekstrarniðurstaða sem hlutfall af tekjum",
   "Rekstrarniðurstaða undanfarinna 3 ára sem hlutfall af tekjum",
   "Skuldahlutfall",
   "Skuldir sem hlutfall af tekjum",
-  "Veltufé sem hlutfall af tekjum",
+  "Veltufé frá rekstri sem hlutfall af tekjum",
   "Veltufjárhlutfall"
 )
 
@@ -344,8 +382,8 @@ throun_data <- d |>
     "Eiginfjárhlutfall" = eiginfjarhlutfall,
     "Framlegð sem hlutfall af tekjum" = framlegd_hlutf,
     "Handbært fé á íbúa" = handbaert_fe_per_ibui,
-    "Launagjöld á íbúa" = launagjold_per_ibui,
-    "Launagjöld sem hlutfall af gjöldum" = launagjold_hlutf_gjold,
+    "Launa- og launatengd gjöld" = launagjold_per_ibui,
+    "Launa- og launatengd gjöld sem hlutfall af útgjöldum" = launagjold_hlutf_gjold,
     "Nettóskuldir sem hlutfall af tekjum" = nettoskuldir_hlutf_tekjur,
     "Rekstrarniðurstaða sem hlutfall af tekjum" = rekstrarnidurstada_hlutf,
     "Rekstrarniðurstaða undanfarinna 3 ára sem hlutfall af tekjum" = rekstur_3_ar_hlutf_tekjur,
@@ -374,6 +412,109 @@ throun_data |>
   write_parquet(
     "throun_data.parquet"
   )
+```
+
+# Dreifingargögn
+
+```{r}
+percent_vars <- c(
+  "Eiginfjárhlutfall",
+  "Framlegð sem hlutfall af tekjum",
+  "Handbært fé á íbúa",
+  "Launa- og launatengd gjöld sem hlutfall af gjöldum",
+  "Nettóskuldir sem hlutfall af tekjum",
+  "Rekstrarniðurstaða sem hlutfall af tekjum",
+  "Rekstrarniðurstaða undanfarinna 3 ára sem hlutfall af tekjum",
+  "Skuldahlutfall",
+  "Skuldir sem hlutfall af tekjum",
+  "Veltufé frá rekstri sem hlutfall af tekjum",
+  "Veltufjárhlutfall"
+)
+
+dreifing_data <- d |> 
+  select(
+    ar,
+    sveitarfelag,
+    hluti,
+    # "Heildarskuldir" = heildarskuldir,
+    # "Eignir" = eignir,
+    # "Tekjur" = tekjur,
+    # "Rekstrarniðurstaða" = rekstrarnidurstada,
+    "Eiginfjárhlutfall" = eiginfjarhlutfall,
+    "Framlegð sem hlutfall af tekjum" = framlegd_hlutf,
+    "Handbært fé á íbúa" = handbaert_fe_per_ibui,
+    "Launa- og launatengd gjöld á íbúa" = launagjold_per_ibui,
+    "Launa- og launatengd gjöld sem hlutfall af gjöldum" = launagjold_hlutf_gjold,
+    "Nettóskuldir sem hlutfall af tekjum" = nettoskuldir_hlutf_tekjur,
+    "Rekstrarniðurstaða sem hlutfall af tekjum" = rekstrarnidurstada_hlutf,
+    "Rekstrarniðurstaða undanfarinna 3 ára sem hlutfall af tekjum" = rekstur_3_ar_hlutf_tekjur,
+    "Útsvar og fasteignaskattur á íbúa" = skattur_a_ibua,
+    "Skuldahlutfall" = skuldahlutfall,
+    "Skuldir sem hlutfall af tekjum" = skuldir_hlutf_tekjur,
+    "Skuldir á íbúa" = skuldir_per_ibui,
+    "Veltufé frá rekstri sem hlutfall af tekjum" = veltufe_hlutf_tekjur,
+    "Veltufjárhlutfall" = veltufjarhlutfall
+  ) |> 
+  pivot_longer(
+    c(-sveitarfelag, -ar, -hluti),
+    names_to = "name",
+    values_to = "y"
+  ) |> 
+  arrange(ar, hluti, sveitarfelag, name) |> 
+  mutate(
+    is_percent = ifelse(
+      name %in% percent_vars,
+      TRUE,
+      FALSE
+    )
+  )
+
+dreifing_data |> 
+  write_parquet(
+    "dreifing_data.parquet"
+  )
+
+dreifing_data
+```
+
+
+# Viðmiðsgögn
+
+```{r}
+vidmid_data <- d |> 
+  filter(
+    ar >= 2010,
+  ) |> 
+  select(
+    sveitarfelag, 
+    ar, 
+    hluti,
+    nettoskuldir_obs = nettoskuldir_hlutf_tekjur, 
+    rekstrarnidurstada_obs = rekstur_3_ar_hlutf_tekjur, 
+    framlegd_obs = framlegd_hlutf, 
+    veltufe_obs = veltufe_hlutf_tekjur,
+    veltufjarhlutfall_obs = veltufjarhlutfall
+  ) |> 
+  mutate(
+    framlegd_vidmid = nettoskuldir_obs/10,
+    veltufe_vidmid = nettoskuldir_obs/20,
+    rekstrarnidurstada_vidmid = 0,
+    veltufjarhlutfall_vidmid = 1,
+    nettoskuldir_vidmid = 1
+  ) |> 
+  pivot_longer(c(-sveitarfelag, -ar, -hluti), names_to = c("name", "type"), values_to = "value", names_sep = "_") |> 
+  pivot_wider(names_from = type, values_from  = value) |> 
+  mutate(
+    diff = obs - vidmid,
+    colour = diff > 0
+  ) 
+
+vidmid_data |> 
+  write_parquet(
+    "vidmid_data.parquet"
+  )
+
+vidmid_data
 ```
 
 
