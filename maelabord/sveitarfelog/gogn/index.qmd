@@ -12,6 +12,8 @@ format:
         code-fold: show
         smooth-scroll: true
         link-external-newwindow: true
+        toc: true
+        toc-location: right
 editor: source
 draft: false
 title-block-banner: true
@@ -31,6 +33,7 @@ library(readxl)
 library(janitor)
 library(visitalaneysluverds)
 library(hagstofa)
+library(arrow)
 ```
 
 ## Mannfjöldi
@@ -209,6 +212,7 @@ d <- d |>
 ```
 
 
+## Reikna breytur
 
 ```{r}
 d <- d |> mutate(
@@ -228,7 +232,7 @@ d <- d |>
     heildarskuldir,
     eignir,
     tekjur = "Tekjur", 
-    skatttekjur_an_jofnundarsjóðs = "Skatttekjur án Jöfnunarsjóðs",
+    skatttekjur_an_jofnundarsjods = "Skatttekjur án Jöfnunarsjóðs",
     framlag_jofnunarsjods = "Framlag Jöfnunarsjóðs",
     gjold = "Gjöld", 
     afskriftir = "Afskriftir",
@@ -284,16 +288,104 @@ d <- d |>
 ```
 
 
+```{r}
+d <- d |>
+  mutate(
+    eiginfjarhlutfall = eigid_fe / eignir,
+    framlegd = tekjur - gjold + afskriftir,
+    framlegd_hlutf = framlegd / tekjur,
+    handbaert_fe_per_ibui = handbaert_fe / mannfjoldi,
+    heildarskuldir = heildarskuldir,
+    launagjold_per_ibui = launagjold / mannfjoldi,
+    launagjold_hlutf_gjold = launagjold / gjold,
+    nettoskuldir = heildarskuldir - veltufjarmunir + skammtimakrofur_eigin_fyrirtaeki,
+    nettoskuldir_hlutf_tekjur = nettoskuldir / tekjur,
+    rekstrarnidurstada_hlutf = rekstrarnidurstada / tekjur,
+    rekstur_3_ar = rekstrarnidurstada + lag(rekstrarnidurstada, 1) + lag(rekstrarnidurstada, 2),
+    tekjur_3_ar = tekjur + lag(tekjur, 1) + lag(tekjur, 2),
+    rekstur_3_ar_hlutf_tekjur = rekstur_3_ar / tekjur_3_ar,
+    skattur_a_ibua = skatttekjur_an_jofnundarsjods / mannfjoldi,
+    skuldahlutfall = 1 - eiginfjarhlutfall,
+    skuldir_hlutf_tekjur = heildarskuldir / tekjur,
+    skuldir_per_ibui = heildarskuldir / mannfjoldi,
+    veltufe_hlutf_tekjur = veltufe / tekjur,
+    veltufjarhlutfall = veltufjarmunir / skammtimaskuldir
+  )
+
+names(d)
+```
+
+# Þróunargögn
 
 ```{r}
-# d <- d |> 
+percent_vars <- c(
+  "Eiginfjárhlutfall",
+  "Framlegð sem hlutfall af tekjum",
+  "Handbært fé á íbúa",
+  "Launagjöld sem hlutfall af gjöldum",
+  "Nettóskuldir sem hlutfall af tekjum",
+  "Rekstrarniðurstaða sem hlutfall af tekjum",
+  "Rekstrarniðurstaða undanfarinna 3 ára sem hlutfall af tekjum",
+  "Skuldahlutfall",
+  "Veltufé sem hlutfall af tekjum",
+  "Veltufjárhlutfall"
+)
+
+throun_data <- d |> 
+  select(
+    sveitarfelag,
+    ar,
+    hluti,
+    # "Heildarskuldir" = heildarskuldir,
+    # "Eignir" = eignir,
+    # "Tekjur" = tekjur,
+    # "Rekstrarniðurstaða" = rekstrarnidurstada,
+    "Eiginfjárhlutfall" = eiginfjarhlutfall,
+    "Framlegð sem hlutfall af tekjum" = framlegd_hlutf,
+    "Handbært fé á íbúa" = handbaert_fe_per_ibui,
+    "Launagjöld á íbúa" = launagjold_per_ibui,
+    "Launagjöld sem hlutfall af gjöldum" = launagjold_hlutf_gjold,
+    "Nettóskuldir sem hlutfall af tekjum" = nettoskuldir_hlutf_tekjur,
+    "Rekstrarniðurstaða sem hlutfall af tekjum" = rekstrarnidurstada_hlutf,
+    "Rekstrarniðurstaða undanfarinna 3 ára sem hlutfall af tekjum" = rekstur_3_ar_hlutf_tekjur,
+    "Útsvar og fasteignaskattur á íbúa" = skattur_a_ibua,
+    "Skuldahlutfall" = skuldahlutfall,
+    "Skuldir sem hlutfall af tekjum" = skuldir_hlutf_tekjur,
+    "Skuldir á íbúa" = skuldir_per_ibui,
+    "Veltufé frá rekstri sem hlutfall af tekjum" = veltufe_hlutf_tekjur,
+    "Veltufjárhlutfall" = veltufjarhlutfall
+  ) |> 
+  pivot_longer(
+    c(-sveitarfelag, -ar, -hluti),
+    names_to = "name",
+    values_to = "y"
+  ) |> 
+  arrange(ar, hluti, sveitarfelag, name) |> 
+  mutate(
+    is_percent = ifelse(
+      name %in% percent_vars,
+      TRUE,
+      FALSE
+    )
+  )
+
+throun_data |> 
+  write_parquet(
+    "throun_data.parquet"
+  )
+```
+
+
+
+```{r}
+# d <- d |>
 #   mutate(
 #     eiginfjarhlutfall = eigid_fe / eignir,
 #     framlegd = tekjur - gjold + afskriftir,
 #     framlegd_hlutf = framlegd / tekjur,
 #     handbaert_fe_per_ibui = handbaert_fe / mannfjoldi,
 #     heildarskuldir = heildarskuldir,
-#     hlutf_jofnunarsjods_skottum = framlag_jofnunarsjods / (framlag_jofnunarsjods + skatttekjur_an_jofnundarsjóðs),
+#     hlutf_jofnunarsjods_skottum = framlag_jofnunarsjods / (framlag_jofnunarsjods + skatttekjur_an_jofnundarsjods),
 #     jofnunarsjodur_a_ibua = framlag_jofnunarsjods / mannfjoldi,
 #     launagjold_per_ibui = launagjold / mannfjoldi,
 #     launagjold_hlutf_gjold = launagjold / gjold,
@@ -315,16 +407,16 @@ d <- d |>
 #     timi_borga_skuldir = ifelse(veltufe <= 0, 1e5, timi_borga_skuldir),
 #     veltufe_hlutf_tekjur = veltufe / tekjur,
 #     veltufjarhlutfall = veltufjarmunir / skammtimaskuldir
-#   ) |> 
+#   ) |>
 #   inner_join(
 #     visitala,
 #     by = "ar"
-#   ) |> 
-#   group_by(ar) |> 
-#   mutate(hlutf_jofnunarsjod_utgjold = utgjold_jofnunarsjod / sum(utgjold_jofnunarsjod)) |> 
-#   ungroup() |> 
-#   arrange(ar, sveitarfelag, hluti) |> 
-#   group_by(sveitarfelag, hluti) |> 
+#   ) |>
+#   group_by(ar) |>
+#   mutate(hlutf_jofnunarsjod_utgjold = utgjold_jofnunarsjod / sum(utgjold_jofnunarsjod)) |>
+#   ungroup() |>
+#   arrange(ar, sveitarfelag, hluti) |>
+#   group_by(sveitarfelag, hluti) |>
 #   mutate(
 #     skuldaaukning_2021 = ifelse(sveitarfelag != "Múlaþing" & ar >= 2018, (heildarskuldir / cpi) / (heildarskuldir[ar == 2018] / cpi[ar == 2018]) - 1, NA),
 #     skuldaaukning = heildarskuldir / heildarskuldir[ar == max(ar)],
@@ -332,7 +424,7 @@ d <- d |>
 #     tekjur_kjortimabil = sum(tekjur * (ar >= 2018)),
 #     rekstrarnidurstada_hlutf_kjortimabil = rekstrarnidurstada_kjortimabil / tekjur_kjortimabil,
 #     rekstrarnidurstada_per_ibui_kjortimabil = rekstrarnidurstada_kjortimabil / mean(mannfjoldi[ar %in% 2018:2021])
-#   ) |> 
-#   ungroup() 
+#   ) |>
+#   ungroup()
 ```
 

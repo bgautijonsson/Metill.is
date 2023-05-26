@@ -67,7 +67,7 @@ theme_set(theme_metill())
 ```{r}
 kaupskra_url <- "https://objectstorage.eu-frankfurt-1.oraclecloud.com/n/frs3o1zldvgn/b/public_data_for_download/o/kaupskra.csv"
 leiguskra_url <- "https://objectstorage.eu-frankfurt-1.oraclecloud.com/n/frs3o1zldvgn/b/public_data_for_download/o/leiguskra.csv"
-kaupskra_raw <-  vroom::vroom(
+kaupskra_raw <-  read_csv(
   kaupskra_url,
   locale = locale(encoding = "ISO-8859-1")
 ) |> 
@@ -119,7 +119,7 @@ kaupskra <- kaupskra_raw |>
 kaupskra <- kaupskra |> 
   inner_join(
     crossing(
-      dags = unique(d$dags),
+      dags = unique(kaupskra$dags),
       size = c(0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9)
     ),
     by = "dags"
@@ -147,7 +147,7 @@ kaupskra <- kaupskra |>
 kaupskra |> write_parquet("data/kaupskra_data.parquet")
 
 
-leiguskra_raw <- vroom::vroom(
+leiguskra_raw <- read_csv(
   leiguskra_url,
   locale = locale(encoding = "ISO-8859-1")
 ) |> 
@@ -214,6 +214,8 @@ leiguskra <- leiguskra_raw |>
          y = sample(c(y1, y2), size = n())) |> 
   select(-data)
 
+
+leiguskra |> write_parquet("data/leiguskra_data.parquet")
 ```
 
 # Kaupverð
