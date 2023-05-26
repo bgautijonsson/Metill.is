@@ -327,6 +327,7 @@ percent_vars <- c(
   "Rekstrarniðurstaða sem hlutfall af tekjum",
   "Rekstrarniðurstaða undanfarinna 3 ára sem hlutfall af tekjum",
   "Skuldahlutfall",
+  "Skuldir sem hlutfall af tekjum",
   "Veltufé sem hlutfall af tekjum",
   "Veltufjárhlutfall"
 )
