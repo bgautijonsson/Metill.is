@@ -56,6 +56,8 @@ library(visitalaneysluverds)
 library(metill)
 library(arrow)
 library(patchwork)
+library(geomtextpath)
+library(gt)
 theme_set(theme_metill())
 
 
@@ -67,7 +69,7 @@ theme_set(theme_metill())
 ```{r}
 kaupskra_url <- "https://objectstorage.eu-frankfurt-1.oraclecloud.com/n/frs3o1zldvgn/b/public_data_for_download/o/kaupskra.csv"
 leiguskra_url <- "https://objectstorage.eu-frankfurt-1.oraclecloud.com/n/frs3o1zldvgn/b/public_data_for_download/o/leiguskra.csv"
-kaupskra_raw <-  read_csv(
+kaupskra_raw <-  read_csv2(
   kaupskra_url,
   locale = locale(encoding = "ISO-8859-1")
 ) |> 
@@ -285,26 +287,6 @@ ggsave(
 ![](Figures/kaupverd_breyting.png){.column-page}
 
 
-```{r}
-kaupskra |> 
-  slice_max(order_by = dags, n = 1) |> 
-  select(size, lower, upper) |> 
-  pivot_longer(c(-size)) |> 
-  mutate(
-    prob = ifelse(
-      name == "lower",
-      0.5 - size / 2,
-      0.5 + size/2
-    )
-  ) |> 
-  arrange(prob) |> 
-  ggplot(aes(prob, value)) +
-  geom_area() +
-  scale_y_continuous(
-    labels = label_percent()
-  )
-```
-
 # Leiguverð
 
 ```{r}
@@ -374,25 +356,100 @@ ggsave(
 
 
 
+
+
 ```{r}
-p <- leiguskra |> 
-  filter(year(dags) > 2020) |> 
-  select(dags, size, lower, upper) |> 
-  pivot_longer(c(-size, -dags)) |> 
+plot_dat1 <- kaupskra |> 
+  slice_max(order_by = dags, n = 1) |> 
+  select(size, lower, upper) |> 
+  pivot_longer(c(-size)) |> 
   mutate(
     prob = ifelse(
       name == "lower",
       0.5 - size / 2,
       0.5 + size/2
-    ),
-    dags = as.numeric(as.factor(dags))
+    )
   ) |> 
   arrange(prob) |> 
-  ggplot(aes(prob, value, frame = dags)) +
-  geom_line() +
-  scale_y_continuous(
-    labels = label_percent()
+  mutate(
+    type = "Kaupverð"
   )
+```
 
-ggplotly(p)
+
+```{r}
+plot_dat2 <- leiguskra |> 
+  slice_max(order_by = dags, n = 1) |> 
+  select(size, lower, upper) |> 
+  pivot_longer(c(-size)) |> 
+  mutate(
+    prob = ifelse(
+      name == "lower",
+      0.5 - size / 2,
+      0.5 + size/2
+    )
+  ) |> 
+  arrange(prob) |> 
+  mutate(
+    type = "Leiguverð"
+  )
+```
+
+
+
+```{r}
+plot_dat <- plot_dat1 |> 
+  bind_rows(
+    plot_dat2
+  )
+```
+
+
+```{r}
+plot_dat |> 
+  pivot_wider(names_from = type, values_from = value) |> 
+  arrange(prob) |> 
+  select(
+    Dreifing = prob,
+    Kaupverð,
+    Leiguverð
+  ) |> 
+  gt()
+```
+
+
+
+
+```{r}
+plot_dat |> 
+  ggplot(aes(prob, value)) +
+  geom_hline(
+    yintercept = 0,
+    lty = 2,
+    alpha = 0.5,
+    linewidth = 0.3
+  ) +
+  geom_textline(aes(col = type, label = type, hjust = type)) +
+  scale_x_tufte(
+    labels = label_hlutf(),
+    breaks = tufte_breaks(plot_dat$prob, n = 20)
+  ) +
+  scale_y_tufte(
+    labels = label_hlutf(),
+    breaks = c(tufte_breaks(plot_dat$value), 0)
+  ) +
+  scale_colour_brewer(
+    palette = "Set1"
+  ) +
+  scale_hjust_discrete(
+    range = c(0.4, 0.6)
+  ) +
+  theme(
+    legend.position = "none"
+  ) +
+  labs(
+    x = NULL,
+    y = NULL,
+    title = "Leiga hækkar "
+  )
 ```

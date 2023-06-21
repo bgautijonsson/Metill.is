@@ -109,7 +109,8 @@ icelandic <- c(
   "Qatar" = "Katar",
   "Sweden" = "Svíþjóð",
   "United States" = "Bandaríkin",
-  "Venezuela" = "Venesúela")
+  "Venezuela" = "Venesúela"
+)
 
 plot_dat <- d |> 
   select(year, country, gdp_per_capita) |> 
@@ -137,7 +138,7 @@ plot_dat <- d |>
   ungroup()
 
 
-plot_dat |> 
+p <- plot_dat |> 
   ggplot(aes(
     year, gdp_per_capita,
     colour = colour,
@@ -168,15 +169,15 @@ plot_dat |>
   scale_colour_manual(
     values = c(
       "#a50f15",
-               "#a6bddb",
-               "#045a8d",
-               "black", 
-               "#e41a1c", 
-               "#980043",
-               "#fed976",
-               "#0868ac",
-               "#fed976",
-               "grey"
+      "#a6bddb",
+      "#045a8d",
+      "black", 
+      "#e41a1c", 
+      "#980043",
+      "#fed976",
+      "#0868ac",
+      "#fed976",
+      "grey"
     )
   ) +
   scale_alpha_manual(values = c(0.3, 1)) +
@@ -189,6 +190,14 @@ plot_dat |>
 
 
 
+p
+
+ggsave(
+  plot = p,
+  filename = "Figures/gdp.png",
+  width = 8, height = 0.5 * 8,
+  scale = 1.6
+)
 
 ```
 
@@ -239,7 +248,7 @@ plot_dat <- d |>
 
 
 
-plot_dat |> 
+p <- plot_dat |> 
   ggplot(aes(year, growth,
              colour = colour,
              alpha = alpha)) +
@@ -261,12 +270,12 @@ plot_dat |>
                 limits = c(1/1.4, 1.4)
   ) +
   scale_colour_manual(values = c("#a50f15",
-                                          "#a6bddb",
-                                          "#045a8d",
-                                          "#e41a1c", 
-                                          "#fed976",
-                                          "grey")) +
-                                            scale_alpha_manual(values = c(0.223, 1)) +
+                                 "#a6bddb",
+                                 "#045a8d",
+                                 "#e41a1c", 
+                                 "#fed976",
+                                 "grey")) +
+  scale_alpha_manual(values = c(0.223, 1)) +
   scale_size_manual(values = c(0.5, 1)) +
   theme(legend.position = "none") +
   coord_cartesian(ylim = c(1/1.11, 1.11),
@@ -276,6 +285,14 @@ plot_dat |>
        title = "Þróun hagvaxtar árin 1980 - 2018")
 
 
+p
+
+ggsave(
+  plot = p,
+  filename = "Figures/gdp_change.png",
+  width = 8, height = 0.5 * 8,
+  scale = 1.6
+)
 
 ```
 
@@ -350,16 +367,16 @@ plot_dat |>
                 labels = label_number(suffix = " kWh", big.mark = ".", decimal.mark = ",")
   ) +
   scale_colour_manual(values = c("#a50f15",
-                                          "#a6bddb",
-                                          "#045a8d",
-                                          "black", 
-                                          "#e41a1c", 
-                                          "#980043",
-                                          "#fed976",
-                                          "#0868ac",
-                                          "#fed976",
-                                          "grey")) +
-                                            scale_alpha_manual(values = c(0.3, 1)) +
+                                 "#a6bddb",
+                                 "#045a8d",
+                                 "black", 
+                                 "#e41a1c", 
+                                 "#980043",
+                                 "#fed976",
+                                 "#0868ac",
+                                 "#fed976",
+                                 "grey")) +
+  scale_alpha_manual(values = c(0.3, 1)) +
   scale_size_manual(values = c(0.5, 1)) +
   theme(legend.position = "none") +
   coord_cartesian() +
@@ -439,16 +456,16 @@ plot_dat |>
                 labels = label_number(suffix = " kWh", big.mark = ".", decimal.mark = ",")
   ) +
   scale_colour_manual(values = c("#a50f15",
-                                          "#a6bddb",
-                                          "#045a8d",
-                                          "black", 
-                                          "#e41a1c", 
-                                          "#980043",
-                                          "#fed976",
-                                          "#0868ac",
-                                          "#fed976",
-                                          "grey")) +
-                                            scale_alpha_manual(values = c(0.3, 1)) +
+                                 "#a6bddb",
+                                 "#045a8d",
+                                 "black", 
+                                 "#e41a1c", 
+                                 "#980043",
+                                 "#fed976",
+                                 "#0868ac",
+                                 "#fed976",
+                                 "grey")) +
+  scale_alpha_manual(values = c(0.3, 1)) +
   scale_size_manual(values = c(0.5, 1)) +
   theme(legend.position = "none") +
   coord_cartesian() +
@@ -526,16 +543,16 @@ plot_dat |>
                      labels = label_percent()
   ) +
   scale_colour_manual(values = c("#a50f15",
-                                          "#a6bddb",
-                                          "#045a8d",
-                                          "black", 
-                                          "#e41a1c", 
-                                          "#980043",
-                                          "#fed976",
-                                          "#0868ac",
-                                          "#fed976",
-                                          "grey")) +
-                                            scale_alpha_manual(values = c(0.3, 1)) +
+                                 "#a6bddb",
+                                 "#045a8d",
+                                 "black", 
+                                 "#e41a1c", 
+                                 "#980043",
+                                 "#fed976",
+                                 "#0868ac",
+                                 "#fed976",
+                                 "grey")) +
+  scale_alpha_manual(values = c(0.3, 1)) +
   scale_size_manual(values = c(0.5, 1)) +
   theme(legend.position = "none") +
   coord_cartesian() +
@@ -623,17 +640,17 @@ plot_dat |>
                                            accuracy = 0.1)
   ) +
   scale_colour_manual(values = c("#a50f15",
-                                          "#a6bddb",
-                                          "#045a8d",
-                                          "black", 
-                                          "#e41a1c", 
-                                          "#980043",
-                                          "#fed976",
-                                          "#67000d",
-                                          "#0868ac",
-                                          "#fed976",
-                                          "grey")) +
-                                            scale_alpha_manual(values = c(0.3, 1)) +
+                                 "#a6bddb",
+                                 "#045a8d",
+                                 "black", 
+                                 "#e41a1c", 
+                                 "#980043",
+                                 "#fed976",
+                                 "#67000d",
+                                 "#0868ac",
+                                 "#fed976",
+                                 "grey")) +
+  scale_alpha_manual(values = c(0.3, 1)) +
   scale_size_manual(values = c(0.5, 1)) +
   theme(legend.position = "none") +
   coord_cartesian(ylim = c(0, 6),
@@ -701,15 +718,15 @@ p <- plot_dat |>
                      breaks = c(1980, 1985, 1990, 1995, 2000, 2005, 2010, 2015, 2018)) +
   scale_y_continuous() +
   scale_colour_manual(values = c("#a50f15",
-                                          "#a6bddb",
-                                          "#ff7f00", 
-                                          "#045a8d",
-                                          "#4daf4a",
-                                          "black", 
-                                          "#e41a1c", 
-                                          "#fed976",
-                                          "grey")) +
-                                            scale_alpha_manual(values = c(0.3, 1)) +
+                                 "#a6bddb",
+                                 "#ff7f00", 
+                                 "#045a8d",
+                                 "#4daf4a",
+                                 "black", 
+                                 "#e41a1c", 
+                                 "#fed976",
+                                 "grey")) +
+  scale_alpha_manual(values = c(0.3, 1)) +
   scale_size_manual(values = c(0.5, 1)) +
   theme(legend.position = "none") +
   coord_cartesian(ylim = c(0, 2),

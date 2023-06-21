@@ -89,7 +89,7 @@ d <- pxweb_get(
   mutate(year_ahrif = roll_fun(ahrif),
          year_breyting = roll_fun(breyting)) |> 
   ungroup() |> 
-  filter(year(date) >= 2012) |> 
+  # filter(year(date) >= 2012) |> 
   mutate(undirvisitala = fct_reorder(undirvisitala, year_ahrif, .fun = sum))
 
 d_undir <- pxweb_get(
@@ -165,7 +165,7 @@ d_undir <- pxweb_get(
     year_breyting = roll_fun(breyting),
   ) |> 
   ungroup() |> 
-  filter(year(date) >= 2012) |> 
+  # filter(year(date) >= 2012) |> 
   mutate(
     hlutf = ahrif / sum(ahrif),
     year_hlutf = year_ahrif / sum(year_ahrif),
@@ -179,8 +179,10 @@ colours <- d |>
   distinct(undirvisitala) |> 
   filter(undirvisitala != "Vísitala neysluverðs") |> 
   arrange(undirvisitala) |> 
-  mutate(flokkur_1 = as.character(undirvisitala),
-         colour = RColorBrewer::brewer.pal(n(), name = "Paired"))
+  mutate(
+    flokkur_1 = as.character(undirvisitala),
+    colour = RColorBrewer::brewer.pal(n(), name = "Paired")
+  )
 
 
 d_undir <- d_undir |> 

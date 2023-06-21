@@ -9,14 +9,14 @@ author:
         url: "https://twitter.com/bgautijonsson"
         affiliation: "Tölfræði, Raunvísindadeild Háskóla Íslands"
         affiliation-url: "https://www.hi.is/tolfraedi_0"
-date: "2023/01/22"
+date: "2023/06/21"
 format: 
     html:
         code-fold: true
         smooth-scroll: true
         link-external-newwindow: true
 editor: source
-draft: true
+draft: false
 title-block-banner: true
 categories:
     - stjórnmál
@@ -217,7 +217,7 @@ magn_plot <- function(data, title, breaks = 2007:2021, labels = 2007:2021) {
 
 # Fyrirvari
 
-* Allar fjárhæðir eru sýndar á föstu verðlagi 2022.
+* Allar fjárhæðir eru sýndar á föstu verðlagi samkvæmt nýjustu gögnum Hagstofu um vísitölu neysluverðs
 
 ## Opinber framlög
 
@@ -453,7 +453,7 @@ ggsave(
 
 ## Aðrar tekjur
 
-Aðrar tekjur eru meðal annars útleiga á fasteignum *(t.d. veislusölum)*, miðasala á viðburði, sala á auglýsingaplássi, eða önnur útseld þjónusta.Örfáir flokkar hafa slíkar tekjur, en Sjálfstæðisflokkur fær meirihluta slíkra tekna.  Árið 2021 voru tekjur flokksins af sölu byggingarréttar 340 milljónir króna sem telja hér inn í *aðrar tejur*.
+Aðrar tekjur eru meðal annars útleiga á fasteignum *(t.d. veislusölum)*, miðasala á viðburði, sala á auglýsingaplássi, eða önnur útseld þjónusta. Örfáir flokkar hafa slíkar tekjur, en Sjálfstæðisflokkur fær meirihluta slíkra tekna.  Árið 2021 voru tekjur flokksins af sölu byggingarréttar 340 milljónir króna sem teljast hér inn í *aðrar tekjur*.
 
 ```{r}
 #| fig-asp: 0.8
@@ -517,20 +517,8 @@ plot_dat <- d |>
 
 p <- plot_dat |> 
   ggplot(aes(ar, value, colour = flokkur)) +
-  geom_line(size = 1,) +
-  geom_richtext(
-    data = plot_dat |> 
-      filter(ar == max(ar)) |> 
-      mutate(
-        x = case_when(
-          flokkur == "Viðreisn" ~ ar + 0.3,
-          TRUE ~ ar + 0.5
-        )
-      ),
-    aes(x = x, label = label, y = y),
-    hjust = 0.5,
-    size = 4.5,
-    fill = NA, label.color = NA
+  geom_textline(
+    aes(label = flokkur, hjust = flokkur)
   ) +
   scale_x_continuous(
     limits = c(2014.8, 2021.2),
@@ -546,12 +534,18 @@ p <- plot_dat |>
   scale_colour_manual(
     values = flokkar_palette() |> slice(8, 1, 5) |> pull(litur)
   ) +
+  scale_hjust_manual(
+    values = c(0.1, 0.4, 0.8)
+  ) +
   theme(legend.position = "none") +
-  labs(x = NULL,
-       y = NULL,
-       title = "Leigutekjur Sjálfstæðisflokks og útgjöld minni flokka",
-       subtitle = "Útleigutekjur Sjálfstæðisflokks gætu fjármagnað Flokk fólksins fram til ársins 2021",
-       caption = "Metill.is")
+  labs(
+    x = NULL,
+    y = NULL,
+    title = "Leigutekjur Sjálfstæðisflokks og útgjöld minni flokka",
+    subtitle = "Útleigutekjur Sjálfstæðisflokks gætu fjármagnað Flokk fólksins fram til ársins 2021",
+    caption = "Metill.is"
+  )
+
 
 ggsave(
   plot = p +
@@ -615,22 +609,9 @@ plot_dat <- d |>
 
 p <- plot_dat |> 
   ggplot(aes(ar, value, colour = flokkur)) +
-  geom_line(size = 1,) +
-  geom_richtext(
-    data = plot_dat |> 
-      filter(ar == max(ar)) |> 
-      mutate(
-        x = case_when(
-          flokkur == "Viðreisn" ~ ar + 0.6,
-          flokkur == "Píratar" ~ ar + 0.6,
-          flokkur == "Flokkur fólksins" ~ ar + 0.5,
-          TRUE ~ ar + 0.7
-        )
-      ),
-    aes(x = x, label = label, y = y),
-    hjust = 0.5,
-    size = 4.5,
-    fill = NA, label.color = NA
+  geom_textline(
+    aes(label = flokkur, hjust = flokkur),
+    text_smoothing = 0.6
   ) +
   scale_x_continuous(
     limits = c(2014.8, 2021.3),
@@ -646,12 +627,18 @@ p <- plot_dat |>
   scale_colour_manual(
     values = flokkar_palette() |> slice(8, 6, 1, 5) |> pull(litur)
   ) +
+  scale_hjust_manual(
+    values = c(0.1, 0.55, 0.15, 0.4)
+  ) +
   theme(legend.position = "none") +
-  labs(x = NULL,
-       y = NULL,
-       title = "Aðrar tekjur Sjálfstæðisflokks og útgjöld minni flokka",
-       subtitle = "Útleiga, miðasala, auglýsingar og seld þjónusta Sjálfstæðisflokks gætu fjármagnað flokk Pírata",
-       caption = "Metill.is")
+  labs(
+    x = NULL,
+    y = NULL,
+    title = "Aðrar tekjur Sjálfstæðisflokks og útgjöld minni flokka",
+    subtitle = "Útleiga, miðasala, auglýsingar og seld þjónusta Sjálfstæðisflokks gætu fjármagnað flokk Pírata",
+    caption = "Metill.is"
+  )
+
 
 ggsave(
   plot = p +
@@ -704,7 +691,7 @@ labels <- c(
   "2016\nKosningar",
   "2017\nKosningar",
   2018:2020,
-  "2021\n"
+  "2021\nKosningar"
 )
 
 
@@ -782,9 +769,11 @@ d |>
 plot_dat <- d |> 
   select(ar, flokkur, litur, fasteignir, cpi) |> 
   filter(ar == max(ar)) |> 
-  mutate(fasteignir = fasteignir/cpi,
-         flokkur = fct_reorder(flokkur, fasteignir),
-         hlutf = fasteignir / sum(fasteignir))
+  mutate(
+    fasteignir = fasteignir/cpi,
+    flokkur = fct_reorder(flokkur, fasteignir),
+    hlutf = fasteignir / sum(fasteignir)
+  )
 
 
 p <- plot_dat |> 
@@ -797,15 +786,17 @@ p <- plot_dat |>
     sec.axis = sec_axis(
       trans = ~ . / sum(plot_dat$fasteignir),
       labels = label_hlutf(),
-      breaks = tufte_breaks(plot_dat$hlutf)
+      breaks = tufte_breaks(plot_dat$hlutf),
+      name = "Hlutfall af öllum fasteignum stjórnmálaflokka"
     )
   ) +
   scale_fill_identity() +
   theme(
-    plot.margin = margin(t = 5, r = 50, b = 5, l = 5)
+    plot.margin = margin(t = 5, r = 50, b = 5, l = 5),
+    axis.title.x = element_text(size = 10, colour = "grey40")
   ) +
   labs(
-    x = NULL,
+    x = "Samanlagðar fasteignir stjórnmálaflokks",
     y = NULL,
     title = "Fasteignir stjórnmálaflokka í ársreikningum 2020",
     subtitle = "Fjórir flokkar eiga fasteignir fyrir meira en 80 m.kr",
@@ -847,7 +838,7 @@ ggsave(
 
 ## Skuldir
 
-Það er ekki nóg að vita bara hverjar eignir flokkanna eru, við viljum líka vita hvort þær séu fjármagnaðar með lántöku eða hreinum eignum. 
+Það er ekki nóg að vita bara hverjar eignir flokkanna eru, við viljum líka vita hvort flokkarnir séu fjármagnaðir með lántöku eða hreinum eignum. 
 
 ```{r}
 #| fig-asp: 0.8
@@ -875,7 +866,7 @@ Með þekkingu okkar um eignir og skuldir að vopni getum við skoðað eigið f
 
 ### Magn
 
-Við sjáum til dæmis að Framsóknarflokkur hefur haft neikvætt eigið fé frá 2007 til 2020.
+Við sjáum til dæmis að Framsóknarflokkur hefur haft neikvætt eigið fé frá 2007 til 2020 og að Viðreisn hafði skuldir umfram eignir í ársreikning ársins 2021.
 
 
 ```{r}

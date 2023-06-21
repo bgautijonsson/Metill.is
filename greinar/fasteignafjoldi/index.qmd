@@ -72,6 +72,8 @@ get_tables <- function(data, years) {
 
 ```{r data}
 if (!file.exists("data/data.parquet")) {
+  
+  init_db()
   d <- fromJSON(file = "https://talnaefni.fasteignaskra.is/talnaefni/v1/staerdibudasveitarfelog")
   
   d <- d$sveitarfélög |> 
@@ -87,28 +89,8 @@ if (!file.exists("data/data.parquet")) {
     mutate(cum_fjoldi = cumsum(fjoldi)) |>
     ungroup()
   
-  mannfjoldi <- pxweb_get(
-    url = "https://px.hagstofa.is:443/pxis/api/v1/is/Ibuar/mannfjoldi/2_byggdir/sveitarfelog/MAN02005.px", 
-    query = list(
-      "Sveitarfélag" = c("*"),
-      "Aldur" = c("*"),
-      "Ár" = c("*"),
-      "Kyn" = c("0")
-    ),
-    verbose = FALSE
-  ) |> 
-    as.data.frame() |> 
-    as_tibble() |> 
-    janitor::clean_names() |> 
-    rename(mannfjoldi = mannfjoldi_eftir_sveitarfelagi_kyni_og_aldri_1_januar_1998_2023) |> 
-    mutate(ar = parse_number(ar)) |> 
-    filter(sveitarfelag != "Alls",
-           aldur != "Alls") |> 
-    mutate(
-      aldur = ifelse(aldur == "Á 1. ári", 0, aldur),
-      aldur = parse_number(aldur)
-    ) |> 
-    select(-kyn) |> 
+  mannfjoldi <- mtl_mannfjoldi_svf() |> 
+    collect() |> 
     mutate(
       vinnualdur = ifelse((aldur >= 20) & (aldur <= 64), 1, 0),
       heild = 1,
@@ -123,10 +105,14 @@ if (!file.exists("data/data.parquet")) {
   
   
   d <- d |>
-    inner_join(
+    left_join(
       mannfjoldi,
       by = c("ar", "sveitarfelag")
-    )
+    ) |> 
+    group_by(sveitarfelag) |> 
+    fill(mannfjoldi_vinnualdur, mannfjoldi_fullordin, mannfjoldi, .direction = "down") |> 
+    ungroup() |> 
+    drop_na()
   
   d |> write_parquet(("data/data.parquet"))
   
