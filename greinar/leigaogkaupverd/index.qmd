@@ -60,7 +60,7 @@ library(geomtextpath)
 library(gt)
 theme_set(theme_metill())
 
-
+loess_span <- 0.15
 ```
 
 
@@ -136,8 +136,8 @@ kaupskra <- kaupskra |>
   # filter(year(dags) >= 2013) |>
   group_by(size) |> 
   mutate(
-    upper = loess(upper ~ as.numeric(dags), span = 0.15) |> predict(),
-    lower = loess(lower ~ as.numeric(dags), span = 0.15) |> predict()
+    upper = loess(upper ~ as.numeric(dags), span = loess_span) |> predict(),
+    lower = loess(lower ~ as.numeric(dags), span = loess_span) |> predict()
   ) |> 
   ungroup() |> 
   mutate(group = hlutf(size, accuracy = 1) |> fct_reorder(-size),
@@ -206,8 +206,8 @@ leiguskra <- leiguskra_raw |>
   filter(year(dags) >= 2013) |>
   group_by(size) |> 
   mutate(
-    upper = loess(upper ~ as.numeric(dags), span = 0.15) |> predict(),
-    lower = loess(lower ~ as.numeric(dags), span = 0.15) |> predict()
+    upper = loess(upper ~ as.numeric(dags), span = loess_span) |> predict(),
+    lower = loess(lower ~ as.numeric(dags), span = loess_span) |> predict()
   ) |> 
   ungroup() |> 
   mutate(group = hlutf(size, accuracy = 1) |> fct_reorder(-size),
@@ -257,7 +257,7 @@ p1 <- kaupskra |>
   labs(
     x = NULL,
     y = NULL,
-    title = "Hækkun fasteignaverðs á ársgrundvelli",
+    title = "Hækkun endursöluverðs fasteogma á ársgrundvelli",
     subtitle = "Reiknuð sem munur á núverandi og síðasta kaupverði íbúðar\nLeiðrétt fyrir tíma milli kaupsamninga og vísitölu neysluverðs án fasteignaverðs",
     fill = "Hlutfall kaupsamninga\nsem lenda innan hvers bils",
     caption = "www.metill.is"
