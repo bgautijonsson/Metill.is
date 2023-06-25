@@ -382,7 +382,7 @@ throun_data <- d |>
     "Eiginfjárhlutfall" = eiginfjarhlutfall,
     "Framlegð sem hlutfall af tekjum" = framlegd_hlutf,
     "Handbært fé á íbúa" = handbaert_fe_per_ibui,
-    "Launa- og launatengd gjöld" = launagjold_per_ibui,
+    "Launa- og launatengd gjöld á íbúa" = launagjold_per_ibui,
     "Launa- og launatengd gjöld sem hlutfall af útgjöldum" = launagjold_hlutf_gjold,
     "Nettóskuldir sem hlutfall af tekjum" = nettoskuldir_hlutf_tekjur,
     "Rekstrarniðurstaða sem hlutfall af tekjum" = rekstrarnidurstada_hlutf,
