@@ -9,7 +9,7 @@ author:
         url: "https://twitter.com/bgautijonsson"
         affiliation: "Tölfræði, Raunvísindadeild Háskóla Íslands"
         affiliation-url: "https://www.hi.is/tolfraedi_0"
-date: "2023/05/26"
+date: "2023/06/29"
 format: 
     html:
         code-fold: true
@@ -233,20 +233,29 @@ plot_dat <- d |>
 
 
 p <- plot_dat |> 
-  filter(undirvisitala != "Vísitala neysluverðs") |> 
+  filter(
+    undirvisitala != "Vísitala neysluverðs",
+    year(date) > min(year(date))
+  ) |> 
   ggplot(aes(date, year_ahrif, text = text)) +
   geom_hline(yintercept = 0, lty = 2) +
   geom_col(aes(fill = undirvisitala, col = undirvisitala), position = "stack", width = 30) +
-  geom_line(data = plot_dat |> 
-              filter(undirvisitala == "Vísitala neysluverðs") |> 
-              mutate(text = str_c("<b>", undirvisitala, "</b>\n",
-                                  "Dagsetning: ", format(date, "%B, %Y"), "\n",
-                                  "Hrein breyting (ár): ", percent(year_breyting, accuracy = 0.01), "\n",
-                                  "Hrein breyting (mánuður): ", percent(breyting, accuracy = 0.01), "\n",
-                                  "Vægi í vísitölu: ", percent(vaegi, accuracy = 0.01), "\n",
-                                  "<b>Áhrif á vísitölu (ár): ", percent(year_ahrif, accuracy = 0.01), "</b>\n",
-                                  "<b>Áhrif á vísitölu (mánuður): ", percent(ahrif, accuracy = 0.01), "</b>\n")), 
-            aes(group = "none")) +
+  geom_line(
+    data = plot_dat |> 
+      filter(
+        undirvisitala == "Vísitala neysluverðs",
+        year(date) > min(year(date))
+      ) |> 
+      mutate(
+        text = str_c("<b>", undirvisitala, "</b>\n",
+                     "Dagsetning: ", format(date, "%B, %Y"), "\n",
+                     "Hrein breyting (ár): ", percent(year_breyting, accuracy = 0.01), "\n",
+                     "Hrein breyting (mánuður): ", percent(breyting, accuracy = 0.01), "\n",
+                     "Vægi í vísitölu: ", percent(vaegi, accuracy = 0.01), "\n",
+                     "<b>Áhrif á vísitölu (ár): ", percent(year_ahrif, accuracy = 0.01), "</b>\n",
+                     "<b>Áhrif á vísitölu (mánuður): ", percent(ahrif, accuracy = 0.01), "</b>\n")
+      ), 
+    aes(group = "none")) +
   scale_x_date(expand = expansion(),
                date_breaks = "year",
                date_labels = "%Y") +
@@ -285,10 +294,11 @@ ggplotly(
   p,
   tooltip = "text"
 ) |> 
-  layout(hoverlabel = list(align = "left"),
-         xaxis = list(
-           rangeslider = list(type = "date")
-         )
+  layout(
+    hoverlabel = list(align = "left"),
+    xaxis = list(
+      rangeslider = list(type = "date")
+    )
   ) |> 
   config(displayModeBar = FALSE)
 ```
