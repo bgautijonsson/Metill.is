@@ -350,6 +350,11 @@ d <- d |>
     .by = c(sveitarfelag, hluti)
   )
 
+d |> 
+  write_parquet(
+    "total_data.parquet"
+  )
+
 names(d)
 ```
 
