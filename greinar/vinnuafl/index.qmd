@@ -461,11 +461,15 @@ p3 <- plot_dat |>
     alpha = 0.3, 
     position = "identity"
   ) +
-  geom_line(aes(col = tegund)) +  
-  geom_text(
-    data = plot_dat |> filter(dags == max(dags)),
-    aes(label = tegund, col = tegund), hjust = 0, nudge_x = 10
-  ) +
+  geom_textline(
+    aes(col = tegund, label = tegund, hjust = tegund),
+    text_smoothing = 25, 
+    size = 6
+    ) +  
+  # geom_text(
+  #   data = plot_dat |> filter(dags == max(dags)),
+  #   aes(label = tegund, col = tegund), hjust = 0, nudge_x = 10, 
+  # ) +
   scale_x_date(
     breaks = breaks_width("year"),
     labels = label_date_short(),
@@ -482,6 +486,9 @@ p3 <- plot_dat |>
   ) +
   scale_fill_brewer(
     palette = "Set1"
+  ) +
+  scale_hjust_manual(
+    values = c(0.13, 0.71)
   ) +
   labs(
     x = NULL, 
@@ -633,11 +640,15 @@ p3 <- plot_dat |>
     alpha = 0.3, 
     position = "identity"
   ) +
-  geom_line(aes(col = tegund)) +  
-  geom_text(
-    data = plot_dat |> filter(dags == max(dags)),
-    aes(label = tegund, col = tegund), hjust = 0, nudge_x = 10
-  ) +
+  geom_textline(
+    aes(col = tegund, label = tegund, hjust = tegund),
+    text_smoothing = 25, 
+    size = 6
+    ) +  
+  # geom_text(
+  #   data = plot_dat |> filter(dags == max(dags)),
+  #   aes(label = tegund, col = tegund), hjust = 0, nudge_x = 10
+  # ) +
   scale_x_date(
     breaks = breaks_width("year"),
     labels = label_date_short(),
@@ -653,6 +664,9 @@ p3 <- plot_dat |>
   ) +
   scale_fill_brewer(
     palette = "Set1"
+  ) +
+  scale_hjust_manual(
+    values = c(0.7, 0.6)
   ) +
   labs(
     x = NULL, 
