@@ -60,13 +60,14 @@ library(glue)
 library(eurostat)
 library(hagstofa)
 library(crosstalk)
+library(clock)
 theme_set(theme_metill())
 Sys.setlocale("LC_ALL", "is_IS.UTF-8")
 
 update_cache <- TRUE
 
 
-caption <- "Mynd eftir @bggjonsson hjá metill.is byggð á gögnum OECD um fólksflutninga: https://stats.oecd.org/Index.aspx?DataSetCode=MIG\nGögn og kóði: https://github.com/bgautijonsson/Metill.is/tree/master/greinar/flottafolk"
+caption <- "Mynd eftir @bggjonsson hjá metill.is byggð á gögnum Eurostat um fólksflutninga: https://metill.is/greinar/flottafolk\nGögn og kóði: https://github.com/bgautijonsson/Metill.is/tree/master/greinar/flottafolk"
 
 litur_island <- "#08306b"
   
@@ -170,10 +171,6 @@ decisions <- get_eurostat(
   select(-citizen, -sex, -age, -unit) |> 
   label_eurostat() |> 
   pivot_wider(names_from = decision, values_from = values) 
-
-decisions
-  mutate(perc = `Total positive decisions` / Total) |> 
-  select(geo, time, perc)
 ```
 
 
@@ -202,6 +199,14 @@ d <- beneficiaries |>
       rename(grants = values),
     by = c("geo", "time")
   ) |> 
+  left_join(
+    decisions |> 
+      rename(
+        "total_decisions" = Total,
+        "positive_decisions" = "Total positive decisions"
+      ),
+    by = join_by(geo, time)
+  ) |> 
   rename(country = geo) |> 
   mutate(
     country = ifelse(str_detect(country, "Germany"), "Germany", country)
@@ -220,6 +225,9 @@ d <- beneficiaries |>
   mutate(pop = max(pop, na.rm = T)) |> 
   ungroup() |> 
   mutate(per_pop = value / pop * 1e3)
+
+d |> 
+  write_csv("data/raw_data.csv")
 
 d |> 
   select(-value, -pop) |> 
@@ -318,7 +326,7 @@ p2 <- d |>
     flottafjoldi = value,
     per_pers = per_pop
   ) |> 
-  filter(month(dags) == 11) |> 
+  filter(month(dags) == 4, year(dags) == 2023) |> 
   drop_na(per_pers) |> 
   mutate(
     colour = case_when(
@@ -329,7 +337,7 @@ p2 <- d |>
       land == "Svíþjóð" ~ litur_svithjod,
       TRUE ~ litur_annad
     ),
-    linewidth = 1 * (land == "Ísland")w,
+    linewidth = 1 * (land == "Ísland"),
     size = as_factor(linewidth),
     land = glue("<i style='color:{colour}'>{land}</i>"),
     land = fct_reorder(land, per_pers)
@@ -359,7 +367,7 @@ p2 <- d |>
     x = NULL,
     y = NULL,
     title = "Hvar bíða flestir einstaklingar eftir niðurstöðu umsóknar sinnar?",
-    subtitle = "Fjöldi í nóvember 2022",
+    subtitle = "Fjöldi í apríl 2023",
     caption = caption
   )
 
@@ -390,7 +398,7 @@ plot_dat <- d |>
     flottafjoldi = value,
     per_pers = per_pop
   ) |>  
-  filter(month(dags) <= 11) |> 
+  filter(dags <= date_build(2023, 04, 01)) |> 
   drop_na(per_pers) |> 
   select(dags, land, value = per_pers) |> 
   mutate(
@@ -444,7 +452,7 @@ p3 <- plot_dat |>
   ) +
   scale_x_date(
     breaks = unique(plot_dat$dags),
-    labels = label_date(format = "%B")
+    labels = label_date_short()
   ) +
   geom_rangeframe(sides = "b") +
   scale_y_tufte(
@@ -485,11 +493,247 @@ ggsave(
 
 ![](Figures/umsaek_saman_2.png){.column-page}
 
+## Ákvarðanir
+
+```{r akvard}
+#| eval: false
+p1 <- d |> 
+  filter(
+    name == "total_decisions"
+  ) |> 
+  drop_na() |> 
+  rename(
+    dags = time, 
+    flottafjoldi = value,
+    per_pers = per_pop
+  ) |> 
+  filter(dags == min(dags)) |> 
+  drop_na(flottafjoldi) |> 
+  mutate(
+    colour = case_when(
+      land == "Ísland" ~ litur_island,
+      land == "Danmörk" ~ litur_danmork,
+      land == "Finnland" ~ litur_finnland,
+      land == "Noregur" ~ litur_noregur,
+      land == "Svíþjóð" ~ litur_svithjod,
+      TRUE ~ litur_annad
+    ),
+    linewidth = 1 * (land == "Ísland"),
+    size = as_factor(linewidth),
+    land = glue("<i style='color:{colour}'>{land}</i>"),
+    land = fct_reorder(land, per_pers)
+  ) |> 
+  ggplot(aes(per_pers, land, col = colour, size = size)) +
+  geom_point() +
+  geom_segment(aes(yend = land, xend = 0, linewidth = linewidth), lty = 2, alpha = 0.5) +
+  scale_x_continuous(
+    expand = expansion(),
+    breaks = breaks_extended(),
+    limits = c(0, 3.2)
+  ) +
+  scale_colour_identity() +
+  scale_size_manual(values = c(1, 3)) +
+  scale_linewidth(
+    range = c(0.2, 0.4)
+  ) +
+  theme(
+    plot.margin = margin(t = 5, r = 25, b = 5, l = 5),
+    axis.text.y = element_markdown(size = 10, family = "Lato"),
+    legend.position = "none"
+  ) +
+  labs(
+    x = NULL,
+    y = NULL,
+    title = "Hvar eru flestar ákvarðanir um stöðu hælisleitenda teknar í hverjum mánuði?",
+    subtitle = "Fjöldi í mars 2022",
+    caption = caption
+  )
+
+
+ggsave(
+  plot = p1,
+  filename = "Figures/akvard_mars.png",
+  width = 8, height = 0.5 * 8, scale = 1.3
+)
+
+p2 <- d |> 
+  filter(name == "total_decisions") |>
+  drop_na() |> 
+  rename(
+    dags = time, 
+    flottafjoldi = value,
+    per_pers = per_pop
+  ) |> 
+  filter(month(dags) == 1, year(dags) == 2023) |> 
+  drop_na(per_pers) |> 
+  mutate(
+    colour = case_when(
+      land == "Ísland" ~ litur_island,
+      land == "Danmörk" ~ litur_danmork,
+      land == "Finnland" ~ litur_finnland,
+      land == "Noregur" ~ litur_noregur,
+      land == "Svíþjóð" ~ litur_svithjod,
+      TRUE ~ litur_annad
+    ),
+    linewidth = 1 * (land == "Ísland"),
+    size = as_factor(linewidth),
+    land = glue("<i style='color:{colour}'>{land}</i>"),
+    land = fct_reorder(land, per_pers)
+  ) |> 
+  ggplot(aes(per_pers, land, col = colour, size = size)) +
+  geom_point() +
+  geom_segment(
+    aes(yend = land, xend = 0, linewidth = linewidth),
+    lty = 2, 
+    alpha = 0.5
+  ) +
+  scale_x_continuous(
+    expand = expansion(),
+    limits = c(0, 5.5)
+  ) +
+  scale_colour_identity() +
+  scale_size_manual(values = c(1, 3)) +
+  scale_linewidth(
+    range = c(0.2, 0.4)
+  ) +
+  theme(
+    plot.margin = margin(t = 5, r = 25, b = 5, l = 5),
+    axis.text.y = element_markdown(size = 10),
+    legend.position = "none"
+  ) +
+  labs(
+    x = NULL,
+    y = NULL,
+    title = "Hvar eru flestar ákvarðanir um stöðu hælisleitenda teknar í hverjum mánuði?",
+    subtitle = "Fjöldi í janúar 2023",
+    caption = caption
+  )
+
+ggsave(
+  plot = p2,
+  filename = "Figures/akvard_nóvember.png",
+  width = 8, height = 0.5 * 8, scale = 1.3
+)
+
+p <- (p1 + labs(title = NULL, caption = NULL)) + 
+  (p2 + labs(title = NULL, caption = NULL)) +
+  plot_annotation(
+    title = "Hvar eru flestar ákvarðanir um stöðu hælisleitenda teknar í hverjum mánuði?",
+    caption = caption
+  )
+
+ggsave(
+  plot = p,
+  filename = "Figures/umsaek_saman.png",
+  width = 8, height = 0.5 * 8, scale = 1.3
+)
+
+plot_dat <- d |> 
+  filter(name == "total_decisions") |> 
+  arrange(time) |> 
+  rename(
+    dags = time, 
+    flottafjoldi = value,
+    per_pers = per_pop
+  ) |>  
+  filter(dags <= date_build(2023, 04, 01)) |> 
+  drop_na(per_pers) |> 
+  select(dags, land, value = per_pers) |> 
+  mutate(
+    colour = case_when(
+      land == "Ísland" ~ litur_island,
+      land == "Danmörk" ~ litur_danmork,
+      land == "Finnland" ~ litur_finnland,
+      land == "Noregur" ~ litur_noregur,
+      land == "Svíþjóð" ~ litur_svithjod,
+      TRUE ~ litur_annad
+    ),
+    linewidth = 1 * (land == "Ísland"),
+    size = as_factor(linewidth)
+  )
+
+p3 <- plot_dat |> 
+  ggplot(aes(dags, value)) +
+  geom_line(
+    data = plot_dat |> 
+      filter(colour == litur_annad),
+    aes(group = land, colour = litur_annad),
+    alpha = 0.3,
+    col = litur_annad
+  ) +
+  geom_line(
+    data = plot_dat |> 
+      filter(colour != litur_annad),
+    aes(group = land, colour = colour),
+    linewidth = 1
+  ) +
+  ggrepel::geom_text_repel(
+    data = plot_dat |> 
+      group_by(land) |> 
+      filter(colour != litur_annad, dags == max(dags)) |> 
+      ungroup() |> 
+      mutate(
+        value = case_when(
+          # land == "Svíþjóð" ~ value - 0.8,
+          # land == "Ísland" ~ value - 0.2,
+          # land == "Noregur" ~ value + 0.3,
+          # land == "Danmörk" ~ value + 1,
+          # land == "Finnland" ~ value + 0.5,
+          TRUE ~ value
+        )
+      ),
+    aes(label = land, colour = colour),
+    hjust = 0,
+    nudge_x = 10,
+    box.padding = 0.1,
+    direction = "y"
+  ) +
+  scale_x_date(
+    breaks = unique(plot_dat$dags),
+    labels = label_date_short()
+  ) +
+  geom_rangeframe(sides = "b") +
+  scale_y_tufte(
+    breaks = tufte_breaks(plot_dat$value),
+    labels = label_number(accuracy = 1),
+    limits = c(0, NA),
+    expand = expansion()
+  ) +
+  scale_colour_identity() +
+  coord_cartesian(ylim = c(0, NA), clip = "off") +
+  theme(
+    axis.line.x = element_blank(),
+    plot.margin = margin(t = 5, r = 35, b = 5, l = 5)
+  ) +
+  labs(
+    x = NULL,
+    y = NULL,
+    subtitle = "Fjöldi eftir mánuði"
+  )
+
+p <- (
+  (p1 + labs(title = NULL, caption = NULL)) + 
+    (p2 + labs(title = NULL, caption = NULL))
+) / 
+  p3 +
+  plot_annotation(
+    title = "Hvar eru flestar ákvarðanir um stöðu hælisleitenda teknar í hverjum mánuði?",
+    subtitle = "Sýnt sem fjöldi á 1.000 íbúa hvers lands",
+    caption = caption
+  )
+
+ggsave(
+  plot = p,
+  filename = "Figures/akvard_saman_2.png",
+  width = 8, height = 1 * 8, scale = 1.3
+)
+```
+
 ## Veitingar
 
 Skoðum svo hversu mörgum er veitt tímabundin vernd í hverjum mánuði.
 
-```{r akvard}
+```{r veiting}
 #| eval: false
 p1 <- d |> 
   filter(
@@ -537,7 +781,7 @@ p1 <- d |>
   labs(
     x = NULL,
     y = NULL,
-    title = "Hvað er mörgum veitt tímabundin vernd?",
+    title = "Hvað er mörgum veitt tímabundin vernd í hverjum mánuði?",
     subtitle = "Fjöldi í mars 2022",
     caption = caption
   )
@@ -545,7 +789,7 @@ p1 <- d |>
 
 ggsave(
   plot = p1,
-  filename = "Figures/akvard_mars.png",
+  filename = "Figures/veiting_mars.png",
   width = 8, height = 0.5 * 8, scale = 1.3
 )
 
@@ -556,7 +800,7 @@ p2 <- d |>
     flottafjoldi = value,
     per_pers = per_pop
   ) |> 
-  filter(month(dags) == 11) |> 
+  filter(dags == date_build(2023, 04, 01)) |> 
   drop_na(per_pers) |> 
   mutate(
     colour = case_when(
@@ -596,14 +840,14 @@ p2 <- d |>
   labs(
     x = NULL,
     y = NULL,
-    title = "Hvað er mörgum veitt tímabundin vernd?",
-    subtitle = "Fjöldi í nóvember 2022",
+    title = "Hvað er mörgum veitt tímabundin vernd í hverjum mánuði?",
+    subtitle = "Fjöldi í apríl 2023",
     caption = caption
   )
 
 ggsave(
   plot = p2,
-  filename = "Figures/akvard_nóvember.png",
+  filename = "Figures/veiting_nóvember.png",
   width = 8, height = 0.5 * 8, scale = 1.3
 )
 
@@ -616,7 +860,7 @@ p <- (p1 + labs(title = NULL, caption = NULL)) +
 
 ggsave(
   plot = p,
-  filename = "Figures/akvard_saman.png",
+  filename = "Figures/veiting_saman.png",
   width = 8, height = 0.5 * 8, scale = 1.3
 )
 
@@ -628,7 +872,7 @@ plot_dat <- d |>
     flottafjoldi = value,
     per_pers = per_pop
   ) |>  
-  filter(month(dags) <= 11) |> 
+  filter(dags <= date_build(2023, 04, 01)) |> 
   drop_na(per_pers) |> 
   select(dags, land, value = per_pers) |> 
   mutate(
@@ -682,7 +926,7 @@ p3 <- plot_dat |>
   ) +
   scale_x_date(
     breaks = unique(plot_dat$dags),
-    labels = label_date(format = "%B")
+    labels = label_date_short()
   ) +
   geom_rangeframe(sides = "b") +
   scale_y_tufte(
@@ -709,19 +953,19 @@ p <- (
 ) / 
   p3 +
   plot_annotation(
-    title = "Hvað er mörgum veitt tímabundin vernd?",
+    title = "Hvað er mörgum veitt tímabundin vernd í hverjum mánuði?",
     subtitle = "Sýnt sem fjöldi á 1.000 íbúa hvers lands",
     caption = caption
   )
 
 ggsave(
   plot = p,
-  filename = "Figures/akvard_saman_2.png",
+  filename = "Figures/veiting_saman_2.png",
   width = 8, height = 1 * 8, scale = 1.3
 )
 ```
 
-![](Figures/akvard_saman_2.png){.column-page}
+![](Figures/veiting_saman_2.png){.column-page}
 
 ## Vernd
 
@@ -793,7 +1037,7 @@ p2 <- d |>
     flottafjoldi = value,
     per_pers = per_pop
   ) |> 
-  filter(month(dags) == 11) |> 
+  filter(dags == date_build(2023, 04, 01)) |> 
   drop_na(per_pers) |> 
   mutate(
     colour = case_when(
@@ -834,7 +1078,7 @@ p2 <- d |>
     x = NULL,
     y = NULL,
     title = "Hvar njóta flestir einstaklingar tímabundinnar verndar?",
-    subtitle = "Fjöldi í nóvember 2022",
+    subtitle = "Fjöldi í apríl 2023",
     caption = caption
   )
 
@@ -865,7 +1109,7 @@ plot_dat <- d |>
     flottafjoldi = value,
     per_pers = per_pop
   ) |>  
-  filter(month(dags) <= 11) |> 
+  filter(dags <= date_build(2023, 04, 01)) |> 
   drop_na(per_pers) |> 
   select(dags, land, value = per_pers) |> 
   mutate(
@@ -919,7 +1163,7 @@ p3 <- plot_dat |>
   ) +
   scale_x_date(
     breaks = unique(plot_dat$dags),
-    labels = label_date(format = "%B")
+    labels = label_date_short()
   ) +
   geom_rangeframe(sides = "b") +
   scale_y_tufte(

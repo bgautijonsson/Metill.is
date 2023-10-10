@@ -9,7 +9,7 @@ author:
         url: "https://twitter.com/bgautijonsson"
         affiliation: "Tölfræði, Raunvísindadeild Háskóla Íslands"
         affiliation-url: "https://www.hi.is/tolfraedi_0"
-date: "2023/08/24"
+date: "2023/10/10"
 format: 
     html:
         code-fold: true
@@ -52,6 +52,7 @@ library(broom)
 library(metill)
 library(patchwork)
 library(gt)
+library(gtExtras)
 library(plotly)
 library(hagstofa)
 library(clock)
@@ -111,8 +112,6 @@ if (!file.exists("data/vinnuafl.csv") | new_data) {
 
 # Gögnin
 
-::: {.panel-tabset}
-
 ## Lýsing
 
 Gagnasafnið á bak við þessa skýrslu er gagnasafn Hagstofu:
@@ -139,14 +138,13 @@ Gagnasafnið á bak við þessa skýrslu er gagnasafn Hagstofu:
 * R & Z: Erlend félög
 * Rekstur á eigin kennitölu
 
-## Tafla
+## Samantekt
 
 ```{r}
 heimild <- md("Heimild: [Gögn Hagstofu um fjölda starfandi samkvæmt skrám](https://px.hagstofa.is/pxis/pxweb/is/Samfelag/Samfelag__vinnumarkadur__vinnuaflskraargogn/VIN10052.px)")
 
 table_dat <- d |> 
   filter(
-    dags == max(dags),
     bakgrunnur == "Alls",
     rekstrarform != "Alls starfandi"
   ) |> 
@@ -158,8 +156,20 @@ table_dat <- d |>
       "Opinbert" ~ "**Opinbert starfsfólk**",
       "Annad" ~ "**Almennur vinnumarkaður**"
     ),
-    hlutf = starfandi / sum(starfandi)
-  ) 
+    hlutf = starfandi / sum(starfandi),
+    .by = c(dags)
+  ) |> 
+  summarise(
+    starfandi_gogn = list(starfandi[dags >= (max(dags) - years(1))]),
+    hlutf_gogn = list(100 * hlutf[dags >= (max(dags) - years(1))]),
+    hlutf = hlutf[dags == max(dags)],
+    starfandi = starfandi[dags == max(dags)],
+    dags = max(dags),
+    .by = c(tegund, rekstrarform)
+  ) |> 
+  select(
+    dags, tegund, rekstrarform, starfandi, starfandi_gogn, hlutf, hlutf_gogn
+  )
 
 table_dat |> 
   group_by(tegund) |> 
@@ -176,8 +186,18 @@ table_dat |>
     tegund = "Tegund",
     rekstrarform = "Rekstrarform",
     dags = "Dagsetning",
-    starfandi = "Fjöldi starfandi",
-    hlutf = "% af starfandi"
+    starfandi = "Nýjast",
+    starfandi_gogn = "Undanfarið ár",
+    hlutf = "Nýjast",
+    hlutf_gogn = "Undanfarið ár"
+  ) |> 
+  tab_spanner(
+    label = "Fjöldi starfandi",
+    columns = starts_with("starfandi")
+  ) |> 
+  tab_spanner(
+    label = "Hlutfall (%)",
+    columns = starts_with("hlutf")
   ) |> 
   fmt_date(columns = dags, date_style = "day_m_year") |> 
   fmt_number(columns = starfandi, decimals = 0) |> 
@@ -196,13 +216,35 @@ table_dat |>
     ),
     fmt = ~ fmt_percent(., decimals = 1)
   ) |> 
+  gt_plt_sparkline(
+    column = starfandi_gogn, type = "ref_mean",
+    same_limit = F
+  ) |> 
+  gt_plt_sparkline(
+    column = hlutf_gogn,
+    same_limit = F
+  ) |> 
+  grand_summary_rows(
+    columns = starfandi,
+    fns = list(
+      "Samtals" = ~ sum(.)
+    ),
+    fmt = ~ fmt_number(., decimals = 0)
+  ) |> 
+  grand_summary_rows(
+    columns = hlutf,
+    fns = list(
+      "Samtals" = ~ sum(.)
+    ),
+    fmt = ~ fmt_percent(., decimals = 1)
+  ) |> 
   tab_source_note(heimild) |> 
   tab_options(
     table.background.color = "#faf9f9"
   ) 
 ```
 
-:::
+
 
 
 # Fjöldi starfsfólks eftir vinnumarkaði

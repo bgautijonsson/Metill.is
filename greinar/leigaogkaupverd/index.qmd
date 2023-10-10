@@ -60,7 +60,9 @@ library(geomtextpath)
 library(gt)
 theme_set(theme_metill())
 
-loess_span <- 0.15
+loess_span <- 0.25
+lower_quantile <- 0.05
+upper_quantile <- 0.95
 ```
 
 
@@ -73,6 +75,7 @@ kaupskra_raw <-  read_csv2(
   kaupskra_url,
   locale = locale(encoding = "ISO-8859-1")
 ) |> 
+  janitor::clean_names() |> 
   filter(
     tegund %in% c(
       "Fjölbýli",
@@ -111,8 +114,8 @@ kaupskra <- kaupskra_raw |>
   ungroup() |>
   drop_na()  |>
   filter(
-    ars_breyting < quantile(ars_breyting, 0.995, na.rm = T),
-    ars_breyting > quantile(ars_breyting, 0.005, na.rm = T)
+    ars_breyting < quantile(ars_breyting, upper_quantile, na.rm = T),
+    ars_breyting > quantile(ars_breyting, lower_quantile, na.rm = T)
   ) |>
   mutate(dags = floor_date(utgdag, "month")) |>
   select(dags, ars_breyting) |>
@@ -149,11 +152,12 @@ kaupskra <- kaupskra |>
 kaupskra |> write_parquet("data/kaupskra_data.parquet")
 
 
-leiguskra_raw <- read_csv(
+leiguskra_raw <- read_csv2(
   leiguskra_url,
   locale = locale(encoding = "ISO-8859-1")
 ) |> 
   janitor::clean_names() |> 
+  rename(utgdag = utgafudagur) |> 
   mutate_at(vars(onothaefur_samningur, otimabundid), replace_na, replace = 0) |> 
   mutate_at(vars(utgdag, thinglystdags, dagsfra, dagstil), as_date)  |>
   select(fastnum, utgdag, heildarverd) |>
@@ -183,8 +187,8 @@ leiguskra <- leiguskra_raw |>
   ungroup() |>
   drop_na()  |>
   filter(
-    ars_breyting < quantile(ars_breyting, 0.995, na.rm = T),
-    ars_breyting > quantile(ars_breyting, 0.005, na.rm = T)
+    ars_breyting < quantile(ars_breyting, upper_quantile, na.rm = T),
+    ars_breyting > quantile(ars_breyting, lower_quantile, na.rm = T)
   ) |>
   mutate(dags = floor_date(utgdag, "month")) |>
   select(dags, ars_breyting) |>
@@ -393,6 +397,11 @@ plot_dat2 <- leiguskra |>
   mutate(
     type = "Leiguverð"
   )
+```
+
+
+```{r}
+p1 + p2
 ```
 
 
