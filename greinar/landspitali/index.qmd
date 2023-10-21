@@ -114,7 +114,7 @@ mannfjoldi <- pxweb_get(
   as.data.frame() |> 
   as_tibble() |> 
   janitor::clean_names() |> 
-  rename(mannfjoldi = mannfjoldi_eftir_sveitarfelagi_kyni_og_aldri_1_januar_1998_2022) |> 
+  rename(mannfjoldi = mannfjoldi_eftir_sveitarfelagi_kyni_og_aldri_1_januar_1998_2023) |> 
   mutate(ar = parse_number(ar)) |> 
   filter(sveitarfelag %in% c("Alls", "Reykjavíkurborg", "Garðabær", "Hafnarfjarðarkaupstaður", "Kópavogsbær", "Seltjarnarnesbær", "Mosfellsbær")) |> 
   mutate(stadur = ifelse(sveitarfelag == "Alls", "mannfjoldi_island", "mannfjoldi_hfbsv")) |> 

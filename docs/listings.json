@@ -12,27 +12,19 @@
   {
     "listing": "/greinar.html",
     "items": [
-      "/greinar/vinnuafl/index.html",
+      "/greinar/tekjurskattar/index.html",
       "/greinar/visitala_neysluverds/index.html",
+      "/greinar/vinnuafl/index.html",
       "/greinar/leikskolar/index.html",
       "/greinar/stjornmalaflokkar/index.html",
       "/greinar/loftgaedi/index.html",
       "/greinar/flottafolk/index.html",
-      "/greinar/skattagogn/index.html",
       "/greinar/landspitali/index.html"
     ]
   },
   {
-    "listing": "/index.html",
+    "listing": "/maelabord.html",
     "items": [
-      "/greinar/vinnuafl/index.html",
-      "/greinar/visitala_neysluverds/index.html",
-      "/greinar/leikskolar/index.html",
-      "/greinar/stjornmalaflokkar/index.html",
-      "/greinar/loftgaedi/index.html",
-      "/greinar/flottafolk/index.html",
-      "/greinar/skattagogn/index.html",
-      "/greinar/landspitali/index.html",
       "/maelabord/sveitarfelog/index.html",
       "/maelabord/skattagogn/index.html",
       "/maelabord/verdbolga/index.html",
@@ -40,8 +32,16 @@
     ]
   },
   {
-    "listing": "/maelabord.html",
+    "listing": "/index.html",
     "items": [
+      "/greinar/tekjurskattar/index.html",
+      "/greinar/visitala_neysluverds/index.html",
+      "/greinar/vinnuafl/index.html",
+      "/greinar/leikskolar/index.html",
+      "/greinar/stjornmalaflokkar/index.html",
+      "/greinar/loftgaedi/index.html",
+      "/greinar/flottafolk/index.html",
+      "/greinar/landspitali/index.html",
       "/maelabord/sveitarfelog/index.html",
       "/maelabord/skattagogn/index.html",
       "/maelabord/verdbolga/index.html",
