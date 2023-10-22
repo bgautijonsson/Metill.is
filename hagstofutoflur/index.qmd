@@ -1,0 +1,5 @@
+```{r}
+library(hagstofa)
+hg_list_tables()
+```
+
