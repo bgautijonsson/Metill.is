@@ -1,0 +1,17 @@
+{
+  "hash": "67113755937d72f0a24da354cec5b59a",
+  "result": {
+    "engine": "knitr",
+    "markdown": "---\ntitle: \"Launagögn Fjársýslunnar\"\npagetitle: \"Launagögn Fjársýslunnar\"\nsubtitle: \"Skoðum meðallaun starfsfólks ríkisins eftir kyni og sveitarfélagi\"\ndescription: |\n  Samkvæmt kjarasamningum eiga karlar, konur og kvár að fá sömu laun fyrir sömu störf. Hér getum við ekki athugað það, heldur skoðum við meðallaun eftir stéttarfélagi. Þá erum við ekki endilega að bera saman einstaklinga sem vinna sömu störf, en við getum séð muninn fyrir alla meðlimi stéttarfélagsins.\nauthor: \n    -   name: \"Brynjólfur Gauti Guðrúnar Jónsson\"\n        url: \"https://twitter.com/bgautijonsson\"\n        affiliation: \"Tölfræði, Raunvísindadeild Háskóla Íslands\"\n        affiliation-url: \"https://www.hi.is/tolfraedi_0\"\ndate: \"2023/10/24\"\nformat: \n    html:\n        code-fold: true\n        smooth-scroll: true\n        link-external-newwindow: true\neditor: source\ndraft: false\ntitle-block-banner: true\ncategories:\n    - launamál\n    - mannauður\nhref: greinar/launagognfjarsyslu/index.qmd\nimage: Figures/fp_image.png\nexecute:\n  eval: true\n---\n\n::: {.cell}\n\n:::\n\n\n\n::: {.column-screen}\n<iframe src=\"https://bggj.shinyapps.io/shiny_launagognfjarsyslu/\" style=\"width:100%;height:750px;padding-left:15%;padding-right:15%\">\n</iframe>\n:::\n\n# Um gögnin\n\nGögnin á bak við þessar myndir má [nálgast hjá Fjársýslu Ríkisins](https://gogn.fjr.is/Report/EmbedReport/4e7d2e68-611d-44c0-9ba0-7c084722c34c){target=\"_blank\"}.\n\nGögnin sýna meðal annars dagvinnu-, yfirvinnu, vaktaálags og heildarlaun meðaleinstaklings eftir stéttarfélagi, kyni og launatímabili. Myndirnar að ofan reikna hlutfallslegan mun heildarlauna kvenna og karla innan sama stéttarfélags, reiknar 12 mánaða meðaltal þess hlutfalls og teiknar það gildi svo eftir mánuði.\n\n",
+    "supporting": [
+      "index_files"
+    ],
+    "filters": [
+      "rmarkdown/pagebreak.lua"
+    ],
+    "includes": {},
+    "engineDependencies": {},
+    "preserve": {},
+    "postProcess": true
+  }
+}
