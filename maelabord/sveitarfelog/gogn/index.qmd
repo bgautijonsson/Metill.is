@@ -58,7 +58,7 @@ mannfjoldi <- hg_data(url) |>
 ## Efnahagur
 
 ```{r}
-efnahagur <- read_excel("net-efnahagsreikningur.xlsx", skip = 4) |> 
+efnahagur <- read_excel("net-efnahagsreikningar.xlsx", skip = 4) |> 
   clean_names() |> 
   fill(ar, sveitarfelag, hluti) |> 
   filter(
@@ -92,7 +92,7 @@ efnahagur
 ## Rekstur
 
 ```{r}
-rekstur <- read_excel("net-rekstrarreikningur.xlsx", skip = 4) |> 
+rekstur <- read_excel("net-rekstrarreikningar.xlsx", skip = 5) |> 
   clean_names() |> 
   fill(ar, sveitarfelag, hluti) |> 
   filter(
@@ -126,7 +126,7 @@ rekstur <- read_excel("net-rekstrarreikningur.xlsx", skip = 4) |>
 ## Sjóðsstreymi
 
 ```{r}
-sjodsstreymi <- read_excel("net-sjodsstreymi.xlsx", skip = 4) |> 
+sjodsstreymi <- read_excel("net-sjodstreymi.xlsx", skip = 4) |> 
   clean_names() |> 
   fill(ar, sveitarfelag, hluti, tegund2) |> 
   mutate(
@@ -170,6 +170,10 @@ d <- efnahagur |>
     sjodsstreymi |> 
       pivot_wider(names_from = tegund2, values_from = total),
     by = c("ar", "sveitarfelag", "hluti")
+  ) |> 
+  mutate_at(
+    vars(-ar, -sveitarfelag, -hluti),
+    coalesce, 0
   )
 ```
 
@@ -286,29 +290,6 @@ d <- d |>
       "A-hluti" = "A_hluti",
       "A og B-hluti" = "A_og_B_hluti"
     )
-  )
-```
-
-
-```{r}
-gdrive_data <- read_sheet("https://docs.google.com/spreadsheets/d/1g4aY4ZDhB2NgvgqTwAS33NgVNbhkitcs3fJLQHWEi6E/edit#gid=0")
-```
-
-
-```{r}
-d <- gdrive_data |> 
-  mutate_at(
-    vars(-ar, -sveitarfelag, -hluti),
-    ~ 1000 * .x
-  ) |> 
-  mutate(
-    gjold = gjold + afskriftir
-  ) |> 
-  bind_rows(
-    d
-  ) |> 
-  arrange(
-    ar, sveitarfelag, hluti
   )
 ```
 
@@ -520,58 +501,5 @@ vidmid_data |>
   )
 
 vidmid_data
-```
-
-
-
-```{r}
-# d <- d |>
-#   mutate(
-#     eiginfjarhlutfall = eigid_fe / eignir,
-#     framlegd = tekjur - gjold + afskriftir,
-#     framlegd_hlutf = framlegd / tekjur,
-#     handbaert_fe_per_ibui = handbaert_fe / mannfjoldi,
-#     heildarskuldir = heildarskuldir,
-#     hlutf_jofnunarsjods_skottum = framlag_jofnunarsjods / (framlag_jofnunarsjods + skatttekjur_an_jofnundarsjods),
-#     jofnunarsjodur_a_ibua = framlag_jofnunarsjods / mannfjoldi,
-#     launagjold_per_ibui = launagjold / mannfjoldi,
-#     launagjold_hlutf_gjold = launagjold / gjold,
-#     utgjold_jofnunarsjod = (0.0077 + 0.0099) * tekjur,
-#     netto_jofnunarsjod = framlag_jofnunarsjods - utgjold_jofnunarsjod,
-#     netto_jofnunarsjod_per_ibui = netto_jofnunarsjod / mannfjoldi,
-#     nettoskuldir = heildarskuldir - veltufjarmunir + skammtimakrofur_eigin_fyrirtaeki,
-#     nettoskuldir_hlutf_tekjur = nettoskuldir / tekjur,
-#     rekstrarnidurstada_hlutf = rekstrarnidurstada / tekjur,
-#     rekstur_3_ar = rekstrarnidurstada + lag(rekstrarnidurstada, 1) + lag(rekstrarnidurstada, 2),
-#     tekjur_3_ar = tekjur + lag(tekjur, 1) + lag(tekjur, 2),
-#     rekstur_3_ar_hlutf_tekjur = rekstur_3_ar / tekjur_3_ar,
-#     skattur_a_ibua = skatttekjur_an_jofnundarsjóðs / mannfjoldi,
-#     skuldahlutfall = 1 - eiginfjarhlutfall,
-#     skuldir_hlutf_tekjur = heildarskuldir / tekjur,
-#     skuldir_per_ibui = heildarskuldir / mannfjoldi,
-#     timi_borga_skuldir = nettoskuldir / veltufe,
-#     timi_borga_skuldir = pmax(timi_borga_skuldir, 0),
-#     timi_borga_skuldir = ifelse(veltufe <= 0, 1e5, timi_borga_skuldir),
-#     veltufe_hlutf_tekjur = veltufe / tekjur,
-#     veltufjarhlutfall = veltufjarmunir / skammtimaskuldir
-#   ) |>
-#   inner_join(
-#     visitala,
-#     by = "ar"
-#   ) |>
-#   group_by(ar) |>
-#   mutate(hlutf_jofnunarsjod_utgjold = utgjold_jofnunarsjod / sum(utgjold_jofnunarsjod)) |>
-#   ungroup() |>
-#   arrange(ar, sveitarfelag, hluti) |>
-#   group_by(sveitarfelag, hluti) |>
-#   mutate(
-#     skuldaaukning_2021 = ifelse(sveitarfelag != "Múlaþing" & ar >= 2018, (heildarskuldir / cpi) / (heildarskuldir[ar == 2018] / cpi[ar == 2018]) - 1, NA),
-#     skuldaaukning = heildarskuldir / heildarskuldir[ar == max(ar)],
-#     rekstrarnidurstada_kjortimabil = sum(rekstrarnidurstada * (ar >= 2018)),
-#     tekjur_kjortimabil = sum(tekjur * (ar >= 2018)),
-#     rekstrarnidurstada_hlutf_kjortimabil = rekstrarnidurstada_kjortimabil / tekjur_kjortimabil,
-#     rekstrarnidurstada_per_ibui_kjortimabil = rekstrarnidurstada_kjortimabil / mean(mannfjoldi[ar %in% 2018:2021])
-#   ) |>
-#   ungroup()
 ```
 
