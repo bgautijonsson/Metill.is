@@ -12,6 +12,7 @@
   {
     "listing": "/index.html",
     "items": [
+      "/greinar/faedingartidni/index.html",
       "/greinar/launagognfjarsyslu/index.html",
       "/greinar/tekjurskattar/index.html",
       "/greinar/visitala_neysluverds/index.html",
@@ -39,6 +40,7 @@
   {
     "listing": "/greinar.html",
     "items": [
+      "/greinar/faedingartidni/index.html",
       "/greinar/launagognfjarsyslu/index.html",
       "/greinar/tekjurskattar/index.html",
       "/greinar/visitala_neysluverds/index.html",

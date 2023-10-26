@@ -2,13 +2,13 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.4.444">
+<meta name="generator" content="quarto-1.4.449">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Rafael Daníel Vias">
-<meta name="dcterms.date" content="2023-03-24">
-<meta name="description" content="Var fæðingartíðni breytileg til langs tíma litið eða eftir árstíðum? Hvað með hlutfall keisaraskurða af heildarfjölda fæðinga? Eru merki um að dagsetningar valkeisaraskurða á Íslandi hafi áhrif á fæðingartíðni eftir vikudögum, dögum ársins eða fljótandi hátíðardögum?">
+<meta name="dcterms.date" content="2023-10-26">
+<meta name="description" content="Var fæðingartíðni breytileg yfir tímabilið, eða eftir árstíðum? Hvað með hlutfall keisaraskurða af heildarfjölda fæðinga? Eru merki um að dagsetningar valkeisaraskurða á Íslandi hafi áhrif á fæðingartíðni eftir vikudögum, dögum ársins eða fljótandi hátíðardögum?">
 
 <title>Fæðingartíðni á Íslandi</title>
 <style>
@@ -23,27 +23,7 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
-/* CSS for citations */
-div.csl-bib-body { }
-div.csl-entry {
-  clear: both;
-  margin-bottom: 0em;
-}
-.hanging-indent div.csl-entry {
-  margin-left:2em;
-  text-indent:-2em;
-}
-div.csl-left-margin {
-  min-width:2em;
-  float:left;
-}
-div.csl-right-inline {
-  margin-left:2em;
-  padding-left:1em;
-}
-div.csl-indent {
-  margin-left: 2em;
-}</style>
+</style>
 
 
 <script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
@@ -74,12 +54,12 @@ div.csl-indent {
 }</script>
 <style>html{ scroll-behavior: smooth; }</style>
 <meta property="og:title" content="Fæðingartíðni á Íslandi">
-<meta property="og:description" content="Var fæðingartíðni breytileg til langs tíma litið eða eftir árstíðum? Hvað með hlutfall keisaraskurða af heildarfjölda fæðinga? Eru merki um að dagsetningar valkeisaraskurða á Íslandi hafi áhrif á fæðingartíðni eftir vikudögum, dögum ársins eða fljótandi hátíðardögum?">
-<meta property="og:image" content="https://raw.githubusercontent.com/RafaelVias/faedingartidni/main/Figures/p11.png">
+<meta property="og:description" content="Var fæðingartíðni breytileg yfir tímabilið, eða eftir árstíðum? Hvað með hlutfall keisaraskurða af heildarfjölda fæðinga? Eru merki um að dagsetningar valkeisaraskurða á Íslandi hafi áhrif á fæðingartíðni eftir vikudögum, dögum ársins eða fljótandi hátíðardögum?">
+<meta property="og:image" content="https://raw.githubusercontent.com/RafaelVias/faedingartidni/main/Figures/feature_pic.png">
 <meta property="og:site_name" content="Metill">
 <meta name="twitter:title" content="Fæðingartíðni á Íslandi">
-<meta name="twitter:description" content="Var fæðingartíðni breytileg til langs tíma litið eða eftir árstíðum? Hvað með hlutfall keisaraskurða af heildarfjölda fæðinga? Eru merki um að dagsetningar valkeisaraskurða á Íslandi hafi áhrif á fæðingartíðni eftir vikudögum, dögum ársins eða fljótandi hátíðardögum?">
-<meta name="twitter:image" content="https://raw.githubusercontent.com/RafaelVias/faedingartidni/main/Figures/p11.png">
+<meta name="twitter:description" content="Var fæðingartíðni breytileg yfir tímabilið, eða eftir árstíðum? Hvað með hlutfall keisaraskurða af heildarfjölda fæðinga? Eru merki um að dagsetningar valkeisaraskurða á Íslandi hafi áhrif á fæðingartíðni eftir vikudögum, dögum ársins eða fljótandi hátíðardögum?">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/RafaelVias/faedingartidni/main/Figures/feature_pic.png">
 <meta name="twitter:creator" content="@bggjonsson">
 <meta name="twitter:site" content="@bggjonsson">
 <meta name="twitter:card" content="summary_large_image">
@@ -117,10 +97,10 @@ div.csl-indent {
   <div class="quarto-title-banner page-columns page-full">
     <div class="quarto-title column-page">
       <h1 class="title">Fæðingartíðni á Íslandi</h1>
-            <p class="subtitle lead">Tímaraðagreining á daglegum fæðingum frá 1990 til 2021</p>
+            <p class="subtitle lead">Tímaraðagreining á daglegum fæðingum frá 1990 til og með 2022</p>
                   <div>
         <div class="description">
-          <p>Var fæðingartíðni breytileg til langs tíma litið eða eftir árstíðum? Hvað með hlutfall keisaraskurða af heildarfjölda fæðinga? Eru merki um að dagsetningar valkeisaraskurða á Íslandi hafi áhrif á fæðingartíðni eftir vikudögum, dögum ársins eða fljótandi hátíðardögum?</p>
+          <p>Var fæðingartíðni breytileg yfir tímabilið, eða eftir árstíðum? Hvað með hlutfall keisaraskurða af heildarfjölda fæðinga? Eru merki um að dagsetningar valkeisaraskurða á Íslandi hafi áhrif á fæðingartíðni eftir vikudögum, dögum ársins eða fljótandi hátíðardögum?</p>
         </div>
       </div>
                           <div class="quarto-categories">
@@ -152,7 +132,7 @@ div.csl-indent {
       <div>
       <div class="quarto-title-meta-heading">Síðast uppfært</div>
       <div class="quarto-title-meta-contents">
-        <p class="date">March 24, 2023</p>
+        <p class="date">October 26, 2023</p>
       </div>
     </div>
     
@@ -173,57 +153,49 @@ div.csl-indent {
 
 <hr>
 <!-- Foreldrar geta reynt að hafaað stjórna því hvenær á árinu börn þeirra fæðast. Hafi þeir ákveðið að eignast barn geta þeir miðað níu mánuði fram í tímann og sett markið á ákveðinn hluta ársins. Í einhverjum tilfellum fá foreldrar þó einnig að velja afmælisdag barnsins.  -->
-<p>Þegar keisaraskurðir eru fyrir fram ákveðnir (valkeisaraskurðir) fá foreldrar að velja fæðingardaginn í samráði við lækni. Ef hlutfall valkeisaraskurða af heildarfjölda fæðinga er nógu hátt ættu áhrif slíkra ákvarðana (ef einhver) að birtast sem breytileg fæðingartíðni eftir vikudögum, dögum ársins eða fljótandi hátíðardögum (t.d. páskadagur). Myndu ekki flestir foreldrar síður kjósa að barnið sitt ætti afmæli 29. febrúar ef þeim stæði annar dagur til boða? Einnig er hægt að hugsa sér að valkeisaraskurðum sé stýrt frá þeim hátíðardögum sem eru samningsbundnir frídagar lækna. Hér verður gerð tímaraðagreining á daglegum fæðingum á Íslandi yfir tímabilið 1990-2021.</p>
+<p>Þegar keisaraskurðir eru fyrir fram ákveðnir (valkeisaraskurðir) fá foreldrar að velja fæðingardaginn í samráði við lækni. Ef hlutfall valkeisaraskurða af heildarfjölda fæðinga er nógu hátt, þá ættu áhrif slíkra ákvarðana (ef einhver) að birtast sem breytileg fæðingartíðni eftir vikudögum, dögum ársins eða fljótandi hátíðardögum (t.d. páskadagur). Sjáum við t.d. merki um það að foreldrar reyni að afstýra því að barnið sitt eigi afmæli 29. febrúar ef þeim stendur annar dagur til boða? Einnig hlýtur að teljast líklegt að valkeisaraskurðum sé stýrt frá þeim hátíðardögum sem eru samningsbundnir frídagar lækna. Hér leitumst við eftir svörum við þessum spurningum – og fleirum – með því að framkvæma tímaraðagreiningu á gögnum Hagstofunnar um daglegar fæðingar á Íslandi á árunum 1990-2022.</p>
 <hr>
 <section id="um-gögnin" class="level3">
 <h3 class="anchored" data-anchor-id="um-gögnin">Um gögnin</h3>
-<p>Notuð eru tvö gagnasett. <a href="https://github.com/RafaelVias/faedingartidni/blob/main/Data/daily_births.csv">Fyrra gagnasettið</a> sýnir daglegar fæðingar á Íslandi á árunum 1990-2021 (Hagstofa Íslands). <a href="https://github.com/RafaelVias/faedingartidni/blob/main/Data/caesarian.csv">Seinna gagnasettið</a>, árlegar fæðingar á Íslandi á árunum 1970-2020 eftir gerð, þ.e. leggangafæðing eða keisaraskurður (Fæðingaskrá, kvennadeild LSH).</p>
+<p>Notuð eru tvö gagnasett. <a href="https://github.com/RafaelVias/faedingartidni/blob/main/Data/daily_births.csv">Fyrra gagnasettið</a> sýnir daglegar fæðingar á Íslandi á árunum 1990-2022 (Hagstofa Íslands). <a href="https://github.com/RafaelVias/faedingartidni/blob/main/Data/caesarian.csv">Seinna gagnasettið</a>, árlegar fæðingar á Íslandi á árunum 1970-2020 eftir gerð, þ.e. leggangafæðing eða keisaraskurður (Fæðingaskrá, kvennadeild LSH).</p>
 <hr>
 </section>
 <section id="rýnt-í-gögnin" class="level3">
 <h3 class="anchored" data-anchor-id="rýnt-í-gögnin">Rýnt í gögnin</h3>
 <p>Valkeisaraskurðir eru greiningu okkar mikilvægir vegna þess að þeir stýra áhrifum vikudaga og daga ársins á fæðingartíðni. Tíðni leggangafæðinga á Íslandi (blár ferill) sveiflaðist til á árunum 1970-2020 en langtímahneigðin virðist halla niður á við. Aftur á móti margfaldaðist fjöldi keisaraskurða yfir tímabilið (rauður ferill).</p>
-<p><img src="https://raw.githubusercontent.com/RafaelVias/faedingartidni/main/Figures/p1.png" class="img-fluid" style="width:75.0%"></p>
-<p>Ef fjöldi keisaraskurða er skoðaður sem hlutfall allra fæðinga má sjá hvernig hlutfallið óx frá 1970 til 2000 og virðist svo hafa náð jafnvægi rétt ofan við efri mörk 10%-15% viðmiðs Alþjóðaheilbrigðismálastofnunarinnar (WHO). Meðaltalið á heimsvísu fyrir tímabilið 2010–2018 var um 21% <span class="citation" data-cites="Betrane005671">(<a href="#ref-Betrane005671" role="doc-biblioref">Betran et al. 2021</a>)</span>.</p>
-<p><img src="https://raw.githubusercontent.com/RafaelVias/faedingartidni/main/Figures/p2.png" class="img-fluid" style="width:75.0%"></p>
-<p>Gögnin sem verða notuð í tímaraðagreininguna hér að neðan voru fengin frá Hagstofu Íslands og sýna fjölda daglegra fæðinga á Íslandi á árunum 1990-2021.</p>
-<p><img src="https://raw.githubusercontent.com/RafaelVias/faedingartidni/main/Figures/p3.png" class="img-fluid" style="width:75.0%"></p>
-<p>Með því að reikna meðalfjölda fæðinga yfir allt tímabilið fyrir hvern dag ársins má sjá að fæðingartíðni var breytileg eftir tíma ársins.</p>
-<p><img src="https://raw.githubusercontent.com/RafaelVias/faedingartidni/main/Figures/p4.png" class="img-fluid" style="width:75.0%"></p>
-<p>Þegar meðalfjöldi fæðinga er reiknaður eftir vikudögum sjást skýr vikudagaáhrif. Fleiri börn fæddust á virkum dögum heldur en um helgar, flestar fæðingar voru á þriðjudögum og fæstar á sunnudögum.</p>
-<p><img src="https://raw.githubusercontent.com/RafaelVias/faedingartidni/main/Figures/p5.png" class="img-fluid" style="width:75.0%"></p>
-<p>Enn fremur, ef meðaltölin eru reiknuð fyrir þrjú aðskilin tímabil má sjá að í seinni tíð hefur valkeisaraskurðum verið stýrt í auknum mæli á þriðjudaga og fimmtudaga.</p>
-<p><img src="https://raw.githubusercontent.com/RafaelVias/faedingartidni/main/Figures/p6.png" class="img-fluid" style="width:75.0%"></p>
+<p><img src="https://raw.githubusercontent.com/RafaelVias/faedingartidni/main/Figures/p1.png" class="img-fluid" style="width:100.0%"></p>
+<p>Ef fjöldi keisaraskurða er skoðaður sem hlutfall allra fæðinga má sjá hvernig hlutfallið óx frá 1970 til 2000 og virðist svo hafa náð jafnvægi rétt ofan við efri mörk 10%-15% viðmiðs Alþjóðaheilbrigðismálastofnunarinnar (WHO). Meðaltalið á heimsvísu fyrir tímabilið 2010-2018 var um 21% <a href="https://gh.bmj.com/content/6/6/e005671">(Betran o.fl., 2021)</a>.</p>
+<p><img src="https://raw.githubusercontent.com/RafaelVias/faedingartidni/main/Figures/p2.png" class="img-fluid" style="width:100.0%"></p>
+<p><a href="https://github.com/RafaelVias/faedingartidni/blob/main/Data/daily_births.csv">Gögnin</a> sem verða notuð í tímaraðagreininguna hér að neðan voru fengin frá Hagstofu Íslands með beiðni um sérvinnslu gagna og sýna fjölda daglegra fæðinga á Íslandi á árunum 1990-2022.</p>
+<p><img src="https://raw.githubusercontent.com/RafaelVias/faedingartidni/main/Figures/p3.png" class="img-fluid" style="width:100.0%"></p>
+<p>Með því að reikna meðalfjölda fæðinga yfir allt tímabilið fyrir hvern dag ársins má sjá að fæðingartíðni var breytileg eftir árstíma.</p>
+<p><img src="https://raw.githubusercontent.com/RafaelVias/faedingartidni/main/Figures/p4.png" class="img-fluid" style="width:100.0%"></p>
+<p>Þegar meðalfjöldi fæðinga er reiknaður eftir vikudögum sjást skýr vikudagaáhrif. Fleiri börn fæddust á virkum dögum heldur en um helgar, flestar fæðingar voru á þriðjudögum og fæstar á sunnudögum. Hér sjáum við fyrstu ummerki þeirra áhrifa sem val á dagsetningum valkeisaraskurða hafði á fæðingartíðni.</p>
+<p><img src="https://raw.githubusercontent.com/RafaelVias/faedingartidni/main/Figures/p5.png" class="img-fluid" style="width:100.0%"></p>
+<p>Ef meðaltölin eru reiknuð fyrir þrjú aðskilin tímabil má sjá að í seinni tíð hefur valkeisaraskurðum verið stýrt í auknum mæli frá mánudögum og miðvikudögum yfir á þriðjudaga og fimmtudaga.</p>
+<p><img src="https://raw.githubusercontent.com/RafaelVias/faedingartidni/main/Figures/p6.png" class="img-fluid" style="width:100.0%"></p>
 <hr>
 </section>
 <section id="tölfræðilíkan" class="level3">
 <h3 class="anchored" data-anchor-id="tölfræðilíkan">Tölfræðilíkan</h3>
-<p>Til þess að meta áhrif daga ársins þurfum við að einangra langtíma-, árstíðar-, og vikudagaáhrifin. Við búum því til tölfræðilíkan sem metur væntigildi fjölda fæðinga yfir tímabilið sem summu þessara fjögurra þátta. Tölfræðilíkanið er byggt á <a href="https://github.com/avehtari/casestudies/tree/master/Birthdays">líkani</a> sem búið var til fyrir sambærileg gögn frá Bandaríkjunum.</p>
+<p>Til þess að meta áhrif tiltekinna daga ársins á fæðingartíðni þurfum við að einangra langtíma-, árstíðar-, og vikudagaáhrifin. Við búum því til tölfræðilíkan sem metur væntigildi fjölda fæðinga yfir tímabilið sem summu þessara fjögurra þátta. Tölfræðilíkanið er byggt á líkani <a href="https://github.com/avehtari/casestudies/tree/master/Birthdays">Gelman, Vehtari, Simpson o.fl. (2022)</a> sem búið var til fyrir sambærileg gögn frá Bandaríkjunum.</p>
 <p>Myndin hér að neðan sýnir niðurstöður tölfræðilíkansins sem mátað er að íslensku fæðingargögnunum. Gögnin og niðurstöður líkansins hafa verið sköluð þannig að lóðrétti ásinn sýnir hlutfallsleg frávik frá meðalfjölda fæðinga yfir allt tímabilið (~12). Þannig táknar gildið 110 að fæðingartíðnin var 10% yfir heildarmeðaltalinu, eða um 13 fæðingar. Hins vegar táknar gildið 85 að fæðingartíðnin var 15% undir heildarmeðaltalinu, eða um 10 fæðingar.</p>
-<p><img src="https://raw.githubusercontent.com/RafaelVias/faedingartidni/main/Figures/p12.png" class="img-fluid" style="width:90.0%"></p>
+<p><img src="https://raw.githubusercontent.com/RafaelVias/faedingartidni/main/Figures/p12.png" class="img-fluid" style="width:100.0%"></p>
 <p>Á myndinni efst til vinstri má sjá gögnin (bláir punktar) og væntigildi líkansins (rauður ferill). Væntigildið er summa fjögurra þátta: langtímahneigðar (f1), árstíðaráhrifa (f2), vikudagaáhrifa (f3) og áhrifa daga ársins sem og fljótandi hátíðardaga (f4). Fljótandi hátíðardagar eru þeir hátíðardagar sem lenda ekki á sama degi ársins ár hvert (t.d. páskadagur).</p>
 <p>Myndin efst hægra megin sýnir hvernig langtímahneigðin (rauður ferill) breytist yfir tímabilið. Ferillinn fer úr hámarkinu í upphafi tímabilsins niður í lágmarkið stuttu eftir aldarmótin. Rís svo aftur upp og nær staðbundnu hámarki stuttu eftir bankahrun eða um 2010. Því næst lækkar ferillinn aftur þar til stuttu fyrir heimsfaraldurinn 2020 þegar hann tekur að rísa á ný.</p>
 <p>Vinstri myndin í línu tvö sýnir árstíðaráhrifin (rauður ferill). Þar sést að flestar fæðingar voru að staðaldri í lok september, níu mánuðum eftir jólahátíðina. Fæðingartíðnin féll þá snögglega að lágmarkinu um jólahátíðina og tók svo að rísa aftur.</p>
 <p>Vikudagaáhrifin eru sýnd á hægri myndinni í línu tvö. Áhrifin eru reiknuð fyrir sex aðskilin tímabil vegna þess að, eins og myndin gefur til kynna, þá breytast vikudagaáhrifin verulega yfir tímabilið. Til að mynda aukast fimmtudagsáhrifin nær stöðugt yfir tímabilið en mánudags- og miðvikudagsáhrifin aukast fyrst en minnka svo.</p>
-<p>Að lokum sýnir neðsta myndin áhrif daga ársins sem og fljótandi hátíðardaga. Hér má sjá að líkanið metur að flestum valkeisaraskurðum hafi verið stýrt frá hátíðardögunum yfir jólin.</p>
+<p>Að lokum sýnir neðsta myndin áhrif daga ársins sem og fljótandi hátíðardaga. Hér má sjá að líkanið metur að flestum valkeisaraskurðum hafi verið stýrt frá hátíðardögunum yfir jólin. fac</p>
 <hr>
 </section>
 <section id="niðurlag" class="level3">
 <h3 class="anchored" data-anchor-id="niðurlag">Niðurlag</h3>
-<p>Fjöldi fæðinga á Íslandi hefur farið fækkandi frá árinu 1970 á sama tíma og fjöldi keisaraskurða hefur margfaldast. Hlutfall keisaraskurða af heildarfjölda fæðinga á Íslandi var um 16% á árunum 1990-2021. Gögnin sýna að valkeisaraskurðum hafi í seinni tíð verið stýrt í auknum mæli á þriðjudaga og fimmtudaga og að fæðingar voru tíðari á virkum dögum heldur en um helgar. Árstíðaráhrifin ná hámarki í lok september (9 mánuðum eftir jólahátíðina) og falla svo skyndilega að lágmarkinu um jólahátíðina. Þá benda niðurstöður tölfræðilíkansins til þess að valkeisaraskurðum hafi verið stýrt frá mörgum af helstu hátíðardögum Íslendinga. Mest voru áhrif hátíðardaganna yfir jólin. Að lokum er athygli dregin að því að líkanið metur engin áhrif fyrir 29. dag febrúarmánaðar.</p>
-</section>
-<section id="heimildir" class="level1">
-
-
+<p>Fjöldi fæðinga á Íslandi hefur farið fækkandi frá árinu 1970 á sama tíma og fjöldi keisaraskurða hefur margfaldast. Hlutfall keisaraskurða af heildarfjölda fæðinga á Íslandi var um 16% á árunum 1990-2022. Gögnin sýna að fæðingar voru tíðari á virkum dögum heldur en um helgar og að valkeisaraskurðum hafi í seinni tíð verið stýrt í auknum mæli frá mánudögum og miðvikudögum yfir á þriðjudaga og fimmtudaga. Árstíðaráhrifin ná hámarki í lok september (9 mánuðum eftir jólahátíðina) og falla svo skyndilega að lágmarkinu um jólahátíðina. Þá benda niðurstöður tölfræðilíkansins til þess að valkeisaraskurðum hafi verið stýrt frá mörgum af helstu hátíðardögum Íslendinga. Mest voru áhrif hátíðardaganna yfir jólin. Líkanið metur engin áhrif 29. dag febrúarmánaðar.</p>
 
 
 </section>
 
-<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography"><h2 class="anchored quarto-appendix-heading">Heimildir</h2><div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
-<div id="ref-Betrane005671" class="csl-entry" role="listitem">
-Betran, Ana Pilar, Jiangfeng Ye, Ann-Beth Moller, João Paulo Souza, and Jun Zhang. 2021. <span>“Trends and Projections of Caesarean Section Rates: Global and Regional Estimates.”</span> <em>BMJ Global Health</em> 6 (6). <a href="https://doi.org/10.1136/bmjgh-2021-005671">https://doi.org/10.1136/bmjgh-2021-005671</a>.
-</div>
-</div></section></div></main> <!-- /main -->
+</main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {
   const toggleBodyColorMode = (bsSheetEl) => {

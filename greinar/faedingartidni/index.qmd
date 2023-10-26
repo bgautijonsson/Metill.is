@@ -9,7 +9,7 @@ author:
         url: "https://github.com/RafaelVias"
         affiliation: "Tölfræði, Raunvísindadeild Háskóla Íslands"
         affiliation-url: "https://www.hi.is/framhaldsnam/tolfraedi"
-date: "2023/03/17"
+date: "2023/10/26"
 format: 
     html:
         code-fold: true
