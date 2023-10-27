@@ -1,12 +1,11 @@
 [
   {
-    "listing": "/pyngjan.html",
+    "listing": "/maelabord.html",
     "items": [
-      "/pyngjan/fyrstukaupendur/index.html",
-      "/pyngjan/haskolar/index.html",
-      "/pyngjan/fasteignafjoldi/index.html",
-      "/pyngjan/opinberar_veitingar/index.html",
-      "/pyngjan/straeto/index.html"
+      "/maelabord/sveitarfelog/index.html",
+      "/maelabord/skattagogn/index.html",
+      "/maelabord/verdbolga/index.html",
+      "/maelabord/sveitarfelog/gogn/index.html"
     ]
   },
   {
@@ -29,15 +28,6 @@
     ]
   },
   {
-    "listing": "/maelabord.html",
-    "items": [
-      "/maelabord/sveitarfelog/index.html",
-      "/maelabord/skattagogn/index.html",
-      "/maelabord/verdbolga/index.html",
-      "/maelabord/sveitarfelog/gogn/index.html"
-    ]
-  },
-  {
     "listing": "/greinar.html",
     "items": [
       "/greinar/faedingartidni/index.html",
@@ -50,6 +40,16 @@
       "/greinar/loftgaedi/index.html",
       "/greinar/flottafolk/index.html",
       "/greinar/landspitali/index.html"
+    ]
+  },
+  {
+    "listing": "/pyngjan.html",
+    "items": [
+      "/pyngjan/fyrstukaupendur/index.html",
+      "/pyngjan/haskolar/index.html",
+      "/pyngjan/fasteignafjoldi/index.html",
+      "/pyngjan/opinberar_veitingar/index.html",
+      "/pyngjan/straeto/index.html"
     ]
   }
 ]

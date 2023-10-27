@@ -1,103 +1,103 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://metill.is/pyngjan.html</loc>
-    <lastmod>2023-01-17T07:43:07.411Z</lastmod>
-  </url>
-  <url>
-    <loc>https://metill.is/hagstofutoflur/index.html</loc>
-    <lastmod>2023-10-22T21:11:31.306Z</lastmod>
-  </url>
-  <url>
-    <loc>https://metill.is/greinar/flottafolk/index.html</loc>
-    <lastmod>2023-08-25T16:30:14.146Z</lastmod>
-  </url>
-  <url>
-    <loc>https://metill.is/greinar/loftgaedi/index.html</loc>
-    <lastmod>2023-01-26T21:32:47.434Z</lastmod>
-  </url>
-  <url>
-    <loc>https://metill.is/greinar/leikskolar/index.html</loc>
-    <lastmod>2023-06-28T10:33:59.181Z</lastmod>
-  </url>
-  <url>
-    <loc>https://metill.is/greinar/faedingartidni/index.html</loc>
-    <lastmod>2023-10-27T16:33:44.863Z</lastmod>
-  </url>
-  <url>
-    <loc>https://metill.is/greinar/stjornmalaflokkar/index.html</loc>
-    <lastmod>2023-06-21T09:30:37.435Z</lastmod>
-  </url>
-  <url>
-    <loc>https://metill.is/index.html</loc>
-    <lastmod>2023-01-21T18:38:39.475Z</lastmod>
-  </url>
-  <url>
-    <loc>https://metill.is/pyngjan/haskolar/index.html</loc>
-    <lastmod>2023-01-26T20:21:22.627Z</lastmod>
-  </url>
-  <url>
-    <loc>https://metill.is/pyngjan/straeto/index.html</loc>
-    <lastmod>2023-01-22T21:57:06.464Z</lastmod>
-  </url>
-  <url>
-    <loc>https://metill.is/pyngjan/opinberar_veitingar/index.html</loc>
-    <lastmod>2023-01-22T21:57:10.023Z</lastmod>
-  </url>
-  <url>
-    <loc>https://metill.is/maelabord/skattagogn/index.html</loc>
-    <lastmod>2023-01-22T21:26:37.566Z</lastmod>
-  </url>
-  <url>
     <loc>https://metill.is/maelabord/sveitarfelog/index.html</loc>
-    <lastmod>2023-05-26T13:56:57.362Z</lastmod>
+    <lastmod>2023-10-27T16:35:32.528Z</lastmod>
   </url>
   <url>
     <loc>https://metill.is/maelabord/sveitarfelog/gogn/index.html</loc>
-    <lastmod>2023-10-26T22:08:35.384Z</lastmod>
+    <lastmod>2023-10-27T16:35:38.163Z</lastmod>
+  </url>
+  <url>
+    <loc>https://metill.is/maelabord/skattagogn/index.html</loc>
+    <lastmod>2023-10-27T16:35:39.879Z</lastmod>
   </url>
   <url>
     <loc>https://metill.is/maelabord/verdbolga/index.html</loc>
-    <lastmod>2023-01-17T07:43:07.411Z</lastmod>
+    <lastmod>2023-10-27T16:35:40.401Z</lastmod>
+  </url>
+  <url>
+    <loc>https://metill.is/pyngjan/opinberar_veitingar/index.html</loc>
+    <lastmod>2023-10-27T16:35:42.006Z</lastmod>
   </url>
   <url>
     <loc>https://metill.is/pyngjan/fyrstukaupendur/index.html</loc>
-    <lastmod>2023-03-29T21:41:15.251Z</lastmod>
+    <lastmod>2023-10-27T16:35:43.218Z</lastmod>
+  </url>
+  <url>
+    <loc>https://metill.is/pyngjan/straeto/index.html</loc>
+    <lastmod>2023-10-27T16:35:44.106Z</lastmod>
   </url>
   <url>
     <loc>https://metill.is/pyngjan/fasteignafjoldi/index.html</loc>
-    <lastmod>2023-01-22T21:57:17.752Z</lastmod>
+    <lastmod>2023-10-27T16:35:44.746Z</lastmod>
+  </url>
+  <url>
+    <loc>https://metill.is/pyngjan/haskolar/index.html</loc>
+    <lastmod>2023-10-27T16:35:45.899Z</lastmod>
   </url>
   <url>
     <loc>https://metill.is/maelabord.html</loc>
-    <lastmod>2023-01-17T07:43:07.407Z</lastmod>
+    <lastmod>2023-10-27T16:35:46.358Z</lastmod>
+  </url>
+  <url>
+    <loc>https://metill.is/index.html</loc>
+    <lastmod>2023-10-27T16:35:47.581Z</lastmod>
+  </url>
+  <url>
+    <loc>https://metill.is/greinar/stjornmalaflokkar/index.html</loc>
+    <lastmod>2023-10-27T16:35:49.213Z</lastmod>
+  </url>
+  <url>
+    <loc>https://metill.is/greinar/faedingartidni/index.html</loc>
+    <lastmod>2023-10-27T16:35:51.125Z</lastmod>
   </url>
   <url>
     <loc>https://metill.is/greinar/visitala_neysluverds/index.html</loc>
-    <lastmod>2023-10-26T22:08:08.770Z</lastmod>
+    <lastmod>2023-10-27T16:35:53.479Z</lastmod>
   </url>
   <url>
     <loc>https://metill.is/greinar/landspitali/index.html</loc>
-    <lastmod>2023-10-21T14:16:04.547Z</lastmod>
+    <lastmod>2023-10-27T16:35:55.600Z</lastmod>
+  </url>
+  <url>
+    <loc>https://metill.is/greinar/leikskolar/index.html</loc>
+    <lastmod>2023-10-27T16:35:56.127Z</lastmod>
   </url>
   <url>
     <loc>https://metill.is/greinar/tekjurskattar/index.html</loc>
-    <lastmod>2023-10-21T14:29:23.021Z</lastmod>
+    <lastmod>2023-10-27T16:35:57.904Z</lastmod>
+  </url>
+  <url>
+    <loc>https://metill.is/greinar/loftgaedi/index.html</loc>
+    <lastmod>2023-10-27T16:35:58.416Z</lastmod>
   </url>
   <url>
     <loc>https://metill.is/greinar/launagognfjarsyslu/index.html</loc>
-    <lastmod>2023-10-24T12:37:03.541Z</lastmod>
+    <lastmod>2023-10-27T16:36:00.461Z</lastmod>
+  </url>
+  <url>
+    <loc>https://metill.is/greinar/flottafolk/index.html</loc>
+    <lastmod>2023-10-27T16:36:01.288Z</lastmod>
   </url>
   <url>
     <loc>https://metill.is/greinar/vinnuafl/index.html</loc>
-    <lastmod>2023-10-10T09:29:43.512Z</lastmod>
+    <lastmod>2023-10-27T16:36:03.474Z</lastmod>
   </url>
   <url>
     <loc>https://metill.is/um_metil.html</loc>
-    <lastmod>2023-01-17T07:43:07.489Z</lastmod>
+    <lastmod>2023-10-27T16:36:04.820Z</lastmod>
+  </url>
+  <url>
+    <loc>https://metill.is/hagstofutoflur/index.html</loc>
+    <lastmod>2023-10-27T16:36:05.905Z</lastmod>
   </url>
   <url>
     <loc>https://metill.is/greinar.html</loc>
-    <lastmod>2023-01-26T18:55:23.637Z</lastmod>
+    <lastmod>2023-10-27T16:36:07.978Z</lastmod>
+  </url>
+  <url>
+    <loc>https://metill.is/pyngjan.html</loc>
+    <lastmod>2023-10-27T16:36:08.939Z</lastmod>
   </url>
 </urlset>
