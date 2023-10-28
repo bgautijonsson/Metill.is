@@ -49,27 +49,27 @@ knitr::opts_chunk$set(message=FALSE, error=FALSE, warning=FALSE)
 
 Valkeisaraskurðir eru greiningu okkar mikilvægir vegna þess að þeir stýra áhrifum vikudaga og daga ársins á fæðingartíðni. Tíðni leggangafæðinga á Íslandi (blár ferill) sveiflaðist til á árunum 1970-2020 en langtímahneigðin virðist halla niður á við. Aftur á móti margfaldaðist fjöldi keisaraskurða á tímabilinu (rauður ferill).
 
-![](https://raw.githubusercontent.com/RafaelVias/faedingartidni/main/Figures/p1.png){width="100%"}
+![](https://raw.githubusercontent.com/RafaelVias/faedingartidni/main/Figures/p1.png){width="100%" .column-page}
 
 Ef fjöldi keisaraskurða er skoðaður sem hlutfall allra fæðinga má sjá hvernig hlutfallið óx frá 1970 til 2000 og virðist svo hafa náð jafnvægi rétt ofan við efri mörk 10%-15% viðmiðs Alþjóðaheilbrigðismálastofnunarinnar (WHO). Meðaltalið á heimsvísu fyrir tímabilið 2010-2018 var um 21% [(Betran o.fl., 2021)](https://gh.bmj.com/content/6/6/e005671).
 
-![](https://raw.githubusercontent.com/RafaelVias/faedingartidni/main/Figures/p2.png){width="100%"}
+![](https://raw.githubusercontent.com/RafaelVias/faedingartidni/main/Figures/p2.png){width="100%" .column-page}
 
 [Gögnin](https://github.com/RafaelVias/faedingartidni/blob/main/Data/daily_births.csv) sem verða notuð í tímaraðagreininguna hér að neðan voru fengin frá Hagstofu Íslands með beiðni um sérvinnslu gagna og sýna fjölda daglegra fæðinga á Íslandi á árunum 1990-2022.
 
-![](https://raw.githubusercontent.com/RafaelVias/faedingartidni/main/Figures/p3.png){width="100%"}
+![](https://raw.githubusercontent.com/RafaelVias/faedingartidni/main/Figures/p3.png){width="100%" .column-page}
 
 Með því að reikna meðalfjölda fæðinga yfir allt tímabilið fyrir hvern dag ársins má sjá að fæðingartíðni var breytileg eftir árstíma.
 
-![](https://raw.githubusercontent.com/RafaelVias/faedingartidni/main/Figures/p4.png){width="100%"}
+![](https://raw.githubusercontent.com/RafaelVias/faedingartidni/main/Figures/p4.png){width="100%" .column-page}
 
 Þegar meðalfjöldi fæðinga er reiknaður eftir vikudögum sjást skýr vikudagaáhrif. Fleiri börn fæddust á virkum dögum heldur en um helgar, flestar fæðingar voru á þriðjudögum og fæstar á sunnudögum. Hér sjáum við fyrstu ummerki þeirra áhrifa sem val á dagsetningum valkeisaraskurða hafði á fæðingartíðni.
 
-![](https://raw.githubusercontent.com/RafaelVias/faedingartidni/main/Figures/p5.png){width="100%"}
+![](https://raw.githubusercontent.com/RafaelVias/faedingartidni/main/Figures/p5.png){width="100%" .column-page}
 
 Ef meðaltölin eru reiknuð fyrir þrjú aðskilin tímabil má sjá að í seinni tíð hefur valkeisaraskurðum verið stýrt í auknum mæli frá mánudögum og miðvikudögum yfir á þriðjudaga og fimmtudaga.
 
-![](https://raw.githubusercontent.com/RafaelVias/faedingartidni/main/Figures/p6.png){width="100%"}
+![](https://raw.githubusercontent.com/RafaelVias/faedingartidni/main/Figures/p6.png){width="100%" .column-page}
 
 ------------------------------------------------------------------------
 
@@ -77,9 +77,9 @@ Ef meðaltölin eru reiknuð fyrir þrjú aðskilin tímabil má sjá að í sei
 
 Til þess að meta áhrif tiltekinna daga ársins á fæðingartíðni þurfum við að einangra langtíma-, árstíðar-, og vikudagaáhrifin. Við búum því til tölfræðilíkan sem metur væntigildi fjölda fæðinga yfir tímabilið sem summu þessara fjögurra þátta. Tölfræðilíkanið er byggt á líkani [Gelman, Vehtari, Simpson o.fl. (2022)](https://github.com/avehtari/casestudies/tree/master/Birthdays) sem búið var til fyrir sambærileg gögn frá Bandaríkjunum.
 
-Myndin hér að neðan sýnir niðurstöður tölfræðilíkansins sem mátað er að íslensku fæðingargögnunum. Gögnin og niðurstöður líkansins hafa verið sköluð þannig að lóðrétti ásinn sýnir hlutfallsleg frávik frá meðalfjölda fæðinga yfir allt tímabilið (\~12). Þannig táknar gildið 110 að fæðingartíðnin var 10% yfir heildarmeðaltalinu, eða um 13 fæðingar. Hins vegar táknar gildið 85 að fæðingartíðnin var 15% undir heildarmeðaltalinu, eða um 10 fæðingar.
+Myndin hér að neðan sýnir niðurstöður tölfræðilíkansins sem mátað er að íslensku fæðingargögnunum. Gögnin og niðurstöður líkansins hafa verið sköluð þannig að lóðrétti ásinn sýnir hlutfallsleg frávik frá meðalfjölda fæðinga yfir allt tímabilið (\~12). Þannig táknar 10% að fæðingartíðnin var 10% yfir heildarmeðaltalinu, eða um 13 fæðingar. Hins vegar táknar -15% að fæðingartíðnin var 15% undir heildarmeðaltalinu, eða um 10 fæðingar.
 
-![](https://raw.githubusercontent.com/RafaelVias/faedingartidni/main/Figures/p12.png){width="100%"}
+![](https://raw.githubusercontent.com/RafaelVias/faedingartidni/main/Figures/p12.png){width="100%" .column-page}
 
 Á myndinni efst til vinstri má sjá gögnin (bláir punktar) og væntigildi líkansins (rauður ferill). Væntigildið er summa fjögurra þátta: langtímahneigðar (f1), árstíðaráhrifa (f2), vikudagaáhrifa (f3) og áhrifa daga ársins sem og fljótandi hátíðardaga (f4). Fljótandi hátíðardagar eru þeir hátíðardagar sem lenda ekki á sama degi ársins ár hvert (t.d. páskadagur).
 
