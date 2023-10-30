@@ -502,7 +502,7 @@ ggplotly(
 
 > Innlendar verðhækkanir hafa hins vegar reynst þrálátar og eru enn á breiðum grunni. - Yfirlýsing peningastefnunefndar, ágúst 2023
 
-> Hvað varðar verðbólguna sjálfa þá er hún á breiðum grunni. Eins og ég segi, þetta er eitt stærsta verkefnið til að takast á við. - Katrín Jakobsdóttir í ræði á Alþingi, janúar 2023
+> Hvað varðar verðbólguna sjálfa þá er hún á breiðum grunni. Eins og ég segi, þetta er eitt stærsta verkefnið til að takast á við. - Katrín Jakobsdóttir í ræðu á Alþingi, janúar 2023
 
 > Verðbólgan er á býsna breiðum grunni en allir mælikvarðar á undirliggjandi verðbólgu hækkuðu í febrúar og eru þeir allir langt yfir verðbólgumarkmiði Seðlabankans. - Íslandsbanki, mars 2023
 
