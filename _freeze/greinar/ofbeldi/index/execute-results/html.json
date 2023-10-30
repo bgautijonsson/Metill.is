@@ -1,6 +1,7 @@
 {
   "hash": "23e8b11d8628aa0901773db4a50958e5",
   "result": {
+    "engine": "knitr",
     "markdown": "---\ntitle: \"Ofbeldi\"\npagetitle: \"Ofbeldi\"\nsubtitle: \"Subtitle\"\ndescription: |\n    Description\nauthor: \n    -   name: \"Brynjólfur Gauti Guðrúnar Jónsson\"\n        url: \"bggj.is\"\n        affiliation: \"Tölfræði, Raunvísindadeild Háskóla Íslands\"\n        affiliation-url: \"https://www.hi.is/tolfraedi_0\"\ndate: \"2022/08/24\"\ndraft: true\nexecute:\n  eval: false\nformat: \n    html:\n        code-fold: true\n        smooth-scroll: true\n        link-external-newwindow: true\neditor: source\ntitle-block-banner: true\ncategories:\n    - lögregla\n    - R\n    - íslenska\nhref: greinar/ofbeldi/index.qmd\n---\n\n::: {.cell}\n\n:::\n\n::: {.cell}\n\n:::\n\n::: {.cell}\n\n:::\n",
     "supporting": [],
     "filters": [
