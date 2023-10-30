@@ -41,7 +41,7 @@ library(gganimate)
 library(lubridate)
 library(plotly)
 library(metill)
-
+library(glue)
 theme_set(theme_metill())
 Sys.setlocale(locale = "is_IS.UTF-8")
 ```
@@ -497,6 +497,103 @@ ggplotly(
 ```
 
 :::
+
+# Grunnur
+
+```{r}
+values <- c(0.025, 0.05, 0.075, 0.1)
+```
+
+
+Myndin að sýnir hvaða hlutfall undirliða vísitölunnar hefur hækkað sem nemur prósentuhækkun litarins. Dýpsti rauði liturinn sýnir því hlutfall undirliða sem hafa hækkað um að minnsta kosti `r hlutf(max(values))` undanfarið ár, en ljósasti bleiki liturinn sýnir hlutfall þeirra sem hækkuðu um meira en `r hlutf(min(values))`. Ef hátt hlutfall undirliða hefur hækkað mikið er oft sagt að verðbólga byggi á breiðum grunni.
+
+```{r}
+#| fig.asp: 1
+#| out-width: "100%"
+#| column: page
+
+
+
+
+plot_dat <- d_undir |> 
+  crossing(
+    value = values
+  ) |> 
+  summarise(
+    hlutf_haekkun = mean(year_breyting > value),
+    .by = c(date, value)
+  ) |> 
+  drop_na() |> 
+  mutate(
+    text = glue(
+      str_c(
+        "<b> % viðmið: {hlutf(value)}</b>\n",
+        "Dagsetning: {format(date, '%B, %Y')}\n",
+        "% undirflokka: {hlutf(hlutf_haekkun)}"
+      )
+    )
+  ) |>
+  arrange(date, value)
+
+p <- plot_dat |> 
+  ggplot(aes(date, hlutf_haekkun, text = text)) +
+  geom_col(
+    aes(group = value, fill = value, col = value), 
+    position = "identity",
+    alpha = 0.5,
+    linewidth = 2,
+    width = 28
+  ) +
+  scale_x_date(
+    labels = label_date_short(),
+    breaks = breaks_width("4 year"),
+    expand = expansion()
+  ) +
+  scale_y_continuous(
+    labels = label_hlutf(),
+    limits = c(0, 1),
+    expand = expansion()
+  ) +
+  scale_fill_distiller(
+    palette = "Reds",
+    direction = 1,
+    breaks = values,
+    labels = label_hlutf(),
+    guide = guide_colorbar(
+      nbin = 4,
+      reverse = T
+      )
+  ) +
+  scale_color_distiller(
+    palette = "Reds",
+    direction = 1,
+    breaks = values,
+    labels = label_hlutf(),
+    guide = guide_colorbar(
+      nbin = 4,
+      reverse = T
+      )
+  ) +
+  labs(
+    x = NULL,
+    y = NULL,
+    title = "Hversu breiður er grunnur verðbólgunnar?",
+    subtitle = "Myndin sýnir hvaða hlutfall undirflokka hefur hækkað sem nemur prósentuhækkun litarins",
+    fill = "% undirflokka",
+    col = "% undirflokka"
+  )
+
+ggplotly(
+  p,
+  tooltip = "text"
+) |> 
+  layout(
+    hoverlabel = list(align = "left"),
+    legend = list(traceorder = "reversed")
+    ) |> 
+  config(displayModeBar = FALSE)
+```
+
 
 # Undirvísitölur
 
