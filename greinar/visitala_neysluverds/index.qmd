@@ -500,12 +500,19 @@ ggplotly(
 
 # Grunnur
 
+> Innlendar verðhækkanir hafa hins vegar reynst þrálátar og eru enn á breiðum grunni. - Yfirlýsing peningastefnunefndar, ágúst 2023
+
+> Hvað varðar verðbólguna sjálfa þá er hún á breiðum grunni. Eins og ég segi, þetta er eitt stærsta verkefnið til að takast á við. - Katrín Jakobsdóttir í ræði á Alþingi, janúar 2023
+
+> Verðbólgan er á býsna breiðum grunni en allir mælikvarðar á undirliggjandi verðbólgu hækkuðu í febrúar og eru þeir allir langt yfir verðbólgumarkmiði Seðlabankans. - Íslandsbanki, mars 2023
+
 ```{r}
 values <- c(0.025, 0.05, 0.075, 0.1)
 ```
 
+Ef hátt hlutfall undirliða hefur hækkað mikið er oft sagt að *verðbólgan byggi á breiðum grunni*. Þá er ekki hægt að kenna einhverjum einum hluta hagkerfisins um verðbólguna, heldur hefur verð hækkað á mörgum sviðum samfélagsins.
 
-Myndin að sýnir hvaða hlutfall undirliða vísitölunnar hefur hækkað sem nemur prósentuhækkun litarins. Dýpsti rauði liturinn sýnir því hlutfall undirliða sem hafa hækkað um að minnsta kosti `r hlutf(max(values))` undanfarið ár, en ljósasti bleiki liturinn sýnir hlutfall þeirra sem hækkuðu um meira en `r hlutf(min(values))`. Ef hátt hlutfall undirliða hefur hækkað mikið er oft sagt að verðbólga byggi á breiðum grunni.
+Myndin að neðan sýnir hvaða hlutfall undirliða vísitölunnar hefur hækkað sem nemur prósentuhækkun litarins. Dýpsti rauði liturinn sýnir því hlutfall undirliða sem hafa hækkað um að minnsta kosti `r hlutf(max(values))` undanfarið ár, en ljósasti bleiki liturinn sýnir hlutfall þeirra sem hækkuðu um meira en `r hlutf(min(values))`. 
 
 ```{r}
 #| fig.asp: 1
