@@ -576,11 +576,11 @@ p <- plot_dat |>
   ) +
   labs(
     x = NULL,
-    y = NULL,
+    y = "% undirflokka",
     title = "Hversu breiður er grunnur verðbólgunnar?",
     subtitle = "Myndin sýnir hvaða hlutfall undirflokka hefur hækkað sem nemur prósentuhækkun litarins",
-    fill = "% undirflokka",
-    col = "% undirflokka"
+    fill = "Verðhækkun",
+    col = "Verðhækkun"
   )
 
 ggplotly(
