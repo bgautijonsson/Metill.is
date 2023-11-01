@@ -9,14 +9,14 @@ author:
         url: "https://twitter.com/bgautijonsson"
         affiliation: "Tölfræði, Raunvísindadeild Háskóla Íslands"
         affiliation-url: "https://www.hi.is/tolfraedi_0"
-date: "2023/02/16"
+date: "2023/11/01"
 format: 
     html:
         code-fold: true
         smooth-scroll: true
         link-external-newwindow: true
 editor: source
-draft: true
+draft: false
 title-block-banner: true
 categories:
     - stjórnmál
@@ -24,9 +24,9 @@ categories:
     - fasteignir
     - sveitarfélög
 href: greinar/leigaogkaupverd/index.qmd
-image: Figures/leiguverd_breyting_fp.png
+image: Figures/saman_breyting_fp.png
 twitter-card:
-  image: Figures/leiguverd_breyting.png
+  image: Figures/saman_breyting.png
 execute:
   eval: false
 ---
@@ -60,7 +60,7 @@ library(geomtextpath)
 library(gt)
 theme_set(theme_metill())
 
-loess_span <- 0.25
+loess_span <- 0.3
 lower_quantile <- 0.05
 upper_quantile <- 0.95
 ```
@@ -223,8 +223,18 @@ leiguskra <- leiguskra_raw |>
 
 leiguskra |> write_parquet("data/leiguskra_data.parquet")
 ```
+Þessi greining byggir á [kaupskrá fasteigna](https://fasteignaskra.is/gogn/grunngogn-til-nidurhals/kaupskra-fasteigna/) og [leiguskrá íbúðarhúsnæðis](https://fasteignaskra.is/gogn/grunngogn-til-nidurhals/leiguskra-ibudarhusnaedis/). Niðurstöður eru reiknaðar á eftirfarandi hátt:
 
-# Kaupverð
+1. Finna allar eignir sem eru seldar/leigðar út oftar en einu sinni
+2. Fyrir hverja sölu/leigu á hverri eign reiknum við hlutfallslega aukningu milli hverrar sölu/leigu
+3. Finnum svo tímann á milli þessara sala/leiga og leiðréttum svo þannig að hlutfallslega aukningin sé á ársgrundvelli
+4. Í hverju mánuði skoðum við svo dreifingu þessara verðbreytinga eftir að leiðrétt hefur verið fyrir vísitölu neysluverðs án húsnæðis
+
+# Myndir
+
+::: {.panel-tabset}
+
+## Kaupverð
 
 ```{r}
 p1 <- kaupskra |>
@@ -261,7 +271,7 @@ p1 <- kaupskra |>
   labs(
     x = NULL,
     y = NULL,
-    title = "Hækkun endursöluverðs fasteogma á ársgrundvelli",
+    title = "Hækkun endursöluverðs fasteigna á ársgrundvelli",
     subtitle = "Reiknuð sem munur á núverandi og síðasta kaupverði íbúðar\nLeiðrétt fyrir tíma milli kaupsamninga og vísitölu neysluverðs án fasteignaverðs",
     fill = "Hlutfall kaupsamninga\nsem lenda innan hvers bils",
     caption = "www.metill.is"
@@ -291,7 +301,7 @@ ggsave(
 ![](Figures/kaupverd_breyting.png){.column-page}
 
 
-# Leiguverð
+## Leiguverð
 
 ```{r}
 p2 <- leiguskra |> 
@@ -357,108 +367,223 @@ ggsave(
 
 ![](Figures/leiguverd_breyting.png){.column-page}
 
-
-
-
-
+## Saman
 
 ```{r}
-plot_dat1 <- kaupskra |> 
-  slice_max(order_by = dags, n = 1) |> 
-  select(size, lower, upper) |> 
-  pivot_longer(c(-size)) |> 
-  mutate(
-    prob = ifelse(
-      name == "lower",
-      0.5 - size / 2,
-      0.5 + size/2
-    )
-  ) |> 
-  arrange(prob) |> 
+p <- kaupskra |> 
   mutate(
     type = "Kaupverð"
-  )
-```
-
-
-```{r}
-plot_dat2 <- leiguskra |> 
-  slice_max(order_by = dags, n = 1) |> 
-  select(size, lower, upper) |> 
-  pivot_longer(c(-size)) |> 
-  mutate(
-    prob = ifelse(
-      name == "lower",
-      0.5 - size / 2,
-      0.5 + size/2
-    )
   ) |> 
-  arrange(prob) |> 
-  mutate(
-    type = "Leiguverð"
-  )
-```
-
-
-```{r}
-p1 + p2
-```
-
-
-
-```{r}
-plot_dat <- plot_dat1 |> 
   bind_rows(
-    plot_dat2
-  )
-```
-
-
-```{r}
-plot_dat |> 
-  pivot_wider(names_from = type, values_from = value) |> 
-  arrange(prob) |> 
-  select(
-    Dreifing = prob,
-    Kaupverð,
-    Leiguverð
+    leiguskra |> 
+      mutate(
+        type = "Leiguverð"
+      )
   ) |> 
-  gt()
-```
-
-
-
-
-```{r}
-plot_dat |> 
-  ggplot(aes(prob, value)) +
-  geom_hline(
-    yintercept = 0,
-    lty = 2,
-    alpha = 0.5,
-    linewidth = 0.3
+  filter(
+    year(dags) >= 2013
+  ) |> 
+  ggplot(aes(dags, y = y + 1, ymin = lower + 1, ymax = upper + 1)) +
+  geom_ribbon(aes(group = group, fill = group, alpha = group), col = "grey70", size = 0.02) +
+  scale_x_date(
+    date_breaks = "year",
+    date_labels = "%Y",
+    expand = expansion()
   ) +
-  geom_textline(aes(col = type, label = type, hjust = type)) +
-  scale_x_tufte(
-    labels = label_hlutf(),
-    breaks = tufte_breaks(plot_dat$prob, n = 20)
+  geom_hline(yintercept = 1, lty = 2, alpha = 1) +
+  facet_wrap("type") +
+  scale_x_date(
+    breaks = breaks_width("2 year", offset = "1 year"),
+    labels = label_date_short()
   ) +
   scale_y_tufte(
-    labels = label_hlutf(),
-    breaks = c(tufte_breaks(plot_dat$value), 0)
+    labels = function(x) hlutf(x - 1),
+    breaks = tufte_breaks(leiguskra$y + 1),
+    trans = "log10"
   ) +
-  scale_colour_brewer(
-    palette = "Set1"
+  scale_fill_brewer(type = "seq", palette = "PuBu") +
+  scale_alpha_discrete(
+    range = c(1, 1)
   ) +
-  scale_hjust_discrete(
-    range = c(0.4, 0.6)
+  guides(
+    fill = guide_legend(reverse = T, title.hjust = 0.5),
+    alpha = "none"
+  ) +
+  coord_cartesian(
+    
   ) +
   theme(
-    legend.position = "none"
+    legend.position = "top",
+    legend.title = element_text(colour = "#525252", family = "Lato"),
+    legend.text = element_text(colour = "#525252", family = "Lato"),
+    plot.margin = margin(t = 5, r = 15, b = 5, l = 5)
   ) +
   labs(
     x = NULL,
     y = NULL,
-    title = "Leiga hækkar "
+    title = "Hækkun kaup- og leiguverðs á ársgrundvelli",
+    subtitle = "Reiknuð sem munur á núverandi og síðasta kaup/leiguverði fasteignar\nLeiðrétt fyrir tíma milli kaup/leigusamninga og vísitölu neysluverðs án fasteignaverðs",
+    fill = "Hlutfall samninga\nsem lenda innan hvers bils",
+    caption = "www.metill.is"
   )
+
+
+ggsave(
+  p, 
+  filename = "Figures/saman_breyting.png",
+  width = 8, height = 0.621 * 8, scale = 1.3
+)
+
+ggsave(
+  p + 
+    scale_alpha_discrete(
+      range = c(0.1, 1)
+    ) +
+    theme(
+      plot.background = element_blank(),
+      panel.background = element_blank(),
+      legend.background = element_blank()
+    ), 
+  filename = "Figures/saman_breyting_fp.png",
+  width = 8, height = 0.621 * 8, scale = 1.3
+)
 ```
+
+![](Figures/saman_breyting.png){.column-page}
+
+:::
+
+# Nánari samanburður
+
+Hreyfimyndin að neðan sýnir sömu gögn og myndirnar að ofan, en auðveldar samanburð á hækkun leigu- og kaupverðs innan hvers mánaðar.
+
+```{r}
+#| eval: false
+p <- kaupskra |> 
+  mutate(
+    type = "Kaupverð"
+  ) |> 
+  bind_rows(
+    leiguskra |> 
+      mutate(
+        type = "Leiguverð"
+      )
+  ) |> 
+  filter(
+    year(dags) >= 2018,
+    dags <= max(leiguskra$dags)
+  ) |> 
+  select(
+    dags, size, lower, upper, type
+  ) |> 
+  pivot_longer(c(lower, upper)) |> 
+  mutate(
+    p = if_else(
+      name == "lower",
+      0.5 - size / 2,
+      0.5 + size / 2
+    )
+  ) |> 
+  ggplot(aes(p, 1 + value)) +
+  geom_hline(
+    yintercept = 1,
+    lty = 2,
+    linewidth = 0.4,
+    alpha = 0.4
+  ) +
+  geom_area(
+    aes(group = type, fill = type),
+    alpha = 0.5,
+    position = "identity"
+  ) +
+  geom_vline(
+    xintercept = 0.5,
+    lty = 2,
+    linewidth = 0.4,
+    alpha = 0.4
+  ) +
+  annotate(
+    geom = "text",
+    x = 0.51,
+    y = 1.3,
+    label = "50% samninga hækkuðu um\nviðeigandi tölu á y-ás\neða minna",
+    alpha = 0.6,
+    hjust = 0
+  ) +
+  geom_labelline(
+    aes(group = type, label = type, col = type), 
+    size = 5
+  ) +
+  scale_x_continuous(
+    labels = label_hlutf(),
+    expand = expansion(),
+    limits = c(0, 1)
+  ) +
+  scale_y_continuous(
+    labels = function(x) hlutf(x - 1),
+    expand = expansion(),
+    breaks = seq(0.4, 1.6, by = 0.2),
+    trans = "log10",
+    limits = c(1 / 1.45, 1.45)
+  ) +
+  scale_color_brewer(palette = "Set1") +
+  scale_fill_brewer(palette = "Set1") +
+  theme(
+    legend.position = "none",
+    plot.margin = margin(t = 5, r = 25, b = 5, l = 25)
+  ) +
+  labs(
+    title = "Dreifing á verðbreytingu kaup- og leigusamninga",
+    subtitle = str_c(
+      "Dagsetning: {next_state}\n",
+      "Leiðrétt fyrir vísitölu neysluverðs án húsnæðis"
+    ),
+    x = "Hlutfall kaup/leigusamninga",
+    y = "Verðbreyting (%)",
+    fill = NULL,
+    lty = NULL,
+    caption = "Myndin er á lograkvarða, svo -50% og +100% eru jafn langt frá 0%"
+  ) +
+  transition_states(
+    dags, 
+    transition_length = 1, 
+    state_length = 0, 
+    wrap = FALSE
+  ) +
+  ease_aes("cubic-in-out")
+
+p_anim <- animate(
+  p, 
+  duration = 10,
+  fps = 10,
+  renderer = ffmpeg_renderer(format = "mp4"),
+  width = 1200, 
+  height = 746,
+  res = 110
+)
+
+anim_save(
+  animation = p_anim,
+  filename = "kaup_leiga_anim.mp4"
+)
+
+
+p_anim <- animate(
+  p, 
+  duration = 10,
+  fps = 10,
+  renderer = gifski_renderer(),
+  width = 1200, 
+  height = 746,
+  res = 110
+)
+
+anim_save(
+  animation = p_anim,
+  filename = "Figures/kaup_leiga_anim.gif"
+)
+
+
+```
+
+![](Figures/kaup_leiga_anim.mp4){.column-page}

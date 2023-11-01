@@ -12,6 +12,7 @@
   {
     "listing": "/index.html",
     "items": [
+      "/greinar/leigaogkaupverd/index.html",
       "/greinar/visitala_neysluverds/index.html",
       "/greinar/faedingartidni/index.html",
       "/greinar/launagognfjarsyslu/index.html",
@@ -40,6 +41,7 @@
   {
     "listing": "/greinar.html",
     "items": [
+      "/greinar/leigaogkaupverd/index.html",
       "/greinar/visitala_neysluverds/index.html",
       "/greinar/faedingartidni/index.html",
       "/greinar/launagognfjarsyslu/index.html",

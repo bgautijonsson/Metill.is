@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Brynjólfur Gauti Guðrúnar Jónsson">
-<meta name="dcterms.date" content="2023-02-16">
+<meta name="dcterms.date" content="2023-11-01">
 <meta name="description" content="Stundum er talað um að leiga vaxi of hratt, eða að hún vaxi hægar en húsnæðisverð. Hérna nota ég kaupskrá, leiguskrá og vaxtatöflu Landsbanka til að bera leigu saman við afborganir á óverðtryggðu láni með jöfnum greiðslum og breytilegum vöxtum að því gefnu að kaupandi fær lán fyrir 80% af kaupverði fasteignarinnar.">
 
 <title>Leiga og kaupverð</title>
@@ -55,13 +55,13 @@ ul.task-list li input[type="checkbox"] {
 <style>html{ scroll-behavior: smooth; }</style>
 <meta property="og:title" content="Leiga og kaupverð">
 <meta property="og:description" content="Stundum er talað um að leiga vaxi of hratt, eða að hún vaxi hægar en húsnæðisverð. Hérna nota ég kaupskrá, leiguskrá og vaxtatöflu Landsbanka til að bera leigu saman við afborganir á óverðtryggðu láni með jöfnum greiðslum og breytilegum vöxtum að því gefnu að kaupandi fær lán fyrir 80% af kaupverði fasteignarinnar.">
-<meta property="og:image" content="https://metill.is/greinar/leigaogkaupverd/Figures/leiguverd_breyting_fp.png">
+<meta property="og:image" content="https://metill.is/greinar/leigaogkaupverd/Figures/saman_breyting_fp.png">
 <meta property="og:site_name" content="Metill">
 <meta property="og:image:height" content="1937">
 <meta property="og:image:width" content="3120">
 <meta name="twitter:title" content="Leiga og kaupverð">
 <meta name="twitter:description" content="Stundum er talað um að leiga vaxi of hratt, eða að hún vaxi hægar en húsnæðisverð. Hérna nota ég kaupskrá, leiguskrá og vaxtatöflu Landsbanka til að bera leigu saman við afborganir á óverðtryggðu láni með jöfnum greiðslum og breytilegum vöxtum að því gefnu að kaupandi fær lán fyrir 80% af kaupverði fasteignarinnar.">
-<meta name="twitter:image" content="https://metill.is/greinar/leigaogkaupverd/Figures/leiguverd_breyting.png">
+<meta name="twitter:image" content="https://metill.is/greinar/leigaogkaupverd/Figures/saman_breyting.png">
 <meta name="twitter:creator" content="@bggjonsson">
 <meta name="twitter:site" content="@bggjonsson">
 <meta name="twitter:card" content="summary_large_image">
@@ -137,7 +137,7 @@ ul.task-list li input[type="checkbox"] {
       <div>
       <div class="quarto-title-meta-heading">Síðast uppfært</div>
       <div class="quarto-title-meta-contents">
-        <p class="date">February 16, 2023</p>
+        <p class="date">November 1, 2023</p>
       </div>
     </div>
     
@@ -156,13 +156,34 @@ ul.task-list li input[type="checkbox"] {
 
 
 
-<section id="kaupverð" class="level1 page-columns page-full">
-<h1>Kaupverð</h1>
+<p>Þessi greining byggir á <a href="https://fasteignaskra.is/gogn/grunngogn-til-nidurhals/kaupskra-fasteigna/">kaupskrá fasteigna</a> og <a href="https://fasteignaskra.is/gogn/grunngogn-til-nidurhals/leiguskra-ibudarhusnaedis/">leiguskrá íbúðarhúsnæðis</a>. Niðurstöður eru reiknaðar á eftirfarandi hátt:</p>
+<ol type="1">
+<li>Finna allar eignir sem eru seldar/leigðar út oftar en einu sinni</li>
+<li>Fyrir hverja sölu/leigu á hverri eign reiknum við hlutfallslega aukningu milli hverrar sölu/leigu</li>
+<li>Finnum svo tímann á milli þessara sala/leiga og leiðréttum svo þannig að hlutfallslega aukningin sé á ársgrundvelli</li>
+<li>Í hverju mánuði skoðum við svo dreifingu þessara verðbreytinga eftir að leiðrétt hefur verið fyrir vísitölu neysluverðs án húsnæðis</li>
+</ol>
+<section id="myndir" class="level1 page-columns page-full">
+<h1>Myndir</h1>
+<div class="tabset-margin-container"></div><div class="panel-tabset page-columns page-full">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true">Kaupverð</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false">Leiguverð</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-3" role="tab" aria-controls="tabset-1-3" aria-selected="false">Saman</a></li></ul>
+<div class="tab-content page-columns page-full">
+<div id="tabset-1-1" class="tab-pane active page-columns page-full" role="tabpanel" aria-labelledby="tabset-1-1-tab">
 <p class="page-columns page-full"><img src="Figures/kaupverd_breyting.png" class="column-page img-fluid"></p>
-</section>
-<section id="leiguverð" class="level1 page-columns page-full">
-<h1>Leiguverð</h1>
+</div>
+<div id="tabset-1-2" class="tab-pane page-columns page-full" role="tabpanel" aria-labelledby="tabset-1-2-tab">
 <p class="page-columns page-full"><img src="Figures/leiguverd_breyting.png" class="column-page img-fluid"></p>
+</div>
+<div id="tabset-1-3" class="tab-pane page-columns page-full" role="tabpanel" aria-labelledby="tabset-1-3-tab">
+<p class="page-columns page-full"><img src="Figures/saman_breyting.png" class="column-page img-fluid"></p>
+</div>
+</div>
+</div>
+</section>
+<section id="nánari-samanburður" class="level1 page-columns page-full">
+<h1>Nánari samanburður</h1>
+<p>Hreyfimyndin að neðan sýnir sömu gögn og myndirnar að ofan, en auðveldar samanburð á hækkun leigu- og kaupverðs innan hvers mánaðar.</p>
+<p class="page-columns page-full"><video src="Figures/kaup_leiga_anim.mp4" class="column-page img-fluid" controls=""><a href="Figures/kaup_leiga_anim.mp4">Video</a></video></p>
 
 
 </section>
