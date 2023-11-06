@@ -52,6 +52,16 @@ d1 <- mtl_fjolskyldugerd_aldur_buseta() |>
 d2 <- fromJSON("https://talnaefni.fasteignaskra.is/talnaefni/v1/ibudavisitala")
 ```
 
+```{r}
+d1 |> 
+  distinct(name)
+```
+
+
+```{r}
+
+```
+
 
 ```{r}
 plot_dat <- d2 |> 
@@ -66,14 +76,22 @@ plot_dat <- d2 |>
     ar = year(dags),
     vst = parse_number(vst)
   ) |> 
+  filter(ar >= 1997) |> 
+  mutate(vst = vst / vst[dags == min(dags)]) |> 
   inner_join(
     d1 |> 
       filter(
         str_detect(skyribreyta, "ára"),
-        str_detect(name, "Ráðstöfunartekjur")
+        str_detect(name, "Ráðstöfunartekjur|Fjöldi í hóp")
       ) |> 
+      pivot_wider() |> 
+      janitor::clean_names() |> 
       mutate(
-        value = 100 * value / value[ar == 1997],
+        value = radstofunartekjur_tekjur_skattar / fjoldi_i_hop
+      ) |> 
+      select(-fjoldi_i_hop, -radstofunartekjur_tekjur_skattar) |> 
+      mutate(
+        value = value / value[ar == 1997],
         .by = skyribreyta
       ),
     by = join_by(ar), 
@@ -128,38 +146,26 @@ p <- plot_dat |>
   geom_richtext(
     data = tibble(x = 1),
     inherit.aes = FALSE,
-    x = clock::date_build(1996, 10), 
-    y = 0.05, 
+    x = clock::date_build(1997, 5), 
+    y = -0.15, 
     label.colour = NA,
     fill = NA,
-    label = "Ráðstöfunartekjur<br>hækkað <b style='color:#006d2c'>meira</b> &rarr;", 
-    hjust = 0,
-    size = 5,
-    colour = "grey40",
-    angle = 90
-  ) +
-  geom_richtext(
-    data = tibble(x = 1),
-    inherit.aes = FALSE,
-    x = clock::date_build(1996, 10), 
-    y = -0.05, 
-    label.colour = NA,
-    fill = NA,
-    label = "&larr; Ráðstöfunartekjur<br>hækkað <b style='color:#a50f15'>minna</b>", 
+    label = "&larr; Ráðstöfunartekjur hafa<br>hækkað svona mikið <b style='color:#a50f15'>minna</b><br>en húsnæðisverð", 
     hjust = 1,
+    vjust = 1,
     size = 5,
     colour = "grey40",
     angle = 90
   ) +
   scale_x_date(
-    limits = c(clock::date_build(1995, 7, 1), clock::date_build(2026, 1, 1)),
+    limits = c(clock::date_build(1997, 1, 1), clock::date_build(2026, 1, 1)),
     expand = expansion()
   ) +
   scale_y_continuous(
     labels = function(x) hlutf(x - 1),
     trans = "log10",
-    breaks = c(0.5, 0.6666, 1, 1.5, 2),
-    limits = c(0.45, 2)
+    breaks = c(0.4, 0.5, 0.6666, 1),
+    # limits = c(0.3, 1.2)
   ) +
   scale_colour_brewer(palette = "RdBu")  +
   coord_cartesian(clip = "off") +
@@ -167,7 +173,7 @@ p <- plot_dat |>
   labs(
     x = NULL,
     y = NULL,
-    title = "Hafa ráðstöfunartekjur eða íbúðarverð hækkað meira?",
+    title = "Ráðstöfunartekjur hafa hækkað mun minna en húsnæðisverð",
     subtitle = "Munur á (%) hækkun ráðstöfunartekna og vísitölu íbúðarverðs frá 1997 eftir aldri",
     caption = "Myndin er á lograkvarða svo -50% og +100% eru jafn langt frá 0%"
   )
