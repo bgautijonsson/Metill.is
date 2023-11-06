@@ -1,0 +1,195 @@
+---
+title: "Tekjur og kaupverð íbúða"
+pagetitle: "Tekjur og kaupverð íbúða"
+subtitle: "Hvernig ber hækkun vísitölu íbúðaverðs saman við aukningu ráðstöfunartekna?"
+description: | 
+    Texti sem lýsir þessu
+author: 
+    -   name: "Brynjólfur Gauti Guðrúnar Jónsson"
+        url: "https://twitter.com/bgautijonsson"
+        affiliation: "Tölfræði, Raunvísindadeild Háskóla Íslands"
+        affiliation-url: "https://www.hi.is/tolfraedi_0"
+date: "2023/10/30"
+format: 
+    html:
+        code-fold: true
+        page-layout: full
+        smooth-scroll: true
+        link-external-newwindow: true
+editor: source
+draft: true
+categories:
+    - efnahagur
+    - verðlag
+    - Hagstofa
+href: greinar/tekjurogkaupverd/index.qmd
+image: Figures/age_compare_fp.png
+twitter-card:
+    image: Figures/age_compare.png
+---
+
+```{r setup}
+#| include: false
+library(tidyverse)
+library(metill)
+library(geomtextpath)
+library(jsonlite)
+library(ggtext)
+theme_set(theme_metill())
+```
+
+
+```{r}
+init_db()
+
+
+d1 <- mtl_fjolskyldugerd_aldur_buseta() |> 
+  collect()
+
+
+
+
+d2 <- fromJSON("https://talnaefni.fasteignaskra.is/talnaefni/v1/ibudavisitala")
+```
+
+
+```{r}
+plot_dat <- d2 |> 
+  as_tibble() |> 
+  janitor::clean_names() |> 
+  select(
+    dags = date,
+    vst = vst_heild
+  ) |> 
+  mutate(
+    dags = ymd(dags),
+    ar = year(dags),
+    vst = parse_number(vst)
+  ) |> 
+  inner_join(
+    d1 |> 
+      filter(
+        str_detect(skyribreyta, "ára"),
+        str_detect(name, "Ráðstöfunartekjur")
+      ) |> 
+      mutate(
+        value = 100 * value / value[ar == 1997],
+        .by = skyribreyta
+      ),
+    by = join_by(ar), 
+    multiple = "all", 
+    relationship = "many-to-many"
+  ) |> 
+  mutate(
+    value = slider::slide_dbl(value, mean, .before = 11),
+    .by = skyribreyta
+  ) |> 
+  mutate(
+    hlutf = value / vst
+  )
+```
+
+
+```{r}
+p <- plot_dat |> 
+  mutate(
+    hlutf = slider::slide_dbl(hlutf, mean, .before = 11),
+    .by = skyribreyta
+  ) |> 
+  ggplot(aes(dags, hlutf)) +
+  geom_labelhline(
+    yintercept = 1,
+    lty = 2,
+    linewidth = 0.5,
+    alpha = 0.5,
+    hjust = 0.68,
+    label = "Enginn munur"
+  ) +
+  geom_line(
+    aes(col = skyribreyta),
+    linewidth = 1,
+    arrow = arrow(length = unit(0.25, "cm"), type = "closed", angle = 30)
+  ) +
+  ggrepel::geom_text_repel(
+    data = ~ filter(.x, dags == max(dags)),
+    aes(label = skyribreyta, col = skyribreyta),
+    seed = 1,
+    hjust = 0,
+    nudge_x = 100,
+    direction = "y",
+    force_pull = 10,
+    force = 0.05,
+    size = 5,
+    min.segment.length = Inf,
+    # bg.color = "grey80",
+    # bg.r = .05,
+    fontface = "bold",
+  ) +
+  geom_richtext(
+    data = tibble(x = 1),
+    inherit.aes = FALSE,
+    x = clock::date_build(1996, 10), 
+    y = 0.05, 
+    label.colour = NA,
+    fill = NA,
+    label = "Ráðstöfunartekjur<br>hækkað <b style='color:#006d2c'>meira</b> &rarr;", 
+    hjust = 0,
+    size = 5,
+    colour = "grey40",
+    angle = 90
+  ) +
+  geom_richtext(
+    data = tibble(x = 1),
+    inherit.aes = FALSE,
+    x = clock::date_build(1996, 10), 
+    y = -0.05, 
+    label.colour = NA,
+    fill = NA,
+    label = "&larr; Ráðstöfunartekjur<br>hækkað <b style='color:#a50f15'>minna</b>", 
+    hjust = 1,
+    size = 5,
+    colour = "grey40",
+    angle = 90
+  ) +
+  scale_x_date(
+    limits = c(clock::date_build(1995, 7, 1), clock::date_build(2026, 1, 1)),
+    expand = expansion()
+  ) +
+  scale_y_continuous(
+    labels = function(x) hlutf(x - 1),
+    trans = "log10",
+    breaks = c(0.5, 0.6666, 1, 1.5, 2),
+    limits = c(0.45, 2)
+  ) +
+  scale_colour_brewer(palette = "RdBu")  +
+  coord_cartesian(clip = "off") +
+  theme(legend.position = "none") +
+  labs(
+    x = NULL,
+    y = NULL,
+    title = "Hafa ráðstöfunartekjur eða íbúðarverð hækkað meira?",
+    subtitle = "Munur á (%) hækkun ráðstöfunartekna og vísitölu íbúðarverðs frá 1997 eftir aldri",
+    caption = "Myndin er á lograkvarða svo -50% og +100% eru jafn langt frá 0%"
+  )
+
+ggsave(
+  plot = p,
+  filename = "Figures/age_compare.png",
+  width = 8, height = 0.621 * 8, scale = 1.3
+)
+
+ggsave(
+  plot = p + 
+    theme(
+      plot.background = element_blank(),
+      panel.background = element_blank(),
+      panel.grid = element_blank()
+    ), 
+  filename = "age_compare_fp.png",
+  width = 8, 
+  height = 0.621 * 8,
+  scale = 1.3
+)
+```
+
+![](Figures/age_compare.png)
