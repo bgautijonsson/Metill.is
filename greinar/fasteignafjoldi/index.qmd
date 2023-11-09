@@ -200,20 +200,6 @@ p <- plot_dat |>
     color = "grey40",
     size = 2.5
   ) +
-  annotate(
-    x = 2.03,
-    y = 14.18,
-    geom = "text",
-    label = str_c(
-      "Seltjarnarnesbær er eina sveitarfélagið þar sem",
-      "\nfasteignum fjölgaði hraðar en fullorðnum, en",
-      "\nfullorðnum fækkaði um 67 frá 2020 til 2023."
-    ),
-    vjust = 1,
-    hjust = 0,
-    color = "grey40",
-    size = 2.5
-  ) +
   scale_x_continuous(
     limits = c(1.4, 2.4001),
     expand = expansion()

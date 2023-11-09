@@ -361,7 +361,7 @@ throun_data <- d |>
     sveitarfelag,
     ar,
     hluti,
-    # "Heildarskuldir" = heildarskuldir,
+    "Heildarskuldir" = heildarskuldir,
     # "Eignir" = eignir,
     # "Tekjur" = tekjur,
     # "Rekstrarniðurstaða" = rekstrarnidurstada,
@@ -470,7 +470,7 @@ dreifing_data
 vidmid_data <- d |> 
   filter(
     ar >= 2010,
-  ) |> 
+  ) |>
   select(
     sveitarfelag, 
     ar, 
@@ -496,6 +496,7 @@ vidmid_data <- d |>
   ) 
 
 vidmid_data |> 
+  drop_na() |> 
   write_parquet(
     "vidmid_data.parquet"
   )

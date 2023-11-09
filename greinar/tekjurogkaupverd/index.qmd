@@ -199,3 +199,104 @@ ggsave(
 ```
 
 ![](Figures/age_compare.png)
+
+
+```{r}
+#| eval: false
+#| include: false
+
+
+d1 |> 
+  filter(
+    str_detect(skyribreyta, "ára"),
+    str_detect(name, "Ráðstöfunartekjur|Fjöldi í hóp")
+  ) |> 
+  pivot_wider() |> 
+  janitor::clean_names() |> 
+  mutate(
+    value = radstofunartekjur_tekjur_skattar / fjoldi_i_hop
+  ) |> 
+  select(-fjoldi_i_hop, -radstofunartekjur_tekjur_skattar) |> 
+  mutate(
+    index = value / value[ar == 1997],
+    .by = skyribreyta
+  ) |> 
+  filter(ar %in% c(1997, 2022)) |> 
+  ggplot(aes(ar, 1e6 * value / 12)) +
+  geom_textline(
+    aes(col = skyribreyta, label = skyribreyta),
+    linewidth = 1,
+    arrow = arrow(length = unit(0.25, "cm"), type = "closed")
+  ) +
+  scale_y_continuous(
+    trans = "log10",
+    labels = label_isk()
+  ) +
+  scale_colour_brewer(palette = "RdBu") +
+  theme(
+    legend.position = "none"
+  )
+
+
+d1 |> 
+  filter(
+    str_detect(skyribreyta, "ára"),
+    str_detect(name, "Ráðstöfunartekjur|Fjöldi í hóp")
+  ) |> 
+  pivot_wider() |> 
+  janitor::clean_names() |> 
+  mutate(
+    value = radstofunartekjur_tekjur_skattar / fjoldi_i_hop
+  ) |> 
+  select(-fjoldi_i_hop, -radstofunartekjur_tekjur_skattar) |> 
+  mutate(
+    index = value / value[ar == 1997],
+    .by = skyribreyta
+  ) |> 
+  mutate(
+    hlutf = value / sum(value),
+    .by = ar
+  ) |> 
+  filter(ar %in% c(1997, 2010, 2016, 2022)) |> 
+  ggplot(aes(skyribreyta, hlutf)) +
+  geom_area(
+    aes(fill = ar, group = ar),
+    alpha = 0.4,
+    position = "identity"
+  ) +
+  geom_labelline(
+    aes(col = ar, label = ar, group = ar, hjust = factor(ar)),
+    linewidth = 1
+  ) +
+  scale_y_continuous(
+    labels = label_hlutf(),
+    limits = c(0, 0.15),
+    expand = expansion(),
+    breaks = c(0, 0.05, 0.1, 0.15)
+  ) +
+  scale_colour_distiller(
+    palette = "PuBu", 
+    direction = 1,
+    values = rescale(c(1900, 2100)),
+  ) +
+  scale_fill_distiller(
+    palette = "PuBu", 
+    direction = 1,
+    values = rescale(c(1950, 2100)),
+  ) +
+  scale_hjust_manual(
+    values = c(
+      0.2, 0.4, 0.5, 0.7
+    )
+  ) +
+  theme(
+    legend.position = "none"
+  ) +
+  labs(
+    x = NULL,
+    y = NULL,
+    title = "Ráðstöfunartekjur hafa færst frá yngri aldurshópum til þeirra eldri"
+  )
+
+```
+
