@@ -4,20 +4,8 @@ pagetitle: "Fyrirtæki"
 subtitle: "Hver er afkoma íslenskra fyrirtækja?"
 description: |
   Oft er talað um uppbyggingu fasteigna í sveitarfélögum landsins. Hvað segja gögnin um frammistöðu þeirra? Hvaða sveitarfélög byggja mest og hvernig ber það saman við mannfjöldann þar?
-author: 
-    -   name: "Brynjólfur Gauti Guðrúnar Jónsson"
-        url: "https://twitter.com/bgautijonsson"
-        affiliation: "Tölfræði, Raunvísindadeild Háskóla Íslands"
-        affiliation-url: "https://www.hi.is/tolfraedi_0"
 date: "2022/10/31"
-format: 
-    html:
-        code-fold: true
-        smooth-scroll: true
-        link-external-newwindow: true
-editor: source
 draft: true
-title-block-banner: true
 categories:
     - stjórnmál
     - efnahagur

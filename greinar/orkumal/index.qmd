@@ -3,20 +3,8 @@ title: "Orkumál"
 subtitle: "Hver er útblástur Íslands og hvernig er hann borið saman við önnur lönd?"
 description: |
     Til að vernda jörðina viljum við draga úr notkun jarðefnaeldsneytis, en einnig vilja þjóðir heims vaxa efnahagslega. Hér skoða ég hvað þjóðir nota margar kílówattstundir (kWh) af jarðefnaeldsneyti og annarri orku alls per dollari af landsframleiðslu. Ég skoða líka útblástur gróðurhúsaloftteguna við framleiðslu rafmagns og tengingu við landsframleiðslu.
-author: 
-    -   name: "Brynjólfur Gauti Guðrúnar Jónsson"
-        url: "https://twitter.com/bgautijonsson"
-        affiliation: "Tölfræði, Raunvísindadeild Háskóla Íslands"
-        affiliation-url: "https://www.hi.is/tolfraedi_0"
 date: "2023/01/26"
-format: 
-    html:
-        code-fold: true
-        smooth-scroll: true
-        link-external-newwindow: true
-editor: source
 draft: true
-title-block-banner: true
 execute: 
   eval: false
 categories:

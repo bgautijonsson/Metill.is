@@ -4,23 +4,8 @@ pagetitle: "Tímabundin vernd"
 subtitle: "Hvað segja gögnin um fjölda hælisleitenda og fólksflutninga til Íslands?"
 description: |
   Hér eru gögn um fjölda einstaklinga sem njóta tímabundinnar verndar, fjölda samþykktra verndarumsókna og fjölda umsókna í bið tekin saman úr gögnum  Eurostat.
-author: 
-    -   name: "Brynjólfur Gauti Guðrúnar Jónsson"
-        url: "https://twitter.com/bgautijonsson"
-        affiliation: "Tölfræði, Raunvísindadeild Háskóla Íslands"
-        affiliation-url: "https://www.hi.is/tolfraedi_0"
 date: "2023/01/18"
-format: 
-    html:
-        code-fold: true
-        smooth-scroll: true
-        link-external-newwindow: true
-        toc: true
-        toc-location: right
-        toc-title: Efnisyfirlit
-editor: source
 draft: false
-title-block-banner: true
 categories:
     - stjórnmál
     - fólksflutningar

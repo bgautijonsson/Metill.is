@@ -4,20 +4,7 @@ pagetitle: "Leikskólar"
 subtitle: "Hvernig gengur sveitarfélögum landsins að brúa bilið?"
 description: |
     Hvernig gengur sveitarfélögum að útbúa leikskólapláss? Hvernig ber fjölda nemenda í leikskólum saman við heildarfjölda barna í hverjum árgangi? Hér skoðum við gögn Hagstofunnar um leikskóla og berum saman við mannfjöldatölur eftir aldri.
-author: 
-    -   name: "Brynjólfur Gauti Guðrúnar Jónsson"
-        url: "https://twitter.com/bgautijonsson"
-        affiliation: "Tölfræði, Raunvísindadeild Háskóla Íslands"
-        affiliation-url: "https://www.hi.is/tolfraedi_0"
 date: "2023/06/28"
-format: 
-    html:
-        code-fold: true
-        smooth-scroll: true
-        link-external-newwindow: true
-editor: source
-title-block-banner: true
-draft: false
 categories:
     - sveitarfélög
     - skólar

@@ -4,20 +4,7 @@ pagetitle: "Fjármál stjórnmálaflokkanna"
 subtitle: "Greining á ársreikningum stjórnmálaflokka úr gögnum Ríkisendurskoðunar"
 description: |
   Hversu miklar tekjur hafa stjórnmálaflokkarnir og hvaðan koma þær? Hækka útgjöld þeirra sjáanlega í kringum kosningar og eiga þeir einhverjar eignir? Hér köfum við ofan í ársreikninga stjórnmálaflokkanna.
-author: 
-    -   name: "Brynjólfur Gauti Guðrúnar Jónsson"
-        url: "https://twitter.com/bgautijonsson"
-        affiliation: "Tölfræði, Raunvísindadeild Háskóla Íslands"
-        affiliation-url: "https://www.hi.is/tolfraedi_0"
 date: "2023/06/21"
-format: 
-    html:
-        code-fold: true
-        smooth-scroll: true
-        link-external-newwindow: true
-editor: source
-draft: false
-title-block-banner: true
 categories:
     - stjórnmál
     - efnahagur

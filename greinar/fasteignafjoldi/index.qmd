@@ -4,20 +4,8 @@ pagetitle: "Fasteignauppbygging Sveitarfélaga"
 subtitle: "Hvaða sveitarfélögum gengur vel að byggja nóg af fasteignum?"
 description: |
   Oft er talað um uppbyggingu fasteigna í sveitarfélögum landsins. Sum eru sögð standa sig sífellt illa í uppbyggingu og öðrum er hrósað. Hvað segja gögnin um frammistöðu þeirra? Hvaða sveitarfélög byggja mest og hvernig ber það saman við mannfjöldann þar?
-author: 
-    -   name: "Brynjólfur Gauti Guðrúnar Jónsson"
-        url: "https://twitter.com/bgautijonsson"
-        affiliation: "Tölfræði, Raunvísindadeild Háskóla Íslands"
-        affiliation-url: "https://www.hi.is/tolfraedi_0"
 date: "2023/01/26"
-format: 
-    html:
-        code-fold: true
-        smooth-scroll: true
-        link-external-newwindow: true
-editor: source
 draft: true
-title-block-banner: true
 categories:
     - stjórnmál
     - efnahagur
@@ -46,6 +34,7 @@ library(crosstalk)
 library(glue)
 library(rjson)
 library(pxweb)
+library(ggtext)
 theme_set(theme_metill())
 
 get_tables <- function(data, years) {
@@ -719,6 +708,7 @@ heild <-  d |>
   pull(bygg_per_mannfj)
 
 lower_x <- min(plot_dat$bygg_per_mannfj) * 0.9
+upper_x <- max(plot_dat$bygg_per_mannfj) * 1.05
 
 p <- plot_dat |>
   ggplot(aes(bygg_per_mannfj, sveitarfelag, text = text)) +
@@ -737,33 +727,25 @@ p <- plot_dat |>
     alpha = 1,
     size = 0.1
   ) +
-  geom_text(
+  geom_richtext(
     data = tibble(
-      x = 100,
+      x = heild,
       y = 20,
-      label = "Á landsvísu"
+      label = "&larr;Á landsvísu"
     ),
     aes(x = x, y = y, label = label),
     inherit.aes = FALSE,
-    size = 4,
+    size = 5,
     hjust = 0,
-    colour = "grey40"
-  ) +
-  metR::geom_arrow(
-    data = tibble(
-      x = 96, y = 20,
-      dx = -0.55,
-      dy = 0
-    ),
-    aes(x = x, y = y, dx = dx, dy = dy),
-    size = 0.4,
-    inherit.aes = FALSE,
-    colour = "grey40"
+    # nudge_x = 5,
+    fill = NA,
+    colour = NA,
+    text.colour = "grey40"
   ) +
   scale_x_tufte(
     labels = label_number(),
     breaks = tufte_breaks(plot_dat$bygg_per_mannfj),
-    limits = c(lower_x, 205),
+    limits = c(lower_x, upper_x),
     expand = expansion()
   ) +
   coord_cartesian(clip = "off") +

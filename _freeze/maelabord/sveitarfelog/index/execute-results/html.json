@@ -1,0 +1,17 @@
+{
+  "hash": "7e9cb2fbb3d9f96365d853bf81d44fee",
+  "result": {
+    "engine": "knitr",
+    "markdown": "---\ntitle-block-style: none\npagetitle: \"Fjármál sveitarfélaga\"\npagesubtitle: \"Gagnvirk samantekt á ársreikningum sveitarfélaga úr gögnum Sambands Íslenskra Sveitarfélaga\"\nimage: image.png\nhref: maelabord/sveitarfelog/index.qmd\npagedate: \"2022/09/18\"\n---\n\n::: {.cell}\n::: {.cell-output-display}\n![](index_files/figure-html/unnamed-chunk-1-1.png){width=672}\n:::\n:::\n\n\n\n::: {.column-screen}\n<iframe\n  src=\"https://bggj.shinyapps.io/shiny_sveitarfelog/\">\n</iframe>\n:::",
+    "supporting": [
+      "index_files"
+    ],
+    "filters": [
+      "rmarkdown/pagebreak.lua"
+    ],
+    "includes": {},
+    "engineDependencies": {},
+    "preserve": {},
+    "postProcess": true
+  }
+}

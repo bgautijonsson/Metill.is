@@ -4,19 +4,7 @@ pagetitle: "Vísitala neysluverðs"
 subtitle: "Vísitalan og áhrif undirtalna á heildina unnið úr nýjustu gögnum Hagstofu hverju sinni"
 description: | 
     Verðbólga er ekki alltaf það sama og verðbólga. Stundum er stór hluti af henni hækkun á húsnæðisverði, stundum ferðir og flutningar. Það er því gott að skoða undirvísitölurnar og áhrif þeirra á heildina.
-author: 
-    -   name: "Brynjólfur Gauti Guðrúnar Jónsson"
-        url: "https://twitter.com/bgautijonsson"
-        affiliation: "Tölfræði, Raunvísindadeild Háskóla Íslands"
-        affiliation-url: "https://www.hi.is/tolfraedi_0"
 date: "2023/10/30"
-format: 
-    html:
-        code-fold: true
-        page-layout: full
-        smooth-scroll: true
-        link-external-newwindow: true
-editor: source
 categories:
     - efnahagur
     - verðlag

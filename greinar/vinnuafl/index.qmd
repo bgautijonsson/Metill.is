@@ -4,19 +4,7 @@ pagetitle: "Vinnumarkaður"
 subtitle: "Hver er fjöldi starfandi einstaklinga og hvernig skiptast þeir á vinnumarkaði?"
 description: |
     Reglulega sjást fyrirsagnir þar sem talað er um að opinbert starfsfólk sé allt of margt og að hlutfall þess af heildarfjölda vinnandi fólks sé of hátt. Hér kryf ég reglulega nýjustu gögnin til að geta vitað hvort slíkar fullyrðingar séu teknar úr samhengi eða endurspegli raunveruleikann.
-author: 
-    -   name: "Brynjólfur Gauti Guðrúnar Jónsson"
-        url: "https://twitter.com/bgautijonsson"
-        affiliation: "Tölfræði, Raunvísindadeild Háskóla Íslands"
-        affiliation-url: "https://www.hi.is/tolfraedi_0"
 date: "2023/11/09"
-format: 
-    html:
-        code-fold: true
-        smooth-scroll: true
-        link-external-newwindow: true
-editor: source
-title-block-banner: true
 categories:
     - efnahagur
     - vinnumarkaður

@@ -84,8 +84,6 @@ efnahagur <- read_excel("net-efnahagsreikningar.xlsx", skip = 4) |>
     ar = parse_number(ar),
     sveitarfelag = str_sub(sveitarfelag, start = 6)
   )
-
-efnahagur
 ```
 
 

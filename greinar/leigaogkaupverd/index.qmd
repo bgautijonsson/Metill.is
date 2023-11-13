@@ -4,20 +4,7 @@ pagetitle: "Leiga og kaupverð"
 subtitle: "Hvernig ber leiguverði saman við kaupverð?"
 description: |
   Stundum er talað um að leiga vaxi of hratt, eða að hún vaxi hægar en húsnæðisverð. Hérna nota ég kaupskrá, leiguskrá og vaxtatöflu Landsbanka til að bera leigu saman við afborganir á óverðtryggðu láni með jöfnum greiðslum og breytilegum vöxtum að því gefnu að kaupandi fær lán fyrir 80% af kaupverði fasteignarinnar.
-author: 
-    -   name: "Brynjólfur Gauti Guðrúnar Jónsson"
-        url: "https://twitter.com/bgautijonsson"
-        affiliation: "Tölfræði, Raunvísindadeild Háskóla Íslands"
-        affiliation-url: "https://www.hi.is/tolfraedi_0"
 date: "2023/11/01"
-format: 
-    html:
-        code-fold: true
-        smooth-scroll: true
-        link-external-newwindow: true
-editor: source
-draft: false
-title-block-banner: true
 categories:
     - stjórnmál
     - efnahagur

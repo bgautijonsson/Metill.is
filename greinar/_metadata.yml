@@ -1,10 +1,20 @@
 # options specified here will apply to all posts in this folder
 # Enable banner style title blocks
 title-block-banner: true 
-
 language:
   title-block-author-single: "Höfundur"
   title-block-author-plural: "Höfundar"
   title-block-affiliation-single: "Stofnun"
   title-block-affiliation-plural: "Stofnun"
   title-block-published: "Síðast uppfært"
+author: 
+    -   name: "Brynjólfur Gauti Guðrúnar Jónsson"
+        url: "https://twitter.com/bggjonsson"
+        affiliation: "Tölfræði, Raunvísindadeild Háskóla Íslands"
+        affiliation-url: "https://www.hi.is/tolfraedi_0"
+format: 
+    html:
+        code-fold: true
+        smooth-scroll: true
+        link-external-newwindow: true
+editor: source

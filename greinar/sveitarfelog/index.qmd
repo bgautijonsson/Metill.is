@@ -1,0 +1,347 @@
+---
+title: "Vinnumarkaður"
+pagetitle: "Vinnumarkaður"
+subtitle: "Hver er fjöldi starfandi einstaklinga og hvernig skiptast þeir á vinnumarkaði?"
+description: |
+    Reglulega sjást fyrirsagnir þar sem talað er um að opinbert starfsfólk sé allt of margt og að hlutfall þess af heildarfjölda vinnandi fólks sé of hátt. Hér kryf ég reglulega nýjustu gögnin til að geta vitað hvort slíkar fullyrðingar séu teknar úr samhengi eða endurspegli raunveruleikann.
+date: "2023/11/09"
+draft: true
+categories:
+    - efnahagur
+    - sveitarfélög
+    - stjórnmál
+href: greinar/vinnuafl/index.qmd
+image: figures/hlutf_opinbert_fp.png
+twitter-card:
+    image: figures/hlutf_opinbert.png
+execute: 
+  eval: false
+---
+
+
+```{r setup}
+#| include: false
+
+library(tidyverse)
+library(readxl)
+library(glue)
+library(metill)
+library(purrr)
+
+theme_set(theme_metill()) 
+```
+
+```{r}
+init_db()
+
+mannfjoldi <- mtl_mannfjoldi_svf() |> 
+  group_by(sveitarfelag, ar) |> 
+  summarise(
+    mannfjoldi = sum(mannfjoldi)
+  ) |> 
+  ungroup() |> 
+  collect() 
+```
+
+
+
+
+```{r}
+read_stodugildi_total <- function(year) {
+  read_xlsx(glue("data/rbok-{year}-toflur.xlsx"), sheet = "Tafla 17", skip = 4) |> 
+    slice(-1) |> 
+    rename("svfn" = 1, "sveitarfelag" = 2, stodugildi_total = "stöðugildi") |> 
+    select(sveitarfelag, stodugildi_total) |> 
+    mutate(ar = year)
+}
+
+
+
+d_total <- map_dfr(2018:2023, read_stodugildi_total) |> 
+  mutate(
+        sveitarfelag = case_when(
+            str_detect(sveitarfelag, "Reykjavíkurborg") ~ "Reykjavíkurborg",
+            str_detect(sveitarfelag, "Hafnarfj") ~ "Hafnarfjarðarkaupstaður",
+            TRUE ~ sveitarfelag
+        )
+    )
+```
+
+```{r}
+read_stodugildi_skola <- function(year) {
+  read_excel(
+    glue("data/rbok-{year}-toflur.xlsx"), 
+    sheet = "Tafla 18", 
+    range = "A7:N356"
+  ) |> 
+    select(
+      sveitarfelag = 3,
+      stodugildi_skola = 14
+    ) |> 
+    filter(
+      str_detect(sveitarfelag, "[Ss]amtals")
+    ) |> 
+    mutate(
+      sveitarfelag = str_replace(sveitarfelag, " [Ss]amtals", "") |> 
+        str_replace("^[0-9]+ ", "")
+    ) |> 
+    mutate(
+      ar = year
+    )
+}
+
+d_skolar <- map_dfr(2018:2023, read_stodugildi_skola) |> 
+  mutate(
+        sveitarfelag = case_when(
+            str_detect(sveitarfelag, "Reykjavíkurborg") ~ "Reykjavíkurborg",
+            str_detect(sveitarfelag, "Hafnarfj") ~ "Hafnarfjarðarkaupstaður",
+            TRUE ~ sveitarfelag
+        )
+    )
+```
+
+
+```{r}
+read_stodugildi_leikskola <- function(year) {
+  read_excel(
+    glue("data/rbok-{year}-toflur.xlsx"), 
+    sheet = "Tafla 19", 
+    range = "A8:Q406"
+  ) |> 
+    select(
+      sveitarfelag = 3,
+      stodugildi_leikskola = 17
+    ) |> 
+    filter(
+      str_detect(sveitarfelag, "samtals")
+    ) |> 
+    mutate(
+      sveitarfelag = str_replace(sveitarfelag, " samtals", "") |> 
+        str_replace("^[0-9]+ ", "")
+    ) |> 
+    mutate(
+      ar = year
+    )
+}
+
+d_leikskolar <- map_dfr(2018:2023, read_stodugildi_leikskola) |> 
+  mutate(
+        sveitarfelag = case_when(
+            str_detect(sveitarfelag, "Reykjavíkurborg") ~ "Reykjavíkurborg",
+            str_detect(sveitarfelag, "Hafnarfj") ~ "Hafnarfjarðarkaupstaður",
+            TRUE ~ sveitarfelag
+        )
+    )
+
+```
+
+
+```{r}
+p <- d_total |> 
+  inner_join(
+    d_skolar,
+    by = join_by(sveitarfelag, ar)
+  ) |> 
+  inner_join(
+    d_leikskolar,
+    by = join_by(sveitarfelag, ar)
+  ) |> 
+  mutate(
+    stodugildi_annad = stodugildi_total - stodugildi_skola - stodugildi_leikskola,
+    sveitarfelag = case_when(
+      str_detect(sveitarfelag, "Reykjavíkurb") ~ "Reykjavíkurborg",
+      str_detect(sveitarfelag, "Hafnarfj") ~ "Hafnarfjarðarkaupstaður",
+      TRUE ~ sveitarfelag
+    )
+  ) |> 
+  filter(
+    sveitarfelag %in% c(
+      "Reykjavíkurborg",
+      "Garðabær",
+      "Kópavogsbær",
+      "Hafnarfjarðarkaupstaður",
+      "Mosfellsbær"
+    )
+  ) |> 
+  rename(
+    "Samtals" = stodugildi_total,
+    "Skólar" = stodugildi_skola,
+    "Leikskólar" = stodugildi_leikskola,
+    "Annað (Ekki skólar eða leikskólar)" = stodugildi_annad
+  ) |> 
+  pivot_longer(c(-ar, -sveitarfelag)) |> 
+  mutate(
+    name = fct_relevel(
+      name,
+      "Leikskólar",
+      "Skólar",
+      "Annað (Ekki skólar eða leikskólar)"
+    )
+  ) |> 
+  mutate(
+    value = value / value[ar == min(ar)],
+    .by = c(sveitarfelag, name)
+  ) |> 
+  ggplot(aes(ar, value, col = sveitarfelag)) +
+  geom_hline(
+    yintercept = 1,
+    lty = 2,
+    alpha = 0.5,
+    linewidth = 0.5
+  ) +
+  geom_line(
+    linewidth = 1,
+    arrow = arrow(length = unit(0.25, "cm"), type = "closed")
+  ) +
+  scale_y_continuous(
+    labels = function(x) hlutf(x - 1),
+    breaks = breaks_pretty(5)
+  ) +
+  scale_colour_brewer(
+    palette = "Set1",
+    guide = guide_legend(nrow = 1, label.position = "top")
+  ) +
+  facet_wrap("name") +
+  coord_cartesian(clip = "off") +
+  theme(
+    legend.position = "top"
+  ) +
+  labs(
+    title = "Stöðugildum hefur fjölgað hjá öllum sveitarfélögum á Höfuðborgarsvæðinu",
+    subtitle = "(%) fjölgun stöðugilda miðað við 2018",
+    x = NULL,
+    y = NULL,
+    col = NULL,
+    caption = "Reiknað út frá Árbókum Sveitarfélaga hjá www.samband.is"
+  )
+
+
+
+ggsave(
+  plot = p,
+  filename = "Figures/stodugildi_svf.png",
+  width = 8, height = 0.621 * 8, scale = 1.3
+)
+
+ggsave(
+  plot = p + 
+    theme(
+      plot.background = element_blank(),
+      panel.background = element_blank(),
+      panel.grid = element_blank()
+    ), 
+  filename = "stodugildi_svf_fp.png",
+  width = 8, 
+  height = 0.621 * 8,
+  scale = 1.3
+)
+```
+
+
+
+```{r}
+p <- d_total |> 
+  inner_join(
+    d_skolar,
+    by = join_by(sveitarfelag, ar)
+  ) |> 
+  inner_join(
+    d_leikskolar,
+    by = join_by(sveitarfelag, ar)
+  ) |> 
+  mutate(
+    stodugildi_annad = stodugildi_total - stodugildi_skola - stodugildi_leikskola,
+    sveitarfelag = case_when(
+      str_detect(sveitarfelag, "Reykjavíkurb") ~ "Reykjavíkurborg",
+      str_detect(sveitarfelag, "Hafnarfj") ~ "Hafnarfjarðarkaupstaður",
+      TRUE ~ sveitarfelag
+    )
+  ) |> 
+  filter(
+    sveitarfelag %in% c(
+      "Reykjavíkurborg",
+      "Garðabær",
+      "Kópavogsbær",
+      "Hafnarfjarðarkaupstaður",
+      "Mosfellsbær"
+    )
+  ) |> 
+  rename(
+    "Samtals" = stodugildi_total,
+    "Skólar" = stodugildi_skola,
+    "Leikskólar" = stodugildi_leikskola,
+    "Annað (Ekki skólar eða leikskólar)" = stodugildi_annad
+  ) |> 
+  pivot_longer(c(-ar, -sveitarfelag)) |> 
+  mutate(
+    name = fct_relevel(
+      name,
+      "Leikskólar",
+      "Skólar",
+      "Annað (Ekki skólar eða leikskólar)"
+    )
+  ) |> 
+  inner_join(
+    mannfjoldi,
+    by = join_by(sveitarfelag, ar)
+  ) |> 
+  mutate(
+    value = value / mannfjoldi,
+    value = value / value[ar == min(ar)],
+    .by = c(sveitarfelag, name)
+  ) |> 
+  ggplot(aes(ar, value, col = sveitarfelag)) +
+  geom_hline(
+    yintercept = 1,
+    lty = 2,
+    alpha = 0.5,
+    linewidth = 0.5
+  ) +
+  geom_line(
+    linewidth = 1,
+    arrow = arrow(length = unit(0.25, "cm"), type = "closed")
+  ) +
+  scale_y_continuous(
+    labels = function(x) hlutf(x - 1),
+    breaks = breaks_pretty(5)
+  ) +
+  scale_colour_brewer(
+    palette = "Set1",
+    guide = guide_legend(nrow = 1, label.position = "top")
+  ) +
+  facet_wrap("name") +
+  coord_cartesian(clip = "off") +
+  theme(
+    legend.position = "top"
+  ) +
+  labs(
+    title = "Stöðugildum hefur fjölgað hraðar en íbúum hjá flestum sveitarfélögum á Höfuðborgarsvæðinu",
+    subtitle = "(%) fjölgun stöðugilda á hvern íbúa miðað við 2018",
+    x = NULL,
+    y = NULL,
+    col = NULL,
+    caption = "Reiknað út frá Árbókum Sveitarfélaga hjá www.samband.is"
+  )
+
+
+
+ggsave(
+  plot = p,
+  filename = "Figures/stodugildi_ibua_svf.png",
+  width = 8, height = 0.621 * 8, scale = 1.5
+)
+
+ggsave(
+  plot = p + 
+    theme(
+      plot.background = element_blank(),
+      panel.background = element_blank(),
+      panel.grid = element_blank()
+    ), 
+  filename = "stodugildi_ibua_svf_fp.png",
+  width = 8, 
+  height = 0.621 * 8,
+  scale = 1.5
+)
+```
+

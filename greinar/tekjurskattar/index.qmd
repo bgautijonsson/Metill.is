@@ -4,20 +4,7 @@ pagetitle: "Tekjur, skattar og kaupmáttur"
 subtitle: "Greining á tekjuskattsgögnum sem Hagstofan vinnur úr skattframtölum Íslendinga"
 description: |
     Stundum er sagt að að skattakerfið ýti undir ójöfnuð, eða að það séu of háir skattar á þeim efnameiru. Hvort er það? Hér notum við skattagögn Hagstofunnar til að skoða tekjur og skatta eftir tekjutíundum.
-author: 
-    -   name: "Brynjólfur Gauti Guðrúnar Jónsson"
-        url: "bggj.is"
-        affiliation: "Tölfræði, Raunvísindadeild Háskóla Íslands"
-        affiliation-url: "https://www.hi.is/tolfraedi_0"
 date: "2023/10/21"
-draft: false
-format: 
-    html:
-        code-fold: true
-        smooth-scroll: true
-        link-external-newwindow: true
-editor: source
-title-block-banner: true
 categories:
     - skattar
     - efnahagur

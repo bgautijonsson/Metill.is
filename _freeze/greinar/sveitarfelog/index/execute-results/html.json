@@ -1,0 +1,17 @@
+{
+  "hash": "58555070d5f479a1cc66cc06c9ef7d58",
+  "result": {
+    "engine": "knitr",
+    "markdown": "---\ntitle: \"Vinnumarkaður\"\npagetitle: \"Vinnumarkaður\"\nsubtitle: \"Hver er fjöldi starfandi einstaklinga og hvernig skiptast þeir á vinnumarkaði?\"\ndescription: |\n    Reglulega sjást fyrirsagnir þar sem talað er um að opinbert starfsfólk sé allt of margt og að hlutfall þess af heildarfjölda vinnandi fólks sé of hátt. Hér kryf ég reglulega nýjustu gögnin til að geta vitað hvort slíkar fullyrðingar séu teknar úr samhengi eða endurspegli raunveruleikann.\ndate: \"2023/11/09\"\ndraft: true\ncategories:\n    - efnahagur\n    - sveitarfélög\n    - stjórnmál\nhref: greinar/vinnuafl/index.qmd\nimage: figures/hlutf_opinbert_fp.png\ntwitter-card:\n    image: figures/hlutf_opinbert.png\nexecute: \n  eval: false\n---\n\n\n\n::: {.cell}\n\n:::\n\n::: {.cell}\n\n:::\n\n::: {.cell}\n\n:::\n\n::: {.cell}\n\n:::\n\n::: {.cell}\n\n:::\n\n::: {.cell}\n\n:::\n",
+    "supporting": [
+      "index_files"
+    ],
+    "filters": [
+      "rmarkdown/pagebreak.lua"
+    ],
+    "includes": {},
+    "engineDependencies": {},
+    "preserve": {},
+    "postProcess": true
+  }
+}

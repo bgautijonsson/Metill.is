@@ -4,19 +4,7 @@ pagetitle: "Landspítalinn"
 subtitle: "Hvaða upplýsingar eru til um rekstur Landspítalans og hvar má finna þær?"
 description: |
     Hvernig er nýting legurýma á Landspítala? Hvaða hlutfall launa fer í þessi margræddu millistjórnendastörf? Hér ætla ég aðeins að skoða hvaða gögn eru til um rekstur landspítalans, hvar má finna þau og hvað mætti betur fara í birtingu þeirra gagna.
-author: 
-    -   name: "Brynjólfur Gauti Guðrúnar Jónsson"
-        url: "bggj.is"
-        affiliation: "Tölfræði, Raunvísindadeild Háskóla Íslands"
-        affiliation-url: "https://www.hi.is/tolfraedi_0"
 date: "2022/08/24"
-format: 
-    html:
-        code-fold: true
-        smooth-scroll: true
-        link-external-newwindow: true
-editor: source
-title-block-banner: true
 categories:
     - landspítali
     - R

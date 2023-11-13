@@ -4,21 +4,8 @@ pagetitle: "Hvað kostar kosningaherferð?"
 subtitle: "Niðurstöður alþingiskosninga tengdar við fjármál stjórnmálaflokkanna"
 description: |
     A description of this stuff!
-author: 
-    -   name: "Brynjólfur Gauti Guðrúnar Jónsson"
-        url: "https://twitter.com/bgautijonsson"
-        affiliation: "Tölfræði, Raunvísindadeild Háskóla Íslands"
-        affiliation-url: "https://www.hi.is/tolfraedi_0"
 date: "2022/09/17"
-format: 
-    html:
-        code-fold: true
-        page-layout: full
-        smooth-scroll: true
-        link-external-newwindow: true
-editor: source
 draft: true
-title-block-banner: true
 categories:
     - stjórnmál
     - kosningar
@@ -32,296 +19,1129 @@ execute:
 ```{r}
 #| include: false
 
-library(cowplot)
+library(dataverse)
+library(haven)
 library(tidyverse)
-library(scales)
 library(ggthemes)
+library(cowplot)
+library(scales)
+library(here)
 library(kableExtra)
-library(gganimate)
-library(lubridate)
-library(geomtextpath)
-library(ggtext)
-library(readxl)
-library(janitor)
-library(plotly)
-library(config)
-library(DBI)
-library(visitalaneysluverds)
-library(tidyverse)
-library(lubridate)
-library(ggthemes)
-library(cowplot)
-library(scales)
-library(visitalaneysluverds)
-library(feather)
-library(gganimate)
-library(metill)
-library(patchwork)
-theme_set(theme_metill())
-
+Sys.setenv("DATAVERSE_SERVER" = "dataverse.rhi.hi.is")
 ```
 
-```{r}
-usr <- config::get("postgres_user")
-con <- dbConnect(RPostgres::Postgres(), 
-                 dbname = usr$dbname, 
-                 host = usr$host,
-                 port = usr$port, 
-                 user = usr$username, 
-                 password = usr$password)
+# Hvert fara atkvæðin?
 
-isk <- function(x, scale = 1e6, suffix = " mkr") number(x / scale, suffix = suffix, big.mark = ".", decimal.mark = ",")
-hlutf <- label_percent(accuracy = 0.1, big.mark = ".", decimal.mark = ",")
-```
-
+## Útbúa gögnin
 
 ```{r}
-d <- tbl(con, "arsreikningar_stjornmalaflokka") |> 
-    collect() |> 
-    mutate_all(~ ifelse(is.na(.), 0, .)) |> 
-    inner_join(
-        vnv() |> 
-            group_by(ar = year(date)) |> 
-            summarise(cpi = mean(cpi)) |> 
-            mutate(cpi = cpi / cpi[ar == max(ar)]),
-        by = "ar"
-    ) |> 
-    mutate(
-        flokkur = case_when(
-            flokkur == "Flokkur Fólksins" ~ "Flokkur fólksins",
-            flokkur == "Framsóknarflokkurinn" ~ "Framsóknarflokkur",
-            TRUE ~ flokkur
-        )
-    ) |> 
-    inner_join(
-        flokkar_palette(),
-        by = "flokkur"
-    ) |> 
-    left_join(
-        tbl(con, "atkvaedi_stjornmalaflokka") |> 
-            filter(ar >= 2007) |> 
-            collect() |> 
-            mutate(ar = ifelse(ar == 2021, 2020, ar)),
-        by = c("flokkur", "ar")
-    ) |> 
-    left_join(
-        tbl(con, "thingmenn_stjornmalaflokka") |> 
-            filter(ar >= 2007) |> 
-            collect() |> 
-            mutate(ar = ifelse(ar == 2021, 2020, ar)),
-        by = c("flokkur", "ar")
-    )
-
-
-
-```
-
-# Atkvæði og þingmenn
-
-```{r}
-#| fig-asp: 0.621
-#| fig-width: 10
-#| out-width: "100%"
-#| column: page
-#| fig-cap: "Mynd 1. Hvaða flokkar fá flesta þingmenn fyrir hvert atkvæði?"
-#| fig-cap-location: margin
-
-
-plot_dat <- d |> 
-    select(ar, flokkur, merki, litur, thingmenn, atkvaedi) |> 
-    drop_na() |> 
-    group_by(ar) |> 
-    mutate(p_th = thingmenn / sum(thingmenn),
-           p_at = atkvaedi / sum(atkvaedi)) |> 
+#| message: false
+preprocess_data_attrition <- function(doi, filename, year) {
+  get_dataframe_by_name(filename,
+                        doi,
+                        original = TRUE,
+                        .f = haven::read_sav) |> 
+    select(current = starts_with("prtvote"), former = starts_with("prtfvote"), age) |> 
+    mutate_at(vars(everything(), -age), as_factor) |> 
+    filter(!as.character(current) %in% c("No, did not vote",
+                                         "Not applicable",
+                                         "Don‘t remember what I voted",
+                                         "95",
+                                         "Cast a blank or invalid ballot",
+                                         "Voted, refuses to say for what party",
+                                         "Other party, what party",
+                                         "Refuses to answer (volunteered)",
+                                         "Don’t know (volunteered)",
+                                         "Voted, does not want to say which party",
+                                         "Cast a blank ballot",
+                                         "Cast an invalid vote",
+                                         "Missing",
+                                         "Voted, doesn‘t want to say for what party",
+                                         "Another party or party list, which?",
+                                         "Refuses to answer")) |> 
+    drop_na(current) |> 
+    group_by(current, former) |> 
+    summarise(n = n(),
+              age = mean(age),
+              .groups = "drop") |> 
+    arrange(former, desc(n)) |> 
+    group_by(former) |> 
+    mutate(p = n / sum(n),
+           cum_p = cumsum(p)) |> 
     ungroup() |> 
-    mutate(
-        ar = ifelse(ar == 2020, 2021, ar),
-        value = p_th / p_at,
-        merki = fct_reorder(merki, value),
-        y = value,
-        y = case_when(
-            merki == "xC" ~ y * 0.997,
-            merki == "xS" ~ y * 1.006,
-            merki == "xD" ~ y * 0.999,
-            TRUE ~ y
-        )
-    )
+    mutate(year = year)
+}
 
-p <- plot_dat |> 
-    ggplot(aes(ar, value)) +
-    geom_hline(yintercept = 1, lty = 2, alpha = 0.4) +
-    geom_line(aes(colour = merki)) +
-    geom_point(aes(colour = merki)) +
-    geom_text(
-        data = plot_dat |> filter(ar == max(ar)),
-        aes(label = merki, colour = merki, y = y),
-        hjust = 0,
-        vjust = 0.5,
-        nudge_x = 0.1
-    ) +
-    annotate(
-        geom = "label", 
-        x = c(2008, 2008), 
-        y = c(min(plot_dat$value), max(plot_dat$value)), 
-        label = c("Færri þingmenn per atkvæði", "Fleiri þingmenn per atkvæði"),
-        size = 4,
-        vjust = c(0, 1),
-        family = "Lato",
-        colour = "#636363"
-        
-    ) +
-    scale_x_tufte(
-        breaks = unique(plot_dat$ar),
-    ) +
-    scale_y_tufte(
-        breaks = c(tufte_breaks(plot_dat$value), 1),
-        labels = label_number(accuracy = 0.01)
-    ) +
-    scale_colour_manual(
-        values = plot_dat |> arrange(merki) |> distinct(litur) |> pull(litur)
-    ) +
-    theme(legend.position = "none") +
-    labs(x = NULL,
-         y = NULL,
-         title = "Hvaða flokkar fá flesta þingmenn fyrir hvert atkvæði?",
-         subtitle = "Reiknað sem hlutfall þingmanna deilt með hlutfalli atkvæða til hvers flokks",
-         caption = "Myndrit eftir @bggjonsson byggt á niðurstöðum alþingiskosninga")
-
-ggsave(
-    plot = p + labs(caption = NULL, title = NULL, subtitle = NULL),
-    filename = "Figures/thingmenn_atkvaedi.png",
-    width = 8, height = 0.621 * 8,
-    scale = 1.3
-)
-
-ggsave(
-    plot = p,
-    filename = "Figures/thingmenn_atkvaedi_tw.png",
-    width = 8, height = 0.621 * 8,
-    scale = 1.3
-)
-
-knitr::include_graphics("Figures/thingmenn_atkvaedi.png")
+translate_parties <- function(name) {
+  parties <- c(
+    "Independence Party" = "Sjálfstæðisflokkurinn",
+    "Progressive Party" = "Framsóknarflokkurinn",
+    "Social Democratic Alliance" = "Samfylkingin",
+    "Left Green Movement" = "Vinstri Græn",
+    "Pirate Party" = "Píratar",
+    "Reform Party" = "Viðreisn",
+    "Centre Party" = "Miðflokkurinn",
+    "Bright Future" = "Björt Framtíð",
+    "Peoples party" = "Flokkur Fólksins",
+    "Civic Movement" = "Borgarahreyfingin",
+    "Dawn" = "Dögun",
+    "Liberal Party" = "Frjálslyndi flokkurinn",
+    "Cast a blank or invalid ballot" = "Skilaði auðu",
+    "95" = "Nýr kjósandi"
+  )
+  
+  ifelse(name %in% names(parties), parties[name], name)
+}
 ```
-
-
-
-
-
-# Peningar
-
-Ríkisendurskoðun birtir ársreikninga stjórnmálaflokkanna. Reyndar voru bara birtir útdrættir úr ársreikningunum fram til ársins 2019, en þar eru þó nægar upplýsingar til að framkvæma ýmsar greiningar. Til dæmis getum við skoðað útgjöld stjórnmálaflokka á hverju kjörtímabili og borið það saman við fjölda atkvæða í næstu kosningum.
 
 ```{r}
-#| column: screen-inset
-#| layout-nrow: 1
-#| fig-cap: "Mynd 2. Meðaltal ársútgjalda frá síðustu kosningum deilt með fjölda atkvæða í yfirstandandi kosningum."
-#| fig-cap-location: margin
-
-
-plot_dat <- d |> 
-    select(flokkur, ar, atkvaedi, gjold, afkoma, litur, merki, cpi) |> 
-    arrange(flokkur, ar) |> 
-    group_by(flokkur) |> 
-    mutate(kosningar = cumsum(!is.na(atkvaedi)) |> lag(default = 0)) |> 
-    group_by(flokkur, kosningar, litur, merki) |> 
-    filter(any(!is.na(atkvaedi))) |> 
-    summarise(
-        gjold = mean(gjold/cpi),
-        afkoma = sum(afkoma/cpi),
-        atkvaedi = na.omit(atkvaedi),
-        start_ar = min(ar),
-        end_ar = max(ar),
-        ar = max(ar),
-        .groups = "drop"
-    ) |> 
-    filter(ar > 2007) |> 
-    mutate(
-        gjold = ifelse(ar == 2020, gjold / (3/4), gjold),
-        value = gjold / atkvaedi,
-        merki = fct_reorder(merki, value),
-        ar = ifelse(ar == 2020, 2021, ar)
-    )
-
-
-
-p <- plot_dat |> 
-    group_by(ar2 = ar) |> 
-    group_map(
-        function(data, ...) {
-            
-            data <- data |> 
-                mutate(merki = fct_reorder(merki, value))
-            
-            data |> 
-                mutate(y = value + 0.02 * mean(value)) |> 
-                ggplot(aes(merki, value)) +
-                geom_col(aes(fill = merki)) +
-                geom_text(
-                    aes(
-                        label = merki, 
-                        colour = merki,
-                        y = y
-                    ),
-                    size = 5,
-                    vjust = 0,
-                    family = "serif"
-                ) +
-                scale_y_tufte(
-                    breaks = tufte_breaks(data$value),
-                    expand = expansion(mult = 0.07),
-                    labels = label_number(suffix = " kr", big.mark = ".", decimal.mark = ","),
-                    limits = c(0, max(plot_dat$value) * 1.01)
-                ) +
-                scale_colour_manual(
-                    values = data |> arrange(merki) |> distinct(litur) |> pull(litur)
-                ) + 
-                scale_fill_manual(
-                    values = data |> arrange(merki) |> distinct(litur) |> pull(litur)
-                ) + 
-                facet_wrap("ar") +
-                theme(legend.position = "none",
-                      plot.tag.position = c(0.1, 0.1),
-                      axis.line.x = element_blank(),
-                      axis.text.x = element_blank(),
-                      axis.ticks.x = element_blank(),
-                      plot.margin = margin(t = 5, r = 5, b = 0, l = 5)) +
-                labs(x = NULL, y = NULL)
-        }
-    )
-
-
-# for (plot in p) print(plot)
-
-p <- wrap_plots(p, nrow = 1) 
-
-ggsave(plot = p,
-       filename = "Figures/kr_per_atkvaedi.png",
-       width = 10, height = 0.25 * 10,
-       scale = 2,
-       dpi = 200)
-
-p <- wrap_plots(p, nrow = 1) +
-    plot_annotation(
-        title = "Hvað kosta atkvæðin?",
-        subtitle = "Meðaltal ársútgjalda frá síðustu kosningum deilt með fjölda atkvæða í yfirstandandi kosningum",
-        caption = "Myndrit frá bggj.is byggt á niðurstöðum alþingiskosninga og ársreikningum stjórnmálaflokka frá Ríkisendurskoðun",
-        theme = theme(
-            plot.caption = element_text(margin = margin(t = -10, r = 0, b = 5, l = 0), size = 10),
-            plot.title = element_text(size = 25),
-            plot.subtitle = element_text(size = 18)
-        )
-    )
-
-ggsave(plot = p,
-       filename = "Figures/kr_per_atkvaedi_tw.png",
-       width = 10, height = 0.25 * 10,
-       scale = 2,
-       dpi = 200)
-
-knitr::include_graphics("Figures/kr_per_atkvaedi.png")
+url_table <- tribble(
+  ~year, ~doi, ~filename,
+  2021, "doi:10.34881/0ERQOZ", "iskos2021_en.tab",
+  2017, "doi:10.34881/1.00011", "ICENES_2017_Open_access_english_1release.tab",
+  2016, "doi:10.34881/1.00010", "ICENES_2016_Open_access_english_2release.tab",
+  2013, "doi:10.34881/1.00009", "ICENESS_2013_open_access_english_1release.tab",
+  2009, "doi:10.34881/1.00008", "ICENES_2009_open_access_english_3release.tab",
+  2007, "doi:10.34881/1.00007", "ICENES_2007_open_access_english_3release.tab",
+  2003, "doi:10.34881/1.00006", "ICENES_2003_open_access_english_4release.tab"
+)
 ```
 
 
+```{r}
+d_retention <- url_table |> 
+  rowwise() |> 
+  reframe(
+    preprocess_data_attrition(doi, filename, year)
+  ) |> 
+  mutate_at(vars(current, former), as.character) |> 
+  mutate_at(vars(current, former), translate_parties)
+```
 
 
+### Litir flokkanna
+
+```{r}
+xS <- "#e41a1c"
+xV <- "#238b45"
+xD <- "#377eb8"
+xP <- "#984ea3"
+xB <- "#b2df8a"
+xBF <- "#cab2d6"
+xC <- "#ff7f00"
+xM <- "#08306b"
+xFF <- "#fee391"
+Annad <- "#e5d8bd"
+```
+
+## Kjósendatryggð
+
+```{r, fig.width = 8, fig.asp=0.5}
+plot_dat <- d_retention |> 
+  filter(current %in% c("Flokkur Fólksins",
+                        "Framsóknarflokkurinn",
+                        "Píratar",
+                        "Samfylkingin",
+                        "Sjálfstæðisflokkurinn",
+                        "Vinstri Græn",
+                        "Viðreisn"),
+         current == former)
+
+plot_text <- plot_dat |> 
+  filter(year == max(year)) |> 
+  mutate(p = case_when(current == "Píratar" ~ p + 0.005,
+                       current == "Framsóknarflokkurinn" ~ p - 0.005,
+                       current == "Samfylkingin" ~ p + 0.00,
+                       TRUE ~ p))
+
+
+p <- plot_dat |> 
+  ggplot(aes(year, p)) +
+  geom_line(aes(col = current, group = current)) +
+  geom_point(aes(col = current, group = current)) +
+  geom_text(data = plot_text, 
+            aes(label = current, col = current), hjust = 0, nudge_x = 0.2) +
+  geom_rangeframe() +
+  scale_y_continuous(limits = range(plot_dat$p), 
+                     labels = label_percent(),
+                     breaks = c(range(plot_dat$p), 0.4, 0.5, 0.6, 0.7)) +
+  scale_x_continuous(breaks = c(2003, 2007, 2009, 2013, 2016, 2017, 2021),
+                     limits = c(2003, 2025.5)) +
+  scale_colour_manual(values = c(xFF,
+                                 xB,
+                                 xP,
+                                 xS,
+                                 xD,
+                                 xC,
+                                 xV)) +
+  labs(title = "Flokkshollusta í alþingiskosningum frá 2003 - 2021",
+       subtitle = "Hlutfall eigin kjósenda sem flokkur heldur í frá síðustu kosningum",
+       x = NULL,
+       y = NULL) +
+  theme_tufte() +
+  theme(plot.caption = element_text(hjust = 0)) +
+  theme(legend.position = "none")
+
+p
+
+ggsave(plot = p, filename = "Figures/voter_retention.png", 
+       width = 8, height = 0.5 * 8, bg = "white")
+```
+
+## Hvert missa flokkar kjósendur sína?
+
+### Samfylkingin
+
+```{r, fig.width = 8, fig.asp=0.5}
+p <- d_retention |> 
+  filter(former == "Samfylkingin") |> 
+  mutate(current = ifelse(current %in% c("Samfylkingin",
+                                         "Vinstri Græn",
+                                         "Sjálfstæðisflokkurinn", 
+                                         "Píratar",
+                                         "Framsóknarflokkurinn", 
+                                         "Píratar",
+                                         "Björt Framtíð",
+                                         "Viðreisn",
+                                         "Miðflokkurinn",
+                                         "Flokkur Fólksins"),
+                          current,
+                          "Annað")) |> 
+  mutate(current = as_factor(current),
+         current = fct_reorder(current, p * (current != "Annað"), .fun = max)) |> 
+  mutate(y_start = cum_p - p,
+         y_end = cum_p,
+         election = as.numeric(as.factor(year))) |>
+  ggplot(aes(election, p)) +
+  geom_col(aes(fill = current), position = "stack", width = 1, alpha = 0.7) +
+  scale_x_continuous(breaks = 1:7, labels = rev(unique(d_retention$year))) +
+  scale_y_continuous(labels = label_percent()) +
+  scale_fill_manual(values = c(Annad,
+                               xM,
+                               xFF,
+                               xD,
+                               xC,
+                               xB,
+                               xP,
+                               xBF,
+                               xV,
+                               xS)) +
+  coord_cartesian(expand = F) +
+  theme_cowplot(font_size = 11, font_family = "serif") +
+  theme(plot.caption = element_text(hjust = 0)) +
+  labs(x = NULL,
+       y = NULL,
+       fill = NULL,
+       title = "Hvert missir Samfylkingin kjósendur sína?",
+       caption = "Kóði og gögn: https://github.com/bgautijonsson/kosningarannsokn")
+
+p
+
+ggsave(plot = p, filename = "Figures/retention_xs.png", 
+       width = 8, height = 0.5 * 8, bg = "white")
+```
+
+### Sjálfstæðisflokkurinn
+
+```{r, fig.width = 8, fig.asp=0.5}
+p <- d_retention |> 
+  filter(former == "Sjálfstæðisflokkurinn") |> 
+  mutate(current = ifelse(current %in% c("Samfylkingin",
+                                         "Vinstri Græn",
+                                         "Flokkur Fólksins",
+                                         "Sjálfstæðisflokkurinn", 
+                                         "Píratar",
+                                         "Framsóknarflokkurinn", 
+                                         "Píratar",
+                                         "Björt Framtíð",
+                                         "Viðreisn",
+                                         "Miðflokkurinn"),
+                          current,
+                          "Annað")) |> 
+  mutate(current = as_factor(current),
+         current = fct_reorder(current, p * (current != "Annað"), .fun = max),
+         curent = factor(current, levels = rev(levels(current)))) |> 
+  mutate(y_start = cum_p - p,
+         y_end = cum_p,
+         election = as.numeric(as.factor(year))) |>
+  ggplot(aes(election, p)) +
+  geom_col(aes(fill = current), position = "stack", width = 1, alpha = 0.7) +
+  scale_x_continuous(breaks = 1:7, labels = rev(unique(d_retention$year))) +
+  scale_y_continuous(labels = label_percent()) +
+  scale_fill_manual(values = c(Annad,
+                               xP,
+                               xBF,
+                               xV,
+                               xFF,
+                               xM,
+                               xC,
+                               xB,
+                               xS,
+                               xD)) +
+  coord_cartesian(expand = F) +
+  theme_cowplot(font_size = 11, font_family = "serif") +
+  theme(plot.caption = element_text(hjust = 0)) +
+  labs(x = NULL,
+       y = NULL,
+       fill = NULL,
+       title = "Hvert missir Sjálfstæðisflokkurinn kjósendur sína?",
+       caption = "Kóði og gögn: https://github.com/bgautijonsson/kosningarannsokn")
+
+p
+
+ggsave(plot = p, filename = "Figures/retention_xd.png", 
+       width = 8, height = 0.5 * 8, bg = "white")
+```
+
+### Framsóknarflokkurinn
+
+```{r, fig.width = 8, fig.asp=0.5}
+p <- d_retention |> 
+  filter(former == "Framsóknarflokkurinn") |> 
+  mutate(current = ifelse(current %in% c("Samfylkingin",
+                                         "Vinstri Græn",
+                                         "Flokkur Fólksins",
+                                         "Sjálfstæðisflokkurinn", 
+                                         "Píratar",
+                                         "Framsóknarflokkurinn", 
+                                         "Píratar",
+                                         "Björt Framtíð",
+                                         "Viðreisn",
+                                         "Miðflokkurinn"),
+                          current,
+                          "Annað")) |> 
+  mutate(current = as_factor(current),
+         current = fct_reorder(current, p * (current != "Annað"), .fun = max),
+         curent = factor(current, levels = rev(levels(current)))) |> 
+  mutate(y_start = cum_p - p,
+         y_end = cum_p,
+         election = as.numeric(as.factor(year))) |>
+  ggplot(aes(election, p)) +
+  geom_col(aes(fill = current), position = "stack", width = 1, alpha = 0.7) +
+  scale_x_continuous(breaks = 1:7, labels = rev(unique(d_retention$year))) +
+  scale_y_continuous(labels = label_percent()) +
+  scale_fill_manual(values = c(Annad,
+                               xBF,
+                               xP,
+                               xC,
+                               xFF,
+                               xV,
+                               xS,
+                               xD,
+                               xM,
+                               xB)) +
+  coord_cartesian(expand = F) +
+  theme_cowplot(font_size = 11, font_family = "serif") +
+  theme(plot.caption = element_text(hjust = 0)) +
+  labs(x = NULL,
+       y = NULL,
+       fill = NULL,
+       title = "Hvert missir Framsóknarflokkurinn kjósendur sína?",
+       caption = "Kóði og gögn: https://github.com/bgautijonsson/kosningarannsokn")
+
+p
+
+ggsave(plot = p, filename = "Figures/retention_xb.png", 
+       width = 8, height = 0.5 * 8, bg = "white")
+```
+
+### Vinstri Græn
+
+```{r, fig.width = 8, fig.asp=0.5}
+p <- d_retention |> 
+  filter(former == "Vinstri Græn") |> 
+  mutate(current = ifelse(current %in% c("Samfylkingin",
+                                         "Flokkur Fólksins",
+                                         "Vinstri Græn",
+                                         "Sjálfstæðisflokkurinn", 
+                                         "Píratar",
+                                         "Framsóknarflokkurinn", 
+                                         "Píratar",
+                                         "Björt Framtíð",
+                                         "Viðreisn",
+                                         "Miðflokkurinn"),
+                          current,
+                          "Annað")) |> 
+  mutate(current = as_factor(current),
+         current = fct_reorder(current, p * (current != "Annað"), .fun = max),
+         curent = factor(current, levels = rev(levels(current)))) |> 
+  mutate(y_start = cum_p - p,
+         y_end = cum_p,
+         election = as.numeric(as.factor(year))) |>
+  ggplot(aes(election, p)) +
+  geom_col(aes(fill = current), position = "stack", width = 1, alpha = 0.7) +
+  scale_x_continuous(breaks = 1:7, labels = rev(unique(d_retention$year))) +
+  scale_y_continuous(labels = label_percent()) +
+  scale_fill_manual(values = c(Annad,
+                               xM,
+                               xD,
+                               xC,
+                               xFF,
+                               xBF,
+                               xB,
+                               xP,
+                               xS,
+                               xV)) +
+  coord_cartesian(expand = F) +
+  theme_cowplot(font_size = 11, font_family = "serif") +
+  theme(plot.caption = element_text(hjust = 0)) +
+  labs(x = NULL,
+       y = NULL,
+       fill = NULL,
+       title = "Hvert missa Vinstri Græn kjósendur sína?",
+       caption = "Kóði og gögn: https://github.com/bgautijonsson/kosningarannsokn")
+
+p
+
+ggsave(plot = p, filename = "Figures/retention_xv.png", 
+       width = 8, height = 0.5 * 8, bg = "white")
+```
+
+# Hvaðan koma atkvæðin?
+
+## Útbúa gögnin
+
+```{r}
+#| message: false
+preprocess_data_recruitment <- function(doi, filename, year) {
+  get_dataframe_by_name(filename,
+                        doi,
+                        original = TRUE,
+                        .f = haven::read_sav) |> 
+    select(current = starts_with("prtvote"), former = starts_with("prtfvote"), age) |> 
+    mutate_at(vars(everything(), -age), as_factor) |> 
+    filter(!as.character(former) %in% c("No, did not vote",
+                                        "Not applicable",
+                                        "Don‘t remember what I voted",
+                                        "95",
+                                        "Cast a blank or invalid ballot",
+                                        "Voted, refuses to say for what party",
+                                        "Other party, what party",
+                                        "Refuses to answer (volunteered)",
+                                        "Don’t know (volunteered)",
+                                        "Voted, does not want to say which party",
+                                        "Cast a blank ballot",
+                                        "Cast an invalid vote",
+                                        "Missing",
+                                        "Voted, doesn‘t want to say for what party",
+                                        "Another party or party list, which?",
+                                        "Refuses to answer")) |> 
+    drop_na(former) |> 
+    group_by(current, former) |> 
+    summarise(n = n(),
+              age = mean(age),
+              .groups = "drop") |> 
+    arrange(current, desc(n)) |> 
+    group_by(current) |> 
+    mutate(p = n / sum(n),
+           cum_p = cumsum(p)) |> 
+    ungroup() |> 
+    mutate(year = year)
+}
+
+translate_parties <- function(name) {
+  parties <- c(
+    "Independence Party" = "Sjálfstæðisflokkurinn",
+    "Progressive Party" = "Framsóknarflokkurinn",
+    "Social Democratic Alliance" = "Samfylkingin",
+    "Left Green Movement" = "Vinstri Græn",
+    "Pirate Party" = "Píratar",
+    "Reform Party" = "Viðreisn",
+    "Centre Party" = "Miðflokkurinn",
+    "Bright Future" = "Björt Framtíð",
+    "Peoples party" = "Flokkur Fólksins",
+    "Civic Movement" = "Borgarahreyfingin",
+    "Dawn" = "Dögun",
+    "Liberal Party" = "Frjálslyndi flokkurinn"
+  )
+  
+  ifelse(name %in% names(parties), parties[name], name)
+}
+
+d_recruitment <- url_table |> 
+  rowwise() |> 
+  reframe(
+    preprocess_data_recruitment(doi, filename, year)
+  ) |> 
+  mutate_at(vars(current, former), as.character) |> 
+  mutate_at(vars(current, former), translate_parties)
+```
+
+## Nýliðun frá öðrum flokkum
+
+```{r, fig.width = 8, fig.asp=0.5}
+plot_dat <- d_recruitment |> 
+  filter(current %in% c("Flokkur Fólksins",
+                        "Framsóknarflokkurinn",
+                        "Píratar",
+                        "Samfylkingin",
+                        "Sjálfstæðisflokkurinn",
+                        "Viðreisn",
+                        "Vinstri Græn"),
+         current != former,
+         !former %in% c("No, did not vote",
+                        "Not applicable",
+                        "Don‘t remember what I voted",
+                        "Nýr kjósandi",
+                        "Skilaði auðu",
+                        "Voted, refuses to say for what party",
+                        "Other party, what party",
+                        "Refuses to answer (volunteered)",
+                        "Don’t know (volunteered)"),
+         !(current == "Píratar" & year == 2013), !(current %in% c("Flokkur Fólksins", "Viðreisn") & year == 2016)) |> 
+  group_by(current, year) |> 
+  summarise(p = sum(p),
+            .groups = "drop")
+
+plot_text <- plot_dat |> 
+  filter(year == max(year)) |> 
+  mutate(p = case_when(current == "Flokkur Fólksins" ~ p + 0.025,
+                       current == "Framsóknarflokkurinn" ~ p - 0.01,
+                       current == "Viðreisn" ~ p - 0.01,
+                       TRUE ~ p))
+
+
+p <- plot_dat |> 
+  ggplot(aes(year, p)) +
+  geom_line(aes(col = current, group = current)) +
+  geom_point(aes(col = current, group = current)) +
+  geom_text(data = plot_text, 
+            aes(label = current, col = current), hjust = 0, nudge_x = 0.2) +
+  geom_rangeframe() +
+  scale_y_continuous(limits = range(plot_dat$p), 
+                     labels = label_percent(),
+                     breaks = c(range(plot_dat$p), 0.1, 0.2, 0.3, 0.4, 0.5, 0.6)) +
+  scale_x_continuous(breaks = c(2003, 2007, 2009, 2013, 2016, 2017, 2021),
+                     limits = c(2003, 2025.5)) +
+  scale_colour_manual(values = c(xFF,
+                                 xB,
+                                 xP,
+                                 xS,
+                                 xD,
+                                 xC,
+                                 xV)) +
+  labs(title = "Nýliðun kjósenda frá öðrum flokkum í alþingiskosningum frá 2003 - 2021",
+       subtitle = "Hlutfall kjósenda sem kusu annan flokk í síðustu kosningum",
+       x = NULL,
+       y = NULL) +
+  theme_tufte() +
+  theme(plot.caption = element_text(hjust = 0)) +
+  theme(legend.position = "none")
+
+p
+
+ggsave(plot = p, filename = "Figures/voter_recruitment.png", 
+       width = 8, height = 0.5 * 8, bg = "white")
+```
+
+
+## Hvaðan sækja flokkar kjósendur sína?
+
+### Samfylkingin
+
+```{r, fig.width = 8, fig.asp=0.5}
+p <- d_recruitment |> 
+  filter(current == "Samfylkingin") |> 
+  mutate(former = ifelse(former %in% c("Samfylkingin",
+                                       "Vinstri Græn",
+                                       "Sjálfstæðisflokkurinn", 
+                                       "Píratar",
+                                       "Framsóknarflokkurinn", 
+                                       "Flokkur Fólksins",
+                                       "Píratar",
+                                       "Björt Framtíð",
+                                       "Viðreisn",
+                                       "Miðflokkurinn"),
+                         former,
+                         "Annað")) |> 
+  mutate(former = as_factor(former),
+         former = fct_reorder(former, p * (former != "Annað") + 1e-8 * (former == "Miðflokkurinn"), .fun = max),
+         election = as.numeric(as.factor(year))) |>
+  ggplot(aes(election, p)) +
+  geom_col(aes(fill = former), position = "stack", width = 1, alpha = 0.7) +
+  scale_x_continuous(breaks = 1:7, labels = rev(unique(d_retention$year))) +
+  scale_y_continuous(labels = label_percent()) +
+  scale_fill_manual(values = c(Annad,
+                               xM,
+                               xFF,
+                               xC,
+                               xP,
+                               xBF,
+                               xB,
+                               xD,
+                               xV,
+                               xS)) +
+  coord_cartesian(expand = F) +
+  theme_cowplot(font_size = 11, font_family = "serif") +
+  theme(plot.caption = element_text(hjust = 0)) +
+  labs(x = NULL,
+       y = NULL,
+       fill = NULL,
+       title = "Hvert sækir Samfylkingin kjósendur sína?",
+       caption = "Kóði og gögn: https://github.com/bgautijonsson/kosningarannsokn")
+
+p
+
+ggsave(plot = p, filename = "Figures/recruitment_xs.png", 
+       width = 8, height = 0.5 * 8, bg = "white")
+```
+
+### Sjálfstæðisflokkurinn
+
+```{r, fig.width = 8, fig.asp=0.5}
+p <- d_recruitment |> 
+  filter(current == "Sjálfstæðisflokkurinn") |> 
+  mutate(former = ifelse(former %in% c("Samfylkingin",
+                                       "Vinstri Græn",
+                                       "Sjálfstæðisflokkurinn", 
+                                       "Píratar",
+                                       "Framsóknarflokkurinn", 
+                                       "Píratar",
+                                       "Björt Framtíð",
+                                       "Viðreisn",
+                                       "Miðflokkurinn"),
+                         former,
+                         "Annað")) |> 
+  mutate(former = as_factor(former),
+         former = fct_reorder(former, p * (former != "Annað"), .fun = max),
+         election = as.numeric(as.factor(year))) |>
+  ggplot(aes(election, p)) +
+  geom_col(aes(fill = former), position = "stack", width = 1, alpha = 0.7) +
+  scale_x_continuous(breaks = 1:7, labels = rev(unique(d_retention$year))) +
+  scale_y_continuous(labels = label_percent()) +
+  scale_fill_manual(values = c(Annad,
+                               xBF,
+                               xP,
+                               xV,
+                               xC,
+                               xM,
+                               xS,
+                               xB,
+                               xD)) +
+  coord_cartesian(expand = F) +
+  theme_cowplot(font_size = 11, font_family = "serif") +
+  theme(plot.caption = element_text(hjust = 0)) +
+  labs(x = NULL,
+       y = NULL,
+       fill = NULL,
+       title = "Hvert sækir Sjálfstæðisflokkurinn kjósendur sína?",
+       caption = "Kóði og gögn: https://github.com/bgautijonsson/kosningarannsokn")
+
+p
+
+ggsave(plot = p, filename = "Figures/recruitment_xd.png", 
+       width = 8, height = 0.5 * 8, bg = "white")
+```
+
+### Framsóknarflokkurinn
+
+```{r, fig.width = 8, fig.asp=0.5}
+p <- d_recruitment |> 
+  filter(current == "Framsóknarflokkurinn") |> 
+  mutate(former = ifelse(former %in% c("Samfylkingin",
+                                       "Vinstri Græn",
+                                       "Sjálfstæðisflokkurinn", 
+                                       "Píratar",
+                                       "Framsóknarflokkurinn", 
+                                       "Píratar",
+                                       "Björt Framtíð",
+                                       "Viðreisn",
+                                       "Miðflokkurinn"),
+                         former,
+                         "Annað")) |> 
+  mutate(former = as_factor(former),
+         former = fct_reorder(former, p * (former != "Annað"), .fun = max),
+         election = as.numeric(as.factor(year))) |>
+  ggplot(aes(election, p)) +
+  geom_col(aes(fill = former), position = "stack", width = 1, alpha = 0.7) +
+  scale_x_continuous(breaks = 1:7, labels = rev(unique(d_retention$year))) +
+  scale_y_continuous(labels = label_percent()) +
+  scale_fill_manual(values = c(Annad,
+                               xP,
+                               xBF,
+                               xC,
+                               xV,
+                               xM,
+                               xS,
+                               xD,
+                               xB)) +
+  coord_cartesian(expand = F) +
+  theme_cowplot(font_size = 11, font_family = "serif") +
+  theme(plot.caption = element_text(hjust = 0)) +
+  labs(x = NULL,
+       y = NULL,
+       fill = NULL,
+       title = "Hvert sækir Framsóknarflokurinn kjósendur sína?",
+       caption = "Kóði og gögn: https://github.com/bgautijonsson/kosningarannsokn")
+
+p
+
+ggsave(plot = p, filename = "Figures/recruitment_xb.png", 
+       width = 8, height = 0.5 * 8, bg = "white")
+```
+
+### Vinstri Græn
+
+```{r, fig.width = 8, fig.asp=0.5}
+p <- d_recruitment |> 
+  filter(current == "Vinstri Græn") |> 
+  mutate(former = ifelse(former %in% c("Samfylkingin",
+                                       "Vinstri Græn",
+                                       "Sjálfstæðisflokkurinn", 
+                                       "Píratar",
+                                       "Framsóknarflokkurinn", 
+                                       "Píratar",
+                                       "Björt Framtíð",
+                                       "Viðreisn",
+                                       "Miðflokkurinn"),
+                         former,
+                         "Annað")) |> 
+  mutate(former = as_factor(former),
+         former = fct_reorder(former, p * (former != "Annað"), .fun = max),
+         election = as.numeric(as.factor(year))) |>
+  ggplot(aes(election, p)) +
+  geom_col(aes(fill = former), position = "stack", width = 1, alpha = 0.7) +
+  scale_x_continuous(breaks = 1:7, labels = rev(unique(d_retention$year))) +
+  scale_y_continuous(labels = label_percent()) +
+  scale_fill_manual(values = c(Annad,
+                               xM,
+                               xC,
+                               xBF,
+                               xD,
+                               xP,
+                               xB,
+                               xS,
+                               xV)) +
+  coord_cartesian(expand = F) +
+  theme_cowplot(font_size = 11, font_family = "serif") +
+  theme(plot.caption = element_text(hjust = 0)) +
+  labs(x = NULL,
+       y = NULL,
+       fill = NULL,
+       title = "Hvaðan sækja Vinstri Græn kjósendur sína?",
+       caption = "Kóði og gögn: https://github.com/bgautijonsson/kosningarannsokn")
+
+p
+
+ggsave(plot = p, filename = "Figures/recruitment_xv.png", 
+       width = 8, height = 0.5 * 8, bg = "white")
+```
+
+### Viðreisn
+
+```{r, fig.width = 8, fig.asp=0.5}
+p <- d_recruitment |> 
+  filter(current == "Viðreisn") |> 
+  mutate(former = ifelse(former %in% c("Samfylkingin",
+                                       "Vinstri Græn",
+                                       "Sjálfstæðisflokkurinn", 
+                                       "Píratar",
+                                       "Framsóknarflokkurinn", 
+                                       "Píratar",
+                                       "Björt Framtíð",
+                                       "Viðreisn",
+                                       "Miðflokkurinn"),
+                         former,
+                         "Annað")) |> 
+  mutate(former = as_factor(former),
+         former = fct_reorder(former, p * (former != "Annað"), .fun = max),
+         election = as.numeric(as.factor(year))) |>
+  ggplot(aes(election, p)) +
+  geom_col(aes(fill = former), position = "stack", width = 1, alpha = 0.7) +
+  scale_x_continuous(breaks = 1:3, labels = c(2016, 2017, 2021)) +
+  scale_y_continuous(labels = label_percent()) +
+  scale_fill_manual(values = c(Annad,
+                               xM,
+                               xP,
+                               xV,
+                               xBF,
+                               xB,
+                               xS,
+                               xD,
+                               xC)) +
+  coord_cartesian(expand = F) +
+  theme_cowplot(font_size = 11, font_family = "serif") +
+  theme(plot.caption = element_text(hjust = 0)) +
+  labs(x = NULL,
+       y = NULL,
+       fill = NULL,
+       title = "Hvert sækir Viðreisn kjósendur sína?",
+       caption = "Kóði og gögn: https://github.com/bgautijonsson/kosningarannsokn")
+
+p
+
+ggsave(plot = p, filename = "Figures/recruitment_xc.png", 
+       width = 8, height = 0.5 * 8, bg = "white")
+```
+
+### Píratar
+
+```{r, fig.width = 8, fig.asp=0.5}
+p <- d_recruitment |> 
+  filter(current == "Píratar") |> 
+  mutate(former = ifelse(former %in% c("Samfylkingin",
+                                       "Vinstri Græn",
+                                       "Sjálfstæðisflokkurinn", 
+                                       "Píratar",
+                                       "Framsóknarflokkurinn", 
+                                       "Píratar",
+                                       "Björt Framtíð",
+                                       "Viðreisn",
+                                       "Miðflokkurinn"),
+                         former,
+                         "Annað")) |> 
+  mutate(former = as_factor(former),
+         former = fct_reorder(former, p * (former != "Annað"), .fun = max),
+         election = as.numeric(as.factor(year))) |>
+  ggplot(aes(election, p)) +
+  geom_col(aes(fill = former), position = "stack", width = 1, alpha = 0.7) +
+  scale_x_continuous(breaks = 1:4, labels = c(2013, 2016, 2017, 2021)) +
+  scale_y_continuous(labels = label_percent()) +
+  scale_fill_manual(values = c(Annad,
+                               xM,
+                               xC,
+                               xB,
+                               xD,
+                               xBF,
+                               xS,
+                               xV,
+                               xP)) +
+  coord_cartesian(expand = F) +
+  theme_cowplot(font_size = 11, font_family = "serif") +
+  theme(plot.caption = element_text(hjust = 0)) +
+  labs(x = NULL,
+       y = NULL,
+       fill = NULL,
+       title = "Hvaðan sækja Píratar kjósendur sína?",
+       caption = "Kóði og gögn: https://github.com/bgautijonsson/kosningarannsokn")
+
+p
+
+ggsave(plot = p, filename = "Figures/recruitment_xp.png", 
+       width = 8, height = 0.5 * 8, bg = "white")
+```
+
+### Miðflokurinn
+
+```{r, fig.width = 8, fig.asp=0.5}
+p <- d_recruitment |> 
+  filter(current == "Miðflokkurinn") |> 
+  mutate(former = ifelse(former %in% c("Samfylkingin",
+                                       "Vinstri Græn",
+                                       "Sjálfstæðisflokkurinn", 
+                                       "Píratar",
+                                       "Framsóknarflokkurinn", 
+                                       "Píratar",
+                                       "Björt Framtíð",
+                                       "Viðreisn",
+                                       "Miðflokkurinn"),
+                         former,
+                         "Annað")) |> 
+  mutate(former = as_factor(former),
+         former = fct_reorder(former, p * (former != "Annað"), .fun = max),
+         election = as.numeric(as.factor(year))) |>
+  ggplot(aes(election, p)) +
+  geom_col(aes(fill = former), position = "stack", width = 1, alpha = 0.7) +
+  scale_x_continuous(breaks = 1:2, labels = c(2017, 2021)) +
+  scale_y_continuous(labels = label_percent()) +
+  scale_fill_manual(values = c(Annad,
+                               xV,
+                               xS,
+                               xC,
+                               xP,
+                               xD,
+                               xB,
+                               xM)) +
+  coord_cartesian(expand = F) +
+  theme_cowplot(font_size = 11, font_family = "serif") +
+  theme(plot.caption = element_text(hjust = 0)) +
+  labs(x = NULL,
+       y = NULL,
+       fill = NULL,
+       title = "Hvert sækir Miðflokkurinn kjósendur sína?",
+       caption = "Kóði og gögn: https://github.com/bgautijonsson/kosningarannsokn")
+
+p
+
+ggsave(plot = p, filename = "Figures/recruitment_xm.png", 
+       width = 8, height = 0.5 * 8, bg = "white")
+```
+
+
+# Aldursdreifing kjósenda
+
+```{r}
+preprocess_data_agedist <- function(doi, filename, year) {
+  get_dataframe_by_name(filename,
+                        doi,
+                        original = TRUE,
+                        .f = haven::read_sav) |> 
+    select(current = starts_with("prtvote"), former = starts_with("prtfvote"), age) |> 
+    mutate_at(vars(everything(), -age), as_factor) |> 
+    filter(!as.character(current) %in% c("No, did not vote",
+                                         "Not applicable",
+                                         "Don‘t remember what I voted",
+                                         "95",
+                                         "Cast a blank or invalid ballot",
+                                         "Voted, refuses to say for what party",
+                                         "Other party, what party",
+                                         "Refuses to answer (volunteered)",
+                                         "Don’t know (volunteered)",
+                                         "Voted, does not want to say which party",
+                                         "Cast a blank ballot",
+                                         "Cast an invalid vote",
+                                         "Missing",
+                                         "Voted, doesn‘t want to say for what party",
+                                         "Another party or party list, which?",
+                                         "Refuses to answer")) |> 
+    drop_na(current) |> 
+    mutate(year = year) |> 
+    select(year, current, age)
+}
+```
+
+```{r}
+d_agedist <- url_table |> 
+  rowwise() |> 
+  reframe(
+    preprocess_data_agedist(doi, filename, year)
+  ) |> 
+  mutate_at(vars(current), as.character) |> 
+  mutate_at(vars(current), translate_parties)
+```
+
+## 2021
+
+```{r}
+d_agedist |> 
+  mutate(age_binned = cut(age, 
+                          breaks = c(0, 30, 40, 50, 60, Inf),
+                          labels = c("18 - 29 ára",
+                                     "30 - 39 ára",
+                                     "40 - 49 ára",
+                                     "50 - 59 ára",
+                                     "60+ ára"),
+                          include.lowest = TRUE,
+                          right = FALSE),
+         current = ifelse(current %in% c("Samfylkingin",
+                                         "Vinstri Græn",
+                                         "Sjálfstæðisflokkurinn", 
+                                         "Píratar",
+                                         "Framsóknarflokkurinn", 
+                                         "Píratar",
+                                         "Björt Framtíð",
+                                         "Viðreisn",
+                                         "Miðflokkurinn",
+                                         "Flokkur Fólksins"),
+                          current,
+                          "Annað")) |> 
+  filter(year == 2021) |> 
+  count(age_binned, current) |> 
+  group_by(age_binned) |> 
+  mutate(p = n / sum(n)) |> 
+  ungroup() |> 
+  ggplot(aes(age_binned, n)) +
+  geom_col(aes(fill = current), position = "fill", width = 1, alpha = 0.7) +
+  scale_y_continuous(labels = label_percent()) +
+  scale_fill_manual(
+    values = c(
+      Annad,
+      xB,
+      xM,
+      xP,
+      xS,
+      xD,
+      xC,
+      xV
+    )
+  ) +
+  coord_cartesian(expand = F) +
+  theme_cowplot(font_size = 11, font_family = "serif") +
+  theme(plot.caption = element_text(hjust = 0)) +
+  labs(x = NULL,
+       y = NULL,
+       fill = NULL,
+       title = "Hvað kjósa mismunandi aldurshópar?",
+       subtitle = "Aldursdreifing kjósenda sýnd fyrir alþingiskosningar 2017",
+       caption = "Kóði og gögn: https://github.com/bgautijonsson/kosningarannsokn")
+```
+
+## 2017
+
+```{r}
+d_agedist |> 
+  mutate(age_binned = cut(age, 
+                          breaks = c(0, 30, 40, 50, 60, Inf),
+                          labels = c("18 - 29 ára",
+                                     "30 - 39 ára",
+                                     "40 - 49 ára",
+                                     "50 - 59 ára",
+                                     "60+ ára"),
+                          include.lowest = TRUE,
+                          right = FALSE),
+         current = ifelse(current %in% c("Samfylkingin",
+                                         "Vinstri Græn",
+                                         "Sjálfstæðisflokkurinn", 
+                                         "Píratar",
+                                         "Framsóknarflokkurinn", 
+                                         "Píratar",
+                                         "Björt Framtíð",
+                                         "Viðreisn",
+                                         "Miðflokkurinn",
+                                         "Flokkur Fólksins"),
+                          current,
+                          "Annað")) |> 
+  filter(year == 2017) |> 
+  count(age_binned, current) |> 
+  group_by(age_binned) |> 
+  mutate(p = n / sum(n)) |> 
+  ungroup() |> 
+  ggplot(aes(age_binned, n)) +
+  geom_col(aes(fill = current), position = "fill", width = 1, alpha = 0.7) +
+  scale_y_continuous(labels = label_percent()) +
+  scale_fill_manual(values = c(xBF,
+                               xFF,
+                               xB,
+                               xM,
+                               xP,
+                               xS,
+                               xD,
+                               xC,
+                               xV)) +
+  coord_cartesian(expand = F) +
+  theme_cowplot(font_size = 11, font_family = "serif") +
+  theme(plot.caption = element_text(hjust = 0)) +
+  labs(x = NULL,
+       y = NULL,
+       fill = NULL,
+       title = "Hvað kjósa mismunandi aldurshópar?",
+       subtitle = "Aldursdreifing kjósenda sýnd fyrir alþingiskosningar 2017",
+       caption = "Kóði og gögn: https://github.com/bgautijonsson/kosningarannsokn")
+```
+
+```{r}
+plot_dat <- d_agedist |> 
+  filter(year == 2017) |> 
+  mutate(age = as.numeric(age))
+
+plot_dat |> 
+  ggplot(aes(age)) +
+  geom_density(data = plot_dat |> rename(cr = current), alpha = 0.5, fill = "grey") +
+  geom_density(aes(fill = current), alpha = 0.7) +
+  scale_fill_manual(values = c(xBF,
+                               xFF,
+                               xB,
+                               xM,
+                               xP,
+                               xS,
+                               xD,
+                               xC,
+                               xV)) +
+  facet_wrap("current") +
+  theme_cowplot(font_size = 11, font_family = "serif") +
+  theme(legend.position = "none") +
+  labs(x = NULL,
+       y = NULL,
+       title = "Aldursdreifing kjósenda eftir flokki (2017)",
+       subtitle = "Borið saman við aldursdreifingu heildarinnar")
+```
+
+
+## 2013
+
+```{r}
+d_retention |> 
+  mutate(age_binned = cut(age, 
+                          breaks = c(0, 30, 40, 50, 60, Inf),
+                          labels = c("18 - 29 ára",
+                                     "30 - 39 ára",
+                                     "40 - 49 ára",
+                                     "50 - 59 ára",
+                                     "60+ ára"),
+                          include.lowest = TRUE,
+                          right = FALSE),
+         current = ifelse(current %in% c("Samfylkingin",
+                                         "Vinstri Græn",
+                                         "Sjálfstæðisflokkurinn", 
+                                         "Píratar",
+                                         "Framsóknarflokkurinn", 
+                                         "Píratar",
+                                         "Björt Framtíð",
+                                         "Viðreisn",
+                                         "Miðflokkurinn",
+                                         "Flokkur Fólksins"),
+                          current,
+                          "Annað")) |> 
+  filter(year == 2013) |> 
+  count(age_binned, current, wt = n) |> 
+  group_by(age_binned) |> 
+  mutate(p = n / sum(n)) |> 
+  ungroup() |> 
+  ggplot(aes(age_binned, n)) +
+  geom_col(aes(fill = current), position = "fill", width = 1, alpha = 0.7) +
+  scale_y_continuous(labels = label_percent()) +
+  scale_fill_manual(values = c(Annad,
+                               xBF,
+                               xB,
+                               xP,
+                               xS,
+                               xD,
+                               xV)) +
+  coord_cartesian(expand = F) +
+  theme_cowplot(font_size = 11, font_family = "serif") +
+  theme(plot.caption = element_text(hjust = 0)) +
+  labs(x = NULL,
+       y = NULL,
+       fill = NULL,
+       title = "Hvað kjósa mismunandi aldurshópar?",
+       subtitle = "Aldursdreifing kjósenda sýnd fyrir alþingiskosningar 2013",
+       caption = "Kóði og gögn: https://github.com/bgautijonsson/kosningarannsokn")
+```
+
+## 2009
+
+```{r}
+d_retention |> 
+  mutate(age_binned = cut(age, 
+                          breaks = c(0, 30, 40, 50, Inf),
+                          labels = c("18 - 29 ára",
+                                     "30 - 39 ára",
+                                     "40 - 49 ára",
+                                     "50+ ára"),
+                          include.lowest = TRUE,
+                          right = FALSE),
+         current = ifelse(current %in% c("Samfylkingin",
+                                         "Vinstri Græn",
+                                         "Sjálfstæðisflokkurinn", 
+                                         "Píratar",
+                                         "Framsóknarflokkurinn", 
+                                         "Píratar",
+                                         "Björt Framtíð",
+                                         "Viðreisn",
+                                         "Miðflokkurinn",
+                                         "Flokkur Fólksins"),
+                          current,
+                          "Annað")) |> 
+  filter(year == 2009) |> 
+  count(age_binned, current, wt = n) |> 
+  group_by(age_binned) |> 
+  mutate(p = n / sum(n)) |> 
+  ungroup() |> 
+  ggplot(aes(age_binned, n)) +
+  geom_col(aes(fill = current), position = "fill", width = 1, alpha = 0.7) +
+  scale_y_continuous(labels = label_percent()) +
+  scale_fill_manual(values = c(Annad,
+                               xB,
+                               xS,
+                               xD,
+                               xV)) +
+  coord_cartesian(expand = F) +
+  theme_cowplot(font_size = 11, font_family = "serif") +
+  theme(plot.caption = element_text(hjust = 0)) +
+  labs(x = NULL,
+       y = NULL,
+       fill = NULL,
+       title = "Hvað kjósa mismunandi aldurshópar?",
+       subtitle = "Aldursdreifing kjósenda sýnd fyrir alþingiskosningar 2009",
+       caption = "Kóði og gögn: https://github.com/bgautijonsson/kosningarannsokn")
+```

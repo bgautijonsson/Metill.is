@@ -4,22 +4,10 @@ pagetitle: "Ofbeldi"
 subtitle: "Subtitle"
 description: |
     Description
-author: 
-    -   name: "Brynjólfur Gauti Guðrúnar Jónsson"
-        url: "bggj.is"
-        affiliation: "Tölfræði, Raunvísindadeild Háskóla Íslands"
-        affiliation-url: "https://www.hi.is/tolfraedi_0"
 date: "2022/08/24"
 draft: true
 execute:
   eval: false
-format: 
-    html:
-        code-fold: true
-        smooth-scroll: true
-        link-external-newwindow: true
-editor: source
-title-block-banner: true
 categories:
     - lögregla
     - R
