@@ -11,16 +11,16 @@ pagedate: "2022/09/18"
 #| echo: false
 #| output: false
 
-width <- 1500
-height <- round(0.621 * width)
-webshot2::webshot(
-  "https://bggj.shinyapps.io/shiny_sveitarfelog/", 
-  delay = 3, 
-  cliprect = "viewport",
-  vwidth = width,
-  vheight = height, 
-  file = "image.png"
-)
+# width <- 1500
+# height <- round(0.621 * width)
+# webshot2::webshot(
+#   "https://bggj.shinyapps.io/shiny_sveitarfelog/", 
+#   delay = 3, 
+#   cliprect = "viewport",
+#   vwidth = width,
+#   vheight = height, 
+#   file = "image.png"
+# )
 
 ```
 

@@ -1,0 +1,15 @@
+{
+  "hash": "2964c0fe12888fd0d2debc55e422b255",
+  "result": {
+    "engine": "knitr",
+    "markdown": "---\ntitle-block-style: none\npagetitle: \"Jarðskjálfar á Íslandi\"\npagesubtitle: \"Fjöldi og staðsetning jarðskjálfa á Íslandi\"\nimage: image.png\nhref: maelabord/jardskjalftar/index.qmd\npagedate: \"2023/11/15\"\n---\n\n::: {.cell}\n\n:::\n\n\n\n::: {.column-screen}\n<iframe \n  src=\"https://bggj.shinyapps.io/shiny_jardskjalftar/\" style=\"height:'100px!important';\">\n</iframe>\n:::",
+    "supporting": [],
+    "filters": [
+      "rmarkdown/pagebreak.lua"
+    ],
+    "includes": {},
+    "engineDependencies": {},
+    "preserve": {},
+    "postProcess": true
+  }
+}
