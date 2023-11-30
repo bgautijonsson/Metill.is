@@ -131,7 +131,7 @@ plot_dat <- d |>
   select(ar, sveitarfelag, full_per_fast) |> 
   pivot_wider(names_from = ar, values_from = full_per_fast) |> 
   rename(
-    fyrir = "2010",
+    fyrir = as.character(ar_fyrir),
     eftir = "2023"
   ) |> 
   mutate(
@@ -671,11 +671,12 @@ ggsave(
 ```{r dreifing_nyjar_per_einst}
 #| eval: true
 
+fyrir_year <- 2010
 
 plot_dat <- d |>
   ungroup() |>
   filter(
-    ar >= 2010
+    ar >= fyrir_year
   ) |>
   mutate(bygg_per_mannfj = fjoldi / mannfjoldi_fullordin * 1000) |> 
   summarise(
@@ -693,7 +694,7 @@ plot_dat <- d |>
 heild <-  d |>
   ungroup() |>
   filter(
-    ar >= 2010
+    ar >= fyrir_year
   ) |>
   group_by(ar) |> 
   summarise_at(
@@ -756,7 +757,7 @@ p <- plot_dat |>
   labs(
     x = NULL,
     y = NULL,
-    title = "Fjöldi nýrra fasteigna á hvern fullorðinn einstakling frá 2010",
+    title = glue("Fjöldi nýrra fasteigna á hvern fullorðinn einstakling frá {fyrir_year}"),
     subtitle = "Reiknað fyrir hvert ár sem fjöldi nýrra fasteigna deilt með fjölda 20 ára og eldri og summað upp",
     caption = "Mynd eftir @bggjonsson byggð á gögnum Þjóðskrár um fasteignafjölda eftir byggingarári og mannfjöldagögnum Hagstofu"
   )

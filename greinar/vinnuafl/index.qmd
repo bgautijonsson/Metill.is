@@ -1720,3 +1720,36 @@ ggsave(
 
 
 <!-- ![](figures/hlutf_erlent.png){.column-page padding=20} -->
+
+```{r}
+# d <- hg_data("http://px.hagstofa.is/pxis/api/v1/is/Samfelag/vinnumarkadur/lausstorf/JVS00001.px") |>
+#   collect()
+# 
+# d |> 
+#   janitor::clean_names() |> 
+#   filter(
+#     eining == "Hlutfall lausra starfa"
+#   ) |> 
+#   separate(arsfjordungur, into = c("year", "quarter"), sep = "Á", convert = TRUE) |> 
+#   mutate(
+#     month = 1 + (quarter - 1) * 3,
+#     dags = clock::date_build(year, month),
+#     atvinnugrein = str_replace(
+#       atvinnugrein,
+#       "^[A-Z0-9\\. \\-&]* ",
+#       ""
+#     ) |> 
+#       str_wrap(50)
+#   ) |> 
+#   select(dags, atvinnugrein, value = 5) |> 
+#   ggplot(aes(dags, value / 100, group = atvinnugrein)) +
+#   geom_line() +
+#   scale_y_continuous(
+#     limits = c(0, 0.2),
+#     expand = expansion(),
+#     labels = label_hlutf()
+#   ) +
+#   facet_wrap("atvinnugrein")
+```
+
+

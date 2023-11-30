@@ -52,7 +52,7 @@ Sys.setlocale("LC_ALL", "is_IS.UTF-8")
 update_cache <- TRUE
 
 
-caption <- "Mynd eftir @bggjonsson hjá metill.is byggð á gögnum Eurostat um fólksflutninga: https://metill.is/greinar/flottafolk\nGögn og kóði: https://github.com/bgautijonsson/Metill.is/tree/master/greinar/flottafolk"
+caption <- "Mynd eftir @bggj hjá metill.is byggð á gögnum Eurostat um fólksflutninga: https://metill.is/greinar/flottafolk\nGögn og kóði: https://github.com/bgautijonsson/Metill.is/tree/master/greinar/flottafolk"
 
 litur_island <- "#08306b"
   
@@ -246,6 +246,9 @@ Fyrst skoðum við hversu margir umsækjendur eru að bíða eftir niðurstöðu
 
 ```{r umsaek}
 #| eval: false
+
+end_date <- clock::date_build(2023, 8, 1)
+
 p1 <- d |> 
   filter(
     name == "applicants"
@@ -311,7 +314,7 @@ p2 <- d |>
     flottafjoldi = value,
     per_pers = per_pop
   ) |> 
-  filter(month(dags) == 4, year(dags) == 2023) |> 
+  filter(dags == end_date) |> 
   drop_na(per_pers) |> 
   mutate(
     colour = case_when(
@@ -352,7 +355,7 @@ p2 <- d |>
     x = NULL,
     y = NULL,
     title = "Hvar bíða flestir einstaklingar eftir niðurstöðu umsóknar sinnar?",
-    subtitle = "Fjöldi í apríl 2023",
+    subtitle = "Fjöldi í ágúst 2023",
     caption = caption
   )
 
@@ -383,7 +386,7 @@ plot_dat <- d |>
     flottafjoldi = value,
     per_pers = per_pop
   ) |>  
-  filter(dags <= date_build(2023, 04, 01)) |> 
+  # filter(dags <= end_date) |> 
   drop_na(per_pers) |> 
   select(dags, land, value = per_pers) |> 
   mutate(
@@ -418,22 +421,15 @@ p3 <- plot_dat |>
     data = plot_dat |> 
       group_by(land) |> 
       filter(colour != litur_annad, dags == max(dags)) |> 
-      ungroup() |> 
-      mutate(
-        value = case_when(
-          # land == "Svíþjóð" ~ value - 0.8,
-          # land == "Ísland" ~ value - 0.2,
-          # land == "Noregur" ~ value + 0.3,
-          # land == "Danmörk" ~ value + 1,
-          # land == "Finnland" ~ value + 0.5,
-          TRUE ~ value
-        )
-      ),
+      ungroup(),
     aes(label = land, colour = colour),
-    hjust = 0,
-    nudge_x = 10,
-    box.padding = 0.1,
-    direction = "y"
+    hjust = 0.1,
+    nudge_x = 20,
+    # box.padding = 0.1,
+    direction = "y", 
+    # min.segment.length = Inf,
+    force = 0.1,
+    force_pull = 2
   ) +
   scale_x_date(
     breaks = unique(plot_dat$dags),
@@ -482,6 +478,9 @@ ggsave(
 
 ```{r akvard}
 #| eval: false
+
+end_date <- clock::date_build(2023, 7, 1)
+
 p1 <- d |> 
   filter(
     name == "total_decisions"
@@ -549,7 +548,7 @@ p2 <- d |>
     flottafjoldi = value,
     per_pers = per_pop
   ) |> 
-  filter(month(dags) == 1, year(dags) == 2023) |> 
+  filter(dags == end_date) |> 
   drop_na(per_pers) |> 
   mutate(
     colour = case_when(
@@ -590,7 +589,7 @@ p2 <- d |>
     x = NULL,
     y = NULL,
     title = "Hvar eru flestar ákvarðanir um stöðu hælisleitenda teknar í hverjum mánuði?",
-    subtitle = "Fjöldi í janúar 2023",
+    subtitle = "Fjöldi í júlí 2023",
     caption = caption
   )
 
@@ -621,7 +620,7 @@ plot_dat <- d |>
     flottafjoldi = value,
     per_pers = per_pop
   ) |>  
-  filter(dags <= date_build(2023, 04, 01)) |> 
+  filter() |> 
   drop_na(per_pers) |> 
   select(dags, land, value = per_pers) |> 
   mutate(
@@ -720,6 +719,9 @@ Skoðum svo hversu mörgum er veitt tímabundin vernd í hverjum mánuði.
 
 ```{r veiting}
 #| eval: false
+
+end_date <- clock::date_build(2023, 8, 1)
+
 p1 <- d |> 
   filter(
     name == "grants"
@@ -785,7 +787,7 @@ p2 <- d |>
     flottafjoldi = value,
     per_pers = per_pop
   ) |> 
-  filter(dags == date_build(2023, 04, 01)) |> 
+  filter(dags == end_date) |> 
   drop_na(per_pers) |> 
   mutate(
     colour = case_when(
@@ -826,7 +828,7 @@ p2 <- d |>
     x = NULL,
     y = NULL,
     title = "Hvað er mörgum veitt tímabundin vernd í hverjum mánuði?",
-    subtitle = "Fjöldi í apríl 2023",
+    subtitle = "Fjöldi í ágúst 2023",
     caption = caption
   )
 
@@ -857,7 +859,7 @@ plot_dat <- d |>
     flottafjoldi = value,
     per_pers = per_pop
   ) |>  
-  filter(dags <= date_build(2023, 04, 01)) |> 
+  # filter(dags <= date_build(2023, 04, 01)) |> 
   drop_na(per_pers) |> 
   select(dags, land, value = per_pers) |> 
   mutate(
@@ -905,7 +907,7 @@ p3 <- plot_dat |>
       ),
     aes(label = land, colour = colour),
     hjust = 0,
-    nudge_x = 10,
+    nudge_x = 20,
     box.padding = 0.1,
     direction = "y"
   ) +
@@ -921,7 +923,7 @@ p3 <- plot_dat |>
     expand = expansion()
   ) +
   scale_colour_identity() +
-  coord_cartesian(ylim = c(0, 5), clip = "on") +
+  coord_cartesian(ylim = c(0, 2), clip = "on") +
   theme(
     axis.line.x = element_blank(),
     plot.margin = margin(t = 5, r = 35, b = 5, l = 5)
@@ -958,6 +960,9 @@ Hér skoðum við svo fjölda fólks í landinu sem nýtur tímabundinnar vernda
 
 ```{r vernd}
 #| eval: false
+
+end_date <- clock::date_build(2023, 9, 1)
+
 p1 <- d |> 
   filter(
     name == "beneficiaries"
@@ -1022,7 +1027,7 @@ p2 <- d |>
     flottafjoldi = value,
     per_pers = per_pop
   ) |> 
-  filter(dags == date_build(2023, 04, 01)) |> 
+  filter(dags == end_date) |> 
   drop_na(per_pers) |> 
   mutate(
     colour = case_when(
@@ -1094,7 +1099,7 @@ plot_dat <- d |>
     flottafjoldi = value,
     per_pers = per_pop
   ) |>  
-  filter(dags <= date_build(2023, 04, 01)) |> 
+  # filter(dags <= date_build(2023, 04, 01)) |> 
   drop_na(per_pers) |> 
   select(dags, land, value = per_pers) |> 
   mutate(
