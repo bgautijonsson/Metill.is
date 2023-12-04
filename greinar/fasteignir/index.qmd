@@ -1,0 +1,202 @@
+---
+title: "Fermetraverð"
+pagetitle: "Fermetraverð"
+subtitle: "Í vinnslu"
+date: "2023/12/04"
+draft: true
+categories:
+    - stjórnmál
+    - efnahagur
+    - fasteignir
+    - sveitarfélög
+href: greinar/fasteignafjoldi/index.qmd
+image: Figures/throun_fast_per_einst_fp.png
+execute:
+  eval: true
+---
+
+
+```{r setup}
+#| include: false
+library(sf)
+library(leaflet)
+library(tidyverse)
+library(visitalaneysluverds)
+library(mapview)
+```
+
+
+```{r data}
+#| echo: false
+#| include: false
+d <- st_read(
+  "~/Downloads/postnumer/postnumer.shp",
+  options = "ENCODING=ISO-8859-10"
+) |> 
+  st_transform("WGS84")
+
+
+for (i in seq_len(nrow(d))) {
+  for (j in seq_len(length(d$geometry[[i]]))) {
+    for (k in seq_len(length(d$geometry[[i]][[j]]))) {
+      X <- d$geometry[[i]][[j]][[k]][, 1]
+      Y <- d$geometry[[i]][[j]][[k]][, 2]
+      
+      d$geometry[[i]][[j]][[k]][, 1] <- Y
+      d$geometry[[i]][[j]][[k]][, 2] <- X
+    }
+  }
+}
+
+kaupskra <- read_csv2(
+  "https://frs3o1zldvgn.objectstorage.eu-frankfurt-1.oci.customer-oci.com/n/frs3o1zldvgn/b/public_data_for_download/o/kaupskra.csv", 
+  locale = locale("is", encoding = "ISO-8859-10")
+)
+
+verd <- kaupskra |> 
+  janitor::clean_names() |> 
+  filter(
+    utgdag >= Sys.time() - years(7),
+    fullbuid == 1,
+    onothaefur_samningur == 0,
+    tegund %in% c("Fjölbýli"),
+    einflm > 30,
+    einflm < 200
+  ) |> 
+  drop_na() |> 
+  mutate(
+    # kaupverd = vnv_convert(kaupverd, as_date(utgdag)),
+    fermverd = kaupverd / einflm,
+    ar = year(utgdag)
+  ) |> 
+  filter(
+    fermverd < quantile(fermverd, 0.99),
+    fermverd > quantile(fermverd, 0.01)
+  ) |> 
+  summarise(
+    kaupv = mean(kaupverd),
+    fermverd = mean(fermverd),
+    n = n(),
+    .by = c(postnr, ar)
+  ) |> 
+  reframe(
+    kaupv_breyting = kaupv[ar == 2023] / kaupv[ar == 2019],
+    fermverd_breyting = fermverd[ar == 2023] / fermverd[ar == 2019],
+    fermverd_breyting_hrein = fermverd[ar == 2023] - fermverd[ar == 2019],
+    kaupv = kaupv[ar == 2023],
+    fermverd_2023 = fermverd[ar == 2023],
+    fermverd_2019 = fermverd[ar == 2019],
+    n = n[ar == 2023],
+    .by = postnr
+  )
+
+
+plot_dat <- d |> 
+  left_join(
+    verd,
+    by = join_by(postnumer == postnr)
+  ) |> 
+  filter(
+    str_detect(
+      str_to_lower(stadur),
+      "reykjav|garðab|kópav|seltjarn|hafnarf|mosfells"
+    ),
+    postnumer != 116
+    # n > 10
+  ) |> 
+  mutate(
+    fermverd_breyting = fermverd_breyting - 1,
+    kaupv_breyting = kaupv_breyting - 1
+  )
+
+
+plot_dat <- d |> 
+  left_join(
+    verd,
+    by = join_by(postnumer == postnr)
+  ) |> 
+  filter(
+    str_detect(
+      str_to_lower(stadur),
+      "reykjav|garðab|kópav|seltjarn|hafnarf|mosfells"
+    ),
+    postnumer != 116
+    # n > 10
+  ) |> 
+  mutate(
+    fermverd_breyting = fermverd_breyting - 1,
+    kaupv_breyting = kaupv_breyting - 1
+  ) |> 
+  mutate(
+    label = str_c(
+      "Staður: ", stadur, "<br>",
+      "<b>Póstnúmer: ", postnumer, "</b>", "<br>",
+      "Fermetraverð (2023): ", metill::isk(1e3 * fermverd_2023, scale = 1e-3), "<br>",
+      "Fermetraverð (2019): ", metill::isk(1e3 * fermverd_2019, scale = 1e-3), "<br>",
+      "% Breyting: ", metill::hlutf(fermverd_breyting), "<br>",
+      "Hrein Breyting: ", metill::isk(1e3 * fermverd_breyting_hrein, scale = 1e-3)
+    )
+  )
+```
+
+
+```{r}
+#| column: screen
+
+m1 <- mapview(
+  plot_dat,
+  zcol = "fermverd_2019",
+  layer.name = c(
+    "2019"
+  ),
+  label = "label",
+  labFormat = labelFormat(
+    suffix = " þús.kr",
+    digits = 0
+  )
+)
+
+m2 <- mapview(
+  plot_dat,
+  zcol = "fermverd_2023",
+  layer.name = c(
+    "2023"
+  ),
+  label = "label",
+  labFormat = labelFormat(
+    suffix = " þús.kr",
+    digits = 0
+  )
+)
+
+m3 <- mapview(
+  plot_dat,
+  zcol = "fermverd_breyting",
+  layer.name = c(
+    "% breyting"
+  ),
+  label = "label",
+  labFormat = labelFormat(
+    suffix = " %",
+    digits = 0,
+    transform = \(x) 100 * x
+  )
+)
+
+m4 <- mapview(
+  plot_dat,
+  zcol = "fermverd_breyting_hrein",
+  layer.name = c(
+    "Hrein breyting"
+  ),
+  label = "label",
+  labFormat = labelFormat(
+    suffix = " þús.kr",
+    digits = 0
+  )
+)
+
+leafsync::sync(m1, m2, m3, m4, ncol = 2)
+
+```
+

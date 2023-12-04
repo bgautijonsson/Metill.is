@@ -10,6 +10,15 @@
     ]
   },
   {
+    "listing": "/maelabord.html",
+    "items": [
+      "/maelabord/sveitarfelog/index.html",
+      "/maelabord/skattagogn/index.html",
+      "/maelabord/verdbolga/index.html",
+      "/maelabord/sveitarfelog/gogn/index.html"
+    ]
+  },
+  {
     "listing": "/index.html",
     "items": [
       "/greinar/visitala_neysluverds/index.html",
@@ -23,15 +32,6 @@
       "/greinar/loftgaedi/index.html",
       "/greinar/flottafolk/index.html",
       "/greinar/landspitali/index.html",
-      "/maelabord/sveitarfelog/index.html",
-      "/maelabord/skattagogn/index.html",
-      "/maelabord/verdbolga/index.html",
-      "/maelabord/sveitarfelog/gogn/index.html"
-    ]
-  },
-  {
-    "listing": "/maelabord.html",
-    "items": [
       "/maelabord/sveitarfelog/index.html",
       "/maelabord/skattagogn/index.html",
       "/maelabord/verdbolga/index.html",
