@@ -23,12 +23,15 @@ library(leaflet)
 library(tidyverse)
 library(visitalaneysluverds)
 library(mapview)
+library(leafsync)
+library(htmltools)
 ```
 
 
 ```{r data}
 #| echo: false
 #| include: false
+#| cache: true
 d <- st_read(
   "~/Downloads/postnumer/postnumer.shp",
   options = "ENCODING=ISO-8859-10"
@@ -91,24 +94,6 @@ verd <- kaupskra |>
   )
 
 
-plot_dat <- d |> 
-  left_join(
-    verd,
-    by = join_by(postnumer == postnr)
-  ) |> 
-  filter(
-    str_detect(
-      str_to_lower(stadur),
-      "reykjav|garðab|kópav|seltjarn|hafnarf|mosfells"
-    ),
-    postnumer != 116
-    # n > 10
-  ) |> 
-  mutate(
-    fermverd_breyting = fermverd_breyting - 1,
-    kaupv_breyting = kaupv_breyting - 1
-  )
-
 
 plot_dat <- d |> 
   left_join(
@@ -127,6 +112,7 @@ plot_dat <- d |>
     fermverd_breyting = fermverd_breyting - 1,
     kaupv_breyting = kaupv_breyting - 1
   ) |> 
+  drop_na(fermverd_breyting) |> 
   mutate(
     label = str_c(
       "Staður: ", stadur, "<br>",
@@ -141,62 +127,77 @@ plot_dat <- d |>
 
 
 ```{r}
-#| column: screen
+make_plot <- function(varname, title, format) {
+  pal <- colorNumeric(
+    "viridis",
+    domain = plot_dat$varname
+  )
+  
+  plot_dat$value <- plot_dat[[varname]]
+  
+  plot_dat |> 
+    leaflet() |> 
+    addProviderTiles(providers$CartoDB) |> 
+    addPolygons(
+      weight = 1,
+      opacity = 1,
+      color = "grey",
+      fillColor = ~ pal(value),
+      fillOpacity = 0.6,
+      label = ~ lapply(label, HTML),
+      highlightOptions = highlightOptions(
+        weight = 1.5,
+        fillOpacity = 1,
+        bringToFront = TRUE
+      )
+    ) |> 
+    addLegend(
+      "topright",
+      pal = pal,
+      values = ~ value,
+      title = title,
+      labFormat = format
+    )
+}
 
-m1 <- mapview(
-  plot_dat,
-  zcol = "fermverd_2019",
-  layer.name = c(
-    "2019"
-  ),
-  label = "label",
-  labFormat = labelFormat(
+m5 <- make_plot(
+  "fermverd_2019", 
+  title = "Fermetraverð (2019)",
+  format = labelFormat(
     suffix = " þús.kr",
     digits = 0
   )
 )
-
-m2 <- mapview(
-  plot_dat,
-  zcol = "fermverd_2023",
-  layer.name = c(
-    "2023"
-  ),
-  label = "label",
-  labFormat = labelFormat(
+m6 <- make_plot(
+  "fermverd_2023",
+  title = "Fermetraverð (2023)",
+  format = labelFormat(
     suffix = " þús.kr",
     digits = 0
   )
 )
-
-m3 <- mapview(
-  plot_dat,
-  zcol = "fermverd_breyting",
-  layer.name = c(
-    "% breyting"
-  ),
-  label = "label",
-  labFormat = labelFormat(
+m7 <- make_plot(
+  "fermverd_breyting",
+  title = "% breyting",
+  format = labelFormat(
     suffix = " %",
     digits = 0,
     transform = \(x) 100 * x
   )
 )
-
-m4 <- mapview(
-  plot_dat,
-  zcol = "fermverd_breyting_hrein",
-  layer.name = c(
-    "Hrein breyting"
-  ),
-  label = "label",
-  labFormat = labelFormat(
+m8 <- make_plot(
+  "fermverd_breyting_hrein",
+  title = "Hrein breyting",
+  format = labelFormat(
     suffix = " þús.kr",
     digits = 0
   )
 )
-
-leafsync::sync(m1, m2, m3, m4, ncol = 2)
-
 ```
 
+
+```{r}
+#| column: screen-inset
+#| fig-asp: 2
+sync(m5, m6, m7, m8)
+```
