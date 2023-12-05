@@ -4,15 +4,16 @@ pagetitle: "Fermetraverð"
 subtitle: "Í vinnslu"
 date: "2023/12/04"
 draft: true
-categories:
-    - stjórnmál
-    - efnahagur
-    - fasteignir
-    - sveitarfélög
-href: greinar/fasteignafjoldi/index.qmd
-image: Figures/throun_fast_per_einst_fp.png
 execute:
   eval: true
+categories:
+    - efnahagur
+    - sveitarfélög
+    - fasteignaverð
+href: greinar/fasteignir/index.qmd
+image: map.png
+twitter-card:
+    image: map.png
 ---
 
 
@@ -199,5 +200,9 @@ m8 <- make_plot(
 ```{r}
 #| column: screen-inset
 #| fig-asp: 2
-sync(m5, m6, m7, m8)
+m <- sync(m5, m6, m7, m8)
+save_html(m, "map.html", libdir = "map_lib")
+webshot::webshot("map.html", file = "map.png")
+m
 ```
+
