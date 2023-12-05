@@ -201,8 +201,12 @@ m8 <- make_plot(
 #| column: screen-inset
 #| fig-asp: 2
 m <- sync(m5, m6, m7, m8)
+m
+```
+
+```{r}
+#| eval: false
 save_html(m, "map.html", libdir = "map_lib")
 webshot::webshot("map.html", file = "map.png")
-m
 ```
 
