@@ -28,7 +28,6 @@ library(leafsync)
 library(htmltools)
 ```
 
-
 ```{r data}
 #| echo: false
 #| include: false
@@ -57,7 +56,17 @@ kaupskra <- vroom::vroom(
   delim = ";",
   locale = locale("is", encoding = "ISO-8859-10", decimal_mark = ".", grouping_mark = ",")
 )
+```
 
+::: {.panel-tabset}
+
+## Fjölbýli
+
+* Tveggja herbergja íbúðir
+* Fermetrar á milli $30m^2$ og $150m^2$
+
+
+```{r}
 verd <- kaupskra |> 
   janitor::clean_names() |> 
   filter(
@@ -66,7 +75,8 @@ verd <- kaupskra |>
     onothaefur_samningur == 0,
     tegund %in% c("Fjölbýli"),
     einflm > 30,
-    einflm < 200
+    einflm < 150,
+    fjherb == 2
   ) |> 
   drop_na(kaupverd, einflm) |> 
   mutate(
@@ -212,3 +222,125 @@ save_html(m, "map.html", libdir = "map_lib")
 webshot::webshot("map.html", file = "map.png")
 ```
 
+
+## Sérbýli
+
+* Fermetrar á milli $30 m^2$ og $250m^2$
+
+```{r}
+verd <- kaupskra |> 
+  janitor::clean_names() |> 
+  filter(
+    utgdag >= Sys.time() - years(7),
+    fullbuid == 1,
+    onothaefur_samningur == 0,
+    tegund %in% c("Sérbýli"),
+    einflm > 30,
+    einflm < 250
+  ) |> 
+  drop_na(kaupverd, einflm) |> 
+  mutate(
+    # kaupverd = vnv_convert(kaupverd, as_date(utgdag)),
+    fermverd = kaupverd / einflm,
+    ar = year(utgdag)
+  ) |> 
+  filter(
+    fermverd < quantile(fermverd, 0.99),
+    fermverd > quantile(fermverd, 0.01),
+    .by = postnr
+  ) |> 
+  summarise(
+    kaupv = mean(kaupverd),
+    fermverd = mean(fermverd),
+    n = n(),
+    .by = c(postnr, ar)
+  ) |> 
+  reframe(
+    kaupv_breyting = kaupv[ar == 2023] / kaupv[ar == 2019],
+    fermverd_breyting = fermverd[ar == 2023] / fermverd[ar == 2019],
+    fermverd_breyting_hrein = fermverd[ar == 2023] - fermverd[ar == 2019],
+    kaupv = kaupv[ar == 2023],
+    fermverd_2023 = fermverd[ar == 2023],
+    fermverd_2019 = fermverd[ar == 2019],
+    n = n[ar == 2023],
+    .by = postnr
+  )
+
+
+
+plot_dat <- d |> 
+  left_join(
+    verd,
+    by = join_by(postnumer == postnr)
+  ) |> 
+  filter(
+    str_detect(
+      str_to_lower(stadur),
+      "reykjav|garðab|kópav|seltjarn|hafnarf|mosfells"
+    ),
+    postnumer != 116
+    # n > 10
+  ) |> 
+  mutate(
+    fermverd_breyting = fermverd_breyting - 1,
+    kaupv_breyting = kaupv_breyting - 1
+  ) |> 
+  drop_na(fermverd_breyting) |> 
+  mutate(
+    label = str_c(
+      "Staður: ", stadur, "<br>",
+      "<b>Póstnúmer: ", postnumer, "</b>", "<br>",
+      "Fermetraverð (2023): ", metill::isk(1e3 * fermverd_2023, scale = 1e-3), "<br>",
+      "Fermetraverð (2019): ", metill::isk(1e3 * fermverd_2019, scale = 1e-3), "<br>",
+      "% Breyting: ", metill::hlutf(fermverd_breyting), "<br>",
+      "Hrein Breyting: ", metill::isk(1e3 * fermverd_breyting_hrein, scale = 1e-3)
+    )
+  )
+```
+
+
+```{r}
+m5 <- make_plot(
+  "fermverd_2019", 
+  title = "Fermetraverð (2019)",
+  format = labelFormat(
+    suffix = " þús.kr",
+    digits = 0
+  )
+)
+m6 <- make_plot(
+  "fermverd_2023",
+  title = "Fermetraverð (2023)",
+  format = labelFormat(
+    suffix = " þús.kr",
+    digits = 0
+  )
+)
+m7 <- make_plot(
+  "fermverd_breyting",
+  title = "% breyting",
+  format = labelFormat(
+    suffix = " %",
+    digits = 0,
+    transform = \(x) 100 * x
+  )
+)
+m8 <- make_plot(
+  "fermverd_breyting_hrein",
+  title = "Hrein breyting",
+  format = labelFormat(
+    suffix = " þús.kr",
+    digits = 0
+  )
+)
+```
+
+
+```{r}
+#| column: screen-inset
+#| fig-asp: 2
+m <- sync(m5, m6, m7, m8)
+m
+```
+
+:::
