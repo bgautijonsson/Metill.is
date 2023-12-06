@@ -52,9 +52,10 @@ for (i in seq_len(nrow(d))) {
   }
 }
 
-kaupskra <- read_csv2(
+kaupskra <- vroom::vroom(
   "https://frs3o1zldvgn.objectstorage.eu-frankfurt-1.oci.customer-oci.com/n/frs3o1zldvgn/b/public_data_for_download/o/kaupskra.csv", 
-  locale = locale("is", encoding = "ISO-8859-10")
+  delim = ";",
+  locale = locale("is", encoding = "ISO-8859-10", decimal_mark = ".", grouping_mark = ",")
 )
 
 verd <- kaupskra |> 
@@ -67,7 +68,7 @@ verd <- kaupskra |>
     einflm > 30,
     einflm < 200
   ) |> 
-  drop_na() |> 
+  drop_na(kaupverd, einflm) |> 
   mutate(
     # kaupverd = vnv_convert(kaupverd, as_date(utgdag)),
     fermverd = kaupverd / einflm,
@@ -75,7 +76,8 @@ verd <- kaupskra |>
   ) |> 
   filter(
     fermverd < quantile(fermverd, 0.99),
-    fermverd > quantile(fermverd, 0.01)
+    fermverd > quantile(fermverd, 0.01),
+    .by = postnr
   ) |> 
   summarise(
     kaupv = mean(kaupverd),
