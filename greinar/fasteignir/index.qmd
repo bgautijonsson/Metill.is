@@ -436,7 +436,7 @@ Hér að neðan skoðum við bæði hreinan fjölda nýrra fasteigna og fjölda 
 ```{r}
 fyrir_year <- 2019
 
-width <- 400
+width <- 350
 
 subplot_dat <- fastfjoldi |>
   ungroup() |>
@@ -487,7 +487,7 @@ p <- subplot_dat |>
           title = "Fjöldi nýrra fasteigna á 1.000 fullorðna",
           subtitle = unique(data$group2)
         ) +
-        theme(legend.position = "none")
+        theme(legend.position = "none", plot.title = element_text(size = 16))
     }
     
   )
@@ -592,7 +592,7 @@ p <- subplot_dat |>
           title = "Fjöldi nýrra fasteigna á 1.000 fullorðna",
           subtitle = unique(data$group2)
         ) +
-        theme(legend.position = "none")
+        theme(legend.position = "none", plot.title = element_text(size = 16))
     }
     
   )
@@ -862,8 +862,8 @@ m4 <- mapview(
 ```
 
 ```{r}
-#| column: screen-inset
-#| fig-asp: 0.9
+#| column: page
+#| out-height: 1000px
 m <- sync(m1, m2, m3, m4, ncol = 2)
 m
 ```
