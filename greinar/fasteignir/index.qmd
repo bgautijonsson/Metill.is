@@ -434,6 +434,8 @@ m
 ```{r}
 fyrir_year <- 2018
 
+width <- 400
+
 subplot_dat <- fastfjoldi |>
   ungroup() |>
   filter(
@@ -480,7 +482,8 @@ p <- subplot_dat |>
       labs(
         x = NULL,
         y = NULL,
-        title = "Fjöldi nýrra fasteigna á 1.000 fullorðna"
+        title = "Fjöldi nýrra fasteigna á 1.000 fullorðna",
+        subtitle = unique(data$group2)
       ) +
       theme(legend.position = "none")
     }
@@ -515,15 +518,19 @@ plot_dat <- svf_shp |>
       "reykjav|garðab|kópav|mosf|seltj|hafnarfj"
     )
   ) |> 
-  arrange(sveitarfel)
+  arrange(sveitarfel) |> 
+   mutate(
+    label = str_c(sveitarfel, ": ", round(value))
+  )
 
-width <- 400
+
 
 m1 <- mapview(
   plot_dat,
   zcol = "value",
   layer.name = "Nýjar fasteignir<br>á 1.000 fullorðna<br>(2018 - 2023)",
-  popup = popupGraph(p, width = width, height = 0.621 * width)
+  popup = popupGraph(p, width = width, height = 0.621 * width),
+  label = "label"
 )
 ```
 
@@ -587,7 +594,8 @@ p <- subplot_dat |>
       labs(
         x = NULL,
         y = NULL,
-        title = "Árlegur fjöldi nýrra fasteigna"
+        title = "Árlegur fjöldi nýrra fasteigna",
+        subtitle = unique(data$group2)
       ) +
       theme(legend.position = "none")
     }
@@ -617,14 +625,16 @@ plot_dat <- svf_shp |>
     )
   ) |> 
   mutate(
-    group = ifelse(str_detect(sveitarfel, "Reykjav"), "RVK", "Nágrannar")
+    group = ifelse(str_detect(sveitarfel, "Reykjav"), "Reykjavík", "Nágrannar")
   ) |> 
   group_by(group) |> 
   summarise(
     value = sum(value)
+  ) |> 
+  mutate(
+    label = str_c(group, ": ", round(value))
   )
 
-width <- 400
 
 m2 <- mapview(
   plot_dat,
@@ -632,12 +642,13 @@ m2 <- mapview(
   col.regions = c("grey69", "grey20"),
   at = plot_dat$value,
   layer.name = "Nýjar fasteignir<br>(2018-2023)",
-  popup = popupGraph(p, width = width, height = 0.621 * width)
+  popup = popupGraph(p, width = width, height = 0.621 * width),
+  label = "label"
 )
 ```
 
 ```{r}
-#| column: page
+#| column: screen-inset
 #| fig-asp: 0.9
 m <- sync(m1, m2)
 m
