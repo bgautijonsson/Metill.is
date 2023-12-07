@@ -1,6 +1,6 @@
 ---
-title: "Fermetraverð"
-pagetitle: "Fermetraverð"
+title: "Fasteignir á Höfuðborgarsvæðinu"
+pagetitle: "Fasteignir á Höfuðborgarsvæðinu"
 subtitle: "Í vinnslu"
 date: "2023/12/04"
 draft: true
@@ -478,6 +478,10 @@ p <- subplot_dat |>
         scale_x_continuous(
           breaks = 2018:2023
         ) +
+        scale_y_continuous(
+          limits = c(0, 35),
+          expand = expansion()
+        ) +
         scale_color_manual(
           values = c("grey", "red")
         ) +
@@ -699,6 +703,10 @@ p <- subplot_dat |>
         scale_x_continuous(
           breaks = 2018:2023
         ) +
+        scale_y_continuous(
+          limits = c(0, 1550),
+          expand = expansion()
+        ) +
         scale_color_manual(
           values = c("grey", "red")
         ) +
@@ -791,19 +799,19 @@ p <- subplot_dat |>
   group_map(
     function(data, ...) {
       ggplot(data) +
-        aes(ar, value, col = which, label = name, hjust = name) +
-        geom_labelline(
+        aes(ar, value, col = which) +
+        geom_line(
           linewidth = 1
         ) +
-        # geom_point(size = 4) +
         scale_x_continuous(
           breaks = c(2010, 2014, 2018, 2023)
         ) +
+        scale_y_continuous(
+          limits = c(0, 1550),
+          expand = expansion()
+        ) +
         scale_color_manual(
           values = c("grey", "red")
-        ) +
-        scale_hjust_manual(
-          values = c(0.3, 0.7)
         ) +
         labs(
           x = NULL,
