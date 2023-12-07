@@ -139,7 +139,7 @@ if (!file.exists("data/data.parquet")) {
 }
 ```
 
-# Fermetraverð
+# Hvar hefur fermetraverð hækkað mest?
 
 ::: {.panel-tabset}
 
@@ -429,10 +429,12 @@ m
 :::
 
 
-# Fjöldi byggðra fasteigna
+# Hvar er mest byggt?
+
+Hér að neðan skoðum við bæði hreinan fjölda nýrra fasteigna og fjölda nýrra fasteigna á 1.000 fullorðna íbúa. Smellið á svæði til að sjá mynd af þróun þess svæðis samanborið við önnur svæði.
 
 ```{r}
-fyrir_year <- 2018
+fyrir_year <- 2019
 
 width <- 400
 
@@ -468,24 +470,24 @@ p <- subplot_dat |>
   group_map(
     function(data, ...) {
       ggplot(data) +
-      aes(ar, value, group = name, col = which) +
-      geom_line(
-        linewidth = 1
-      ) +
-      # geom_point(size = 4) +
-      scale_x_continuous(
-        breaks = 2018:2023
-      ) +
-      scale_color_manual(
-        values = c("grey", "red")
-      ) +
-      labs(
-        x = NULL,
-        y = NULL,
-        title = "Fjöldi nýrra fasteigna á 1.000 fullorðna",
-        subtitle = unique(data$group2)
-      ) +
-      theme(legend.position = "none")
+        aes(ar, value, group = name, col = which) +
+        geom_line(
+          linewidth = 1
+        ) +
+        # geom_point(size = 4) +
+        scale_x_continuous(
+          breaks = 2018:2023
+        ) +
+        scale_color_manual(
+          values = c("grey", "red")
+        ) +
+        labs(
+          x = NULL,
+          y = NULL,
+          title = "Fjöldi nýrra fasteigna á 1.000 fullorðna",
+          subtitle = unique(data$group2)
+        ) +
+        theme(legend.position = "none")
     }
     
   )
@@ -507,7 +509,7 @@ plot_dat <- fastfjoldi |>
     .by = sveitarfelag
   )
 
-plot_dat <- svf_shp |> 
+map_dat <- svf_shp |> 
   inner_join(
     plot_dat,
     by = join_by(sveitarfel == sveitarfelag)
@@ -519,30 +521,242 @@ plot_dat <- svf_shp |>
     )
   ) |> 
   arrange(sveitarfel) |> 
-   mutate(
+  mutate(
     label = str_c(sveitarfel, ": ", round(value))
   )
 
 
 
 m1 <- mapview(
-  plot_dat,
+  map_dat,
   zcol = "value",
-  layer.name = "Nýjar fasteignir<br>á 1.000 fullorðna<br>(2018 - 2023)",
+  layer.name = "Nýjar fasteignir<br>á 1.000 fullorðna<br>(2019 - 2023)",
   popup = popupGraph(p, width = width, height = 0.621 * width),
   label = "label"
 )
 ```
 
 ```{r}
+subplot_dat <- fastfjoldi |>
+  ungroup() |>
+  filter(
+    ar >= fyrir_year,
+    str_detect(
+      str_to_lower(sveitarfelag),
+      "reykjav|garðab|kópav|mosf|seltj|hafnarfj"
+    )
+  ) |> 
+  mutate(
+    sveitarfelag = ifelse(str_detect(sveitarfelag, "Reykjav"), "Reykjavík", "Nágrannar")
+  ) |> 
+  summarise(
+    fjoldi = sum(fjoldi),
+    mannfjoldi_fullordin = sum(mannfjoldi_fullordin),
+    .by = c(sveitarfelag, ar)
+  ) |> 
+  mutate(value = fjoldi / mannfjoldi_fullordin * 1000) |> 
+  select(-fjoldi, -mannfjoldi_fullordin)
 
+p <- subplot_dat |> 
+  pivot_wider(names_from = sveitarfelag) |> 
+  crossing(
+    group = c("Reykjavík", "Nágrannar")
+  ) |> 
+  pivot_longer(c(-ar, -group)) |> 
+  mutate(
+    which = ifelse(group == name, "same", "other"),
+    group2 = group
+  ) |> 
+  group_by(group) |> 
+  group_map(
+    function(data, ...) {
+      ggplot(data) +
+        aes(ar, value, group = name, col = which) +
+        geom_line(
+          linewidth = 1
+        ) +
+        # geom_point(size = 4) +
+        scale_x_continuous(
+          breaks = 2018:2023
+        ) +
+        scale_y_continuous(
+          limits = c(0, 30),
+          expand = expansion()
+        ) +
+        scale_color_manual(
+          values = c("grey", "red")
+        ) +
+        labs(
+          x = NULL,
+          y = NULL,
+          title = "Fjöldi nýrra fasteigna á 1.000 fullorðna",
+          subtitle = unique(data$group2)
+        ) +
+        theme(legend.position = "none")
+    }
+    
+  )
+
+
+
+plot_dat <- fastfjoldi |>
+  ungroup() |>
+  filter(
+    ar >= fyrir_year,
+    str_detect(
+      str_to_lower(sveitarfelag),
+      "reykjav|garðab|kópav|mosf|seltj|hafnarfj"
+    )
+  ) |> 
+  mutate(
+    sveitarfelag = ifelse(str_detect(sveitarfelag, "Reykjav"), "Reykjavík", "Nágrannar")
+  ) |> 
+  summarise(
+    fjoldi = sum(fjoldi),
+    mannfjoldi_fullordin = sum(mannfjoldi_fullordin),
+    .by = c(sveitarfelag, ar)
+  ) |> 
+  mutate(value = fjoldi / mannfjoldi_fullordin * 1000) |> 
+  summarise(
+    value = sum(value) |> round(),
+    .by = sveitarfelag
+  )
+
+
+map_dat <- svf_shp |> 
+  filter(
+    str_detect(
+      str_to_lower(sveitarfel),
+      "reykjav|garðab|kópav|mosf|seltj|hafnarfj"
+    )
+  ) |> 
+  mutate(
+    sveitarfel = ifelse(str_detect(sveitarfel, "Reykjav"), "Reykjavík", "Nágrannar")
+  ) |> 
+  group_by(sveitarfel) |> 
+  summarise(
+    n = n()
+  ) |> 
+  inner_join(
+    plot_dat,
+    by = join_by(sveitarfel == sveitarfelag)
+  ) |> 
+  mutate(
+    label = str_c(sveitarfel, ": ", round(value)) |> fct_reorder(value)
+  )
+
+
+
+m2 <- mapview(
+  map_dat,
+  zcol = "label",
+  col.regions = c("grey20", "grey69"),
+  at = plot_dat$value,
+  layer.name = "Nýjar fasteignir<br>á 1.000 fullorðna<br>(2019 - 2023)",
+  popup = popupGraph(p, width = width, height = 0.621 * width),
+  label = "label"
+)
 ```
 
 
+```{r}
+subplot_dat <- fastfjoldi |>
+  ungroup() |>
+  filter(
+    ar >= fyrir_year
+  ) |>
+  filter(
+    str_detect(
+      str_to_lower(sveitarfelag),
+      "reykjav|garðab|kópav|mosf|seltj|hafnarfj"
+    )
+  ) |> 
+  summarise(
+    value = sum(fjoldi),
+    .by = c(sveitarfelag, ar)
+  ) |> 
+  arrange(sveitarfelag)
+
+p <- subplot_dat |> 
+  pivot_wider(names_from = sveitarfelag) |> 
+  crossing(
+    group = c("Garðabær", "Hafnarfjarðarkaupstaður", "Kópavogsbær", "Mosfellsbær", "Reykjavíkurborg", "Seltjarnarnesbær")
+  ) |> 
+  pivot_longer(c(-ar, -group)) |> 
+  mutate(
+    which = ifelse(group == name, "same", "other"),
+    group2 = group
+  ) |> 
+  group_by(group) |> 
+  group_map(
+    function(data, ...) {
+      ggplot(data) +
+        aes(ar, value, group = name, col = which) +
+        geom_line(
+          linewidth = 1
+        ) +
+        # geom_point(size = 4) +
+        scale_x_continuous(
+          breaks = 2018:2023
+        ) +
+        scale_color_manual(
+          values = c("grey", "red")
+        ) +
+        labs(
+          x = NULL,
+          y = NULL,
+          title = "Fjöldi nýrra fasteigna",
+          subtitle = unique(data$group2)
+        ) +
+        theme(legend.position = "none")
+    }
+    
+  )
+
+
+
+plot_dat <- fastfjoldi |>
+  ungroup() |>
+  filter(
+    ar >= fyrir_year,
+    str_detect(
+      str_to_lower(sveitarfelag),
+      "reykjav|garðab|kópav|mosf|seltj|hafnarfj"
+    )
+  ) |> 
+  summarise(
+    value = sum(fjoldi),
+    .by = sveitarfelag
+  )
+
+map_dat <- svf_shp |> 
+  inner_join(
+    plot_dat,
+    by = join_by(sveitarfel == sveitarfelag)
+  ) |> 
+  filter(
+    str_detect(
+      str_to_lower(sveitarfel),
+      "reykjav|garðab|kópav|mosf|seltj|hafnarfj"
+    )
+  ) |> 
+  arrange(sveitarfel) |> 
+  mutate(
+    label = str_c(sveitarfel, ": ", round(value))
+  )
+
+
+
+m3 <- mapview(
+  map_dat,
+  zcol = "value",
+  layer.name = "Nýjar fasteignir<br>(2019 - 2023)",
+  popup = popupGraph(p, width = width, height = 0.621 * width),
+  label = "label"
+)
+```
 
 ```{r}
-fyrir_year <- 2018
-
 subplot_dat <- fastfjoldi |>
   ungroup() |>
   filter(
@@ -577,27 +791,27 @@ p <- subplot_dat |>
   group_map(
     function(data, ...) {
       ggplot(data) +
-      aes(ar, value, col = which, label = name, hjust = name) +
-      geom_labelline(
-        linewidth = 1
-      ) +
-      # geom_point(size = 4) +
-      scale_x_continuous(
-        breaks = c(2010, 2014, 2018, 2023)
-      ) +
-      scale_color_manual(
-        values = c("grey", "red")
-      ) +
-      scale_hjust_manual(
-        values = c(0.3, 0.7)
-      ) +
-      labs(
-        x = NULL,
-        y = NULL,
-        title = "Árlegur fjöldi nýrra fasteigna",
-        subtitle = unique(data$group2)
-      ) +
-      theme(legend.position = "none")
+        aes(ar, value, col = which, label = name, hjust = name) +
+        geom_labelline(
+          linewidth = 1
+        ) +
+        # geom_point(size = 4) +
+        scale_x_continuous(
+          breaks = c(2010, 2014, 2018, 2023)
+        ) +
+        scale_color_manual(
+          values = c("grey", "red")
+        ) +
+        scale_hjust_manual(
+          values = c(0.3, 0.7)
+        ) +
+        labs(
+          x = NULL,
+          y = NULL,
+          title = "Árlegur fjöldi nýrra fasteigna",
+          subtitle = unique(data$group2)
+        ) +
+        theme(legend.position = "none")
     }
     
   )
@@ -613,7 +827,7 @@ plot_dat <- fastfjoldi |>
     .by = sveitarfelag
   )
 
-plot_dat <- svf_shp |> 
+map_dat <- svf_shp |> 
   inner_join(
     plot_dat,
     by = join_by(sveitarfel == sveitarfelag)
@@ -632,16 +846,16 @@ plot_dat <- svf_shp |>
     value = sum(value)
   ) |> 
   mutate(
-    label = str_c(group, ": ", round(value))
+    label = str_c(group, ": ", round(value)) |> fct_reorder(value)
   )
 
 
-m2 <- mapview(
-  plot_dat,
-  zcol = "value",
+m4 <- mapview(
+  map_dat,
+  zcol = "label",
   col.regions = c("grey69", "grey20"),
   at = plot_dat$value,
-  layer.name = "Nýjar fasteignir<br>(2018-2023)",
+  layer.name = "Nýjar fasteignir<br>(2019-2023)",
   popup = popupGraph(p, width = width, height = 0.621 * width),
   label = "label"
 )
@@ -650,6 +864,6 @@ m2 <- mapview(
 ```{r}
 #| column: screen-inset
 #| fig-asp: 0.9
-m <- sync(m1, m2)
+m <- sync(m1, m2, m3, m4, ncol = 2)
 m
 ```
