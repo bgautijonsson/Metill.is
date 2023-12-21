@@ -2,9 +2,8 @@
 title: "Vísitala neysluverðs"
 pagetitle: "Vísitala neysluverðs"
 subtitle: "Vísitalan og áhrif undirtalna á heildina unnið úr nýjustu gögnum Hagstofu hverju sinni"
-description: | 
-    Verðbólga er ekki alltaf það sama og verðbólga. Stundum er stór hluti af henni hækkun á húsnæðisverði, stundum ferðir og flutningar. Það er því gott að skoða undirvísitölurnar og áhrif þeirra á heildina.
-date: "2023/11/30"
+description: "Verðbólga er ekki alltaf það sama og verðbólga. Stundum er stór hluti af henni hækkun á húsnæðisverði, stundum ferðir og flutningar. Það er því gott að skoða undirvísitölurnar og áhrif þeirra á heildina."
+date: "2023/12/21"
 categories:
     - efnahagur
     - verðlag
@@ -17,8 +16,6 @@ twitter-card:
 
 ```{r}
 #| include: false
-
-
 library(cowplot)
 library(tidyverse)
 library(scales)
@@ -557,7 +554,7 @@ p <- plot_dat |>
     guide = guide_colorbar(
       nbin = 4,
       reverse = T
-      )
+    )
   ) +
   scale_color_distiller(
     palette = "Reds",
@@ -567,7 +564,7 @@ p <- plot_dat |>
     guide = guide_colorbar(
       nbin = 4,
       reverse = T
-      )
+    )
   ) +
   labs(
     x = NULL,
@@ -584,8 +581,11 @@ ggplotly(
 ) |> 
   layout(
     hoverlabel = list(align = "left"),
-    legend = list(traceorder = "reversed")
-    ) |> 
+    legend = list(traceorder = "reversed"),
+    xaxis = list(
+      rangeslider = list(type = "date")
+    )
+  ) |> 
   config(displayModeBar = FALSE)
 ```
 

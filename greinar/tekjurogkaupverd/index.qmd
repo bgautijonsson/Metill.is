@@ -616,3 +616,24 @@ ggsave(
 )
 ```
 
+
+
+```{r}
+d1 |> 
+  filter(
+    str_detect(skyribreyta, "ára"),
+    str_detect(name, "Ráðstöfunartekjur|Fjöldi í hóp"),
+    ar == 2022
+  ) |> 
+  pivot_wider() |> 
+  janitor::clean_names() |> 
+  mutate(
+    value = radstofunartekjur_tekjur_skattar / fjoldi_i_hop,
+    value = value * 1e6 / 12
+  ) |> 
+  select(-fjoldi_i_hop, -radstofunartekjur_tekjur_skattar) |>
+  mutate(
+    dags = clock::date_build(ar)
+  )
+```
+

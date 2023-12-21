@@ -1,8 +1,7 @@
 {
-  "hash": "54a74d9030f72f32c6ea9e5f4e8bf0b1",
+  "hash": "5839023d007034c9ca7402824b8e758c",
   "result": {
-    "engine": "knitr",
-    "markdown": "---\ntitle: \"Tekjur og kaupverð íbúða\"\npagetitle: \"Tekjur og kaupverð íbúða\"\nsubtitle: \"Hvernig ber hækkun vísitölu íbúðaverðs saman við aukningu ráðstöfunartekna?\"\ndescription: | \n    Texti sem lýsir þessu\ndate: \"2023/10/30\"\ndraft: true\ncategories:\n    - efnahagur\n    - verðlag\n    - Hagstofa\nhref: greinar/tekjurogkaupverd/index.qmd\nimage: Figures/age_compare_fp.png\ntwitter-card:\n    image: Figures/age_compare.png\nexecute:\n  eval: false\n---\n\n\n\n::: {.cell}\n\n:::\n\n::: {.cell}\n\n:::\n\n::: {.cell}\n\n:::\n\n::: {.cell}\n\n:::\n\n::: {.cell}\n\n:::\n\n\n![](Figures/age_compare.png)\n\n\n::: {.cell}\n\n:::\n\n\n\n\n\n::: {.cell}\n\n:::\n\n::: {.cell}\n\n:::\n",
+    "markdown": "---\ntitle: \"Tekjur og kaupverð íbúða\"\npagetitle: \"Tekjur og kaupverð íbúða\"\nsubtitle: \"Hvernig ber hækkun vísitölu íbúðaverðs saman við aukningu ráðstöfunartekna?\"\ndescription: | \n    Texti sem lýsir þessu\ndate: \"2023/10/30\"\ndraft: true\ncategories:\n    - efnahagur\n    - verðlag\n    - Hagstofa\nhref: greinar/tekjurogkaupverd/index.qmd\nimage: Figures/age_compare_fp.png\ntwitter-card:\n    image: Figures/age_compare.png\nexecute:\n  eval: false\n---\n\n\n\n::: {.cell}\n\n:::\n\n::: {.cell}\n\n:::\n\n::: {.cell}\n\n:::\n\n::: {.cell}\n\n:::\n\n::: {.cell}\n\n:::\n\n\n![](Figures/age_compare.png)\n\n\n::: {.cell}\n\n:::\n\n\n\n\n\n::: {.cell}\n\n:::\n\n::: {.cell}\n\n:::\n\n::: {.cell}\n\n:::\n",
     "supporting": [
       "index_files"
     ],
