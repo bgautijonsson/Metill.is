@@ -1,0 +1,57 @@
+{
+  "89afcc2dfa68959532bdcdd83d2f799b": {
+    "id": ["migr_asytpsm"],
+    "time_format": ["date"],
+    "filters": null,
+    "type": ["code"],
+    "select_time": null,
+    "stringsAsFactors": [false],
+    "keepFlags": [false],
+    "source": ["bulk"],
+    "download_date": ["2024-01-17"]
+  },
+  "8ec2011c3071e925457abf4134c3d8d5": {
+    "id": ["demo_pjan"],
+    "time_format": ["date"],
+    "filters": null,
+    "type": ["code"],
+    "select_time": null,
+    "stringsAsFactors": [false],
+    "keepFlags": [false],
+    "source": ["bulk"],
+    "download_date": ["2024-01-17"]
+  },
+  "6553165079496196a299dd583c1f7e08": {
+    "id": ["migr_asypenctzm"],
+    "time_format": ["date"],
+    "filters": null,
+    "type": ["code"],
+    "select_time": null,
+    "stringsAsFactors": [false],
+    "keepFlags": [false],
+    "source": ["bulk"],
+    "download_date": ["2024-01-17"]
+  },
+  "1e6367370e8e7b1de226b90590ddbb2f": {
+    "id": ["migr_asytpfm"],
+    "time_format": ["date"],
+    "filters": null,
+    "type": ["code"],
+    "select_time": null,
+    "stringsAsFactors": [false],
+    "keepFlags": [false],
+    "source": ["bulk"],
+    "download_date": ["2024-01-17"]
+  },
+  "beac83c1282e036bb18cfd38f38585d5": {
+    "id": ["migr_asydcfstq"],
+    "time_format": ["date"],
+    "filters": null,
+    "type": ["code"],
+    "select_time": null,
+    "stringsAsFactors": [false],
+    "keepFlags": [false],
+    "source": ["bulk"],
+    "download_date": ["2024-01-17"]
+  }
+}

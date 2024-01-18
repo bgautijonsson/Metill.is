@@ -36,6 +36,33 @@ library(metill)
 theme_set(theme_metill())
 ```
 
+```{r}
+read_csv2("data/landspitali_erlend.csv") |> 
+  pivot_longer(c(-ar)) |> 
+  mutate(
+    name = as.numeric(name),
+    date = clock::date_build(ar, name)
+  ) |> 
+  mutate(
+    diff = value - value[ar == 2019],
+    .by = name
+  ) |> 
+  ggplot(aes(date, diff)) +
+  geom_hline(
+    yintercept = 0,
+    lty = 2,
+    alpha = 0.5
+  ) +
+  stat_smooth(
+    geom = "area",
+    alpha = 0.3
+  ) +
+  stat_smooth(
+    geom = "line"
+  )
+```
+
+
 # Gögn
 
 Gögnin eru fengin úr [starfsemisupplýsingum Landspítala](https://www.landspitali.is/um-landspitala/spitalinn-i-tolum/starfsemisupplysingar-lsh/?branch=7ae95bda-92f7-11ec-a2e6-005056865b13){target="_blank"}. Þar sem þetta er allt í PDF skjölum er ég ekki búinn að sækja öll gögnin, en ég birti hérna yfirlit yfir það helsta sem ég hef náð að safna saman. Það er kannski óþarfi að segja það, en það væri mikill kostur ef Landspítali myndi birta töflurnar úr þessum PDF skýrslum t.d. á csv formi, eða sem excel skrár. Seðlabankinn birtir t.d. excel skrár með viðeigandi gögnum samhliða PDF skýrslum sínum.
@@ -128,8 +155,6 @@ d <- d |>
 
 # Veikindahlutfall
 
-Veikindahlutfall starfsfólks á Landspítala hefur verið frekar stöðugt í kringum 6,5%, en fór að aukast upp úr 2015 og jókst svo gífurlega *(í 11,8%)* á fyrstu þremur mánuðum ársins 2022 .
-
 ```{r}
 #| fig.asp: 1
 #| out.width: "100%"
@@ -188,14 +213,13 @@ knitr::include_graphics("veikindi_kjarnar.png")
 
 Í grófum drætti er hjúkrunarþyngd skráð fyrir hvern sjúkling og hvern dag. Lægsta þyngdin er 1 og hæsta er 5. Landspítalinn birtir svo dreifingu hjúkrunarþungans eða heildarfjölda legudaga í hverjum þyngdarflokki. Nánar um hjúkrunarþyngd í [þessari grein Halldóru Hálfdánardóttur, Elísabetar Guðmundsdóttur og Helgu Bragadóttur.](https://www.hjukrun.is/library/Timarit---Skrar/Timarit/Timarit-2011/4.-tbl-2011/TENGSL%20STARFSMANNAvELTU,%20vEIKINdAFJARvISTA%20HJÚKRUNARFRÆÐINGA%20OG%20HJÚKRUN.pdf){target="_blank"}
 
-Á myndinni hér fyrir neðan sjáum við að meðalþyngd hjúkrunar hefur aukist stöðugt frá 2012 *(2,59)* til 2022 *(3,39)* samhliða því að stöðugt hærra hlutfall hjúkrunardaga skráist í þyngstu flokkana, 14% árið 2012 en 48,5% á fyrstu þremur mánuðum 2022.
 
 ```{r}
 #| fig.asp: 1
 #| out.width: "100%"
 #| column: page
 
-plot_dat <-d |> 
+plot_dat <- d |> 
   select(ar, f1:f5) |> 
   drop_na() |> 
   pivot_longer(c(-ar)) |> 
@@ -222,7 +246,6 @@ p <- plot_dat |>
             aes(y = skor, group = "none", yaxis = "y2"), 
             size = 2) +
   scale_x_continuous(breaks = 2012:2022, 
-                     labels = c(2012:2021, "2022\n(Jan-Mars)"),
                      expand = expansion()) +
   scale_y_continuous(labels = label_percent(),
                      expand = expansion(),
@@ -289,7 +312,7 @@ p <- plot_dat |>
   ggplot(aes(ar, hlutfall, text = text)) +
   geom_area(aes(group = "none"), alpha = 0.5, col = "black") +
   scale_x_continuous(breaks = 2007:2022,
-                     labels = c(2007:2021, "2022\n(Jan-Mars)"),
+                     labels = c(2007:2021, "2022"),
                      expand = expansion()) +
   scale_y_continuous(labels = label_number(),
                      breaks = c(0, seq(10, 31, by = 3)),
@@ -329,7 +352,6 @@ p <- plot_dat |>
   ggplot(aes(ar, hlutfall, text = text)) +
   geom_area(aes(group = "none"), alpha = 0.5, col = "black") +
   scale_x_continuous(breaks = 2007:2022,
-                     labels = c(2007:2021, "2022\n(Jan-Mars)"),
                      expand = expansion()) +
   scale_y_continuous(labels = label_number(),
                      breaks = c(0, seq(7, 23, by = 2)),
@@ -374,7 +396,6 @@ p <- plot_dat |>
   ggplot(aes(ar, laeknavelta, text = text)) +
   geom_area(aes(group = "none"), alpha = 0.5, col = "black") +
   scale_x_continuous(breaks = 2007:2022,
-                     labels = c(2007:2021, "2022\n(Jan-Mars)"),
                      expand = expansion()) +
   scale_y_continuous(labels = label_percent(big.mark = ".", decimal.mark = ","),
                      breaks = c(0, seq(0.03, 0.12, by = 0.03)),
@@ -415,7 +436,6 @@ p <- plot_dat |>
   ggplot(aes(ar, hjukrvelta, text = text)) +
   geom_area(aes(group = "none"), alpha = 0.5, col = "black") +
   scale_x_continuous(breaks = 2007:2022,
-                     labels = c(2007:2021, "2022\n(Jan-Mars)"),
                      expand = expansion()) +
   scale_y_continuous(labels = label_percent(big.mark = ".", decimal.mark = ","),
                      breaks = c(0, seq(0.03, 0.15, by = 0.03)),
@@ -455,8 +475,7 @@ plot_dat <- d |>
 p <- plot_dat |> 
   ggplot(aes(ar, sjukralvelta, text = text)) +
   geom_area(aes(group = "none"), alpha = 0.5, col = "black") +
-  scale_x_continuous(breaks = 2007:2021,
-                     labels = c(2007:2021),
+  scale_x_continuous(breaks = 2007:2022,
                      expand = expansion()) +
   scale_y_continuous(labels = label_percent(big.mark = ".", decimal.mark = ","),
                      breaks = c(0, seq(0.12, 0.25, by = 0.02)),
@@ -596,7 +615,7 @@ p <- plot_dat |>
   ggplot(aes(ar, value, text = text)) +
   geom_col(aes(fill = name, col = name), width = 1, position = "fill") +
   scale_x_continuous(expand = expansion(),
-                     breaks = 2010:2021) +
+                     breaks = 2010:2022) +
   scale_y_continuous(expand = expansion(),
                      labels = label_percent()) +
   scale_colour_brewer(type = "qual", palette = "Paired") +
@@ -654,7 +673,7 @@ p <- plot_dat |>
   ggplot(aes(ar, value, text = text)) +
   geom_col(aes(fill = name, col = name), width = 1, position = "stack") +
   scale_x_continuous(expand = expansion(),
-                     breaks = 2010:2021) +
+                     breaks = 2010:2022) +
   scale_y_continuous(expand = expansion(),
                      labels = label_number(big.mark = ".", decimal.mark = ",")) +
   scale_colour_brewer(type = "qual", palette = "Paired") +
@@ -711,7 +730,7 @@ p <- plot_dat |>
   ggplot(aes(ar, hlutf_stodtj, text = text)) +
   geom_line(aes(group = "none"), alpha = 0.6, col = "black") +
   scale_x_continuous(expand = expansion(add = 0.6),
-                     breaks = 2006:2021) +
+                     breaks = 2006:2022) +
   scale_y_continuous(expand = expansion(),
                      labels = label_percent(),
                      breaks = seq(0, 0.2, by = 0.02),
@@ -751,7 +770,7 @@ p <- plot_dat |>
   ggplot(aes(ar, fjoldi, text = text)) +
   geom_area(aes(group = "none"), alpha = 0.6, col = "black") +
   scale_x_continuous(expand = expansion(add = 0.6),
-                     breaks = 2006:2021) +
+                     breaks = 2006:2022) +
   scale_y_continuous(expand = expansion(),
                      labels = label_number(),
                      limits = c(0, NA)) +
@@ -798,7 +817,7 @@ p <- plot_dat |>
   ggplot(aes(ar, hlutf_stjornendur, text = text)) +
   geom_line(aes(group = "none"), alpha = 0.6, col = "black") +
   scale_x_continuous(expand = expansion(add = 0.6),
-                     breaks = 2006:2021) +
+                     breaks = 2006:2022) +
   scale_y_continuous(expand = expansion(),
                      labels = label_percent(),
                      breaks = 0:10/100,
@@ -940,7 +959,7 @@ p <- plot_dat |>
   ggplot(aes(ar, samtals_laun, text = text)) +
   geom_col(aes(fill = tegund_launa,group = tegund_launa), position = "fill") +
   scale_x_continuous(expand = expansion(),
-                     breaks = c(2004:2021)) +
+                     breaks = c(2004:2022)) +
   scale_y_continuous(expand = expansion(),
                      labels = label_percent()) +
   scale_fill_brewer(type = "qual", palette = "Set1") +

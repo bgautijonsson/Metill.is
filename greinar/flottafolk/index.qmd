@@ -4,7 +4,7 @@ pagetitle: "Tímabundin vernd"
 subtitle: "Hvað segja gögnin um fjölda hælisleitenda og fólksflutninga til Íslands?"
 description: |
   Hér eru gögn um fjölda einstaklinga sem njóta tímabundinnar verndar, fjölda samþykktra verndarumsókna og fjölda umsókna í bið tekin saman úr gögnum  Eurostat.
-date: "2023/01/18"
+date: "2024/01/18"
 draft: false
 categories:
     - stjórnmál
@@ -52,7 +52,7 @@ Sys.setlocale("LC_ALL", "is_IS.UTF-8")
 update_cache <- TRUE
 
 
-caption <- "Mynd eftir @bggj hjá metill.is byggð á gögnum Eurostat um fólksflutninga: https://metill.is/greinar/flottafolk\nGögn og kóði: https://github.com/bgautijonsson/Metill.is/tree/master/greinar/flottafolk"
+caption <- "Mynd eftir @bggjonsson hjá metill.is byggð á gögnum Eurostat um fólksflutninga: https://metill.is/greinar/flottafolk\nGögn og kóði: https://github.com/bgautijonsson/Metill.is/tree/master/greinar/flottafolk"
 
 litur_island <- "#08306b"
   
@@ -92,7 +92,7 @@ beneficiaries <- get_eurostat(
 pop <- get_eurostat(
   "demo_pjan",
   cache = TRUE,
-  # update_cache = TRUE,
+  update_cache = update_cache,
   cache_dir = "data"
 ) |> 
   filter(
@@ -108,7 +108,7 @@ pop <- get_eurostat(
 applicants <- get_eurostat(
   "migr_asypenctzm",
   cache = TRUE,
-  # update_cache = TRUE,
+  update_cache = update_cache,
   cache_dir = "data"
 ) |>
   janitor::remove_constant() |> 
@@ -127,7 +127,7 @@ applicants <- get_eurostat(
 grants <- get_eurostat(
   "migr_asytpfm",
   cache = TRUE,
-  # update_cache = TRUE,
+  update_cache = update_cache,
   cache_dir = "data"
 ) |> 
   filter(
@@ -144,7 +144,7 @@ grants <- get_eurostat(
 decisions <- get_eurostat(
   "migr_asydcfstq",
   cache = TRUE,
-  # update_cache = TRUE,
+  update_cache = update_cache,
   cache_dir = "data"
 )  |> 
   filter(
@@ -163,13 +163,15 @@ decisions <- get_eurostat(
 #| eval: false
 d <- beneficiaries |> 
   mutate(
-    year = year(time)
+    year = year(TIME_PERIOD)
   ) |> 
-  rename(beneficiaries = values) |> 
+  rename(beneficiaries = values) |>
+  select(-freq) |> 
   inner_join(
     pop |> 
+      select(-freq) |> 
       group_by(geo) |> 
-      filter(time == max(time)) |> 
+      filter(TIME_PERIOD == max(TIME_PERIOD)) |> 
       ungroup() |> 
       select(geo, pop = values),
     by = c("geo")
@@ -177,22 +179,24 @@ d <- beneficiaries |>
   full_join(
     applicants |> 
       rename(applicants = values),
-    by = c("geo", "time")
+    by = c("geo", "TIME_PERIOD")
   ) |> 
   inner_join(
     grants |> 
+      select(-freq) |> 
       rename(grants = values),
-    by = c("geo", "time")
+    by = c("geo", "TIME_PERIOD")
   ) |> 
   left_join(
     decisions |> 
+      select(-freq) |> 
       rename(
         "total_decisions" = Total,
         "positive_decisions" = "Total positive decisions"
       ),
-    by = join_by(geo, time)
+    by = join_by(geo, TIME_PERIOD)
   ) |> 
-  rename(country = geo) |> 
+  rename(country = geo, time = TIME_PERIOD) |> 
   mutate(
     country = ifelse(str_detect(country, "Germany"), "Germany", country)
   ) |> 
@@ -230,6 +234,14 @@ d |>
 
 # Um gögnin
 
+```{r}
+d <- read_csv("data/raw_data.csv") |> 
+  mutate(
+    per_pop = per_pop * 1000
+  )
+```
+
+
 Gögn þessarar úrvinnslu koma frá [Eurostat](https://ec.europa.eu/eurostat/en/), nánar tiltekið eru þetta þrjú gagnasöfn:
 
 * [Ákvarðanir í málum um tímabundnavernd eftir mánuði](https://ec.europa.eu/eurostat/databrowser/view/MIGR_ASYTPFM/default/table?lang=en&category=migr.migr_asy.migr_asytp)
@@ -238,7 +250,7 @@ Gögn þessarar úrvinnslu koma frá [Eurostat](https://ec.europa.eu/eurostat/en
 
 Þessari upplýsingar eru svo tengdar við [gögn um mannfjölda hvers lands](https://ec.europa.eu/eurostat/databrowser/view/demo_pjan/default/table?lang=en).
 
-Til að auðvelda samanburð milli landa eru allar tölur sýndar sem fjöldi á hverja 1.000 íbúa hvers lands.
+Til að auðvelda samanburð milli landa eru allar tölur sýndar sem fjöldi á hverja 100.000 íbúa hvers lands.
 
 ## Umsækjendur
 
@@ -247,7 +259,7 @@ Fyrst skoðum við hversu margir umsækjendur eru að bíða eftir niðurstöðu
 ```{r umsaek}
 #| eval: false
 
-end_date <- clock::date_build(2023, 8, 1)
+end_date <- clock::date_build(2023, 10, 1)
 
 p1 <- d |> 
   filter(
@@ -278,9 +290,9 @@ p1 <- d |>
   geom_point() +
   geom_segment(aes(yend = land, xend = 0, linewidth = linewidth), lty = 2, alpha = 0.5) +
   scale_x_continuous(
-    expand = expansion(),
+    expand = expansion(c(0, 0.01)),
     breaks = breaks_extended(),
-    limits = c(0, 3.2)
+    limits = c(0, NA)
   ) +
   scale_colour_identity() +
   scale_size_manual(values = c(1, 3)) +
@@ -338,8 +350,8 @@ p2 <- d |>
     alpha = 0.5
   ) +
   scale_x_continuous(
-    expand = expansion(),
-    limits = c(0, 5.5)
+    expand = expansion(c(0, 0.01)),
+    limits = c(0, NA)
   ) +
   scale_colour_identity() +
   scale_size_manual(values = c(1, 3)) +
@@ -355,7 +367,7 @@ p2 <- d |>
     x = NULL,
     y = NULL,
     title = "Hvar bíða flestir einstaklingar eftir niðurstöðu umsóknar sinnar?",
-    subtitle = "Fjöldi í ágúst 2023",
+    subtitle = glue("Fjöldi í {month(end_date, label = T, abbr = F)} {year(end_date)}"),
     caption = caption
   )
 
@@ -440,7 +452,7 @@ p3 <- plot_dat |>
     breaks = tufte_breaks(plot_dat$value),
     labels = label_number(accuracy = 1),
     limits = c(0, NA),
-    expand = expansion()
+    expand = expansion(c(0, 0.01))
   ) +
   scale_colour_identity() +
   coord_cartesian(ylim = c(0, NA), clip = "off") +
@@ -461,7 +473,7 @@ p <- (
   p3 +
   plot_annotation(
     title = "Hvar bíða flestir einstaklingar eftir niðurstöðu umsóknar sinnar?",
-    subtitle = "Sýnt sem fjöldi á 1.000 íbúa hvers lands",
+    subtitle = "Sýnt sem fjöldi á 100.000 íbúa hvers lands",
     caption = caption
   )
 
@@ -473,8 +485,6 @@ ggsave(
 ```
 
 ![](Figures/umsaek_saman_2.png){.column-page}
-
-## Ákvarðanir
 
 ```{r akvard}
 #| eval: false
@@ -589,7 +599,7 @@ p2 <- d |>
     x = NULL,
     y = NULL,
     title = "Hvar eru flestar ákvarðanir um stöðu hælisleitenda teknar í hverjum mánuði?",
-    subtitle = "Fjöldi í júlí 2023",
+    subtitle = glue("Fjöldi í {month(end_date, label = T, abbr = F)} {year(end_date)}"),
     caption = caption
   )
 
@@ -702,7 +712,7 @@ p <- (
   p3 +
   plot_annotation(
     title = "Hvar eru flestar ákvarðanir um stöðu hælisleitenda teknar í hverjum mánuði?",
-    subtitle = "Sýnt sem fjöldi á 1.000 íbúa hvers lands",
+    subtitle = "Sýnt sem fjöldi á 100.000 íbúa hvers lands",
     caption = caption
   )
 
@@ -720,7 +730,7 @@ Skoðum svo hversu mörgum er veitt tímabundin vernd í hverjum mánuði.
 ```{r veiting}
 #| eval: false
 
-end_date <- clock::date_build(2023, 8, 1)
+end_date <- clock::date_build(2023, 10, 1)
 
 p1 <- d |> 
   filter(
@@ -811,8 +821,8 @@ p2 <- d |>
     alpha = 0.5
   ) +
   scale_x_continuous(
-    expand = expansion(),
-    limits = c(0, 1.1)
+    expand = expansion(c(0, 0.1)),
+    limits = c(0, NA)
   ) +
   scale_colour_identity() +
   scale_size_manual(values = c(1, 3)) +
@@ -828,7 +838,7 @@ p2 <- d |>
     x = NULL,
     y = NULL,
     title = "Hvað er mörgum veitt tímabundin vernd í hverjum mánuði?",
-    subtitle = "Fjöldi í ágúst 2023",
+    subtitle = glue("Fjöldi í {month(end_date, label = T, abbr = F)} {year(end_date)}"),
     caption = caption
   )
 
@@ -917,13 +927,13 @@ p3 <- plot_dat |>
   ) +
   geom_rangeframe(sides = "b") +
   scale_y_tufte(
-    breaks = tufte_breaks(plot_dat$value),
+    breaks = breaks_pretty(6),
     labels = label_number(accuracy = 1),
     limits = c(0, NA),
-    expand = expansion()
+    expand = expansion(c(0, 0.1))
   ) +
   scale_colour_identity() +
-  coord_cartesian(ylim = c(0, 2), clip = "on") +
+  coord_cartesian(ylim = c(0, 2000), clip = "on") +
   theme(
     axis.line.x = element_blank(),
     plot.margin = margin(t = 5, r = 35, b = 5, l = 5)
@@ -941,7 +951,7 @@ p <- (
   p3 +
   plot_annotation(
     title = "Hvað er mörgum veitt tímabundin vernd í hverjum mánuði?",
-    subtitle = "Sýnt sem fjöldi á 1.000 íbúa hvers lands",
+    subtitle = "Sýnt sem fjöldi á 100.000 íbúa hvers lands",
     caption = caption
   )
 
@@ -961,7 +971,7 @@ Hér skoðum við svo fjölda fólks í landinu sem nýtur tímabundinnar vernda
 ```{r vernd}
 #| eval: false
 
-end_date <- clock::date_build(2023, 9, 1)
+end_date <- clock::date_build(2023, 11, 1)
 
 p1 <- d |> 
   filter(
@@ -992,8 +1002,8 @@ p1 <- d |>
   geom_point() +
   geom_segment(aes(yend = land, xend = 0, linewidth = linewidth), lty = 2, alpha = 0.5) +
   scale_x_continuous(
-    expand = expansion(),
-    limits = c(0, 20)
+    expand = expansion(c(0, 0.1)),
+    limits = c(0, NA)
   ) +
   scale_colour_identity() +
   scale_size_manual(values = c(1, 3)) +
@@ -1051,8 +1061,8 @@ p2 <- d |>
     alpha = 0.5
   ) +
   scale_x_continuous(
-    expand = expansion(),
-    limits = c(0, 30)
+    expand = expansion(c(0, 0.1)),
+    limits = c(0, NA)
   ) +
   scale_colour_identity() +
   scale_size_manual(values = c(1, 3)) +
@@ -1068,7 +1078,7 @@ p2 <- d |>
     x = NULL,
     y = NULL,
     title = "Hvar njóta flestir einstaklingar tímabundinnar verndar?",
-    subtitle = "Fjöldi í apríl 2023",
+    subtitle = glue("Fjöldi í {month(end_date, label = T, abbr = F)} {year(end_date)}"),
     caption = caption
   )
 
@@ -1181,7 +1191,7 @@ p <- (
   p3 +
   plot_annotation(
     title = "Hvar njóta flestir einstaklingar tímabundinnar verndar?",
-    subtitle = "Sýnt sem fjöldi á 1.000 íbúa hvers lands",
+    subtitle = "Sýnt sem fjöldi á 100.000 íbúa hvers lands",
     caption = caption
   )
 
