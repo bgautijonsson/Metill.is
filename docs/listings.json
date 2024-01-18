@@ -21,7 +21,6 @@
   {
     "listing": "/index.html",
     "items": [
-      "/greinar/flottafolk/index.html",
       "/greinar/vinnuafl/index.html",
       "/greinar/visitala_neysluverds/index.html",
       "/greinar/leigaogkaupverd/index.html",
@@ -41,7 +40,6 @@
   {
     "listing": "/greinar.html",
     "items": [
-      "/greinar/flottafolk/index.html",
       "/greinar/vinnuafl/index.html",
       "/greinar/visitala_neysluverds/index.html",
       "/greinar/leigaogkaupverd/index.html",
