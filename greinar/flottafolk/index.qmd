@@ -1219,7 +1219,7 @@ p3 <- plot_dat |>
   labs(
     x = NULL,
     y = NULL,
-    subtitle = "Fjöldi eftir mánuði"
+    subtitle = "Fjöldi eftir ársfjórðungi"
   )
 
 p <- (
@@ -1457,7 +1457,7 @@ p3 <- plot_dat |>
   labs(
     x = NULL,
     y = NULL,
-    subtitle = "Fjöldi eftir mánuði"
+    subtitle = "Fjöldi eftir ársfjórðungi"
   )
 
 p <- (
