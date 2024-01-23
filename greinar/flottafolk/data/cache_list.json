@@ -119,5 +119,96 @@
     "keepFlags": [false],
     "source": ["bulk"],
     "download_date": ["2024-01-18"]
+  },
+  "17912399bee4adfef1e9980c79cf45b7": {
+    "id": ["migr_asytpsm"],
+    "time_format": ["date"],
+    "filters": null,
+    "type": ["code"],
+    "select_time": null,
+    "stringsAsFactors": [false],
+    "keepFlags": [false],
+    "source": ["bulk"],
+    "download_date": ["2024-01-23"]
+  },
+  "f5038f4ec1e4d0786940b228a5157bb4": {
+    "id": ["demo_pjan"],
+    "time_format": ["date"],
+    "filters": null,
+    "type": ["code"],
+    "select_time": null,
+    "stringsAsFactors": [false],
+    "keepFlags": [false],
+    "source": ["bulk"],
+    "download_date": ["2024-01-23"]
+  },
+  "67b96ce45de47a8fefb5d6ea768ecd31": {
+    "id": ["migr_asypenctzm"],
+    "time_format": ["date"],
+    "filters": null,
+    "type": ["code"],
+    "select_time": null,
+    "stringsAsFactors": [false],
+    "keepFlags": [false],
+    "source": ["bulk"],
+    "download_date": ["2024-01-23"]
+  },
+  "cec4d7956a3800ce631b4bc0d9c24f9e": {
+    "id": ["migr_asytpfm"],
+    "time_format": ["date"],
+    "filters": null,
+    "type": ["code"],
+    "select_time": null,
+    "stringsAsFactors": [false],
+    "keepFlags": [false],
+    "source": ["bulk"],
+    "download_date": ["2024-01-23"]
+  },
+  "c5069e4aefa4970a5284e17ee416722b": {
+    "id": ["migr_asydcfstq"],
+    "time_format": ["date"],
+    "filters": null,
+    "type": ["code"],
+    "select_time": null,
+    "stringsAsFactors": [false],
+    "keepFlags": [false],
+    "source": ["bulk"],
+    "download_date": ["2024-01-23"]
+  },
+  "6e7ca893231f90604d791cb8cbea4fa9": {
+    "id": ["tps00195"],
+    "time_format": ["date"],
+    "filters": null,
+    "type": ["code"],
+    "select_time": null,
+    "stringsAsFactors": [false],
+    "keepFlags": [false],
+    "source": ["bulk"],
+    "download_date": ["2024-01-23"]
+  },
+  "bbea1df457136bf4dcec6613d2adc2e1": {
+    "id": ["migr_asyappctzm"],
+    "time_format": ["date"],
+    "filters": null,
+    "type": ["code"],
+    "select_time": null,
+    "stringsAsFactors": [false],
+    "keepFlags": [false],
+    "source": ["bulk"],
+    "download_date": ["2024-01-23"]
+  },
+  "74a59261deb883d7912a83a7b53e31ca": {
+    "id": ["migr_asyappctzm"],
+    "time_format": ["date"],
+    "filters": {
+      "age": ["TOTAL"],
+      "sex": ["T"]
+    },
+    "type": ["code"],
+    "select_time": null,
+    "stringsAsFactors": [false],
+    "keepFlags": [false],
+    "source": ["json"],
+    "download_date": ["2024-01-23"]
   }
 }

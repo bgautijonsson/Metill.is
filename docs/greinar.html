@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.3.450">
+<meta name="generator" content="quarto-1.4.548">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -46,6 +46,7 @@ ul.task-list li input[type="checkbox"] {
     "search-more-match-text": "more match in this document",
     "search-more-matches-text": "more matches in this document",
     "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
     "search-detached-cancel-button-title": "Cancel",
     "search-submit-button-title": "Submit",
     "search-label": "Search"
@@ -82,7 +83,7 @@ ul.task-list li input[type="checkbox"] {
   </script>
 <meta property="og:title" content="Greinasafn">
 <meta property="og:image" content="https://raw.githubusercontent.com/RafaelVias/faedingartidni/main/Figures/feature_pic.png">
-<meta property="og:site-name" content="Metill">
+<meta property="og:site_name" content="Metill">
 <meta name="twitter:title" content="Greinasafn">
 <meta name="twitter:image" content="https://raw.githubusercontent.com/RafaelVias/faedingartidni/main/Figures/feature_pic.png">
 <meta name="twitter:creator" content="@bggjonsson">
@@ -112,6 +113,33 @@ ul.task-list li input[type="checkbox"] {
   <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
 
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
 <link rel="stylesheet" href="style.css">
 
 
@@ -130,22 +158,23 @@ ul.task-list li input[type="checkbox"] {
 
 
 
+
 <p><br></p>
 <div id="listing-posts" class="quarto-listing quarto-listing-container-default">
 <div class="list quarto-listing-default">
-<div class="quarto-post image-right" data-index="0" data-categories="efnahagur,vinnumarkaður,Hagstofa" data-listing-date-sort="1705363200000" data-listing-file-modified-sort="1705428058972" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="49">
+<div class="quarto-post image-right" data-index="0" data-categories="efnahagur,vinnumarkaður,Hagstofa" data-listing-date-sort="1705363200000" data-listing-file-modified-sort="1705428058972" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="49" data-listing-word-count-sort="9611">
 <div class="thumbnail">
-<p><a href="./greinar/vinnuafl/index.html"> <img src="./greinar/vinnuafl/figures/hlutf_opinbert_fp.png" class="thumbnail-image"> </a></p>
+<p><a href="./greinar/vinnuafl/index.html" class="no-external"></a></p><a href="./greinar/vinnuafl/index.html" class="no-external">
+<p><img src="./greinar/vinnuafl/figures/hlutf_opinbert_fp.png" class="thumbnail-image"></p>
+</a><p><a href="./greinar/vinnuafl/index.html" class="no-external"></a></p>
 </div>
 <div class="body">
-<a href="./greinar/vinnuafl/index.html">
 <h3 class="no-anchor listing-title">
-Vinnumarkaður
+<a href="./greinar/vinnuafl/index.html" class="no-external">Vinnumarkaður</a>
 </h3>
 <div class="listing-subtitle">
-Hver er fjöldi starfandi einstaklinga og hvernig skiptast þeir á vinnumarkaði?
+<a href="./greinar/vinnuafl/index.html" class="no-external">Hver er fjöldi starfandi einstaklinga og hvernig skiptast þeir á vinnumarkaði?</a>
 </div>
-</a>
 <div class="listing-categories">
 <div class="listing-category" onclick="window.quartoListingCategory('efnahagur'); return false;">
 efnahagur
@@ -157,14 +186,12 @@ vinnumarkaður
 Hagstofa
 </div>
 </div>
-<a href="./greinar/vinnuafl/index.html">
 <div class="listing-description">
-<p>Reglulega sjást fyrirsagnir þar sem talað er um að opinbert starfsfólk sé allt of margt og að hlutfall þess af heildarfjölda vinnandi fólks sé of hátt. Hér kryf ég reglulega nýjustu gögnin til að geta vitað hvort slíkar fullyrðingar séu teknar úr samhengi eða endurspegli raunveruleikann.</p>
+<a href="./greinar/vinnuafl/index.html" class="no-external">Reglulega sjást fyrirsagnir þar sem talað er um að opinbert starfsfólk sé allt of margt og að hlutfall þess af heildarfjölda vinnandi fólks sé of hátt. Hér kryf ég reglulega nýjustu gögnin til að geta vitað hvort slíkar fullyrðingar séu teknar úr samhengi eða endurspegli raunveruleikann. </a>
 </div>
-</a>
 </div>
 <div class="metadata">
-<a href="./greinar/vinnuafl/index.html">
+<a href="./greinar/vinnuafl/index.html" class="no-external">
 <div class="listing-date">
 Jan 16, 2024
 </div>
@@ -174,19 +201,19 @@ Brynjólfur Gauti Guðrúnar Jónsson
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="1" data-categories="efnahagur,verðlag,Hagstofa" data-listing-date-sort="1703116800000" data-listing-file-modified-sort="1703152155768" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="30">
+<div class="quarto-post image-right" data-index="1" data-categories="efnahagur,verðlag,Hagstofa" data-listing-date-sort="1703116800000" data-listing-file-modified-sort="1703152155768" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="30" data-listing-word-count-sort="5948">
 <div class="thumbnail">
-<p><a href="./greinar/visitala_neysluverds/index.html"> <img src="./greinar/visitala_neysluverds/undirtolur_fp.png" class="thumbnail-image"> </a></p>
+<p><a href="./greinar/visitala_neysluverds/index.html" class="no-external"></a></p><a href="./greinar/visitala_neysluverds/index.html" class="no-external">
+<p><img src="./greinar/visitala_neysluverds/undirtolur_fp.png" class="thumbnail-image"></p>
+</a><p><a href="./greinar/visitala_neysluverds/index.html" class="no-external"></a></p>
 </div>
 <div class="body">
-<a href="./greinar/visitala_neysluverds/index.html">
 <h3 class="no-anchor listing-title">
-Vísitala neysluverðs
+<a href="./greinar/visitala_neysluverds/index.html" class="no-external">Vísitala neysluverðs</a>
 </h3>
 <div class="listing-subtitle">
-Vísitalan og áhrif undirtalna á heildina unnið úr nýjustu gögnum Hagstofu hverju sinni
+<a href="./greinar/visitala_neysluverds/index.html" class="no-external">Vísitalan og áhrif undirtalna á heildina unnið úr nýjustu gögnum Hagstofu hverju sinni</a>
 </div>
-</a>
 <div class="listing-categories">
 <div class="listing-category" onclick="window.quartoListingCategory('efnahagur'); return false;">
 efnahagur
@@ -198,14 +225,12 @@ verðlag
 Hagstofa
 </div>
 </div>
-<a href="./greinar/visitala_neysluverds/index.html">
 <div class="listing-description">
-<p>Verðbólga er ekki alltaf það sama og verðbólga. Stundum er stór hluti af henni hækkun á húsnæðisverði, stundum ferðir og flutningar. Það er því gott að skoða undirvísitölurnar og áhrif þeirra á heildina.</p>
+<a href="./greinar/visitala_neysluverds/index.html" class="no-external">Verðbólga er ekki alltaf það sama og verðbólga. Stundum er stór hluti af henni hækkun á húsnæðisverði, stundum ferðir og flutningar. Það er því gott að skoða undirvísitölurnar og áhrif þeirra á heildina.</a>
 </div>
-</a>
 </div>
 <div class="metadata">
-<a href="./greinar/visitala_neysluverds/index.html">
+<a href="./greinar/visitala_neysluverds/index.html" class="no-external">
 <div class="listing-date">
 Dec 21, 2023
 </div>
@@ -215,19 +240,19 @@ Brynjólfur Gauti Guðrúnar Jónsson
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="2" data-categories="stjórnmál,efnahagur,fasteignir,sveitarfélög" data-listing-date-sort="1698796800000" data-listing-file-modified-sort="1699888023588" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="14">
+<div class="quarto-post image-right" data-index="2" data-categories="stjórnmál,efnahagur,fasteignir,sveitarfélög" data-listing-date-sort="1698796800000" data-listing-file-modified-sort="1699888023588" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="14" data-listing-word-count-sort="2691">
 <div class="thumbnail">
-<p><a href="./greinar/leigaogkaupverd/index.html"> <img src="./greinar/leigaogkaupverd/Figures/saman_breyting_fp.png" class="thumbnail-image"> </a></p>
+<p><a href="./greinar/leigaogkaupverd/index.html" class="no-external"></a></p><a href="./greinar/leigaogkaupverd/index.html" class="no-external">
+<p><img src="./greinar/leigaogkaupverd/Figures/saman_breyting_fp.png" class="thumbnail-image"></p>
+</a><p><a href="./greinar/leigaogkaupverd/index.html" class="no-external"></a></p>
 </div>
 <div class="body">
-<a href="./greinar/leigaogkaupverd/index.html">
 <h3 class="no-anchor listing-title">
-Leiga og kaupverð
+<a href="./greinar/leigaogkaupverd/index.html" class="no-external">Leiga og kaupverð</a>
 </h3>
 <div class="listing-subtitle">
-Hvernig ber leiguverði saman við kaupverð?
+<a href="./greinar/leigaogkaupverd/index.html" class="no-external">Hvernig ber leiguverði saman við kaupverð?</a>
 </div>
-</a>
 <div class="listing-categories">
 <div class="listing-category" onclick="window.quartoListingCategory('stjórnmál'); return false;">
 stjórnmál
@@ -242,14 +267,12 @@ fasteignir
 sveitarfélög
 </div>
 </div>
-<a href="./greinar/leigaogkaupverd/index.html">
 <div class="listing-description">
-<p>Stundum er talað um að leiga vaxi of hratt, eða að hún vaxi hægar en húsnæðisverð. Hérna nota ég kaupskrá, leiguskrá og vaxtatöflu Landsbanka til að bera leigu saman við afborganir á óverðtryggðu láni með jöfnum greiðslum og breytilegum vöxtum að því gefnu að kaupandi fær lán fyrir 80% af kaupverði fasteignarinnar.</p>
+<a href="./greinar/leigaogkaupverd/index.html" class="no-external">Stundum er talað um að leiga vaxi of hratt, eða að hún vaxi hægar en húsnæðisverð. Hérna nota ég kaupskrá, leiguskrá og vaxtatöflu Landsbanka til að bera leigu saman við afborganir á óverðtryggðu láni með jöfnum greiðslum og breytilegum vöxtum að því gefnu að kaupandi fær lán fyrir 80% af kaupverði fasteignarinnar. </a>
 </div>
-</a>
 </div>
 <div class="metadata">
-<a href="./greinar/leigaogkaupverd/index.html">
+<a href="./greinar/leigaogkaupverd/index.html" class="no-external">
 <div class="listing-date">
 Nov 1, 2023
 </div>
@@ -259,19 +282,19 @@ Brynjólfur Gauti Guðrúnar Jónsson
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="3" data-categories="fæðingartíðni,valkeisaraskurðir" data-listing-date-sort="1698278400000" data-listing-file-modified-sort="1698660650529" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="5">
+<div class="quarto-post image-right" data-index="3" data-categories="fæðingartíðni,valkeisaraskurðir" data-listing-date-sort="1698278400000" data-listing-file-modified-sort="1698660650529" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="5" data-listing-word-count-sort="886">
 <div class="thumbnail">
-<p><a href="./greinar/faedingartidni/index.html"> <img src="https://raw.githubusercontent.com/RafaelVias/faedingartidni/main/Figures/feature_pic.png" class="thumbnail-image"> </a></p>
+<p><a href="./greinar/faedingartidni/index.html" class="no-external"></a></p><a href="./greinar/faedingartidni/index.html" class="no-external">
+<p><img src="https://raw.githubusercontent.com/RafaelVias/faedingartidni/main/Figures/feature_pic.png" class="thumbnail-image"></p>
+</a><p><a href="./greinar/faedingartidni/index.html" class="no-external"></a></p>
 </div>
 <div class="body">
-<a href="./greinar/faedingartidni/index.html">
 <h3 class="no-anchor listing-title">
-Fæðingartíðni á Íslandi
+<a href="./greinar/faedingartidni/index.html" class="no-external">Fæðingartíðni á Íslandi</a>
 </h3>
 <div class="listing-subtitle">
-Tímaraðagreining á daglegum fæðingum frá 1990 til og með 2022
+<a href="./greinar/faedingartidni/index.html" class="no-external">Tímaraðagreining á daglegum fæðingum frá 1990 til og með 2022</a>
 </div>
-</a>
 <div class="listing-categories">
 <div class="listing-category" onclick="window.quartoListingCategory('fæðingartíðni'); return false;">
 fæðingartíðni
@@ -280,14 +303,12 @@ fæðingartíðni
 valkeisaraskurðir
 </div>
 </div>
-<a href="./greinar/faedingartidni/index.html">
 <div class="listing-description">
-<p>Hvert var hlutfall keisaraskurða af heildarfjölda fæðinga? Var fæðingartíðni breytileg á tímabilinu, var hún breytileg eftir árstíðum, og eru merki um að dagsetningar valkeisaraskurða hafi haft áhrif á fæðingartíðni eftir vikudögum, dögum ársins eða hátíðardögum?</p>
+<a href="./greinar/faedingartidni/index.html" class="no-external">Hvert var hlutfall keisaraskurða af heildarfjölda fæðinga? Var fæðingartíðni breytileg á tímabilinu, var hún breytileg eftir árstíðum, og eru merki um að dagsetningar valkeisaraskurða hafi haft áhrif á fæðingartíðni eftir vikudögum, dögum ársins eða hátíðardögum? </a>
 </div>
-</a>
 </div>
 <div class="metadata">
-<a href="./greinar/faedingartidni/index.html">
+<a href="./greinar/faedingartidni/index.html" class="no-external">
 <div class="listing-date">
 Oct 26, 2023
 </div>
@@ -297,19 +318,19 @@ Brynjólfur Gauti Guðrúnar Jónsson, Rafael Daníel Vias
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="4" data-categories="launamál,mannauður" data-listing-date-sort="1698105600000" data-listing-file-modified-sort="1699888008561" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="1">
+<div class="quarto-post image-right" data-index="4" data-categories="launamál,mannauður" data-listing-date-sort="1698105600000" data-listing-file-modified-sort="1699888008561" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="1" data-listing-word-count-sort="55">
 <div class="thumbnail">
-<p><a href="./greinar/launagognfjarsyslu/index.html"> <img src="./greinar/launagognfjarsyslu/Figures/fp_image.png" class="thumbnail-image"> </a></p>
+<p><a href="./greinar/launagognfjarsyslu/index.html" class="no-external"></a></p><a href="./greinar/launagognfjarsyslu/index.html" class="no-external">
+<p><img src="./greinar/launagognfjarsyslu/Figures/fp_image.png" class="thumbnail-image"></p>
+</a><p><a href="./greinar/launagognfjarsyslu/index.html" class="no-external"></a></p>
 </div>
 <div class="body">
-<a href="./greinar/launagognfjarsyslu/index.html">
 <h3 class="no-anchor listing-title">
-Launagögn Fjársýslunnar
+<a href="./greinar/launagognfjarsyslu/index.html" class="no-external">Launagögn Fjársýslunnar</a>
 </h3>
 <div class="listing-subtitle">
-Skoðum meðallaun starfsfólks ríkisins eftir kyni og sveitarfélagi
+<a href="./greinar/launagognfjarsyslu/index.html" class="no-external">Skoðum meðallaun starfsfólks ríkisins eftir kyni og sveitarfélagi</a>
 </div>
-</a>
 <div class="listing-categories">
 <div class="listing-category" onclick="window.quartoListingCategory('launamál'); return false;">
 launamál
@@ -318,14 +339,12 @@ launamál
 mannauður
 </div>
 </div>
-<a href="./greinar/launagognfjarsyslu/index.html">
 <div class="listing-description">
-<p>Samkvæmt kjarasamningum eiga karlar, konur og kvár að fá sömu laun fyrir sömu störf. Hér getum við ekki athugað það, heldur skoðum við meðallaun eftir stéttarfélagi. Þá erum við ekki endilega að bera saman einstaklinga sem vinna sömu störf, en við getum séð muninn fyrir alla meðlimi stéttarfélagsins.</p>
+<a href="./greinar/launagognfjarsyslu/index.html" class="no-external">Samkvæmt kjarasamningum eiga karlar, konur og kvár að fá sömu laun fyrir sömu störf. Hér getum við ekki athugað það, heldur skoðum við meðallaun eftir stéttarfélagi. Þá erum við ekki endilega að bera saman einstaklinga sem vinna sömu störf, en við getum séð muninn fyrir alla meðlimi stéttarfélagsins. </a>
 </div>
-</a>
 </div>
 <div class="metadata">
-<a href="./greinar/launagognfjarsyslu/index.html">
+<a href="./greinar/launagognfjarsyslu/index.html" class="no-external">
 <div class="listing-date">
 Oct 24, 2023
 </div>
@@ -335,19 +354,19 @@ Brynjólfur Gauti Guðrúnar Jónsson
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="5" data-categories="skattar,efnahagur,tekjur" data-listing-date-sort="1697846400000" data-listing-file-modified-sort="1699888145864" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="27">
+<div class="quarto-post image-right" data-index="5" data-categories="skattar,efnahagur,tekjur" data-listing-date-sort="1697846400000" data-listing-file-modified-sort="1699888145864" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="27" data-listing-word-count-sort="5230">
 <div class="thumbnail">
-<p><a href="./greinar/tekjurskattar/index.html"> <img src="./greinar/tekjurskattar/image_fp.png" class="thumbnail-image"> </a></p>
+<p><a href="./greinar/tekjurskattar/index.html" class="no-external"></a></p><a href="./greinar/tekjurskattar/index.html" class="no-external">
+<p><img src="./greinar/tekjurskattar/image_fp.png" class="thumbnail-image"></p>
+</a><p><a href="./greinar/tekjurskattar/index.html" class="no-external"></a></p>
 </div>
 <div class="body">
-<a href="./greinar/tekjurskattar/index.html">
 <h3 class="no-anchor listing-title">
-Tekjur, skattar og kaupmáttur
+<a href="./greinar/tekjurskattar/index.html" class="no-external">Tekjur, skattar og kaupmáttur</a>
 </h3>
 <div class="listing-subtitle">
-Greining á tekjuskattsgögnum sem Hagstofan vinnur úr skattframtölum Íslendinga
+<a href="./greinar/tekjurskattar/index.html" class="no-external">Greining á tekjuskattsgögnum sem Hagstofan vinnur úr skattframtölum Íslendinga</a>
 </div>
-</a>
 <div class="listing-categories">
 <div class="listing-category" onclick="window.quartoListingCategory('skattar'); return false;">
 skattar
@@ -359,14 +378,12 @@ efnahagur
 tekjur
 </div>
 </div>
-<a href="./greinar/tekjurskattar/index.html">
 <div class="listing-description">
-<p>Stundum er sagt að að skattakerfið ýti undir ójöfnuð, eða að það séu of háir skattar á þeim efnameiru. Hvort er það? Hér notum við skattagögn Hagstofunnar til að skoða tekjur og skatta eftir tekjutíundum.</p>
+<a href="./greinar/tekjurskattar/index.html" class="no-external">Stundum er sagt að að skattakerfið ýti undir ójöfnuð, eða að það séu of háir skattar á þeim efnameiru. Hvort er það? Hér notum við skattagögn Hagstofunnar til að skoða tekjur og skatta eftir tekjutíundum. </a>
 </div>
-</a>
 </div>
 <div class="metadata">
-<a href="./greinar/tekjurskattar/index.html">
+<a href="./greinar/tekjurskattar/index.html" class="no-external">
 <div class="listing-date">
 Oct 21, 2023
 </div>
@@ -376,19 +393,19 @@ Brynjólfur Gauti Guðrúnar Jónsson
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="6" data-categories="sveitarfélög,skólar" data-listing-date-sort="1687910400000" data-listing-file-modified-sort="1699888035091" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="12">
+<div class="quarto-post image-right" data-index="6" data-categories="sveitarfélög,skólar" data-listing-date-sort="1687910400000" data-listing-file-modified-sort="1699888035091" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="12" data-listing-word-count-sort="2208">
 <div class="thumbnail">
-<p><a href="./greinar/leikskolar/index.html"> <img src="./greinar/leikskolar/Figures/ordered_2022_fp.png" class="thumbnail-image"> </a></p>
+<p><a href="./greinar/leikskolar/index.html" class="no-external"></a></p><a href="./greinar/leikskolar/index.html" class="no-external">
+<p><img src="./greinar/leikskolar/Figures/ordered_2022_fp.png" class="thumbnail-image"></p>
+</a><p><a href="./greinar/leikskolar/index.html" class="no-external"></a></p>
 </div>
 <div class="body">
-<a href="./greinar/leikskolar/index.html">
 <h3 class="no-anchor listing-title">
-Leikskólar
+<a href="./greinar/leikskolar/index.html" class="no-external">Leikskólar</a>
 </h3>
 <div class="listing-subtitle">
-Hvernig gengur sveitarfélögum landsins að brúa bilið?
+<a href="./greinar/leikskolar/index.html" class="no-external">Hvernig gengur sveitarfélögum landsins að brúa bilið?</a>
 </div>
-</a>
 <div class="listing-categories">
 <div class="listing-category" onclick="window.quartoListingCategory('sveitarfélög'); return false;">
 sveitarfélög
@@ -397,14 +414,12 @@ sveitarfélög
 skólar
 </div>
 </div>
-<a href="./greinar/leikskolar/index.html">
 <div class="listing-description">
-<p>Hvernig gengur sveitarfélögum að útbúa leikskólapláss? Hvernig ber fjölda nemenda í leikskólum saman við heildarfjölda barna í hverjum árgangi? Hér skoðum við gögn Hagstofunnar um leikskóla og berum saman við mannfjöldatölur eftir aldri.</p>
+<a href="./greinar/leikskolar/index.html" class="no-external">Hvernig gengur sveitarfélögum að útbúa leikskólapláss? Hvernig ber fjölda nemenda í leikskólum saman við heildarfjölda barna í hverjum árgangi? Hér skoðum við gögn Hagstofunnar um leikskóla og berum saman við mannfjöldatölur eftir aldri. </a>
 </div>
-</a>
 </div>
 <div class="metadata">
-<a href="./greinar/leikskolar/index.html">
+<a href="./greinar/leikskolar/index.html" class="no-external">
 <div class="listing-date">
 Jun 28, 2023
 </div>
@@ -414,19 +429,19 @@ Brynjólfur Gauti Guðrúnar Jónsson
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="7" data-categories="stjórnmál,efnahagur,ársreikningar" data-listing-date-sort="1687305600000" data-listing-file-modified-sort="1699888096035" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="24">
+<div class="quarto-post image-right" data-index="7" data-categories="stjórnmál,efnahagur,ársreikningar" data-listing-date-sort="1687305600000" data-listing-file-modified-sort="1699888096035" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="24" data-listing-word-count-sort="4696">
 <div class="thumbnail">
-<p><a href="./greinar/stjornmalaflokkar/index.html"> <img src="./greinar/stjornmalaflokkar/Figures/eigidfe_page.png" class="thumbnail-image"> </a></p>
+<p><a href="./greinar/stjornmalaflokkar/index.html" class="no-external"></a></p><a href="./greinar/stjornmalaflokkar/index.html" class="no-external">
+<p><img src="./greinar/stjornmalaflokkar/Figures/eigidfe_page.png" class="thumbnail-image"></p>
+</a><p><a href="./greinar/stjornmalaflokkar/index.html" class="no-external"></a></p>
 </div>
 <div class="body">
-<a href="./greinar/stjornmalaflokkar/index.html">
 <h3 class="no-anchor listing-title">
-Fjármál stjórnmálaflokkanna
+<a href="./greinar/stjornmalaflokkar/index.html" class="no-external">Fjármál stjórnmálaflokkanna</a>
 </h3>
 <div class="listing-subtitle">
-Greining á ársreikningum stjórnmálaflokka úr gögnum Ríkisendurskoðunar
+<a href="./greinar/stjornmalaflokkar/index.html" class="no-external">Greining á ársreikningum stjórnmálaflokka úr gögnum Ríkisendurskoðunar</a>
 </div>
-</a>
 <div class="listing-categories">
 <div class="listing-category" onclick="window.quartoListingCategory('stjórnmál'); return false;">
 stjórnmál
@@ -438,14 +453,12 @@ efnahagur
 ársreikningar
 </div>
 </div>
-<a href="./greinar/stjornmalaflokkar/index.html">
 <div class="listing-description">
-<p>Hversu miklar tekjur hafa stjórnmálaflokkarnir og hvaðan koma þær? Hækka útgjöld þeirra sjáanlega í kringum kosningar og eiga þeir einhverjar eignir? Hér köfum við ofan í ársreikninga stjórnmálaflokkanna.</p>
+<a href="./greinar/stjornmalaflokkar/index.html" class="no-external">Hversu miklar tekjur hafa stjórnmálaflokkarnir og hvaðan koma þær? Hækka útgjöld þeirra sjáanlega í kringum kosningar og eiga þeir einhverjar eignir? Hér köfum við ofan í ársreikninga stjórnmálaflokkanna. </a>
 </div>
-</a>
 </div>
 <div class="metadata">
-<a href="./greinar/stjornmalaflokkar/index.html">
+<a href="./greinar/stjornmalaflokkar/index.html" class="no-external">
 <div class="listing-date">
 Jun 21, 2023
 </div>
@@ -455,19 +468,19 @@ Brynjólfur Gauti Guðrúnar Jónsson
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="8" data-categories="loftgæði,umhverfi" data-listing-date-sort="1674259200000" data-listing-file-modified-sort="1699888047338" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="1">
+<div class="quarto-post image-right" data-index="8" data-categories="loftgæði,umhverfi" data-listing-date-sort="1674259200000" data-listing-file-modified-sort="1699888047338" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="1" data-listing-word-count-sort="135">
 <div class="thumbnail">
-<p><a href="./greinar/loftgaedi/index.html"> <img src="https://raw.githubusercontent.com/bgautijonsson/loftgaedimyndiractions/master/Figures/combined_image_page.png" class="thumbnail-image"> </a></p>
+<p><a href="./greinar/loftgaedi/index.html" class="no-external"></a></p><a href="./greinar/loftgaedi/index.html" class="no-external">
+<p><img src="https://raw.githubusercontent.com/bgautijonsson/loftgaedimyndiractions/master/Figures/combined_image_page.png" class="thumbnail-image"></p>
+</a><p><a href="./greinar/loftgaedi/index.html" class="no-external"></a></p>
 </div>
 <div class="body">
-<a href="./greinar/loftgaedi/index.html">
 <h3 class="no-anchor listing-title">
-Loftgæði
+<a href="./greinar/loftgaedi/index.html" class="no-external">Loftgæði</a>
 </h3>
 <div class="listing-subtitle">
-Samantekt á mælingum köfnunarefnisdíoxíðs (NO2) við Grensásveg
+<a href="./greinar/loftgaedi/index.html" class="no-external">Samantekt á mælingum köfnunarefnisdíoxíðs (NO2) við Grensásveg</a>
 </div>
-</a>
 <div class="listing-categories">
 <div class="listing-category" onclick="window.quartoListingCategory('loftgæði'); return false;">
 loftgæði
@@ -476,14 +489,12 @@ loftgæði
 umhverfi
 </div>
 </div>
-<a href="./greinar/loftgaedi/index.html">
 <div class="listing-description">
-<p>Nýlega var fjallað um óvenjulega háar mælingar á NO2 í Reykjavíkurborg. Hversu algeng eru slík tilvik? Hér ber ég mælingar ársins 2023 saman við fyrri ár og birti daglega uppfært yfirlit yfir NO2 við Grensásveg.</p>
+<a href="./greinar/loftgaedi/index.html" class="no-external">Nýlega var fjallað um óvenjulega háar mælingar á NO2 í Reykjavíkurborg. Hversu algeng eru slík tilvik? Hér ber ég mælingar ársins 2023 saman við fyrri ár og birti daglega uppfært yfirlit yfir NO2 við Grensásveg. </a>
 </div>
-</a>
 </div>
 <div class="metadata">
-<a href="./greinar/loftgaedi/index.html">
+<a href="./greinar/loftgaedi/index.html" class="no-external">
 <div class="listing-date">
 Jan 21, 2023
 </div>
@@ -493,19 +504,19 @@ Brynjólfur Gauti Guðrúnar Jónsson
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="9" data-categories="landspítali,R,íslenska" data-listing-date-sort="1661299200000" data-listing-file-modified-sort="1704379693479" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="50">
+<div class="quarto-post image-right" data-index="9" data-categories="landspítali,R,íslenska" data-listing-date-sort="1661299200000" data-listing-file-modified-sort="1704379693479" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="50" data-listing-word-count-sort="9936">
 <div class="thumbnail">
-<p><a href="./greinar/landspitali/index.html"> <img src="./greinar/landspitali/hjukthyngd_fp.png" class="thumbnail-image"> </a></p>
+<p><a href="./greinar/landspitali/index.html" class="no-external"></a></p><a href="./greinar/landspitali/index.html" class="no-external">
+<p><img src="./greinar/landspitali/hjukthyngd_fp.png" class="thumbnail-image"></p>
+</a><p><a href="./greinar/landspitali/index.html" class="no-external"></a></p>
 </div>
 <div class="body">
-<a href="./greinar/landspitali/index.html">
 <h3 class="no-anchor listing-title">
-Landspítalinn
+<a href="./greinar/landspitali/index.html" class="no-external">Landspítalinn</a>
 </h3>
 <div class="listing-subtitle">
-Hvaða upplýsingar eru til um rekstur Landspítalans og hvar má finna þær?
+<a href="./greinar/landspitali/index.html" class="no-external">Hvaða upplýsingar eru til um rekstur Landspítalans og hvar má finna þær?</a>
 </div>
-</a>
 <div class="listing-categories">
 <div class="listing-category" onclick="window.quartoListingCategory('landspítali'); return false;">
 landspítali
@@ -517,14 +528,12 @@ R
 íslenska
 </div>
 </div>
-<a href="./greinar/landspitali/index.html">
 <div class="listing-description">
-<p>Hvernig er nýting legurýma á Landspítala? Hvaða hlutfall launa fer í þessi margræddu millistjórnendastörf? Hér ætla ég aðeins að skoða hvaða gögn eru til um rekstur landspítalans, hvar má finna þau og hvað mætti betur fara í birtingu þeirra gagna.</p>
+<a href="./greinar/landspitali/index.html" class="no-external">Hvernig er nýting legurýma á Landspítala? Hvaða hlutfall launa fer í þessi margræddu millistjórnendastörf? Hér ætla ég aðeins að skoða hvaða gögn eru til um rekstur landspítalans, hvar má finna þau og hvað mætti betur fara í birtingu þeirra gagna. </a>
 </div>
-</a>
 </div>
 <div class="metadata">
-<a href="./greinar/landspitali/index.html">
+<a href="./greinar/landspitali/index.html" class="no-external">
 <div class="listing-date">
 Aug 24, 2022
 </div>
@@ -623,10 +632,9 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     // clear code selection
     e.clearSelection();
   });
-  function tippyHover(el, contentFn) {
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
     const config = {
       allowHTML: true,
-      content: contentFn,
       maxWidth: 500,
       delay: 100,
       arrow: false,
@@ -636,8 +644,17 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       interactive: true,
       interactiveBorder: 10,
       theme: 'quarto',
-      placement: 'bottom-start'
+      placement: 'bottom-start',
     };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
     window.tippy(el, config); 
   }
   const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
@@ -650,6 +667,125 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       const id = href.replace(/^#\/?/, "");
       const note = window.document.getElementById(id);
       return note.innerHTML;
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
     });
   }
       let selectedAnnoteEl;
@@ -693,6 +829,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
             }
             div.style.top = top - 2 + "px";
             div.style.height = height + 4 + "px";
+            div.style.left = 0;
             let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
             if (gutterDiv === null) {
               gutterDiv = window.document.createElement("div");
@@ -718,6 +855,32 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
         });
         selectedAnnoteEl = undefined;
       };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
       // Attach click handler to the DT
       const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
       for (const annoteDlNode of annoteDls) {
@@ -786,7 +949,9 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     <div class="nav-footer-center">
       <ul class="footer-items list-unstyled">
     <li class="nav-item">
-    <a class="nav-link" href="./um_metil.html">Um Metil</a>
+    <a class="nav-link" href="./um_metil.html">
+<p>Um Metil</p>
+</a>
   </li>  
 </ul>
     </div>
@@ -795,6 +960,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     </div>
   </div>
 </footer>
+
 
 
 
