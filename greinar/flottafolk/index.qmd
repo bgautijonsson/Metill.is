@@ -1,8 +1,8 @@
 ---
-title: "Tímabundin vernd"
-pagetitle: "Tímabundin vernd"
-subtitle: "Hvað segja gögnin um fjölda hælisleitenda og fólksflutninga til Íslands?"
-description: "Hér eru gögn um fjölda einstaklinga sem njóta tímabundinnar verndar, fjölda samþykktra verndarumsókna og fjölda umsókna í bið tekin saman úr gögnum  Eurostat."
+title: "Tímabundin vernd og hælisleitendur"
+pagetitle: "Tímabundin vernd og hælisleitendur"
+subtitle: "Hvað segja gögnin um fjölda hælisleitenda og tímabundna vernd til Íslands?"
+description: "Hér eru gögn um fjölda einstaklinga sem njóta tímabundinnar verndar eða hælis, fjölda samþykktra verndar- og hælisumsókna og fjölda umsókna í bið tekin saman úr gögnum  Eurostat."
 date: "2024/01/18"
 draft: true
 categories:
