@@ -282,7 +282,6 @@ Til að auðvelda samanburð milli landa eru allar tölur sýndar sem fjöldi á
 
 ## Mánaðarlegar veitingar
 
-Skoðum svo hversu mörgum er veitt hæli í hverjum mánuði.
 
 ```{r veiting}
 #| eval: false
@@ -518,7 +517,6 @@ ggsave(
 
 ## Einstaklingar sem njóta verndar
 
-Hér skoðum við svo fjölda fólks í landinu sem nýtur tímabundinnar verndar hverri stundu.
 
 ```{r vernd}
 #| eval: false
@@ -1487,7 +1485,7 @@ ggsave(
 
 ## Umsækjendur í bið
 
-Fyrst skoðum við hversu margir umsækjendur eru að bíða eftir niðurstöðu í sínu máli á hverri stundu.
+Skoðum hversu margir umsækjendur eru að bíða eftir niðurstöðu í sínu máli á hverri stundu.
 
 ```{r umsaek}
 #| eval: false
@@ -1966,3 +1964,5 @@ ggsave(
 )
 ```
 
+
+![](Figures/veiting_total_saman_2.png){.column-page}
