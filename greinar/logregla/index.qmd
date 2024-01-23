@@ -1,0 +1,30 @@
+---
+title: "Glæpatíðni á Höfuðborgarsvæðinu"
+pagetitle: "Glæpatíðni á Höfuðborgarsvæðinu"
+subtitle: "Hvernig hefur glæpatíðni þróast á Höfuðborgarsvæðinu undanfarinn áratug?"
+description: |
+    Stundum heyrum við að glæpum sé að fjölga og sum halda að þeim stafi sífellt meiri hætta af glæpamönnum. Það getur verið að glæpum fjölgi, en íbúum fjölgar líka svo við þurfum að taka tillit til fólksfjölgunar þegar við skoðum þessi gögn. Hér verða sett fram gögn um fjölda glæpa á hvern íbúa Höfuðborgarsvæðis.
+date: "2024/01/22"
+draft: true
+categories:
+    - glæpir
+    - höfuðborgarsvæði
+href: greinar/logregla/index.qmd
+image: https://raw.githubusercontent.com/bgautijonsson/logregla/master/Figures/ofbeldi_fp.png
+twitter-card:
+    image: https://raw.githubusercontent.com/bgautijonsson/logregla/master/Figures/ofbeldi_fp.png
+---
+
+# Hegningarlög almennt
+
+![](https://raw.githubusercontent.com/bgautijonsson/logregla/master/Figures/hegningarlog.png)
+
+# Ofbeldi
+
+![](https://raw.githubusercontent.com/bgautijonsson/logregla/master/Figures/ofbeldi.png){.column-page}
+
+
+
+# Innbrot
+
+![](https://raw.githubusercontent.com/bgautijonsson/logregla/master/Figures/innbrot.png){.column-page}

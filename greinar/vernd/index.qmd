@@ -1,0 +1,101 @@
+---
+title: "Tímabundin vernd"
+pagetitle: "Tímabundin vernd"
+subtitle: "Hvað segja gögnin um fjölda hælisleitenda og fólksflutninga til Íslands?"
+description: "Hér eru gögn um fjölda einstaklinga sem njóta tímabundinnar verndar, fjölda samþykktra verndarumsókna og fjölda umsókna í bið tekin saman úr gögnum  Eurostat."
+date: "2024/01/19"
+draft: true
+categories:
+    - stjórnmál
+    - fólksflutningar
+href: greinar/flottafolk/index.qmd
+image: Figures/vernd_saman_2_page.png
+execute: 
+  eval: false
+---
+
+```{r setup}
+library(tidyverse)
+library(metill)
+library(patchwork)
+library(gganimate)
+library(plotly)
+
+caption <- str_c(
+  "Mynd eftir @bggjonsson hjá metill.is byggð á gögnum Eurostat um fólksflutninga.",
+  "\nGögn og kóði: https://github.com/bgautijonsson/asylum"
+)
+
+litur_island <- "#08306b"
+litur_danmork <- "#e41a1c"
+litur_finnland <- "#3690c0"
+litur_noregur <- "#7f0000"
+litur_svithjod <- "#fd8d3c"
+litur_annad <- "#737373"
+
+```
+
+```{r}
+applicants <- read_csv("data/applicants.csv")
+decisions <- read_csv("data/decisions.csv")
+pop <- read_csv("data/pop.csv")
+```
+
+
+
+Gögn þessarar úrvinnslu koma frá [Eurostat](https://ec.europa.eu/eurostat/en/), nánar tiltekið eru þetta þrjú gagnasöfn:
+
+* [Asylum applicants by type of applicant, citizenship, age and sex - annual aggregated data](https://ec.europa.eu/eurostat/databrowser/view/migr_asyappctza/default/table?lang=en)
+* [First instance decisions on applications by citizenship, age and sex - annual aggregated data](https://ec.europa.eu/eurostat/databrowser/view/migr_asydcfsta/default/table?lang=en)
+* [Persons subject of asylum applications pending at the end of the month - monthly data](https://ec.europa.eu/eurostat/databrowser/view/TPS00190/default/table?lang=en&category=migr.migr_asy.migr_asyapp)
+
+Þessari upplýsingar eru svo tengdar við [gögn um mannfjölda hvers lands](https://ec.europa.eu/eurostat/databrowser/view/demo_pjan/default/table?lang=en).
+
+Til að auðvelda samanburð milli landa eru allar tölur sýndar sem fjöldi á hverja 100.000 íbúa hvers lands.
+
+
+# Alþjóðleg vernd
+
+Á [island.is](https://island.is/althjodleg-vernd-rettur-og-ferill-umsokna) stendur um alþjóðlega vernd:
+
+> Fólk sem sætir ofsóknum í heimalandi sínu eða á þar á hættu dauðarefsingu, pyndingar eða ómannúðlega eða vanvirðandi meðferð eða refsingu á rétt á alþjóðlegri vernd sem flóttamenn hér á landi.
+>
+> Ríkisfangslausir einstaklingar eiga rétt á alþjóðlegri vernd á grundvelli ríkisfangsleysis.
+
+En hvernig er sótt um þessa vernd? [Á island.is má líka lesa hvernig er sótt um alþjóðlega vernd:](https://island.is/althjodleg-vernd-rettur-og-ferill-umsokna/hvernig-er-sott-um)
+
+> Sá sem vill sækja um alþjóðlega vernd á Íslandi verður að vera staddur á Íslandi, annað hvort við landamæri landsins eða innan þeirra.
+>
+> Umsókn þarf að leggja fram í eigin persónu. Hún þarf ekki að vera á tilteknu formi og er nóg að umsækjandi lýsi ósk sinni munnlega.
+>
+> Hægt er að sækja um vernd hjá lögreglunni á Keflavíkurflugvelli við komuna til landsins.
+>
+> Einstaklingar sem þegar eru komnir til landsins geta sótt um vernd í móttökumiðstöð fyrir umsækjendur um alþjóðlega vernd að Egilsgötu 3 í Reykjavík. Þar er opið á dagvinnutíma.
+>
+> Einstaklingar sem staddir eru utan höfuðborgarsvæðisins geta sótt um vernd á næstu lögreglustöð.
+>
+> Umsóknir um alþjóðlega vernd sem eru sendar til Íslands frá einstaklingum sem eru staddir erlendis eru ekki teknar til meðferðar.
+
+Það þarf að skila inn umsókn í eigin persónu. Hvað verður þá um fólk á meðan það bíður eftir niðurstöðu? [Við finnum sömuleiðis upplýsingar um það inni á island.is:](https://island.is/thjonusta-vid-umsaekjendur-um-althjodlega-vernd)
+
+> Umsækjendur um alþjóðlega vernd eiga rétt á þjónustu löglærðs talsmanns á lægra og æðra stjórnsýslustigi. Hlutverk talsmanns hefst við skipun hans og lýkur við endanlega ákvörðun á stjórnsýslustigi. Nánar um hlutverk talsmanns.
+>
+> Á meðan umsækjendur bíða þess að fá svar við umsókn um vernd stendur þeim til boða húsnæði, framfærsla og nauðsynleg heilbrigðisþjónusta. Barnshafandi konur skulu fá aðgang að mæðravernd og fæðingarhjálp og börn sem sækja um vernd skulu eiga þess kost að stunda nám.
+> 
+> Vinnumálastofnun starfrækir almenn þjónustuúrræði fyrir umsækjendur um alþjóðlega vernd á meðan mál þeirra eru í vinnslu. Útlendingastofnun rekur engin búsetuúrræði fyrir umsækjendur um alþjóðlega vernd eða aðra útlendinga.
+> 
+> Rétturinn til þjónustu fellur alla jafna niður átta vikum frá veitingu verndar, 30 dögum eftir endanlega niðurstöðu um synjun eða þremur dögum eftir að umsækjandi hefur dregið umsókn sína til baka. Nánar um lok þjónustu.
+
+
+# Umsóknir um alþjóðlega vernd
+
+![](https://raw.githubusercontent.com/bgautijonsson/asylum/master/Figures/umsaekjendur.png){.column-screen}
+
+![](https://raw.githubusercontent.com/bgautijonsson/asylum/master/Figures/applicants_anim.gif)
+
+
+# Veitingar á alþjóðlegri vernd
+
+![](https://raw.githubusercontent.com/bgautijonsson/asylum/master/Figures/veitingar.png){.column-screen}
+
+![](https://raw.githubusercontent.com/bgautijonsson/asylum/master/Figures/decisions_anim.gif)
