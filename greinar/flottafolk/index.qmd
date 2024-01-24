@@ -696,6 +696,7 @@ p2 <- plot_dat |>
 
 ```
 
+-----
 
 ```{r}
 #| layout-ncol: 1
@@ -713,8 +714,8 @@ p <- p2 + p1 +
 
 girafe(
   ggobj = p,
-  width_svg = 15,
-  height_svg = 0.4 * 15,
+  width_svg = 18,
+  height_svg = 0.34 * 18,
   options = list(
     opts_tooltip(
       opacity = 0.8, 
@@ -728,6 +729,8 @@ girafe(
   )
 )
 ```
+
+-----
 
 ## Mánaðarlegar veitingar
 
@@ -1517,8 +1520,8 @@ p <- p2 + p1 +
 
 girafe(
   ggobj = p,
-  width_svg = 15,
-  height_svg = 0.4 * 15,
+  width_svg = 18,
+  height_svg = 0.34 * 18,
   options = list(
     opts_tooltip(
       opacity = 0.8, 
