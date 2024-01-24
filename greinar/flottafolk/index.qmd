@@ -12,6 +12,7 @@ href: greinar/flottafolk/index.qmd
 image: Figures/vernd_saman_2_page.png
 execute: 
   eval: true
+toc: true
 ---
 
 
@@ -333,8 +334,11 @@ Til að auðvelda samanburð milli landa eru allar tölur sýndar sem fjöldi á
 
 # Tímabundin Vernd
 
+Í þessum kafla verður aðallega fjallar um flóttafólk frá Úkraínu. Það getur verið eitthvað af flóttafólki frá öðrum löndum eftir löggjöfum hvers svæðis, en hlutdeild Úkraínsks flóttafólks er nær 100% í öllum fjöldatölum þessa flokks.
+
 ## Mánaðarlegar veitingar
 
+Hér sjáum við tölur um hversu mörgum einstaklingum var veitt tímabundin vernd í hverjum mánuði.
 
 ```{r veiting}
 #| eval: false
@@ -570,6 +574,7 @@ ggsave(
 
 ## Einstaklingar sem njóta verndar
 
+Hér sjaum við svo tölur um það hversu margir einstaklingar njóta tímabundinnar verndar hverju sinni. 
 
 ```{r vernd}
 #| eval: false
@@ -816,7 +821,11 @@ ggsave(
 
 # Hæli
 
+Í þessum kafla eiga tölur við um *hæli*, það er flóttafólk hvers umsóknir þurfa að fara í gegnum efnislega meðferð og úrskurður byggður á aðstæðum hvers og eins. 
+
 ## Mánaðarlegur fjöldi umsókna
+
+
 
 ```{r asylum_applicants}
 #| eval: false
@@ -869,7 +878,7 @@ p1 <- d |>
   labs(
     x = NULL,
     y = NULL,
-    title = "Hvar sækja flestir einstaklingar um hæli (efnisleg meðferð)?",
+    title = "Hvar sækja flestir einstaklingar um hæli?",
     subtitle = "Fjöldi í mars 2022",
     caption = caption
   )
@@ -930,7 +939,7 @@ p2 <- d |>
   labs(
     x = NULL,
     y = NULL,
-    title = "Hvar sækja flestir einstaklingar um hæli (efnisleg meðferð)?",
+    title = "Hvar sækja flestir einstaklingar um hæli?",
     subtitle = glue("Fjöldi í {month(end_date, label = T, abbr = F)} {year(end_date)}"),
     caption = caption
   )
@@ -944,7 +953,7 @@ ggsave(
 p <- (p1 + labs(title = NULL, caption = NULL)) + 
   (p2 + labs(title = NULL, caption = NULL)) +
   plot_annotation(
-    title = "Hvar sækja flestir einstaklingar um hæli (efnisleg meðferð)?",
+    title = "Hvar sækja flestir einstaklingar um hæli?",
     caption = caption
   )
 
@@ -1041,7 +1050,7 @@ p <- (
 ) / 
   p3 +
   plot_annotation(
-    title = "Hvar sækja flestir einstaklingar um hæli (efnisleg meðferð)?",
+    title = "Hvar sækja flestir einstaklingar um hæli?",
     subtitle = "Sýnt sem fjöldi á 100.000 íbúa hvers lands",
     caption = caption
   )
@@ -1114,7 +1123,7 @@ p1 <- d |>
   labs(
     x = NULL,
     y = NULL,
-    title = "Hvar eru flestar ákvarðanir um stöðu hælisleitenda (efnisleg meðferð) teknar á mánuði?",
+    title = "Hvar eru flestar ákvarðanir um stöðu hælisleitenda teknar á mánuði?",
     subtitle = "Fjöldi í apríl 2022",
     caption = caption
   )
@@ -1174,7 +1183,7 @@ p2 <- d |>
   labs(
     x = NULL,
     y = NULL,
-    title = "Hvar eru flestar ákvarðanir um stöðu hælisleitenda (efnisleg meðferð) teknar á mánuði?",
+    title = "Hvar eru flestar ákvarðanir um stöðu hælisleitenda teknar á mánuði?",
     subtitle = glue("Fjöldi í {month(end_date, label = T, abbr = F)} {year(end_date)}"),
     caption = caption
   )
@@ -1188,7 +1197,7 @@ ggsave(
 p <- (p1 + labs(title = NULL, caption = NULL)) + 
   (p2 + labs(title = NULL, caption = NULL)) +
   plot_annotation(
-    title = "Hvar eru flestar ákvarðanir um stöðu hælisleitenda (efnisleg meðferð) teknar á mánuði?",
+    title = "Hvar eru flestar ákvarðanir um stöðu hælisleitenda teknar á mánuði?",
     caption = caption
   )
 
@@ -1282,7 +1291,7 @@ p <- (
 ) / 
   p3 +
   plot_annotation(
-    title = "Hvar eru flestar ákvarðanir um stöðu hælisleitenda (efnisleg meðferð) teknar á mánuði?",
+    title = "Hvar eru flestar ákvarðanir um stöðu hælisleitenda teknar á mánuði?",
     subtitle = "Sýnt sem fjöldi á 100.000 íbúa hvers lands",
     caption = caption
   )
@@ -1352,7 +1361,7 @@ p1 <- d |>
   labs(
     x = NULL,
     y = NULL,
-    title = "Hvar er flestum einstaklingum veitt hæli (efnisleg meðferð) á mánuði?",
+    title = "Hvar er flestum einstaklingum veitt hæli á mánuði?",
     subtitle = "Fjöldi í apríl 2022",
     caption = caption
   )
@@ -1412,7 +1421,7 @@ p2 <- d |>
   labs(
     x = NULL,
     y = NULL,
-    title = "Hvar er flestum einstaklingum veitt hæli (efnisleg meðferð) á mánuði?",
+    title = "Hvar er flestum einstaklingum veitt hæli á mánuði?",
     subtitle = glue("Fjöldi í {month(end_date, label = T, abbr = F)} {year(end_date)}"),
     caption = caption
   )
@@ -1426,7 +1435,7 @@ ggsave(
 p <- (p1 + labs(title = NULL, caption = NULL)) + 
   (p2 + labs(title = NULL, caption = NULL)) +
   plot_annotation(
-    title = "Hvar er flestum einstaklingum veitt hæli (efnisleg meðferð) á mánuði?",
+    title = "Hvar er flestum einstaklingum veitt hæli á mánuði?",
     caption = caption
   )
 
@@ -1520,7 +1529,7 @@ p <- (
 ) / 
   p3 +
   plot_annotation(
-    title = "Hvar er flestum einstaklingum veitt hæli (efnisleg meðferð) á mánuði?",
+    title = "Hvar er flestum einstaklingum veitt hæli á mánuði?",
     subtitle = "Sýnt sem fjöldi á 100.000 íbúa hvers lands",
     caption = caption
   )
@@ -1759,7 +1768,7 @@ p <- (
   p3 +
   plot_annotation(
     title = "Hvaða hlutfall umsókna um hæli er samþykkt?",
-    subtitle = "Sýnt sem hlutfall allra umsókna um hæli (efnisleg meðferð)",
+    subtitle = "Sýnt sem hlutfall allra umsókna um hæli",
     caption = caption
   )
 
@@ -2012,6 +2021,8 @@ ggsave(
 
 # Saman
 
+Með því að leggja saman tölur um *tímabundna vernd* og *hæli* getum við skoðað heildarfjölda flóttafólks í hverju landi. Tölurnar að neðan eiga því við um flóttafólk bæði frá Úkraínu og öðrum löndum.
+
 ## Mánaðarlegur fjöldi 
 
 ```{r combined}
@@ -2023,16 +2034,12 @@ d1 <- d |>
   select(-value) |> 
   pivot_wider(values_from = per_pop) |> 
   mutate(
-    positive_decisions = zoo::na.approx(positive_decisions, na.rm = FALSE, maxgap = 3) / 3,
-    .by = land
-  ) |> 
-  mutate(
     total_decisions = grants + positive_decisions
   ) |> 
   select(-pop, -grants, -positive_decisions) |> 
   drop_na(total_decisions) |> 
   filter(
-    time >= clock::date_build(2022, 4, 1)
+    time >= clock::date_build(2022, 3, 1)
   )
 
 end_date <- clock::date_build(2023, 7, 1)
