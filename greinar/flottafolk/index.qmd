@@ -47,6 +47,7 @@ library(hagstofa)
 library(crosstalk)
 library(clock)
 library(ggh4x)
+library(ggiraph)
 theme_set(theme_metill())
 source("R/make_plot.R")
 
@@ -245,6 +246,81 @@ gdp <- get_eurostat(
   rename(gdp = values)
 ```
 
+```{r historical_data}
+decisions_hist <- get_eurostat(
+  "migr_asydcfsta",
+  filters = list(
+    citizen = list("TOTAL", "UA"),
+    sex = "T",
+    age = "TOTAL"
+  )
+)
+
+temporary_protection_hist <- get_eurostat(
+  "migr_asytpfa",
+  filters = list(
+    citizen = "TOTAL",
+    age = "TOTAL",
+    sex = "T"
+  )
+)  |> 
+  select(-citizen, -age, -sex, -freq, -unit) |> 
+  label_eurostat() |> 
+  rename(
+    granted_temporary_protection = values
+  )
+
+pop_hist <- get_eurostat(
+  "demo_pjan",
+  filters = list(
+    age = "TOTAL",
+    sex = "T"
+  )
+)
+
+decisions_hist <- decisions_hist |> 
+  janitor::remove_constant() |> 
+  label_eurostat()
+
+pop_hist <- pop_hist |> 
+  janitor::remove_constant() |> 
+  label_eurostat()
+
+data_hist <- decisions_hist |> 
+  rename(
+    decisions = values
+  ) |> 
+  inner_join(
+    pop_hist |> rename(pop = values),
+    by = join_by(geo, time)
+  ) |> 
+  pivot_wider(names_from = decision, values_from = decisions) |> 
+  janitor::clean_names() |> 
+  select(citizen:pop, total_positive_decisions) |> 
+  pivot_wider(names_from = citizen, values_from = total_positive_decisions) |> 
+  left_join(
+    temporary_protection_hist,
+    by = join_by(geo, time)
+  ) |> 
+  mutate(
+    granted_temporary_protection = coalesce(granted_temporary_protection, 0),
+    total = Total - Ukraine + granted_temporary_protection,
+    total_non_ukr = Total - Ukraine
+  ) |> 
+  select(geo, time, pop, total, total_non_ukr) |> 
+  pivot_longer(c(total, total_non_ukr)) |> 
+  mutate(
+    per_pop = value / pop * 1e5
+  ) |> 
+  inner_join(
+    metill::country_names(),
+    by = join_by(geo == country)
+  ) |> 
+  select(-geo)
+
+data_hist |> write_csv("data/data_hist.csv")
+```
+
 
 ```{r data_merge}
 #| eval: false
@@ -358,6 +434,8 @@ d <- read_csv("data/raw_data.csv")
 ```
 
 
+
+
 # Skilgreiningar
 
 Hér er unnið með gögn frá Eurostat, hagstofu Evrópusambandsins. Þar sem það er munur á löggjöf þar og á Íslandi er mikilvægt að hafa nokkrar skilgreiningar og þýðingar á hreinu. Hér verður notast við eftirfarandi skilgreiningar og þýðingar:
@@ -381,11 +459,6 @@ Gögn þessarar úrvinnslu koma frá [Eurostat](https://ec.europa.eu/eurostat/en
 Þessari upplýsingar eru svo tengdar við [gögn um mannfjölda hvers lands](https://ec.europa.eu/eurostat/databrowser/view/demo_pjan/default/table?lang=en).
 
 Til að auðvelda samanburð milli landa eru allar tölur sýndar sem fjöldi á hverja 100.000 íbúa hvers lands.
-
-
-::: {.panel-tabset}
-
-## Á mannfjölda
 
 ```{r}
 #| column: page
@@ -421,7 +494,8 @@ d |>
     locale = "is" 
   ) |> 
   opt_interactive(
-    use_search = TRUE,
+    use_search = FALSE,
+    use_highlight = TRUE,
     use_filters = TRUE
   ) |> 
   tab_options(
@@ -431,53 +505,7 @@ d |>
 
 {{< downloadthis data/timabundin_vernd_perpop.csv dname="timebundin_vernd" label="Sækja gögn" type=primary class=downloadbutton >}}
 
-## Á landsframleiðslu
 
-```{r}
-#| column: page
-#| cache: true
-library(gt)
-library(readr)
-d <- read_csv("data/timabundin_vernd_pergdp.csv")
-d |> 
-  gt() |> 
-  tab_header(
-    title = "Samantekt á gögnum um málefni flóttafólks",
-    subtitle = "Tölur eru sýndar sem fjöldi á €100.000 landsframleiðslu móttökulands"
-  ) |> 
-  tab_spanner(
-    label = "Á €100.000 landsframleiðslu",
-    columns = 3:8
-  ) |> 
-   fmt_number(
-    3:8, 
-    decimals = 0, 
-    sep_mark = ".",
-    dec_mark = ","
-  ) |> 
-  fmt_percent(
-    9,
-    decimals = 2,
-    sep_mark = ".",
-    dec_mark = ","
-  ) |> 
-  fmt_date(
-    1,
-    date_style = "yMMM",
-    locale = "is" 
-  ) |> 
-  opt_interactive(
-    use_search = TRUE,
-    use_filters = TRUE
-  ) |> 
-  tab_options(
-    table.background.color = "#faf9f9"
-  ) 
-```
-
-{{< downloadthis data/timabundin_vernd_pergdp.csv dname="timebundin_vernd" label="Sækja gögn" type=primary class=downloadbutton >}}
-
-:::
 
 
 
@@ -487,6 +515,219 @@ d |>
 Í þessum kafla verður aðallega fjallar um flóttafólk frá Úkraínu. Það getur verið eitthvað af flóttafólki frá öðrum löndum eftir löggjöfum hvers svæðis, en hlutdeild Úkraínsks flóttafólks er nær 100% í öllum fjöldatölum þessa flokks.
 
 Þessi flokkur er oftast tekinn út úr sviga þegar tölur um flóttafólk eru greindar þar sem flóttafólk frá Úkraínu fær fljótari meðferð og veldur því minna álagi á innviði sem tengjast móttöku flóttafólks.
+
+```{r}
+plot_dat <- data_hist |> 
+  bind_rows(
+    data_hist |> 
+      filter(
+        year(time) == 2022
+      ) |> 
+      mutate(
+        time = time + years(1)
+      )
+  ) |> 
+  filter(
+    land != "Bretland",
+    name == "total"
+  ) |> 
+  mutate(
+    colour = case_when(
+      land == "Ísland" ~ litur_island,
+      land == "Danmörk" ~ litur_danmork,
+      land == "Finnland" ~ litur_finnland,
+      land == "Noregur" ~ litur_noregur,
+      land == "Svíþjóð" ~ litur_svithjod,
+      TRUE ~ litur_annad
+    ),
+    linewidth = 1 * (land == "Ísland"),
+    size = as_factor(linewidth)
+  ) |> 
+  arrange(time, per_pop) |> 
+  mutate(
+    placement = row_number(),
+    .by = time
+  ) |> 
+  mutate(
+    colour = if_else(
+      land == "Lúxemborg",
+      "black",
+      colour
+    )
+  ) 
+
+p1 <- plot_dat |>  
+  ggplot(aes(time, placement)) +
+  geom_step_interactive(
+    data = ~ filter(.x, colour == litur_annad),
+    aes(group = land, colour = colour, data_id = land),
+    linewidth = 0.3
+  ) +
+  geom_step_interactive(
+    data = ~ filter(.x, colour != litur_annad, land != "Ísland"),
+    aes(group = land, colour = colour, data_id = land),
+    linewidth = 1
+  ) +
+  geom_step_interactive(
+    data = ~ filter(.x, land == "Ísland"),
+    aes(group = land, colour = colour, data_id = land),
+    linewidth = 1.5
+  ) +
+  geom_text_interactive(
+    data = ~ group_by(.x, land) |> 
+      filter(colour != litur_annad, time == max(time)),
+    aes(label = land, colour = colour, data_id = land),
+    hjust = 0,
+    nudge_x = 30
+  ) +
+  geom_text_interactive(
+    data = ~ group_by(.x, land) |> 
+      filter(colour == litur_annad, time == max(time)),
+    aes(label = land, colour = colour, data_id = land),
+    hjust = 0,
+    nudge_x = 30,
+    size = 3
+  ) +
+  scale_x_date(
+    breaks = unique(plot_dat$time) + months(6),
+    limits = c(min(plot_dat$time), max(plot_dat$time) + years(2)),
+    labels = label_date_short(format = "%Y"),
+    expand = expansion(add = 50),
+    guide = guide_axis_truncated(
+      trunc_lower = min(plot_dat$time) + months(6),
+      trunc_upper = max(plot_dat$time) + months(6)
+    )
+  ) +
+  scale_y_continuous(
+    breaks = 1:22,
+    labels = \(x) number(23 - x),
+    limits = c(1, 22),
+    expand = expansion(c(0.05, 0.05)),
+    guide = guide_axis_truncated()
+  )  +
+  scale_colour_identity() +
+  coord_cartesian(clip = "off") +
+  theme(
+    plot.margin = margin(t = 5, r = 35, b = 5, l = 5),
+    legend.position = "none"
+  ) +
+  labs(
+    x = NULL,
+    y = NULL,
+    title = "Evrópulöndum raðað eftir fjölda verndarveitinga á höfðatölu",
+    subtitle = "1: Flestar veitingar | 23: Fæstar veitingar"
+  )
+
+```
+
+```{r}
+plot_dat <- data_hist |> 
+  filter(
+    land != "Bretland",
+    name == "total"
+  ) |> 
+  mutate(
+    colour = case_when(
+      land == "Ísland" ~ litur_island,
+      land == "Danmörk" ~ litur_danmork,
+      land == "Finnland" ~ litur_finnland,
+      land == "Noregur" ~ litur_noregur,
+      land == "Svíþjóð" ~ litur_svithjod,
+      TRUE ~ litur_annad
+    ),
+    linewidth = 1 * (land == "Ísland"),
+    size = as_factor(linewidth)
+  ) |> 
+  arrange(time, per_pop) |> 
+  mutate(
+    colour = if_else(
+      land == "Lúxemborg",
+      "black",
+      colour
+    )
+  ) 
+
+p2 <- plot_dat |>  
+  ggplot(aes(time, per_pop)) +
+  geom_line_interactive(
+    data = ~ filter(.x, colour == litur_annad),
+    aes(group = land, colour = colour, data_id = land),
+    linewidth = 0.5
+  ) +
+  geom_line_interactive(
+    data = ~ filter(.x, colour != litur_annad, land != "Ísland"),
+    aes(group = land, colour = colour, data_id = land),
+    linewidth = 1
+  ) +
+  geom_line_interactive(
+    data = ~ filter(.x, land == "Ísland"),
+    aes(group = land, colour = colour, data_id = land),
+    linewidth = 1.5
+  ) +
+  scale_x_date(
+    breaks = unique(plot_dat$time),
+    limits = c(min(plot_dat$time), max(plot_dat$time) + years(2)),
+    labels = label_date_short(format = "%Y"),
+    expand = expansion(add = 50),
+    guide = guide_axis_truncated(
+      trunc_lower = min(plot_dat$time),
+      trunc_upper = max(plot_dat$time)
+    )
+  ) +
+  scale_y_continuous(
+    breaks = breaks_pretty(),
+    labels = label_number(),
+    # limits = c(1, 22),
+    expand = expansion(c(0.05, 0.05)),
+    guide = guide_axis_truncated()
+  )  +
+  scale_colour_identity() +
+  coord_cartesian(clip = "off") +
+  theme(
+    plot.margin = margin(t = 5, r = 35, b = 5, l = 5),
+    legend.position = "none"
+  ) +
+  labs(
+    x = NULL,
+    y = NULL,
+    title = "Fjöldi verndarveitinga á höfðatölu",
+    subtitle = "Sýnt sem fjöldi á 100.000 íbúa"
+  )
+
+```
+
+
+```{r}
+#| layout-ncol: 1
+#| column: screen-inset
+
+p <- p2 + p1 +
+  plot_annotation(
+    title = "Áhrif innrásar Rússa í Úkraínu á fjölda flóttafólks (2008 til 2022)",
+    subtitle = str_c(
+      "Láttu músina yfir land til að einblina á gögn þess",
+      " | ",
+      "Myndir sýna bæði venjular hælisveitingar og tímabundna vernd vegna innrásarinnar"
+    )
+  )
+
+girafe(
+  ggobj = p,
+  width_svg = 15,
+  height_svg = 0.4 * 15,
+  options = list(
+    opts_tooltip(
+      opacity = 0.8, 
+      use_fill = FALSE,
+      use_stroke = TRUE, 
+      css = "padding:5pt;font-family: Open Sans;font-size:1rem;color:white"),
+    opts_hover(css = "", nearest_distance = 50),
+    opts_hover_inv(css = "opacity:0.05"), 
+    opts_toolbar(saveaspng = FALSE),
+    opts_zoom(max = 1)
+  )
+)
+```
 
 ## Mánaðarlegar veitingar
 
@@ -764,17 +1005,10 @@ ggsave(
 )
 ```
 
-::: {.panel-tabset}
-
-#### Á mannfjölda
 
 ![](Figures/per_pop/veiting_saman_2.png){.column-page-left}
 
-#### Á landsframleiðslu
 
-![](Figures/per_gdp/veiting_saman_2.png){.column-page-left}
-
-:::
 
 ## Einstaklingar sem njóta verndar
 
@@ -1061,17 +1295,8 @@ ggsave(
 )
 ```
 
-::: {.panel-tabset}
-
-#### Á mannfjölda
-
 ![](Figures/per_pop/vernd_saman_2.png){.column-page-left}
 
-#### Á landsframleiðslu
-
-![](Figures/per_gdp/vernd_saman_2.png){.column-page-left}
-
-:::
 
 # Hæli
 
@@ -1079,11 +1304,238 @@ ggsave(
 
 Þessi flokkur er helsta ágreiningsefnið í umræðum þar sem einstaklingar í þessum hóp fá ekki sömu flýtimeðferð og einstaklingar frá Úkraínu. Því er rétt að líta helst til þessa hóps þegar skoða á álag á innviði sem tengjast móttöku flóttafólks.
 
+```{r}
+plot_dat <- data_hist |> 
+  bind_rows(
+    data_hist |> 
+      filter(
+        year(time) == 2022
+      ) |> 
+      mutate(
+        time = time + years(1)
+      )
+  ) |> 
+  filter(
+    land != "Bretland",
+    name == "total_non_ukr"
+  ) |> 
+  mutate(
+    colour = case_when(
+      land == "Ísland" ~ litur_island,
+      land == "Danmörk" ~ litur_danmork,
+      land == "Finnland" ~ litur_finnland,
+      land == "Noregur" ~ litur_noregur,
+      land == "Svíþjóð" ~ litur_svithjod,
+      TRUE ~ litur_annad
+    ),
+    linewidth = 1 * (land == "Ísland"),
+    size = as_factor(linewidth)
+  ) |> 
+  arrange(time, per_pop) |> 
+  mutate(
+    placement = row_number(),
+    .by = time
+  ) |> 
+  mutate(
+    colour = if_else(
+      land == "Lúxemborg",
+      "black",
+      colour
+    )
+  ) 
+
+p1 <- plot_dat |>  
+  ggplot(aes(time, placement)) +
+  geom_step_interactive(
+    data = ~ filter(.x, colour == litur_annad),
+    aes(group = land, colour = colour, data_id = land),
+    linewidth = 0.3
+  ) +
+  geom_step_interactive(
+    data = ~ filter(.x, colour != litur_annad, land != "Ísland"),
+    aes(group = land, colour = colour, data_id = land),
+    linewidth = 1
+  ) +
+  geom_step_interactive(
+    data = ~ filter(.x, land == "Ísland"),
+    aes(group = land, colour = colour, data_id = land),
+    linewidth = 1.5
+  ) +
+  geom_text_interactive(
+    data = ~ group_by(.x, land) |> 
+      filter(colour != litur_annad, time == max(time)),
+    aes(label = land, colour = colour, data_id = land),
+    hjust = 0,
+    nudge_x = 30
+  ) +
+  geom_text_interactive(
+    data = ~ group_by(.x, land) |> 
+      filter(colour == litur_annad, time == max(time)),
+    aes(label = land, colour = colour, data_id = land),
+    hjust = 0,
+    nudge_x = 30,
+    size = 3
+  ) +
+  scale_x_date(
+    breaks = unique(plot_dat$time) + months(6),
+    limits = c(min(plot_dat$time), max(plot_dat$time) + years(2)),
+    labels = label_date_short(format = "%Y"),
+    expand = expansion(add = 50),
+    guide = guide_axis_truncated(
+      trunc_lower = min(plot_dat$time) + months(6),
+      trunc_upper = max(plot_dat$time) + months(6)
+    )
+  ) +
+  scale_y_continuous(
+    breaks = 1:22,
+    labels = \(x) number(23 - x),
+    limits = c(1, 22),
+    expand = expansion(c(0.05, 0.05)),
+    guide = guide_axis_truncated()
+  )  +
+  scale_colour_identity() +
+  coord_cartesian(clip = "off") +
+  theme(
+    plot.margin = margin(t = 5, r = 35, b = 5, l = 5),
+    legend.position = "none"
+  ) +
+  labs(
+    x = NULL,
+    y = NULL,
+    title = "Evrópulöndum raðað eftir fjölda hælisveitinga á höfðatölu",
+    subtitle = "1: Flestar veitingar | 23: Fæstar veitingar"
+  )
+
+```
+
+```{r}
+plot_dat <- data_hist |> 
+  filter(
+    land != "Bretland",
+    name == "total_non_ukr"
+  ) |> 
+  mutate(
+    colour = case_when(
+      land == "Ísland" ~ litur_island,
+      land == "Danmörk" ~ litur_danmork,
+      land == "Finnland" ~ litur_finnland,
+      land == "Noregur" ~ litur_noregur,
+      land == "Svíþjóð" ~ litur_svithjod,
+      TRUE ~ litur_annad
+    ),
+    linewidth = 1 * (land == "Ísland"),
+    size = as_factor(linewidth)
+  ) |> 
+  arrange(time, per_pop) |> 
+  mutate(
+    colour = if_else(
+      land == "Lúxemborg",
+      "black",
+      colour
+    )
+  ) 
+
+p2 <- plot_dat |>  
+  ggplot(aes(time, per_pop)) +
+  geom_line_interactive(
+    data = ~ filter(.x, colour == litur_annad),
+    aes(group = land, colour = colour, data_id = land),
+    linewidth = 0.5
+  ) +
+  geom_line_interactive(
+    data = ~ filter(.x, colour != litur_annad, land != "Ísland"),
+    aes(group = land, colour = colour, data_id = land),
+    linewidth = 1
+  ) +
+  geom_line_interactive(
+    data = ~ filter(.x, land == "Ísland"),
+    aes(group = land, colour = colour, data_id = land),
+    linewidth = 1.5
+  ) +
+  # geom_text_interactive(
+  #   data = ~ group_by(.x, land) |> 
+  #     filter(colour != litur_annad, time == max(time)) |> 
+  #     mutate(
+  #       per_pop = case_when(
+  #         land == "Svíþjóð" ~ per_pop * 2,
+  #         land == "Finnland" ~ per_pop * 1.9,
+  #         land == "Finnland" ~ per_pop * 1.6,
+  #         land == "Danmörk" ~ per_pop * 0.98,
+  #         TRUE ~ per_pop
+  #       )
+  #     ),
+  #   aes(label = land, colour = colour, data_id = land),
+  #   hjust = 0,
+  #   nudge_x = 30
+  # ) +
+  scale_x_date(
+    breaks = unique(plot_dat$time),
+    limits = c(min(plot_dat$time), max(plot_dat$time) + years(2)),
+    labels = label_date_short(format = "%Y"),
+    expand = expansion(add = 50),
+    guide = guide_axis_truncated(
+      trunc_lower = min(plot_dat$time),
+      trunc_upper = max(plot_dat$time)
+    )
+  ) +
+  scale_y_continuous(
+    breaks = breaks_pretty(),
+    labels = label_number(),
+    # limits = c(1, 22),
+    expand = expansion(c(0.05, 0.05)),
+    guide = guide_axis_truncated()
+  )  +
+  scale_colour_identity() +
+  coord_cartesian(clip = "off") +
+  theme(
+    plot.margin = margin(t = 5, r = 35, b = 5, l = 5),
+    legend.position = "none"
+  ) +
+  labs(
+    x = NULL,
+    y = NULL,
+    title = "Fjöldi hælisveitinga á höfðatölu",
+    subtitle = "Sýnt sem fjöldi á 100.000 íbúa"
+  )
+
+```
+
+
+```{r}
+#| layout-ncol: 1
+#| column: screen-inset
+
+p <- p2 + p1 +
+  plot_annotation(
+    title = "Hælisveitingar í Evrópulöndum (2008 til 2022)",
+    subtitle = str_c(
+      "Láttu músina yfir land til að einblina á gögn þess",
+      " | ",
+      "Inniheldur ekki flóttafólk frá innrás Rússa í Úkraínu"
+    )
+  )
+
+girafe(
+  ggobj = p,
+  width_svg = 15,
+  height_svg = 0.4 * 15,
+  options = list(
+    opts_tooltip(
+      opacity = 0.8, 
+      use_fill = FALSE,
+      use_stroke = TRUE, 
+      css = "padding:5pt;font-family: Open Sans;font-size:1rem;color:white"),
+    opts_hover(css = "", nearest_distance = 50),
+    opts_hover_inv(css = "opacity:0.05"), 
+    opts_toolbar(saveaspng = FALSE),
+    opts_zoom(max = 1)
+  )
+)
+```
+
 ## Mánaðarlegur fjöldi umsókna
 
 Fyrst skoðum við hversu margar umsóknir um *hæli* þjóðir fá á hverjum mánuði.
-
-
 
 
 ```{r asylum_applicants}
@@ -1357,19 +1809,8 @@ ggsave(
 )
 ```
 
-::: {.panel-tabset}
-
-#### Á mannfjölda
 
 ![](Figures/per_pop/asylum_applicants_saman_2.png){.column-page-left}
-
-#### Á landsframleiðslu
-
-![](Figures/per_gdp/asylum_applicants_saman_2.png){.column-page-left}
-
-:::
-
-
 
 
 
@@ -1654,18 +2095,8 @@ ggsave(
 )
 ```
 
-::: {.panel-tabset}
-
-#### Á mannfjölda
 
 ![](Figures/per_pop/akvard_total_saman_2.png){.column-page-left}
-
-#### Á landsframleiðslu
-
-![](Figures/per_gdp/akvard_total_saman_2.png){.column-page-left}
-
-:::
-
 
 
 ## Jákvæðar
@@ -1944,17 +2375,7 @@ ggsave(
 )
 ```
 
-::: {.panel-tabset}
-
-#### Á mannfjölda
-
 ![](Figures/per_pop/akvard_positive_saman_2.png){.column-page-left}
-
-#### Á landsframleiðslu
-
-![](Figures/per_gdp/akvard_positive_saman_2.png){.column-page-left}
-
-:::
 
 
 ## Hlutfall Jákvæðra
@@ -2497,18 +2918,8 @@ ggsave(
 )
 ```
 
-::: {.panel-tabset}
-
-#### Á mannfjölda
 
 ![](Figures/per_pop/umsaek_saman_2.png){.column-page-left}
-
-#### Á landsframleiðslu
-
-![](Figures/per_gdp/umsaek_saman_2.png){.column-page-left}
-
-:::
-
 
 
 # Saman
@@ -2796,14 +3207,5 @@ ggsave(
 )
 ```
 
-::: {.panel-tabset}
-
-#### Á mannfjölda
 
 ![](Figures/per_pop/veiting_total_saman_2.png){.column-page-left}
-
-#### Á landsframleiðslu
-
-![](Figures/per_gdp/veiting_total_saman_2.png){.column-page-left}
-
-:::
