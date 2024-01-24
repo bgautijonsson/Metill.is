@@ -698,13 +698,14 @@ p2 <- plot_dat |>
 
 -----
 
-```{r}
+```{r ggiraph1}
 #| layout-ncol: 1
-#| column: screen-inset
+#| column: screen
+#| classes: padding10p
 
 p <- p2 + p1 +
   plot_annotation(
-    title = "Áhrif innrásar Rússa í Úkraínu á fjölda flóttafólks (2008 til 2022)",
+    title = "Áhrif innrásar Rússa í Úkraínu á fjölda flóttafólks",
     subtitle = str_c(
       "Láttu músina yfir land til að einblina á gögn þess",
       " | ",
@@ -714,8 +715,8 @@ p <- p2 + p1 +
 
 girafe(
   ggobj = p,
-  width_svg = 18,
-  height_svg = 0.34 * 18,
+  width_svg = 17,
+  height_svg = 0.4 * 17,
   options = list(
     opts_tooltip(
       opacity = 0.8, 
@@ -1504,9 +1505,10 @@ p2 <- plot_dat |>
 ```
 
 
-```{r}
+```{r ggiraph2}
 #| layout-ncol: 1
-#| column: screen-inset
+#| column: screen
+#| classes: padding10p
 
 p <- p2 + p1 +
   plot_annotation(
@@ -1520,8 +1522,8 @@ p <- p2 + p1 +
 
 girafe(
   ggobj = p,
-  width_svg = 18,
-  height_svg = 0.34 * 18,
+  width_svg = 17,
+  height_svg = 0.4 * 17,
   options = list(
     opts_tooltip(
       opacity = 0.8, 
