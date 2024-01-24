@@ -60,7 +60,15 @@ make_ggiraph2 <- function(
     ) +
     geom_text_interactive(
       data = ~ group_by(.x, land) |> 
-        filter(colour != litur_annad, time == max(time)),
+        filter(land == "Ísland", time == max(time)),
+      aes(label = land, colour = colour, data_id = land),
+      hjust = 0,
+      nudge_x = 30,
+      size = 5
+    ) +
+    geom_text_interactive(
+      data = ~ group_by(.x, land) |> 
+        filter(colour != litur_annad, land != "Ísland", time == max(time)),
       aes(label = land, colour = colour, data_id = land),
       hjust = 0,
       nudge_x = 30
@@ -182,8 +190,9 @@ make_ggiraph2 <- function(
       subtitle = str_c(
         "Láttu músina yfir land til að einblina á gögn þess",
         " | ",
-        "Inniheldur ekki flóttafólk frá innrás Rússa í Úkraínu"
-      )
+        "Inniheldur ekki flóttafólk frá Úkraínu í kjölfar innrásar Rússlands"
+      ),
+      caption = caption
     ) &
     theme(
       plot.background = element_blank(),
@@ -203,7 +212,7 @@ make_ggiraph2 <- function(
         css = "padding:5pt;font-family: Open Sans;font-size:1rem;color:white"),
       opts_hover(css = "", nearest_distance = 50),
       opts_hover_inv(css = "opacity:0.05"), 
-      opts_toolbar(saveaspng = FALSE),
+      opts_toolbar(saveaspng = TRUE),
       opts_zoom(max = 1)
     )
   ) 

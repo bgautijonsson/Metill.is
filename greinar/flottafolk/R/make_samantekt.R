@@ -441,7 +441,7 @@ make_samantekt <- function(
       ),
       opts_hover(css = "", nearest_distance = 1000),
       opts_hover_inv(css = "opacity:0.05"), 
-      opts_toolbar(saveaspng = FALSE),
+      opts_toolbar(saveaspng = TRUE),
       opts_zoom(max = 1)
     )
   )

@@ -60,7 +60,15 @@ make_ggiraph1 <- function(
     ) +
     geom_text_interactive(
       data = ~ group_by(.x, land) |> 
-        filter(colour != litur_annad, time == max(time)),
+        filter(land == "Ísland", time == max(time)),
+      aes(label = land, colour = colour, data_id = land),
+      hjust = 0,
+      nudge_x = 30,
+      size = 5
+    ) +
+    geom_text_interactive(
+      data = ~ group_by(.x, land) |> 
+        filter(colour != litur_annad, land != "Ísland", time == max(time)),
       aes(label = land, colour = colour, data_id = land),
       hjust = 0,
       nudge_x = 30
@@ -74,7 +82,7 @@ make_ggiraph1 <- function(
       size = 3
     ) +
     scale_x_date(
-      breaks = unique(plot_dat$time) + months(6),
+      breaks = unique(plot_dat$time[year(plot_dat$time) != 2023]) + months(6),
       limits = c(min(plot_dat$time), max(plot_dat$time) + years(2)),
       labels = label_date_short(format = "%Y"),
       expand = expansion(add = 50),
@@ -99,8 +107,8 @@ make_ggiraph1 <- function(
     labs(
       x = NULL,
       y = NULL,
-      title = "Evrópulöndum raðað eftir fjölda verndarveitinga á höfðatölu",
-      subtitle = "1: Flestar veitingar | 23: Fæstar veitingar"
+      title = "Evrópulöndum raðað eftir fjölda flóttamanna á höfðatölu",
+      subtitle = "1: Flestir flóttamenn | 23: Fæstir flóttamenn"
     )
   
   plot_dat <- data_hist |> 
@@ -172,19 +180,20 @@ make_ggiraph1 <- function(
     labs(
       x = NULL,
       y = NULL,
-      title = "Fjöldi verndarveitinga á höfðatölu",
+      title = "Fjöldi flóttamanna á höfðatölu",
       subtitle = "Sýnt sem fjöldi á 100.000 íbúa"
     )
   
   p <- p2 + p1 +
     plot_annotation(
-      title = "Áhrif innrásar Rússa í Úkraínu á fjölda flóttafólks",
+      title = "Áhrif innrásar Rússlands í Úkraínu á fjölda flóttafólks í Evrópu",
       subtitle = str_c(
+        "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
         "Láttu músina yfir land til að einblina á gögn þess",
         " | ",
-        "Myndir sýna bæði venjular hælisveitingar og tímabundna vernd vegna innrásarinnar",
-        "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n"
-      )
+        "Myndir sýna bæði venjular hælisveitingar og tímabundna vernd vegna innrásarinnar"
+      ),
+      caption = caption
     ) &
     theme(
       plot.background = element_blank(),
@@ -204,7 +213,7 @@ make_ggiraph1 <- function(
         css = "padding:5pt;font-family: Open Sans;font-size:1rem;color:white"),
       opts_hover(css = "", nearest_distance = 50),
       opts_hover_inv(css = "opacity:0.05"), 
-      opts_toolbar(saveaspng = FALSE),
+      opts_toolbar(saveaspng = TRUE),
       opts_zoom(max = 1)
     )
   )

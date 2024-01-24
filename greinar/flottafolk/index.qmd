@@ -460,52 +460,6 @@ Gögn þessarar úrvinnslu koma frá [Eurostat](https://ec.europa.eu/eurostat/en
 
 Til að auðvelda samanburð milli landa eru allar tölur sýndar sem fjöldi á hverja 100.000 íbúa hvers lands.
 
-```{r}
-#| column: page
-#| cache: true
-library(gt)
-library(readr)
-d <- read_csv("data/timabundin_vernd_perpop.csv")
-d |> 
-  gt() |> 
-  tab_header(
-    title = "Samantekt á gögnum um málefni flóttafólks",
-    subtitle = "Tölur eru sýndar sem fjöldi á 100.000 íbúa móttökulands"
-  ) |> 
-  tab_spanner(
-    label = "Á 100.000 íbúa",
-    columns = 3:8
-  ) |> 
-  fmt_number(
-    3:8, 
-    decimals = 0, 
-    sep_mark = ".",
-    dec_mark = ","
-  ) |> 
-  fmt_percent(
-    9,
-    decimals = 2,
-    sep_mark = ".",
-    dec_mark = ","
-  ) |> 
-  fmt_date(
-    1,
-    date_style = "yMMM",
-    locale = "is" 
-  ) |> 
-  opt_interactive(
-    use_search = FALSE,
-    use_highlight = TRUE,
-    use_filters = TRUE
-  ) |> 
-  tab_options(
-    table.background.color = "#faf9f9"
-  ) 
-```
-
-{{< downloadthis data/timabundin_vernd_perpop.csv dname="timebundin_vernd" label="Sækja gögn" type=primary class=downloadbutton >}}
-
-
 
 
 ```{r}
@@ -728,7 +682,7 @@ make_plot(
 
 
 make_samantekt(
-  height = 0.85 * 15,
+  height = 0.87 * 15,
   width = 15,
   end_date = clock::date_build(2023, c(10, 7, 10)),
   number_labels = label_number(big.mark = ".", decimal.mark = ",")
@@ -765,3 +719,52 @@ make_plot(
 
 
 
+
+# Gögn
+
+Hægt er að vafra gögnin á bak við þessa greiningu í töflunni eða sækja þau með því að smella á takkann að neðan.
+
+```{r}
+#| column: page
+#| cache: true
+library(gt)
+library(readr)
+d <- read_csv("data/timabundin_vernd_perpop.csv")
+d |> 
+  gt() |> 
+  tab_header(
+    title = "Samantekt á gögnum um málefni flóttafólks",
+    subtitle = "Tölur eru sýndar sem fjöldi á 100.000 íbúa móttökulands"
+  ) |> 
+  tab_spanner(
+    label = "Á 100.000 íbúa",
+    columns = 3:8
+  ) |> 
+  fmt_number(
+    3:8, 
+    decimals = 0, 
+    sep_mark = ".",
+    dec_mark = ","
+  ) |> 
+  fmt_percent(
+    9,
+    decimals = 2,
+    sep_mark = ".",
+    dec_mark = ","
+  ) |> 
+  fmt_date(
+    1,
+    date_style = "yMMM",
+    locale = "is" 
+  ) |> 
+  opt_interactive(
+    use_search = FALSE,
+    use_highlight = TRUE,
+    use_filters = TRUE
+  ) |> 
+  tab_options(
+    table.background.color = "#faf9f9"
+  ) 
+```
+
+{{< downloadthis data/timabundin_vernd_perpop.csv dname="timebundin_vernd" label="Sækja gögn" type=primary class=downloadbutton >}}
