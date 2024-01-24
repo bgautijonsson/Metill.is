@@ -134,17 +134,17 @@ make_ggiraph1 <- function(
     geom_line_interactive(
       data = ~ filter(.x, colour == litur_annad),
       aes(group = land, colour = colour, data_id = land),
-      linewidth = 0.5
+      linewidth = 0.8
     ) +
     geom_line_interactive(
       data = ~ filter(.x, colour != litur_annad, land != "Ísland"),
       aes(group = land, colour = colour, data_id = land),
-      linewidth = 1
+      linewidth = 1.5
     ) +
     geom_line_interactive(
       data = ~ filter(.x, land == "Ísland"),
       aes(group = land, colour = colour, data_id = land),
-      linewidth = 1.5
+      linewidth = 2
     ) +
     scale_x_date(
       breaks = unique(plot_dat$time),
@@ -164,7 +164,7 @@ make_ggiraph1 <- function(
       guide = guide_axis_truncated()
     )  +
     scale_colour_identity() +
-    coord_cartesian(clip = "off") +
+    coord_cartesian(clip = "off", ylim = c(0, 800)) +
     theme(
       plot.margin = margin(t = 5, r = 35, b = 5, l = 5),
       legend.position = "none"
@@ -182,7 +182,8 @@ make_ggiraph1 <- function(
       subtitle = str_c(
         "Láttu músina yfir land til að einblina á gögn þess",
         " | ",
-        "Myndir sýna bæði venjular hælisveitingar og tímabundna vernd vegna innrásarinnar"
+        "Myndir sýna bæði venjular hælisveitingar og tímabundna vernd vegna innrásarinnar",
+        "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n"
       )
     ) &
     theme(
@@ -208,3 +209,5 @@ make_ggiraph1 <- function(
     )
   )
 }
+
+
