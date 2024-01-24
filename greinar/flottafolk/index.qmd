@@ -303,6 +303,12 @@ d |>
   write_csv("data/timabundin_vernd.csv")
 ```
 
+```{r}
+#| eval: false
+d <- read_csv("data/raw_data.csv")
+```
+
+
 # Skilgreiningar
 
 Hér er unnið með gögn frá Eurostat, hagstofu Evrópusambandsins. Þar sem það er munur á löggjöf þar og á Íslandi er mikilvægt að hafa nokkrar skilgreiningar og þýðingar á hreinu. Hér verður notast við eftirfarandi skilgreiningar og þýðingar:
@@ -311,11 +317,6 @@ Hér er unnið með gögn frá Eurostat, hagstofu Evrópusambandsins. Þar sem �
 * **Hæli (e. asylum):** Einstaklingur sem fær ekki tímabundna vernd heldur þarf að ganga í gegnum persónulegra ferli þar sem málsmeðferð þarf að skera út um hvort einstaklingur þurfi á hæli að halda. Í gögnum Útlendingastofnunar er þetta oftast kallað *efnisleg meðferð* og hefur verið ýmist verið skipt niður í flokkana *vernd*, *viðbótarvernd* og *mannúðarleyfi* í gögnum þeirra. Hér verður notast við orðið **hæli** yfir alla þessa flokka.
 
 # Um gögnin
-
-```{r}
-d <- read_csv("data/raw_data.csv")
-```
-
 
 Gögn þessarar úrvinnslu koma frá [Eurostat](https://ec.europa.eu/eurostat/en/), nánar tiltekið eru þetta eftirfarandi gagnasöfn:
 
@@ -331,6 +332,40 @@ Gögn þessarar úrvinnslu koma frá [Eurostat](https://ec.europa.eu/eurostat/en
 Þessari upplýsingar eru svo tengdar við [gögn um mannfjölda hvers lands](https://ec.europa.eu/eurostat/databrowser/view/demo_pjan/default/table?lang=en).
 
 Til að auðvelda samanburð milli landa eru allar tölur sýndar sem fjöldi á hverja 100.000 íbúa hvers lands.
+
+
+```{r}
+#| column: page
+library(gt)
+library(readr)
+d <- read_csv("data/timabundin_vernd.csv")
+d |> 
+  gt() |> 
+  tab_spanner(
+    label = "Á 100.000 íbúa",
+    columns = 3:8
+  ) |> 
+  fmt_number(
+    3:8, decimals = 0
+  ) |> 
+  fmt_percent(
+    9, decimals = 2
+  ) |> 
+  fmt_date(
+    1,
+    date_style = "yMMM",
+    locale = "is"
+  ) |> 
+  opt_interactive(
+    use_search = TRUE,
+    use_filters = TRUE
+    ) |> 
+  tab_options(
+    table.background.color = "#faf9f9"
+  ) 
+```
+
+{{< downloadthis data/timabundin_vernd.csv dname="timebundin_vernd" label="Sækja gögn" type=primary class=downloadbutton >}}
 
 # Tímabundin Vernd
 
@@ -570,7 +605,7 @@ ggsave(
 )
 ```
 
-![](Figures/veiting_saman_2.png){.column-page}
+![](Figures/veiting_saman_2.png){.column-page-left}
 
 ## Einstaklingar sem njóta verndar
 
@@ -817,7 +852,7 @@ ggsave(
 )
 ```
 
-![](Figures/vernd_saman_2.png){.column-page}
+![](Figures/vernd_saman_2.png){.column-page-left}
 
 # Hæli
 
@@ -1063,7 +1098,7 @@ ggsave(
 ```
 
 
-![](Figures/asylum_applicants_saman_2.png){.column-page}
+![](Figures/asylum_applicants_saman_2.png){.column-page-left}
 
 
 
@@ -1303,7 +1338,7 @@ ggsave(
 )
 ```
 
-![](Figures/akvard_total_saman_2.png){.column-page}
+![](Figures/akvard_total_saman_2.png){.column-page-left}
 
 
 
@@ -1541,7 +1576,7 @@ ggsave(
 )
 ```
 
-![](Figures/akvard_positive_saman_2.png){.column-page}
+![](Figures/akvard_positive_saman_2.png){.column-page-left}
 
 
 ## Hlutfall Jákvæðra
@@ -1779,7 +1814,7 @@ ggsave(
 )
 ```
 
-![](Figures/percent_positive_saman_2.png){.column-page}
+![](Figures/percent_positive_saman_2.png){.column-page-left}
 
 ## Umsækjendur í bið
 
@@ -2017,7 +2052,7 @@ ggsave(
 )
 ```
 
-![](Figures/umsaek_saman_2.png){.column-page}
+![](Figures/umsaek_saman_2.png){.column-page-left}
 
 # Saman
 
@@ -2261,4 +2296,4 @@ ggsave(
 ```
 
 
-![](Figures/veiting_total_saman_2.png){.column-page}
+![](Figures/veiting_total_saman_2.png){.column-page-left}
