@@ -341,6 +341,10 @@ library(readr)
 d <- read_csv("data/timabundin_vernd.csv")
 d |> 
   gt() |> 
+  tab_header(
+    title = "Samantekt á gögnum um málefni flóttafólks",
+    subtitle = "Tölur eru sýndar sem fjöldi á 100.000 íbúa móttökulands"
+  ) |> 
   tab_spanner(
     label = "Á 100.000 íbúa",
     columns = 3:8
@@ -371,9 +375,11 @@ d |>
 
 Í þessum kafla verður aðallega fjallar um flóttafólk frá Úkraínu. Það getur verið eitthvað af flóttafólki frá öðrum löndum eftir löggjöfum hvers svæðis, en hlutdeild Úkraínsks flóttafólks er nær 100% í öllum fjöldatölum þessa flokks.
 
+Þessi flokkur er oftast tekinn út úr sviga þegar tölur um flóttafólk eru greindar þar sem flóttafólk frá Úkraínu fær fljótari meðferð og veldur því minna álagi á innviði sem tengjast móttöku flóttafólks.
+
 ## Mánaðarlegar veitingar
 
-Hér sjáum við tölur um hversu mörgum einstaklingum var veitt tímabundin vernd í hverjum mánuði.
+Hér sjáum við tölur um hversu mörgum einstaklingum var veitt tímabundin vernd í hverjum mánuði. 
 
 ```{r veiting}
 #| eval: false
@@ -608,6 +614,8 @@ ggsave(
 ![](Figures/veiting_saman_2.png){.column-page-left}
 
 ## Einstaklingar sem njóta verndar
+
+1°
 
 Hér sjaum við svo tölur um það hversu margir einstaklingar njóta tímabundinnar verndar hverju sinni. 
 
@@ -856,11 +864,13 @@ ggsave(
 
 # Hæli
 
-Í þessum kafla eiga tölur við um *hæli*, það er flóttafólk hvers umsóknir þurfa að fara í gegnum efnislega meðferð og úrskurður byggður á aðstæðum hvers og eins. 
+Í þessum kafla eiga tölur við um *hæli*, það er að segja flóttafólk hvers umsóknir þurfa að fara í gegnum efnislega meðferð og úrskurður byggður á aðstæðum hvers og eins. 
+
+Þessi flokkur er helsta ágreiningsefnið í umræðum þar sem einstaklingar í þessum hóp fá ekki sömu flýtimeðferð og einstaklingar frá Úkraínu. Því er rétt að líta helst til þessa hóps þegar skoða á álag á innviði sem tengjast móttöku flóttafólks.
 
 ## Mánaðarlegur fjöldi umsókna
 
-
+Fyrst skoðum við hversu margar umsóknir um *hæli* þjóðir fá á hverjum mánuði.
 
 ```{r asylum_applicants}
 #| eval: false
@@ -1104,7 +1114,11 @@ ggsave(
 
 ## Ákvarðanir
 
+Þjóðir fá mismargar umsóknir í hverju mánuði og því gefur að skilja að sumar þjóðir þurfa að afgreiða mál fljótar en aðrar til að ná að afgreiða málin.
+
 ### Samtals Ákvarðanir
+
+Byrjum á að skoða hverju margar ákvarðanir eru teknar á hverjum mánuði. 
 
 ```{r akvard_total}
 #| eval: false
@@ -1344,6 +1358,8 @@ ggsave(
 
 ## Jákvæðar
 
+Í gögnum um ákvarðanir getum við séð hvort ákveðið var að veita einstakling hæli eða ekki. Skoðum hér fjölda veitinga, það er skoðum hversu mörgum einstaklingum var veitt hæli í hverjum mánuði.
+
 ```{r akvard_positive}
 #| eval: false
 
@@ -1580,6 +1596,8 @@ ggsave(
 
 
 ## Hlutfall Jákvæðra
+
+Með upplýsingum um fjölda ákvarðana og fjölda veitinga getum við svo skoðað hlutfall umsókna sem voru samþykktar.
 
 ```{r akvard_percent_positive}
 #| eval: false
