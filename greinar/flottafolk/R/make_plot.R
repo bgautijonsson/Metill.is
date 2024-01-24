@@ -7,7 +7,9 @@ make_plot <- function(
     subtitle,
     caption,
     y_upper = NA,
-    number_labels = label_number()
+    number_labels = label_number(),
+    height = 0.9 * 11,
+    width = 11
 ) {
   
   p1 <- d |> 
@@ -32,27 +34,43 @@ make_plot <- function(
       ),
       linewidth = 1 * (land == "Ísland"),
       size = as_factor(linewidth),
-      land = glue("<i style='color:{colour}'>{land}</i>"),
-      land = fct_reorder(land, per_pers)
+      land_ordered = glue("<i style='color:{colour}'>{land}</i>"),
+      land_ordered = fct_reorder(land_ordered, per_pers)
     ) |> 
-    ggplot(aes(per_pers, land, col = colour, size = size)) +
-    geom_point() +
-    geom_segment(aes(yend = land, xend = 0, linewidth = linewidth), lty = 2, alpha = 0.5) +
+    ggplot(aes(per_pers, land_ordered, col = colour, size = size)) +
+    geom_text_interactive(
+      aes(x = 0, label = str_c(land, " "), data_id = land),
+      hjust = 1,
+      size = 4
+    ) +
+    geom_point_interactive(
+      aes(data_id = land)
+    ) +
+    geom_segment_interactive(
+      aes(yend = land_ordered, xend = 0, linewidth = linewidth, data_id = land),
+      lty = 2, 
+      alpha = 0.5
+    ) +
     scale_x_continuous(
-      expand = expansion(c(0, 0.05)),
+      expand = expansion(c(0.15, 0.05)),
       breaks = breaks_extended(),
       limits = c(0, NA),
-      labels = number_labels
+      labels = number_labels,
+      guide = guide_axis_truncated(
+        trunc_lower = 0
+      )
     ) +
     scale_colour_identity() +
-    scale_size_manual(values = c(1, 3)) +
+    scale_size_manual(values = c(1.5, 3)) +
     scale_linewidth(
       range = c(0.2, 0.4)
     ) +
     coord_cartesian(clip = "off") +
     theme(
       plot.margin = margin(t = 5, r = 25, b = 5, l = 5),
-      axis.text.y = element_markdown(size = 10, family = "Lato"),
+      axis.line.y = element_blank(),
+      axis.text.y = element_blank(),
+      axis.ticks.y = element_blank(),
       legend.position = "none"
     ) +
     labs(
@@ -83,30 +101,43 @@ make_plot <- function(
       ),
       linewidth = 1 * (land == "Ísland"),
       size = as_factor(linewidth),
-      land = glue("<i style='color:{colour}'>{land}</i>"),
-      land = fct_reorder(land, per_pers)
+      land_ordered = glue("<i style='color:{colour}'>{land}</i>"),
+      land_ordered = fct_reorder(land_ordered, per_pers)
     ) |> 
-    ggplot(aes(per_pers, land, col = colour, size = size)) +
-    geom_point() +
-    geom_segment(
-      aes(yend = land, xend = 0, linewidth = linewidth),
+    ggplot(aes(per_pers, land_ordered, col = colour, size = size)) +
+    geom_text_interactive(
+      aes(x = 0, label = str_c(land, " "), data_id = land),
+      hjust = 1,
+      size = 4
+    ) +
+    geom_point_interactive(
+      aes(data_id = land)
+    ) +
+    geom_segment_interactive(
+      aes(yend = land_ordered, xend = 0, linewidth = linewidth, data_id = land),
       lty = 2, 
       alpha = 0.5
     ) +
     scale_x_continuous(
-      expand = expansion(c(0, 0.05)),
+      expand = expansion(c(0.15, 0.05)),
+      breaks = breaks_extended(),
       limits = c(0, NA),
-      labels = number_labels
+      labels = number_labels,
+      guide = guide_axis_truncated(
+        trunc_lower = 0
+      )
     ) +
     scale_colour_identity() +
-    scale_size_manual(values = c(1, 3)) +
+    scale_size_manual(values = c(1.5, 3)) +
     scale_linewidth(
       range = c(0.2, 0.4)
     ) +
     coord_cartesian(clip = "off") +
     theme(
       plot.margin = margin(t = 5, r = 25, b = 5, l = 5),
-      axis.text.y = element_markdown(size = 10),
+      axis.line.y = element_blank(),
+      axis.text.y = element_blank(),
+      axis.ticks.y = element_blank(),
       legend.position = "none"
     ) +
     labs(
@@ -142,31 +173,18 @@ make_plot <- function(
   
   p3 <- plot_dat |> 
     ggplot(aes(dags, value)) +
-    geom_line(
+    geom_line_interactive(
       data = plot_dat |> 
         filter(colour == litur_annad),
-      aes(group = land, colour = litur_annad),
+      aes(group = land, colour = litur_annad, data_id = land),
       alpha = 0.3,
       col = litur_annad
     ) +
-    geom_line(
+    geom_line_interactive(
       data = plot_dat |> 
         filter(colour != litur_annad),
-      aes(group = land, colour = colour),
+      aes(group = land, colour = colour, data_id = land),
       linewidth = 1
-    ) +
-    ggrepel::geom_text_repel(
-      data = plot_dat |> 
-        group_by(land) |> 
-        filter(colour != litur_annad, dags == max(dags)) |> 
-        ungroup(),
-      aes(label = land, colour = colour),
-      hjust = 0.1,
-      nudge_x = 15,
-      direction = "y", 
-      min.segment.length = Inf,
-      force = 0.1,
-      force_pull = 2
     ) +
     scale_x_date(
       breaks = unique(plot_dat$dags),
@@ -193,7 +211,7 @@ make_plot <- function(
     labs(
       x = NULL,
       y = NULL,
-      subtitle = "Fjöldi á mánuði"
+      subtitle = "Mánaðarleg þróun"
     )
   
   p <- (
@@ -203,11 +221,30 @@ make_plot <- function(
     p3 +
     plot_annotation(
       title = title,
-      subtitle = subtitle,
+      subtitle = str_c(
+        subtitle, " | ",
+        "Láttu músina yfir land til að einblína á það"
+      ),
       caption = caption
     )
   
-  p
+  girafe(
+    ggobj = p,
+    width_svg = width,
+    height_svg = height,
+    options = list(
+      opts_tooltip(
+        opacity = 0.8, 
+        use_fill = TRUE,
+        use_stroke = FALSE, 
+        css = "padding:5pt;font-family: Open Sans;font-size:1rem;color:white"
+      ),
+      opts_hover(css = "", nearest_distance = 1000),
+      opts_hover_inv(css = "opacity:0.05"), 
+      opts_toolbar(saveaspng = FALSE),
+      opts_zoom(max = 1)
+    )
+  )
 }
 
 
