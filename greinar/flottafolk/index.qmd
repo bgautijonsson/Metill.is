@@ -314,6 +314,9 @@ d |>
   write_csv("data/raw_data.csv")
 
 d |>
+  mutate(
+    per_pop = if_else(name == "percent_positive_decisions", value, per_pop)
+  ) |> 
   select(-value, -pop, -per_gdp) |>
   pivot_wider(names_from = name, values_from = per_pop) |> 
   select(
@@ -330,6 +333,9 @@ d |>
   write_csv("data/timabundin_vernd_perpop.csv")
 
 d |>
+  mutate(
+    per_gdp = if_else(name == "percent_positive_decisions", value, per_gdp)
+  ) |> 
   select(-value, -pop, -per_pop) |>
   pivot_wider(names_from = name, values_from = per_gdp) |> 
   select(
@@ -398,15 +404,21 @@ d |>
     columns = 3:8
   ) |> 
   fmt_number(
-    3:8, decimals = 0
+    3:8, 
+    decimals = 0, 
+    sep_mark = ".",
+    dec_mark = ","
   ) |> 
   fmt_percent(
-    9, decimals = 2
+    9,
+    decimals = 2,
+    sep_mark = ".",
+    dec_mark = ","
   ) |> 
   fmt_date(
     1,
     date_style = "yMMM",
-    locale = "is"
+    locale = "is" 
   ) |> 
   opt_interactive(
     use_search = TRUE,
@@ -434,19 +446,25 @@ d |>
     subtitle = "Tölur eru sýndar sem fjöldi á €100.000 landsframleiðslu móttökulands"
   ) |> 
   tab_spanner(
-    label = "Á 100.000 íbúa",
+    label = "Á €100.000 landsframleiðslu",
     columns = 3:8
   ) |> 
-  fmt_number(
-    3:8, decimals = 0
+   fmt_number(
+    3:8, 
+    decimals = 0, 
+    sep_mark = ".",
+    dec_mark = ","
   ) |> 
   fmt_percent(
-    9, decimals = 2
+    9,
+    decimals = 2,
+    sep_mark = ".",
+    dec_mark = ","
   ) |> 
   fmt_date(
     1,
     date_style = "yMMM",
-    locale = "is"
+    locale = "is" 
   ) |> 
   opt_interactive(
     use_search = TRUE,
