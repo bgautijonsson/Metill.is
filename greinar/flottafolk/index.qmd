@@ -75,13 +75,13 @@ beneficiaries <- get_eurostat(
   "migr_asytpsm", 
   cache = TRUE,
   update_cache = update_cache,
-  cache_dir = "data"
+  cache_dir = "data",
+  filters = list(
+    sex = "T",
+    age = "TOTAL",
+    citizen = "TOTAL"
+  )
 ) |>
-  filter(
-    sex == "T",
-    age == "TOTAL",
-    citizen == "TOTAL"
-  ) |> 
   select(-unit, -sex, -age, -citizen) |> 
   label_eurostat()
 ```
@@ -93,12 +93,12 @@ pop <- get_eurostat(
   "demo_pjan",
   cache = TRUE,
   update_cache = update_cache,
-  cache_dir = "data"
+  cache_dir = "data",
+  filters = list(
+    age = "TOTAL",
+    sex = "T"
+  )
 ) |> 
-  filter(
-    age == "TOTAL",
-    sex == "T"
-  ) |> 
   select(-unit, -age, -sex) |> 
   label_eurostat()
 ```
@@ -109,17 +109,26 @@ applicants <- get_eurostat(
   "migr_asypenctzm",
   cache = TRUE,
   update_cache = update_cache,
-  cache_dir = "data"
-) |>
+  cache_dir = "data",
+  filters = list(
+    age = "TOTAL",
+    sex = "T",
+    citizen = c("TOTAL", "UA")
+  )
+) |> 
+  select(-sex, -age) |> 
   janitor::remove_constant() |> 
-  filter(
-    age == "TOTAL",
-    sex == "T",
-    citizen == "TOTAL"
+  label_eurostat() |> 
+  pivot_wider(names_from = citizen, values_from = values) |> 
+  janitor::clean_names() |> 
+  mutate(
+    non_ukraine = total - ukraine
   ) |> 
-  select(-citizen, -sex, -age) |> 
-  label_eurostat()
-
+  rename(
+    applicants_ukraine = ukraine,
+    applicants_total = total,
+    applicants_non_ukraine = non_ukraine
+  )
 ```
 
 ```{r data_grants}
@@ -128,13 +137,13 @@ grants <- get_eurostat(
   "migr_asytpfm",
   cache = TRUE,
   update_cache = update_cache,
-  cache_dir = "data"
+  cache_dir = "data",
+  filters = list(
+    sex = "T",
+    age = "TOTAL",
+    citizen = "TOTAL"
+  )
 ) |> 
-  filter(
-    sex == "T",
-    age == "TOTAL",
-    citizen == "TOTAL"
-  ) |> 
   select(-unit, -citizen, -sex, -age) |> 
   label_eurostat()
 ```
@@ -145,17 +154,46 @@ decisions <- get_eurostat(
   "migr_asydcfstq",
   cache = TRUE,
   update_cache = update_cache,
-  cache_dir = "data"
+  cache_dir = "data",
+  filters = list(
+    citizen = c("TOTAL", "UA"),
+    sex = "T",
+    age = "TOTAL",
+    decision = c("TOTAL", "TOTAL_POS")
+  )
 )  |> 
-  filter(
-    citizen == "TOTAL",
-    sex == "T",
-    age == "TOTAL",
-    decision %in% c("TOTAL", "TOTAL_POS")
-  ) |> 
-  select(-citizen, -sex, -age, -unit) |> 
+  select(-sex, -age, -unit, -freq) |> 
   label_eurostat() |> 
-  pivot_wider(names_from = decision, values_from = values) 
+  pivot_wider(names_from = citizen, values_from = values) |> 
+  mutate(values = Total - Ukraine) |> 
+  select(-Total, -Ukraine) |> 
+  pivot_wider(names_from = decision, values_from = values) |> 
+  janitor::clean_names() |> 
+  rename(total_decisions = total, positive_decisions = total_positive_decisions) |> 
+  mutate(
+    percent_positive_decisions = positive_decisions / total_decisions
+  )
+
+decisions <- crossing(
+      time = seq.Date(
+        from = min(decisions$time), 
+        to = max(decisions$time), 
+        by = "1 month"
+      ),
+      geo = unique(decisions$geo)
+    ) |> 
+  left_join(
+    decisions,
+    by = join_by(time, geo)
+  ) |> 
+  arrange(time)  |> 
+  group_by(geo) |> 
+  mutate_at(
+    vars(total_decisions, positive_decisions, percent_positive_decisions),
+    \(x) zoo::na.approx(x, na.rm = FALSE, maxgap = 5) / 3
+  ) |> 
+  ungroup()
+   
 ```
 
 
@@ -170,14 +208,23 @@ asylum_applicants <- get_eurostat(
     sex = "T",
     age = "TOTAL",
     asyl_app = "ASY_APP",
-    citizen = "TOTAL"
+    citizen = c("TOTAL", "UA")
   )
 ) |> 
-  select(-sex, -age, -freq, -unit, -asyl_app, -citizen) |> 
+  select(-sex, -age, -freq, -unit, -asyl_app) |> 
   drop_na() |> 
   label_eurostat() |> 
-  select(-asyl_app) |> 
-  rename(asylum_applicants = values)
+  rename(asylum_applicants = values) |> 
+  pivot_wider(names_from = citizen, values_from = asylum_applicants) |> 
+  janitor::clean_names() |> 
+  mutate(
+    non_ukr = total - ukraine
+  ) |> 
+  rename(
+    asylum_applicants_total = total, 
+    asylum_applicants_ukraine = ukraine,
+    asylum_applicants_non_ukraine = non_ukr
+  )
 ```
 
 
@@ -185,7 +232,7 @@ asylum_applicants <- get_eurostat(
 #| eval: false
 d <- beneficiaries |> 
   mutate(
-    year = year(TIME_PERIOD)
+    year = year(time)
   ) |> 
   rename(beneficiaries = values) |>
   select(-freq) |> 
@@ -193,36 +240,30 @@ d <- beneficiaries |>
     pop |> 
       select(-freq) |> 
       group_by(geo) |> 
-      filter(TIME_PERIOD == max(TIME_PERIOD)) |> 
+      filter(time == max(time)) |> 
       ungroup() |> 
       select(geo, pop = values),
     by = c("geo")
   ) |> 
   full_join(
-    applicants |> 
-      rename(applicants = values),
-    by = c("geo", "TIME_PERIOD")
+    applicants,
+    by = join_by(geo, time)
   ) |> 
   inner_join(
     grants |> 
       select(-freq) |> 
       rename(grants = values),
-    by = c("geo", "TIME_PERIOD")
+    by = join_by(geo, time)
   ) |> 
   left_join(
-    decisions |> 
-      select(-freq) |> 
-      rename(
-        "total_decisions" = Total,
-        "positive_decisions" = "Total positive decisions"
-      ),
-    by = join_by(geo, TIME_PERIOD)
+    decisions ,
+    by = join_by(geo, time)
   ) |> 
   left_join(
     asylum_applicants,
-    by = join_by(geo, TIME_PERIOD == time)
+    by = join_by(geo, time)
   ) |> 
-  rename(country = geo, time = TIME_PERIOD) |> 
+  rename(country = geo) |> 
   mutate(
     country = ifelse(str_detect(country, "Germany"), "Germany", country)
   ) |> 
@@ -244,19 +285,25 @@ d <- beneficiaries |>
 d |> 
   write_csv("data/raw_data.csv")
 
-d |> 
-  select(-value, -pop) |> 
-  pivot_wider(names_from = name, values_from = per_pop) |> 
-  rename(
-    "Mánuður" = time,
-    "Land" = land,
-    "Fjöldi með vernd" = beneficiaries,
-    "Umsækjendur" = applicants,
-    "Veitt vernd í mánuði" = grants
-  ) |> 
-  write_csv("data/timabundin_vernd.csv")
+# d |> 
+#   select(-value, -pop) |> 
+#   pivot_wider(names_from = name, values_from = per_pop) |> 
+#   rename(
+#     "Mánuður" = time,
+#     "Land" = land,
+#     "Fjöldi með vernd" = beneficiaries,
+#     "Umsækjendur" = applicants,
+#     "Veitt vernd í mánuði" = grants
+#   ) |> 
+#   write_csv("data/timabundin_vernd.csv")
 ```
 
+# Skilgreiningar
+
+Hér er unnið með gögn frá Eurostat, hagstofu Evrópusambandsins. Þar sem það er munur á löggjöf þar og á Íslandi er mikilvægt að hafa nokkrar skilgreiningar og þýðingar á hreinu. Hér verður notast við eftirfarandi skilgreiningar og þýðingar:
+
+* **Tímabundin vernd (e. temporary protection):** Þetta er kallað *sameiginleg vernd vegna fjöldaflótta* í 44. grein laga um útlendinga, en *temporary protection* hjá Evrópusambandinu. Dómsmálaráðherra virkjaði þessa grein vegna fjöldaflótta frá Úkraínu í mars 2022. Hér verður notast við orðatiltækið **tímabundin vernd**.
+* **Hælisleitandi (e. asylum applicant):** Einstaklingur sem fær ekki tímabundna vernd heldur þarf að ganga í gegnum persónulegra ferli þar sem málsmeðferð þarf að skera út um hvort einstaklingur þurfi á hæli að halda.
 
 # Um gögnin
 
@@ -268,12 +315,12 @@ d <- read_csv("data/raw_data.csv")
 Gögn þessarar úrvinnslu koma frá [Eurostat](https://ec.europa.eu/eurostat/en/), nánar tiltekið eru þetta eftirfarandi gagnasöfn:
 
 * Tímabundin vernd
-  - [Einstaklingar sem njóta tímabundinnar verndar í lok mánaðar](https://ec.europa.eu/eurostat/databrowser/view/MIGR_ASYTPSM/default/table?lang=en&category=migr.migr_asy.migr_asytp)
-  - [Mánaðarlegur fjöldi einstaklinga sem fá veitta tímabundna vernd](https://ec.europa.eu/eurostat/databrowser/view/MIGR_ASYTPFM/default/table?lang=en&category=migr.migr_asy.migr_asytp)
+- [Einstaklingar sem njóta tímabundinnar verndar í lok mánaðar](https://ec.europa.eu/eurostat/databrowser/view/MIGR_ASYTPSM/default/table?lang=en&category=migr.migr_asy.migr_asytp)
+- [Mánaðarlegur fjöldi einstaklinga sem fá veitta tímabundna vernd](https://ec.europa.eu/eurostat/databrowser/view/MIGR_ASYTPFM/default/table?lang=en&category=migr.migr_asy.migr_asytp)
 * Hæli
-  - [Mánaðarlegur fjöldi umsækjenda um hæli](https://ec.europa.eu/eurostat/databrowser/view/migr_asyappctzm/default/table?lang=en)
-  - [Umsækjendur í bið eftir niðurstöðu hælisumsóknar í lok mánaðar](https://ec.europa.eu/eurostat/databrowser/view/TPS00190/default/table?lang=en&category=migr.migr_asy.migr_asyapp)
-  
+- [Mánaðarlegur fjöldi umsækjenda um hæli](https://ec.europa.eu/eurostat/databrowser/view/migr_asyappctzm/default/table?lang=en)
+- [Umsækjendur í bið eftir niðurstöðu hælisumsóknar í lok mánaðar](https://ec.europa.eu/eurostat/databrowser/view/TPS00190/default/table?lang=en&category=migr.migr_asy.migr_asyapp)
+
 Þessari upplýsingar eru svo tengdar við [gögn um mannfjölda hvers lands](https://ec.europa.eu/eurostat/databrowser/view/demo_pjan/default/table?lang=en).
 
 Til að auðvelda samanburð milli landa eru allar tölur sýndar sem fjöldi á hverja 100.000 íbúa hvers lands.
@@ -772,7 +819,7 @@ end_date <- clock::date_build(2023, 11, 1)
 
 p1 <- d |> 
   filter(
-    name == "asylum_applicants"
+    name == "asylum_applicants_non_ukraine"
   ) |> 
   rename(
     dags = time, 
@@ -799,7 +846,7 @@ p1 <- d |>
   geom_point() +
   geom_segment(aes(yend = land, xend = 0, linewidth = linewidth), lty = 2, alpha = 0.5) +
   scale_x_continuous(
-    expand = expansion(c(0, 0.01)),
+    expand = expansion(c(0, 0.02)),
     breaks = breaks_extended(),
     limits = c(0, NA)
   ) +
@@ -816,7 +863,7 @@ p1 <- d |>
   labs(
     x = NULL,
     y = NULL,
-    title = "Hvar sækja flestir einstaklingar um hæli?",
+    title = "Hvar sækja flestir einstaklingar um hæli (efnisleg meðferð)?",
     subtitle = "Fjöldi í mars 2022",
     caption = caption
   )
@@ -830,8 +877,8 @@ ggsave(
 
 p2 <- d |> 
   filter(
-    name == "asylum_applicants"
-    ) |> 
+    name == "asylum_applicants_non_ukraine"
+  ) |> 
   rename(
     dags = time, 
     flottafjoldi = value,
@@ -877,7 +924,7 @@ p2 <- d |>
   labs(
     x = NULL,
     y = NULL,
-    title = "Hvar sækja flestir einstaklingar um hæli?",
+    title = "Hvar sækja flestir einstaklingar um hæli (efnisleg meðferð)?",
     subtitle = glue("Fjöldi í {month(end_date, label = T, abbr = F)} {year(end_date)}"),
     caption = caption
   )
@@ -891,7 +938,7 @@ ggsave(
 p <- (p1 + labs(title = NULL, caption = NULL)) + 
   (p2 + labs(title = NULL, caption = NULL)) +
   plot_annotation(
-    title = "Hvar sækja flestir einstaklingar um hæli?",
+    title = "Hvar sækja flestir einstaklingar um hæli (efnisleg meðferð)?",
     caption = caption
   )
 
@@ -902,7 +949,7 @@ ggsave(
 )
 
 plot_dat <- d |> 
-  filter(name == "asylum_applicants") |> 
+  filter(name == "asylum_applicants_non_ukraine") |> 
   arrange(time) |> 
   rename(
     dags = time, 
@@ -972,6 +1019,7 @@ p3 <- plot_dat |>
     guide = guide_axis_truncated()
   ) +
   scale_colour_identity() +
+  coord_cartesian(clip = "off") +
   theme(
     plot.margin = margin(t = 5, r = 35, b = 5, l = 5)
   ) +
@@ -987,7 +1035,7 @@ p <- (
 ) / 
   p3 +
   plot_annotation(
-    title = "Hvar sækja flestir einstaklingar um hæli?",
+    title = "Hvar sækja flestir einstaklingar um hæli (efnisleg meðferð)?",
     subtitle = "Sýnt sem fjöldi á 100.000 íbúa hvers lands",
     caption = caption
   )
@@ -1051,7 +1099,7 @@ p1 <- d |>
   scale_linewidth(
     range = c(0.2, 0.4)
   ) +
-  coord_cartesian(xlim = c(0, 100), clip = "off") +
+  coord_cartesian(clip = "off") +
   theme(
     plot.margin = margin(t = 5, r = 25, b = 5, l = 5),
     axis.text.y = element_markdown(size = 10, family = "Lato"),
@@ -1060,8 +1108,8 @@ p1 <- d |>
   labs(
     x = NULL,
     y = NULL,
-    title = "Hvar eru flestar ákvarðanir um stöðu hælisleitenda teknar á hverjum ársfjórðungi?",
-    subtitle = "Fjöldi samkvæmt tölum frá apríl 2022",
+    title = "Hvar eru flestar ákvarðanir um stöðu hælisleitenda (efnisleg meðferð) teknar á mánuði?",
+    subtitle = "Fjöldi í apríl 2022",
     caption = caption
   )
 
@@ -1104,14 +1152,14 @@ p2 <- d |>
     alpha = 0.5
   ) +
   scale_x_continuous(
-    expand = expansion(),
-    limits = c(0, 100)
+    expand = expansion()
   ) +
   scale_colour_identity() +
   scale_size_manual(values = c(1, 3)) +
   scale_linewidth(
     range = c(0.2, 0.4)
   ) +
+  coord_cartesian(clip = "off") +
   theme(
     plot.margin = margin(t = 5, r = 25, b = 5, l = 5),
     axis.text.y = element_markdown(size = 10),
@@ -1120,8 +1168,8 @@ p2 <- d |>
   labs(
     x = NULL,
     y = NULL,
-    title = "Hvar eru flestar ákvarðanir um stöðu hælisleitenda teknar á hverjum ársfjórðungi?",
-    subtitle = glue("Fjöldi samkvæmt tölum frá {month(end_date, label = T, abbr = F)} {year(end_date)}"),
+    title = "Hvar eru flestar ákvarðanir um stöðu hælisleitenda (efnisleg meðferð) teknar á mánuði?",
+    subtitle = glue("Fjöldi í {month(end_date, label = T, abbr = F)} {year(end_date)}"),
     caption = caption
   )
 
@@ -1134,7 +1182,7 @@ ggsave(
 p <- (p1 + labs(title = NULL, caption = NULL)) + 
   (p2 + labs(title = NULL, caption = NULL)) +
   plot_annotation(
-    title = "Hvar eru flestar ákvarðanir um stöðu hælisleitenda teknar á hverjum ársfjórðungi?",
+    title = "Hvar eru flestar ákvarðanir um stöðu hælisleitenda (efnisleg meðferð) teknar á mánuði?",
     caption = caption
   )
 
@@ -1219,7 +1267,7 @@ p3 <- plot_dat |>
   labs(
     x = NULL,
     y = NULL,
-    subtitle = "Fjöldi eftir ársfjórðungi"
+    subtitle = "Fjöldi eftir mánuði"
   )
 
 p <- (
@@ -1228,7 +1276,7 @@ p <- (
 ) / 
   p3 +
   plot_annotation(
-    title = "Hvar eru flestar ákvarðanir um stöðu hælisleitenda teknar á hverjum ársfjórðungi?",
+    title = "Hvar eru flestar ákvarðanir um stöðu hælisleitenda (efnisleg meðferð) teknar á mánuði?",
     subtitle = "Sýnt sem fjöldi á 100.000 íbúa hvers lands",
     caption = caption
   )
@@ -1289,7 +1337,7 @@ p1 <- d |>
   scale_linewidth(
     range = c(0.2, 0.4)
   ) +
-  coord_cartesian(xlim = c(0, 100), clip = "off") +
+  coord_cartesian(clip = "off") +
   theme(
     plot.margin = margin(t = 5, r = 25, b = 5, l = 5),
     axis.text.y = element_markdown(size = 10, family = "Lato"),
@@ -1298,8 +1346,8 @@ p1 <- d |>
   labs(
     x = NULL,
     y = NULL,
-    title = "Hvar er flestum einstaklingum veitt hæli á hverjum ársfjórðungi?",
-    subtitle = "Fjöldi samkvæmt tölum frá apríl 2022",
+    title = "Hvar er flestum einstaklingum veitt hæli (efnisleg meðferð) á mánuði?",
+    subtitle = "Fjöldi í apríl 2022",
     caption = caption
   )
 
@@ -1342,14 +1390,14 @@ p2 <- d |>
     alpha = 0.5
   ) +
   scale_x_continuous(
-    expand = expansion(),
-    limits = c(0, 100)
+    expand = expansion()
   ) +
   scale_colour_identity() +
   scale_size_manual(values = c(1, 3)) +
   scale_linewidth(
     range = c(0.2, 0.4)
   ) +
+  coord_cartesian(clip = "off") +
   theme(
     plot.margin = margin(t = 5, r = 25, b = 5, l = 5),
     axis.text.y = element_markdown(size = 10),
@@ -1358,8 +1406,8 @@ p2 <- d |>
   labs(
     x = NULL,
     y = NULL,
-    title = "Hvar er flestum einstaklingum veitt hæli á hverjum ársfjórðungi?",
-    subtitle = glue("Fjöldi samkvæmt tölum frá {month(end_date, label = T, abbr = F)} {year(end_date)}"),
+    title = "Hvar er flestum einstaklingum veitt hæli (efnisleg meðferð) á mánuði?",
+    subtitle = glue("Fjöldi í {month(end_date, label = T, abbr = F)} {year(end_date)}"),
     caption = caption
   )
 
@@ -1372,7 +1420,7 @@ ggsave(
 p <- (p1 + labs(title = NULL, caption = NULL)) + 
   (p2 + labs(title = NULL, caption = NULL)) +
   plot_annotation(
-    title = "Hvar er flestum einstaklingum veitt hæli á hverjum ársfjórðungi?",
+    title = "Hvar er flestum einstaklingum veitt hæli (efnisleg meðferð) á mánuði?",
     caption = caption
   )
 
@@ -1457,7 +1505,7 @@ p3 <- plot_dat |>
   labs(
     x = NULL,
     y = NULL,
-    subtitle = "Fjöldi eftir ársfjórðungi"
+    subtitle = "Fjöldi á mánuði"
   )
 
 p <- (
@@ -1466,7 +1514,7 @@ p <- (
 ) / 
   p3 +
   plot_annotation(
-    title = "Hvar er flestum einstaklingum veitt hæli á hverjum ársfjórðungi?",
+    title = "Hvar er flestum einstaklingum veitt hæli (efnisleg meðferð) á mánuði?",
     subtitle = "Sýnt sem fjöldi á 100.000 íbúa hvers lands",
     caption = caption
   )
@@ -1481,7 +1529,242 @@ ggsave(
 ![](Figures/akvard_positive_saman_2.png){.column-page}
 
 
+## Hlutfall Jákvæðra
 
+```{r akvard_percent_positive}
+#| eval: false
+
+end_date <- clock::date_build(2023, 7, 1)
+
+p1 <- d |> 
+  filter(
+    name == "percent_positive_decisions"
+  ) |> 
+  drop_na() |> 
+  rename(
+    dags = time, 
+    flottafjoldi = value,
+    per_pers = per_pop
+  ) |> 
+  filter(dags == min(dags)) |> 
+  drop_na(flottafjoldi) |> 
+  mutate(
+    colour = case_when(
+      land == "Ísland" ~ litur_island,
+      land == "Danmörk" ~ litur_danmork,
+      land == "Finnland" ~ litur_finnland,
+      land == "Noregur" ~ litur_noregur,
+      land == "Svíþjóð" ~ litur_svithjod,
+      TRUE ~ litur_annad
+    ),
+    linewidth = 1 * (land == "Ísland"),
+    size = as_factor(linewidth),
+    land = glue("<i style='color:{colour}'>{land}</i>"),
+    land = fct_reorder(land, per_pers)
+  ) |> 
+  ggplot(aes(per_pers, land, col = colour, size = size)) +
+  geom_point() +
+  geom_segment(aes(yend = land, xend = 0, linewidth = linewidth), lty = 2, alpha = 0.5) +
+  scale_x_continuous(
+    expand = expansion(),
+    breaks = breaks_extended(),
+    labels = label_hlutf()
+  ) +
+  scale_colour_identity() +
+  scale_size_manual(values = c(1, 3)) +
+  scale_linewidth(
+    range = c(0.2, 0.4)
+  ) +
+  coord_cartesian(clip = "off") +
+  theme(
+    plot.margin = margin(t = 5, r = 25, b = 5, l = 5),
+    axis.text.y = element_markdown(size = 10, family = "Lato"),
+    legend.position = "none"
+  ) +
+  labs(
+    x = NULL,
+    y = NULL,
+    title = "Hvaða hlutfall umsókna um hæli er samþykkt?",
+    subtitle = "Fjöldi í apríl 2022",
+    caption = caption
+  )
+
+
+ggsave(
+  plot = p1,
+  filename = "Figures/perc_positive_mars.png",
+  width = 8, height = 0.5 * 8, scale = 1.3
+)
+
+p2 <- d |> 
+  filter(name == "percent_positive_decisions") |>
+  drop_na() |> 
+  rename(
+    dags = time, 
+    flottafjoldi = value,
+    per_pers = per_pop
+  ) |> 
+  filter(dags == end_date) |> 
+  drop_na(per_pers) |> 
+  mutate(
+    colour = case_when(
+      land == "Ísland" ~ litur_island,
+      land == "Danmörk" ~ litur_danmork,
+      land == "Finnland" ~ litur_finnland,
+      land == "Noregur" ~ litur_noregur,
+      land == "Svíþjóð" ~ litur_svithjod,
+      TRUE ~ litur_annad
+    ),
+    linewidth = 1 * (land == "Ísland"),
+    size = as_factor(linewidth),
+    land = glue("<i style='color:{colour}'>{land}</i>"),
+    land = fct_reorder(land, per_pers)
+  ) |> 
+  ggplot(aes(per_pers, land, col = colour, size = size)) +
+  geom_point() +
+  geom_segment(
+    aes(yend = land, xend = 0, linewidth = linewidth),
+    lty = 2, 
+    alpha = 0.5
+  ) +
+  scale_x_continuous(
+    expand = expansion()
+  ) +
+  scale_colour_identity() +
+  scale_size_manual(values = c(1, 3)) +
+  scale_linewidth(
+    range = c(0.2, 0.4)
+  ) +
+  coord_cartesian(clip = "off") +
+  theme(
+    plot.margin = margin(t = 5, r = 25, b = 5, l = 5),
+    axis.text.y = element_markdown(size = 10),
+    legend.position = "none"
+  ) +
+  labs(
+    x = NULL,
+    y = NULL,
+    title = "Hvaða hlutfall umsókna um hæli er samþykkt?",
+    subtitle = glue("Fjöldi í {month(end_date, label = T, abbr = F)} {year(end_date)}"),
+    caption = caption
+  )
+
+ggsave(
+  plot = p2,
+  filename = "Figures/percent_positive_nóvember.png",
+  width = 8, height = 0.5 * 8, scale = 1.3
+)
+
+p <- (p1 + labs(title = NULL, caption = NULL)) + 
+  (p2 + labs(title = NULL, caption = NULL)) +
+  plot_annotation(
+    title = "Hvaða hlutfall umsókna um hæli er samþykkt?",
+    caption = caption
+  )
+
+ggsave(
+  plot = p,
+  filename = "Figures/percent_positive_saman.png",
+  width = 8, height = 0.5 * 8, scale = 1.3
+)
+
+plot_dat <- d |> 
+  filter(name == "percent_positive_decisions") |> 
+  arrange(time) |> 
+  rename(
+    dags = time, 
+    flottafjoldi = value,
+    per_pers = per_pop
+  ) |>  
+  filter() |> 
+  drop_na(per_pers) |> 
+  select(dags, land, value = per_pers) |> 
+  mutate(
+    colour = case_when(
+      land == "Ísland" ~ litur_island,
+      land == "Danmörk" ~ litur_danmork,
+      land == "Finnland" ~ litur_finnland,
+      land == "Noregur" ~ litur_noregur,
+      land == "Svíþjóð" ~ litur_svithjod,
+      TRUE ~ litur_annad
+    ),
+    linewidth = 1 * (land == "Ísland"),
+    size = as_factor(linewidth)
+  )
+
+p3 <- plot_dat |> 
+  ggplot(aes(dags, value)) +
+  geom_line(
+    data = plot_dat |> 
+      filter(colour == litur_annad),
+    aes(group = land, colour = litur_annad),
+    alpha = 0.3,
+    col = litur_annad
+  ) +
+  geom_line(
+    data = plot_dat |> 
+      filter(colour != litur_annad),
+    aes(group = land, colour = colour),
+    linewidth = 1
+  ) +
+  ggrepel::geom_text_repel(
+    data = plot_dat |> 
+      group_by(land) |> 
+      filter(colour != litur_annad, dags == max(dags)),
+    aes(label = land, colour = colour),
+    hjust = 0.1,
+    nudge_x = 15,
+    # box.padding = 0.1,
+    # min.segment.length = Inf,
+    direction = "y"
+  ) +
+  scale_x_date(
+    breaks = unique(plot_dat$dags),
+    limits = c(min(plot_dat$dags), max(plot_dat$dags) + days(25)),
+    labels = label_date_short(),
+    expand = expansion(add = 25),
+    guide = guide_axis_truncated(
+      trunc_lower = min(plot_dat$dags),
+      trunc_upper = max(plot_dat$dags)
+    )
+  ) +
+  scale_y_continuous(
+    breaks = breaks_extended(n = 6),
+    labels = label_hlutf(accuracy = 1),
+    limits = c(0, NA),
+    expand = expansion(c(0, 0.01)),
+    guide = guide_axis_truncated()
+  )  +
+  scale_colour_identity() +
+  coord_cartesian(ylim = c(0, NA), clip = "off") +
+  theme(
+    plot.margin = margin(t = 5, r = 35, b = 5, l = 5)
+  ) +
+  labs(
+    x = NULL,
+    y = NULL,
+    subtitle = "Mánaðarleg hlutföll"
+  )
+
+p <- (
+  (p1 + labs(title = NULL, caption = NULL)) + 
+    (p2 + labs(title = NULL, caption = NULL))
+) / 
+  p3 +
+  plot_annotation(
+    title = "Hvaða hlutfall umsókna um hæli er samþykkt?",
+    subtitle = "Sýnt sem hlutfall allra umsókna um hæli (efnisleg meðferð)",
+    caption = caption
+  )
+
+ggsave(
+  plot = p,
+  filename = "Figures/percent_positive_saman_2.png",
+  width = 8, height = 1 * 8, scale = 1.3
+)
+```
+
+![](Figures/percent_positive_saman_2.png){.column-page}
 
 ## Umsækjendur í bið
 
@@ -1494,7 +1777,7 @@ end_date <- clock::date_build(2023, 10, 1)
 
 p1 <- d |> 
   filter(
-    name == "applicants"
+    name == "applicants_total"
   ) |> 
   rename(
     dags = time, 
@@ -1538,7 +1821,7 @@ p1 <- d |>
   labs(
     x = NULL,
     y = NULL,
-    title = "Hvar bíða flestir einstaklingar eftir niðurstöðu umsóknar sinnar?",
+    title = "Hvar bíða flestir einstaklingar eftir niðurstöðu hælisumsóknar sinnar?",
     subtitle = "Fjöldi í mars 2022",
     caption = caption
   )
@@ -1551,7 +1834,7 @@ ggsave(
 )
 
 p2 <- d |> 
-  filter(name == "applicants") |> 
+  filter(name == "applicants_total") |> 
   rename(
     dags = time, 
     flottafjoldi = value,
@@ -1597,7 +1880,7 @@ p2 <- d |>
   labs(
     x = NULL,
     y = NULL,
-    title = "Hvar bíða flestir einstaklingar eftir niðurstöðu umsóknar sinnar?",
+    title = "Hvar bíða flestir einstaklingar eftir niðurstöðu hælisumsóknar sinnar?",
     subtitle = glue("Fjöldi í {month(end_date, label = T, abbr = F)} {year(end_date)}"),
     caption = caption
   )
@@ -1611,7 +1894,7 @@ ggsave(
 p <- (p1 + labs(title = NULL, caption = NULL)) + 
   (p2 + labs(title = NULL, caption = NULL)) +
   plot_annotation(
-    title = "Hvar bíða flestir einstaklingar eftir niðurstöðu umsóknar sinnar?",
+    title = "Hvar bíða flestir einstaklingar eftir niðurstöðu hælisumsóknar sinnar?",
     caption = caption
   )
 
@@ -1622,7 +1905,7 @@ ggsave(
 )
 
 plot_dat <- d |> 
-  filter(name == "applicants") |> 
+  filter(name == "applicants_total") |> 
   arrange(time) |> 
   rename(
     dags = time, 
@@ -1707,7 +1990,7 @@ p <- (
 ) / 
   p3 +
   plot_annotation(
-    title = "Hvar bíða flestir einstaklingar eftir niðurstöðu umsóknar sinnar?",
+    title = "Hvar bíða flestir einstaklingar eftir niðurstöðu hælisumsóknar sinnar?",
     subtitle = "Sýnt sem fjöldi á 100.000 íbúa hvers lands",
     caption = caption
   )
@@ -1905,7 +2188,7 @@ p3 <- plot_dat |>
     linewidth = 1
   ) +
   ggrepel::geom_text_repel(
-    data = plot_dat2 |> 
+    data = plot_dat |> 
       group_by(land) |> 
       filter(colour != litur_annad, dags == max(dags)) |> 
       ungroup(),

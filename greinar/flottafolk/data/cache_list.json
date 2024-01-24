@@ -210,5 +210,219 @@
     "keepFlags": [false],
     "source": ["json"],
     "download_date": ["2024-01-23"]
+  },
+  "3a9870abd3cd90b009159816f8301a27": {
+    "id": ["migr_asydcfstq"],
+    "time_format": ["date"],
+    "filters": {
+      "age": ["TOTAL"],
+      "citizen": ["TOTAL"],
+      "decision": ["TOTAL", "TOTAL_POS"],
+      "sex": ["T"]
+    },
+    "type": ["code"],
+    "select_time": null,
+    "stringsAsFactors": [false],
+    "keepFlags": [false],
+    "source": ["json"],
+    "download_date": ["2024-01-23"]
+  },
+  "783b6ca9566ea85c8ec6615f71b653aa": {
+    "id": ["migr_asytpsm"],
+    "time_format": ["date"],
+    "filters": {
+      "age": ["TOTAL"],
+      "citizen": ["TOTAL"],
+      "sex": ["T"]
+    },
+    "type": ["code"],
+    "select_time": null,
+    "stringsAsFactors": [false],
+    "keepFlags": [false],
+    "source": ["json"],
+    "download_date": ["2024-01-23"]
+  },
+  "76b96c14594f6d55e6da82a6a8965a16": {
+    "id": ["demo_pjan"],
+    "time_format": ["date"],
+    "filters": {
+      "age": ["TOTAL"],
+      "sex": ["T"]
+    },
+    "type": ["code"],
+    "select_time": null,
+    "stringsAsFactors": [false],
+    "keepFlags": [false],
+    "source": ["json"],
+    "download_date": ["2024-01-23"]
+  },
+  "8fa329cefe062d62125a00d6b3fbc2d5": {
+    "id": ["migr_asypenctzm"],
+    "time_format": ["date"],
+    "filters": {
+      "age": ["TOTAL"],
+      "citizen": ["TOTAL"],
+      "sex": ["T"]
+    },
+    "type": ["code"],
+    "select_time": null,
+    "stringsAsFactors": [false],
+    "keepFlags": [false],
+    "source": ["json"],
+    "download_date": ["2024-01-23"]
+  },
+  "d2ff10822d26ed8a29863a10fc8d8b9e": {
+    "id": ["migr_asytpfm"],
+    "time_format": ["date"],
+    "filters": {
+      "age": ["TOTAL"],
+      "citizen": ["TOTAL"],
+      "sex": ["T"]
+    },
+    "type": ["code"],
+    "select_time": null,
+    "stringsAsFactors": [false],
+    "keepFlags": [false],
+    "source": ["json"],
+    "download_date": ["2024-01-23"]
+  },
+  "34604f3a19382338dea0e418eb7ead07": {
+    "id": ["migr_asyappctzm"],
+    "time_format": ["date"],
+    "filters": {
+      "age": ["TOTAL"],
+      "asyl_app": ["ASY_APP"],
+      "citizen": ["TOTAL"],
+      "sex": ["T"]
+    },
+    "type": ["code"],
+    "select_time": null,
+    "stringsAsFactors": [false],
+    "keepFlags": [false],
+    "source": ["json"],
+    "download_date": ["2024-01-23"]
+  },
+  "8b8403d885928b443ffbe0a3fed604b8": {
+    "id": ["migr_asypenctzm"],
+    "time_format": ["date"],
+    "filters": {
+      "age": ["TOTAL"],
+      "citizen": ["TOTAL", "UA"],
+      "sex": ["T"]
+    },
+    "type": ["code"],
+    "select_time": null,
+    "stringsAsFactors": [false],
+    "keepFlags": [false],
+    "source": ["json"],
+    "download_date": ["2024-01-24"]
+  },
+  "ea24913c909ec60161c2f7e4e55f21b1": {
+    "id": ["migr_asydcfstq"],
+    "time_format": ["date"],
+    "filters": {
+      "age": ["TOTAL"],
+      "citizen": ["TOTAL", "UA"],
+      "decision": ["TOTAL", "TOTAL_POS"],
+      "sex": ["T"]
+    },
+    "type": ["code"],
+    "select_time": null,
+    "stringsAsFactors": [false],
+    "keepFlags": [false],
+    "source": ["json"],
+    "download_date": ["2024-01-24"]
+  },
+  "cb22977726831497e120d8feee5bd77a": {
+    "id": ["migr_asydcfstq"],
+    "time_format": ["date"],
+    "filters": {
+      "age": ["TOTAL"],
+      "citizen": ["TOTAL"],
+      "decision": ["TOTAL", "TOTAL_POS"],
+      "sex": ["T"]
+    },
+    "type": ["code"],
+    "select_time": null,
+    "stringsAsFactors": [false],
+    "keepFlags": [false],
+    "source": ["json"],
+    "download_date": ["2024-01-24"]
+  },
+  "01e531aba0eed67ca1d3345e2091b149": {
+    "id": ["migr_asytpsm"],
+    "time_format": ["date"],
+    "filters": {
+      "age": ["TOTAL"],
+      "citizen": ["TOTAL"],
+      "sex": ["T"]
+    },
+    "type": ["code"],
+    "select_time": null,
+    "stringsAsFactors": [false],
+    "keepFlags": [false],
+    "source": ["json"],
+    "download_date": ["2024-01-24"]
+  },
+  "956d25dca1cca418fb33ccde06e2887d": {
+    "id": ["demo_pjan"],
+    "time_format": ["date"],
+    "filters": {
+      "age": ["TOTAL"],
+      "sex": ["T"]
+    },
+    "type": ["code"],
+    "select_time": null,
+    "stringsAsFactors": [false],
+    "keepFlags": [false],
+    "source": ["json"],
+    "download_date": ["2024-01-24"]
+  },
+  "73b76b5340ab57d70d3b6d5c7a5f4221": {
+    "id": ["migr_asytpfm"],
+    "time_format": ["date"],
+    "filters": {
+      "age": ["TOTAL"],
+      "citizen": ["TOTAL"],
+      "sex": ["T"]
+    },
+    "type": ["code"],
+    "select_time": null,
+    "stringsAsFactors": [false],
+    "keepFlags": [false],
+    "source": ["json"],
+    "download_date": ["2024-01-24"]
+  },
+  "f68ba2903b3ce1b39661f6675547e66c": {
+    "id": ["migr_asyappctzm"],
+    "time_format": ["date"],
+    "filters": {
+      "age": ["TOTAL"],
+      "asyl_app": ["ASY_APP"],
+      "citizen": ["TOTAL"],
+      "sex": ["T"]
+    },
+    "type": ["code"],
+    "select_time": null,
+    "stringsAsFactors": [false],
+    "keepFlags": [false],
+    "source": ["json"],
+    "download_date": ["2024-01-24"]
+  },
+  "b368d8a3aa5dddcb764214918dabf187": {
+    "id": ["migr_asyappctzm"],
+    "time_format": ["date"],
+    "filters": {
+      "age": ["TOTAL"],
+      "asyl_app": ["ASY_APP"],
+      "citizen": ["TOTAL", "UA"],
+      "sex": ["T"]
+    },
+    "type": ["code"],
+    "select_time": null,
+    "stringsAsFactors": [false],
+    "keepFlags": [false],
+    "source": ["json"],
+    "download_date": ["2024-01-24"]
   }
 }
