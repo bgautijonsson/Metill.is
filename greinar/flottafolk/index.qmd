@@ -48,7 +48,7 @@ library(crosstalk)
 library(clock)
 library(ggh4x)
 theme_set(theme_metill())
-Sys.setlocale("LC_ALL", "is_IS.UTF-8")
+source("R/make_plot.R")
 
 update_cache <- TRUE
 
@@ -176,13 +176,13 @@ decisions <- get_eurostat(
   )
 
 decisions <- crossing(
-      time = seq.Date(
-        from = min(decisions$time), 
-        to = max(decisions$time), 
-        by = "1 month"
-      ),
-      geo = unique(decisions$geo)
-    ) |> 
+  time = seq.Date(
+    from = min(decisions$time), 
+    to = max(decisions$time), 
+    by = "1 month"
+  ),
+  geo = unique(decisions$geo)
+) |> 
   left_join(
     decisions,
     by = join_by(time, geo)
@@ -194,7 +194,7 @@ decisions <- crossing(
     \(x) zoo::na.approx(x, na.rm = FALSE, maxgap = 5) / 3
   ) |> 
   ungroup()
-   
+
 ```
 
 
@@ -228,6 +228,23 @@ asylum_applicants <- get_eurostat(
   )
 ```
 
+```{r data_gdp}
+#| eval: false
+
+gdp <- get_eurostat(
+  "nama_10_gdp",
+  filters = list(
+    unit = "CP_MEUR",
+    na_item = "B1GQ"
+  )
+) |> 
+  select(-freq, -unit, -na_item) |>
+  label_eurostat() |> 
+  filter(year(time) == 2022) |> 
+  select(-time) |> 
+  rename(gdp = values)
+```
+
 
 ```{r data_merge}
 #| eval: false
@@ -245,6 +262,10 @@ d <- beneficiaries |>
       ungroup() |> 
       select(geo, pop = values),
     by = c("geo")
+  ) |> 
+  inner_join(
+    gdp,
+    by = join_by(geo)
   ) |> 
   full_join(
     applicants,
@@ -275,19 +296,25 @@ d <- beneficiaries |>
   select(
     -year, -country
   ) |> 
+  mutate(
+    total_grants = grants + positive_decisions
+  ) |> 
   pivot_longer(
-    c(-land, -time, -pop)
+    c(-land, -time, -pop, -gdp)
   ) |> 
   group_by(land) |> 
   mutate(pop = max(pop, na.rm = T)) |> 
   ungroup() |> 
-  mutate(per_pop = value / pop * 1e5)
+  mutate(
+    per_pop = value / pop * 1e5,
+    per_gdp = value / gdp * 1e5
+  )
 
 d |> 
   write_csv("data/raw_data.csv")
 
 d |>
-  select(-value, -pop) |>
+  select(-value, -pop, -per_gdp) |>
   pivot_wider(names_from = name, values_from = per_pop) |> 
   select(
     "Dagsetning" = time,
@@ -300,7 +327,23 @@ d |>
     "Einstaklingum veitt hæli" = positive_decisions,
     "Hlutfall jákvæðra ákvarðana" = percent_positive_decisions
   ) |> 
-  write_csv("data/timabundin_vernd.csv")
+  write_csv("data/timabundin_vernd_perpop.csv")
+
+d |>
+  select(-value, -pop, -per_pop) |>
+  pivot_wider(names_from = name, values_from = per_gdp) |> 
+  select(
+    "Dagsetning" = time,
+    "Land" = land,
+    "Fjöldi sem nýtur tímabundinnar verndar" = beneficiaries,
+    "Nýjar veitingar á tímabundinni vernd" = grants,
+    "Nýir umsækjendur um hæli" = asylum_applicants_non_ukraine,
+    "Umsækjendur um hæli í bið eftir niðurstöðu" = applicants_non_ukraine,
+    "Ákvarðanir teknar um hæli" = total_decisions,
+    "Einstaklingum veitt hæli" = positive_decisions,
+    "Hlutfall jákvæðra ákvarðana" = percent_positive_decisions
+  ) |> 
+  write_csv("data/timabundin_vernd_pergdp.csv")
 ```
 
 ```{r}
@@ -321,24 +364,29 @@ Hér er unnið með gögn frá Eurostat, hagstofu Evrópusambandsins. Þar sem �
 Gögn þessarar úrvinnslu koma frá [Eurostat](https://ec.europa.eu/eurostat/en/), nánar tiltekið eru þetta eftirfarandi gagnasöfn:
 
 * Tímabundin vernd
-  - [Einstaklingar sem njóta tímabundinnar verndar í lok mánaðar](https://ec.europa.eu/eurostat/databrowser/view/MIGR_ASYTPSM/default/table?lang=en&category=migr.migr_asy.migr_asytp)
-  - [Mánaðarlegur fjöldi einstaklinga sem fá veitta tímabundna vernd](https://ec.europa.eu/eurostat/databrowser/view/MIGR_ASYTPFM/default/table?lang=en&category=migr.migr_asy.migr_asytp)
+- [Einstaklingar sem njóta tímabundinnar verndar í lok mánaðar](https://ec.europa.eu/eurostat/databrowser/view/MIGR_ASYTPSM/default/table?lang=en&category=migr.migr_asy.migr_asytp)
+- [Mánaðarlegur fjöldi einstaklinga sem fá veitta tímabundna vernd](https://ec.europa.eu/eurostat/databrowser/view/MIGR_ASYTPFM/default/table?lang=en&category=migr.migr_asy.migr_asytp)
 * Hæli
-  - [Mánaðarlegur fjöldi umsækjenda um hæli](https://ec.europa.eu/eurostat/databrowser/view/migr_asyappctzm/default/table?lang=en)
-  - [Ákvarðanir teknar í málefnum umsækjenda um hæli](https://ec.europa.eu/eurostat/databrowser/view/migr_asydcfstq/default/table?lang=en&category=migr.migr_asy.migr_asydec)
-  - [Lokaákvarðanir teknar í málefnum umsækjenda um hæli eftir áfrýjun](https://ec.europa.eu/eurostat/databrowser/view/migr_asydcfina/default/table?lang=en&category=migr.migr_asy.migr_asydec)
-  - [Umsækjendur í bið eftir niðurstöðu hælisumsóknar í lok mánaðar](https://ec.europa.eu/eurostat/databrowser/view/TPS00190/default/table?lang=en&category=migr.migr_asy.migr_asyapp)
+- [Mánaðarlegur fjöldi umsækjenda um hæli](https://ec.europa.eu/eurostat/databrowser/view/migr_asyappctzm/default/table?lang=en)
+- [Ákvarðanir teknar í málefnum umsækjenda um hæli](https://ec.europa.eu/eurostat/databrowser/view/migr_asydcfstq/default/table?lang=en&category=migr.migr_asy.migr_asydec)
+- [Lokaákvarðanir teknar í málefnum umsækjenda um hæli eftir áfrýjun](https://ec.europa.eu/eurostat/databrowser/view/migr_asydcfina/default/table?lang=en&category=migr.migr_asy.migr_asydec)
+- [Umsækjendur í bið eftir niðurstöðu hælisumsóknar í lok mánaðar](https://ec.europa.eu/eurostat/databrowser/view/TPS00190/default/table?lang=en&category=migr.migr_asy.migr_asyapp)
 
 Þessari upplýsingar eru svo tengdar við [gögn um mannfjölda hvers lands](https://ec.europa.eu/eurostat/databrowser/view/demo_pjan/default/table?lang=en).
 
 Til að auðvelda samanburð milli landa eru allar tölur sýndar sem fjöldi á hverja 100.000 íbúa hvers lands.
 
 
+::: {.panel-tabset}
+
+## Á mannfjölda
+
 ```{r}
 #| column: page
+#| cache: true
 library(gt)
 library(readr)
-d <- read_csv("data/timabundin_vernd.csv")
+d <- read_csv("data/timabundin_vernd_perpop.csv")
 d |> 
   gt() |> 
   tab_header(
@@ -363,13 +411,58 @@ d |>
   opt_interactive(
     use_search = TRUE,
     use_filters = TRUE
-    ) |> 
+  ) |> 
   tab_options(
     table.background.color = "#faf9f9"
   ) 
 ```
 
-{{< downloadthis data/timabundin_vernd.csv dname="timebundin_vernd" label="Sækja gögn" type=primary class=downloadbutton >}}
+{{< downloadthis data/timabundin_vernd_perpop.csv dname="timebundin_vernd" label="Sækja gögn" type=primary class=downloadbutton >}}
+
+## Á landsframleiðslu
+
+```{r}
+#| column: page
+#| cache: true
+library(gt)
+library(readr)
+d <- read_csv("data/timabundin_vernd_pergdp.csv")
+d |> 
+  gt() |> 
+  tab_header(
+    title = "Samantekt á gögnum um málefni flóttafólks",
+    subtitle = "Tölur eru sýndar sem fjöldi á €100.000 landsframleiðslu móttökulands"
+  ) |> 
+  tab_spanner(
+    label = "Á 100.000 íbúa",
+    columns = 3:8
+  ) |> 
+  fmt_number(
+    3:8, decimals = 0
+  ) |> 
+  fmt_percent(
+    9, decimals = 2
+  ) |> 
+  fmt_date(
+    1,
+    date_style = "yMMM",
+    locale = "is"
+  ) |> 
+  opt_interactive(
+    use_search = TRUE,
+    use_filters = TRUE
+  ) |> 
+  tab_options(
+    table.background.color = "#faf9f9"
+  ) 
+```
+
+{{< downloadthis data/timabundin_vernd_pergdp.csv dname="timebundin_vernd" label="Sækja gögn" type=primary class=downloadbutton >}}
+
+:::
+
+
+
 
 # Tímabundin Vernd
 
@@ -380,6 +473,8 @@ d |>
 ## Mánaðarlegar veitingar
 
 Hér sjáum við tölur um hversu mörgum einstaklingum var veitt tímabundin vernd í hverjum mánuði. 
+
+
 
 ```{r veiting}
 #| eval: false
@@ -611,11 +706,59 @@ ggsave(
 )
 ```
 
-![](Figures/veiting_saman_2.png){.column-page-left}
+```{r}
+#| eval: false
+
+p <- make_plot(
+  plot_var = "grants",
+  scaling_var = "per_pop",
+  start_date = clock::date_build(2022, 3, 1),
+  end_date = clock::date_build(2023, 10, 1),
+  title = "Hvað er mörgum veitt tímabundin vernd í hverjum mánuði?",
+  subtitle = "Sýnt sem fjöldi á 100.000 íbúa hvers lands",
+  caption = caption,
+  y_upper = 200,
+  number_labels = label_number(big.mark = ".", decimal.mark = ",")
+)
+
+ggsave(
+  plot = p,
+  filename = "Figures/per_pop/veiting_saman_2.png",
+  width = 8, height = 1 * 8, scale = 1.3
+)
+
+p <- make_plot(
+  plot_var = "grants",
+  scaling_var = "per_gdp",
+  start_date = clock::date_build(2022, 3, 1),
+  end_date = clock::date_build(2023, 10, 1),
+  title = "Hvað er mörgum veitt tímabundin vernd í hverjum mánuði?",
+  subtitle = "Sýnt sem fjöldi á €100.000 landsframleiðslu hvers lands",
+  caption = caption,
+  y_upper = 5000,
+  number_labels = label_number(big.mark = ".", decimal.mark = ",")
+)
+
+ggsave(
+  plot = p,
+  filename = "Figures/per_gdp/veiting_saman_2.png",
+  width = 8, height = 1 * 8, scale = 1.3
+)
+```
+
+::: {.panel-tabset}
+
+#### Á mannfjölda
+
+![](Figures/per_pop/veiting_saman_2.png){.column-page-left}
+
+#### Á landsframleiðslu
+
+![](Figures/per_gdp/veiting_saman_2.png){.column-page-left}
+
+:::
 
 ## Einstaklingar sem njóta verndar
-
-1°
 
 Hér sjaum við svo tölur um það hversu margir einstaklingar njóta tímabundinnar verndar hverju sinni. 
 
@@ -860,7 +1003,57 @@ ggsave(
 )
 ```
 
-![](Figures/vernd_saman_2.png){.column-page-left}
+```{r}
+#| eval: false
+
+p <- make_plot(
+  plot_var = "beneficiaries",
+  scaling_var = "per_pop",
+  start_date = clock::date_build(2022, 3, 1),
+  end_date = clock::date_build(2023, 10, 1),
+  title = "Hvar njóta flestir einstaklingar tímabundinnar verndar?",
+  subtitle = "Sýnt sem fjöldi á 100.000 íbúa hvers lands",
+  caption = caption,
+  # y_upper = 200,
+  number_labels = label_number(big.mark = ".", decimal.mark = ",")
+)
+
+ggsave(
+  plot = p,
+  filename = "Figures/per_pop/vernd_saman_2.png",
+  width = 8, height = 1 * 8, scale = 1.3
+)
+
+p <- make_plot(
+  plot_var = "beneficiaries",
+  scaling_var = "per_gdp",
+  start_date = clock::date_build(2022, 3, 1),
+  end_date = clock::date_build(2023, 10, 1),
+  title = "Hvar njóta flestir einstaklingar tímabundinnar verndar?",
+  subtitle = "Sýnt sem fjöldi á €100.000 landsframleiðslu hvers lands",
+  caption = caption,
+  # y_upper = 50000,
+  number_labels = label_number(big.mark = ".", decimal.mark = ",")
+)
+
+ggsave(
+  plot = p,
+  filename = "Figures/per_gdp/vernd_saman_2.png",
+  width = 8, height = 1 * 8, scale = 1.3
+)
+```
+
+::: {.panel-tabset}
+
+#### Á mannfjölda
+
+![](Figures/per_pop/vernd_saman_2.png){.column-page-left}
+
+#### Á landsframleiðslu
+
+![](Figures/per_gdp/vernd_saman_2.png){.column-page-left}
+
+:::
 
 # Hæli
 
@@ -871,6 +1064,9 @@ ggsave(
 ## Mánaðarlegur fjöldi umsókna
 
 Fyrst skoðum við hversu margar umsóknir um *hæli* þjóðir fá á hverjum mánuði.
+
+
+
 
 ```{r asylum_applicants}
 #| eval: false
@@ -1107,8 +1303,56 @@ ggsave(
 )
 ```
 
+```{r}
+#| eval: false
 
-![](Figures/asylum_applicants_saman_2.png){.column-page-left}
+p <- make_plot(
+  plot_var = "asylum_applicants_non_ukraine",
+  scaling_var = "per_pop",
+  start_date = clock::date_build(2022, 3, 1),
+  end_date = clock::date_build(2023, 11, 1),
+  title = "Hvar sækja flestir einstaklingar um hæli?",
+  subtitle = "Sýnt sem fjöldi á 100.000 íbúa hvers lands",
+  caption = caption
+)
+
+ggsave(
+  plot = p,
+  filename = "Figures/per_pop/asylum_applicants_saman_2.png",
+  width = 8, height = 1 * 8, scale = 1.3
+)
+
+p <- make_plot(
+  plot_var = "asylum_applicants_non_ukraine",
+  scaling_var = "per_gdp",
+  start_date = clock::date_build(2022, 3, 1),
+  end_date = clock::date_build(2023, 11, 1),
+  title = "Hvar sækja flestir einstaklingar um hæli?",
+  subtitle = "Sýnt sem fjöldi á €100.000 landsframleiðslu hvers lands",
+  caption = caption
+)
+
+ggsave(
+  plot = p,
+  filename = "Figures/per_gdp/asylum_applicants_saman_2.png",
+  width = 8, height = 1 * 8, scale = 1.3
+)
+```
+
+::: {.panel-tabset}
+
+#### Á mannfjölda
+
+![](Figures/per_pop/asylum_applicants_saman_2.png){.column-page-left}
+
+#### Á landsframleiðslu
+
+![](Figures/per_gdp/asylum_applicants_saman_2.png){.column-page-left}
+
+:::
+
+
+
 
 
 
@@ -1352,7 +1596,57 @@ ggsave(
 )
 ```
 
-![](Figures/akvard_total_saman_2.png){.column-page-left}
+```{r}
+#| eval: false
+
+p <- make_plot(
+  plot_var = "total_decisions",
+  scaling_var = "per_pop",
+  start_date = clock::date_build(2022, 3, 1),
+  end_date = clock::date_build(2023, 7, 1),
+  title = "Hvar eru flestar ákvarðanir um stöðu hælisleitenda teknar á mánuði?",
+  subtitle = "Sýnt sem fjöldi á 100.000 íbúa hvers lands",
+  caption = caption,
+  # y_upper = 500,
+  number_labels = label_number(big.mark = ".", decimal.mark = ",")
+)
+
+ggsave(
+  plot = p,
+  filename = "Figures/per_pop/akvard_total_saman_2.png",
+  width = 8, height = 1 * 8, scale = 1.3
+)
+
+p <- make_plot(
+  plot_var = "total_decisions",
+  scaling_var = "per_gdp",
+  start_date = clock::date_build(2022, 3, 1),
+  end_date = clock::date_build(2023, 7, 1),
+  title = "Hvar eru flestar ákvarðanir um stöðu hælisleitenda teknar á mánuði?",
+  subtitle = "Sýnt sem fjöldi á €100.000 landsframleiðslu hvers lands",
+  caption = caption,
+  # y_upper = 25000,
+  number_labels = label_number(big.mark = ".", decimal.mark = ",")
+)
+
+ggsave(
+  plot = p,
+  filename = "Figures/per_gdp/akvard_total_saman_2.png",
+  width = 8, height = 1 * 8, scale = 1.3
+)
+```
+
+::: {.panel-tabset}
+
+#### Á mannfjölda
+
+![](Figures/per_pop/akvard_total_saman_2.png){.column-page-left}
+
+#### Á landsframleiðslu
+
+![](Figures/per_gdp/akvard_total_saman_2.png){.column-page-left}
+
+:::
 
 
 
@@ -1592,7 +1886,57 @@ ggsave(
 )
 ```
 
-![](Figures/akvard_positive_saman_2.png){.column-page-left}
+```{r}
+#| eval: false
+
+p <- make_plot(
+  plot_var = "positive_decisions",
+  scaling_var = "per_pop",
+  start_date = clock::date_build(2022, 3, 1),
+  end_date = clock::date_build(2023, 7, 1),
+  title = "Hvar er flestum einstaklingum veitt hæli á mánuði?",
+  subtitle = "Sýnt sem fjöldi á 100.000 íbúa hvers lands",
+  caption = caption,
+  # y_upper = 200,
+  number_labels = label_number(big.mark = ".", decimal.mark = ",")
+)
+
+ggsave(
+  plot = p,
+  filename = "Figures/per_pop/akvard_positive_saman_2.png",
+  width = 8, height = 1 * 8, scale = 1.3
+)
+
+p <- make_plot(
+  plot_var = "positive_decisions",
+  scaling_var = "per_gdp",
+  start_date = clock::date_build(2022, 3, 1),
+  end_date = clock::date_build(2023, 7, 1),
+  title = "Hvar er flestum einstaklingum veitt hæli á mánuði?",
+  subtitle = "Sýnt sem fjöldi á €100.000 landsframleiðslu hvers lands",
+  caption = caption,
+  # y_upper = 50000,
+  number_labels = label_number(big.mark = ".", decimal.mark = ",")
+)
+
+ggsave(
+  plot = p,
+  filename = "Figures/per_gdp/akvard_positive_saman_2.png",
+  width = 8, height = 1 * 8, scale = 1.3
+)
+```
+
+::: {.panel-tabset}
+
+#### Á mannfjölda
+
+![](Figures/per_pop/akvard_positive_saman_2.png){.column-page-left}
+
+#### Á landsframleiðslu
+
+![](Figures/per_gdp/akvard_positive_saman_2.png){.column-page-left}
+
+:::
 
 
 ## Hlutfall Jákvæðra
@@ -1832,7 +2176,32 @@ ggsave(
 )
 ```
 
+```{r}
+#| eval: false
+
+p <- make_plot(
+  plot_var = "percent_positive_decisions",
+  scaling_var = "per_pop",
+  start_date = clock::date_build(2022, 3, 1),
+  end_date = clock::date_build(2023, 7, 1),
+  title = "Hvaða hlutfall umsókna um hæli er samþykkt?",
+  subtitle = "Sýnt sem hlutfall allra umsókna um hæli",
+  caption = caption,
+  # y_upper = 200,
+  number_labels = label_hlutf()
+)
+
+
+ggsave(
+  plot = p,
+  filename = "Figures/percent_positive_saman_2.png",
+  width = 8, height = 1 * 8, scale = 1.3
+)
+```
+mannfjölda
+
 ![](Figures/percent_positive_saman_2.png){.column-page-left}
+
 
 ## Umsækjendur í bið
 
@@ -2070,13 +2439,66 @@ ggsave(
 )
 ```
 
-![](Figures/umsaek_saman_2.png){.column-page-left}
+```{r}
+#| eval: false
+
+p <- make_plot(
+  plot_var = "applicants_non_ukraine",
+  scaling_var = "per_pop",
+  start_date = clock::date_build(2022, 3, 1),
+  end_date = clock::date_build(2023, 7, 1),
+  title = "Hvar bíða flestir einstaklingar eftir niðurstöðu hælisumsóknar sinnar?",
+  subtitle = "Sýnt sem fjöldi á 100.000 íbúa hvers lands",
+  caption = caption,
+  # y_upper = 250,
+  number_labels = label_number(big.mark = ".", decimal.mark = ",")
+)
+
+ggsave(
+  plot = p,
+  filename = "Figures/per_pop/umsaek_saman_2.png",
+  width = 8, height = 1 * 8, scale = 1.3
+)
+
+p <- make_plot(
+  plot_var = "applicants_non_ukraine",
+  scaling_var = "per_gdp",
+  start_date = clock::date_build(2022, 3, 1),
+  end_date = clock::date_build(2023, 7, 1),
+  title = "Hvar bíða flestir einstaklingar eftir niðurstöðu hælisumsóknar sinnar?",
+  subtitle = "Sýnt sem fjöldi á €100.000 landsframleiðslu hvers lands",
+  caption = caption,
+  # y_upper = 50000,
+  number_labels = label_number(big.mark = ".", decimal.mark = ",")
+)
+
+ggsave(
+  plot = p,
+  filename = "Figures/per_gdp/umsaek_saman_2.png",
+  width = 8, height = 1 * 8, scale = 1.3
+)
+```
+
+::: {.panel-tabset}
+
+#### Á mannfjölda
+
+![](Figures/per_pop/umsaek_saman_2.png){.column-page-left}
+
+#### Á landsframleiðslu
+
+![](Figures/per_gdp/umsaek_saman_2.png){.column-page-left}
+
+:::
+
+
 
 # Saman
 
 Með því að leggja saman tölur um *tímabundna vernd* og *hæli* getum við skoðað heildarfjölda flóttafólks í hverju landi. Tölurnar að neðan eiga því við um flóttafólk bæði frá Úkraínu og öðrum löndum.
 
 ## Mánaðarlegur fjöldi 
+
 
 ```{r combined}
 #| eval: false
@@ -2314,4 +2736,56 @@ ggsave(
 ```
 
 
-![](Figures/veiting_total_saman_2.png){.column-page-left}
+
+
+```{r}
+#| eval: false
+
+p <- make_plot(
+  plot_var = "total_grants",
+  scaling_var = "per_pop",
+  start_date = clock::date_build(2022, 3, 1),
+  end_date = clock::date_build(2023, 7, 1),
+  title = "Samtals veitingar á hæli og tímabundinni vernd í hverjum mánuði",
+  subtitle = "Sýnt sem fjöldi á 100.000 íbúa hvers lands",
+  caption = caption,
+  y_upper = 250,
+  number_labels = label_number(big.mark = ".", decimal.mark = ",")
+)
+
+ggsave(
+  plot = p,
+  filename = "Figures/per_pop/veiting_total_saman_2.png",
+  width = 8, height = 1 * 8, scale = 1.3
+)
+
+p <- make_plot(
+  plot_var = "total_grants",
+  scaling_var = "per_gdp",
+  start_date = clock::date_build(2022, 3, 1),
+  end_date = clock::date_build(2023, 7, 1),
+  title = "Samtals veitingar á hæli og tímabundinni vernd í hverjum mánuði",
+  subtitle = "Sýnt sem fjöldi á €100.000 landsframleiðslu hvers lands",
+  caption = caption,
+  y_upper = 5000,
+  number_labels = label_number(big.mark = ".", decimal.mark = ",")
+)
+
+ggsave(
+  plot = p,
+  filename = "Figures/per_gdp/veiting_total_saman_2.png",
+  width = 8, height = 1 * 8, scale = 1.3
+)
+```
+
+::: {.panel-tabset}
+
+#### Á mannfjölda
+
+![](Figures/per_pop/veiting_total_saman_2.png){.column-page-left}
+
+#### Á landsframleiðslu
+
+![](Figures/per_gdp/veiting_total_saman_2.png){.column-page-left}
+
+:::
