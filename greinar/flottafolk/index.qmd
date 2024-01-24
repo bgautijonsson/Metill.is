@@ -448,13 +448,13 @@ Hér er unnið með gögn frá Eurostat, hagstofu Evrópusambandsins. Þar sem �
 Gögn þessarar úrvinnslu koma frá [Eurostat](https://ec.europa.eu/eurostat/en/), nánar tiltekið eru þetta eftirfarandi gagnasöfn:
 
 * Tímabundin vernd
-- [Einstaklingar sem njóta tímabundinnar verndar í lok mánaðar](https://ec.europa.eu/eurostat/databrowser/view/MIGR_ASYTPSM/default/table?lang=en&category=migr.migr_asy.migr_asytp)
-- [Mánaðarlegur fjöldi einstaklinga sem fá veitta tímabundna vernd](https://ec.europa.eu/eurostat/databrowser/view/MIGR_ASYTPFM/default/table?lang=en&category=migr.migr_asy.migr_asytp)
+  - [Einstaklingar sem njóta tímabundinnar verndar í lok mánaðar](https://ec.europa.eu/eurostat/databrowser/view/MIGR_ASYTPSM/default/table?lang=en&category=migr.migr_asy.migr_asytp)
+  - [Mánaðarlegur fjöldi einstaklinga sem fá veitta tímabundna vernd](https://ec.europa.eu/eurostat/databrowser/view/MIGR_ASYTPFM/default/table?lang=en&category=migr.migr_asy.migr_asytp)
 * Hæli
-- [Mánaðarlegur fjöldi umsækjenda um hæli](https://ec.europa.eu/eurostat/databrowser/view/migr_asyappctzm/default/table?lang=en)
-- [Ákvarðanir teknar í málefnum umsækjenda um hæli](https://ec.europa.eu/eurostat/databrowser/view/migr_asydcfstq/default/table?lang=en&category=migr.migr_asy.migr_asydec)
-- [Lokaákvarðanir teknar í málefnum umsækjenda um hæli eftir áfrýjun](https://ec.europa.eu/eurostat/databrowser/view/migr_asydcfina/default/table?lang=en&category=migr.migr_asy.migr_asydec)
-- [Umsækjendur í bið eftir niðurstöðu hælisumsóknar í lok mánaðar](https://ec.europa.eu/eurostat/databrowser/view/TPS00190/default/table?lang=en&category=migr.migr_asy.migr_asyapp)
+  - [Mánaðarlegur fjöldi umsækjenda um hæli](https://ec.europa.eu/eurostat/databrowser/view/migr_asyappctzm/default/table?lang=en)
+  - [Ákvarðanir teknar í málefnum umsækjenda um hæli](https://ec.europa.eu/eurostat/databrowser/view/migr_asydcfstq/default/table?lang=en&category=migr.migr_asy.migr_asydec)
+  - [Lokaákvarðanir teknar í málefnum umsækjenda um hæli eftir áfrýjun](https://ec.europa.eu/eurostat/databrowser/view/migr_asydcfina/default/table?lang=en&category=migr.migr_asy.migr_asydec)
+  - [Umsækjendur í bið eftir niðurstöðu hælisumsóknar í lok mánaðar](https://ec.europa.eu/eurostat/databrowser/view/TPS00190/default/table?lang=en&category=migr.migr_asy.migr_asyapp)
 
 Þessari upplýsingar eru svo tengdar við [gögn um mannfjölda hvers lands](https://ec.europa.eu/eurostat/databrowser/view/demo_pjan/default/table?lang=en).
 
