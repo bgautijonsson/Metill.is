@@ -423,7 +423,8 @@ make_samantekt <- function(
     ) &
     theme(
       plot.background = element_blank(),
-      panel.background = element_blank()
+      panel.background = element_blank(),
+      plot.margin = margin(t = 0, r = 5, b = 0, l = 5)
     )
   
   girafe(

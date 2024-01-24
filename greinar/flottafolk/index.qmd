@@ -522,7 +522,6 @@ d <- read_csv("data/raw_data.csv")
 -----
 
 ```{r ggiraph1}
-#| layout-ncol: 1
 #| column: screen
 #| classes: between-content
 
@@ -724,13 +723,13 @@ make_plot(
 
 ```{r}
 #| eval: true
-#| column: page
+#| column: screen
 #| classes: between-content 
 
 
 make_samantekt(
-  height = 14,
-  width = 14,
+  height = 0.85 * 15,
+  width = 15,
   end_date = clock::date_build(2023, c(10, 7, 10)),
   number_labels = label_number(big.mark = ".", decimal.mark = ",")
 )
