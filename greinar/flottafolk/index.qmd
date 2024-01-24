@@ -285,17 +285,21 @@ d <- beneficiaries |>
 d |> 
   write_csv("data/raw_data.csv")
 
-# d |> 
-#   select(-value, -pop) |> 
-#   pivot_wider(names_from = name, values_from = per_pop) |> 
-#   rename(
-#     "Mánuður" = time,
-#     "Land" = land,
-#     "Fjöldi með vernd" = beneficiaries,
-#     "Umsækjendur" = applicants,
-#     "Veitt vernd í mánuði" = grants
-#   ) |> 
-#   write_csv("data/timabundin_vernd.csv")
+d |>
+  select(-value, -pop) |>
+  pivot_wider(names_from = name, values_from = per_pop) |> 
+  select(
+    "Dagsetning" = time,
+    "Land" = land,
+    "Fjöldi sem nýtur tímabundinnar verndar" = beneficiaries,
+    "Nýjar veitingar á tímabundinni vernd" = grants,
+    "Nýir umsækjendur um hæli" = asylum_applicants_non_ukraine,
+    "Umsækjendur um hæli í bið eftir niðurstöðu" = applicants_non_ukraine,
+    "Ákvarðanir teknar um hæli" = total_decisions,
+    "Einstaklingum veitt hæli" = positive_decisions,
+    "Hlutfall jákvæðra ákvarðana" = percent_positive_decisions
+  ) |> 
+  write_csv("data/timabundin_vernd.csv")
 ```
 
 # Skilgreiningar
@@ -303,7 +307,7 @@ d |>
 Hér er unnið með gögn frá Eurostat, hagstofu Evrópusambandsins. Þar sem það er munur á löggjöf þar og á Íslandi er mikilvægt að hafa nokkrar skilgreiningar og þýðingar á hreinu. Hér verður notast við eftirfarandi skilgreiningar og þýðingar:
 
 * **Tímabundin vernd (e. temporary protection):** Þetta er kallað *sameiginleg vernd vegna fjöldaflótta* í 44. grein laga um útlendinga, en *temporary protection* hjá Evrópusambandinu. Dómsmálaráðherra virkjaði þessa grein vegna fjöldaflótta frá Úkraínu í mars 2022. Hér verður notast við orðatiltækið **tímabundin vernd**.
-* **Hælisleitandi (e. asylum applicant):** Einstaklingur sem fær ekki tímabundna vernd heldur þarf að ganga í gegnum persónulegra ferli þar sem málsmeðferð þarf að skera út um hvort einstaklingur þurfi á hæli að halda.
+* **Hæli (e. asylum):** Einstaklingur sem fær ekki tímabundna vernd heldur þarf að ganga í gegnum persónulegra ferli þar sem málsmeðferð þarf að skera út um hvort einstaklingur þurfi á hæli að halda. Í gögnum Útlendingastofnunar er þetta oftast kallað *efnisleg meðferð* og hefur verið ýmist verið skipt niður í flokkana *vernd*, *viðbótarvernd* og *mannúðarleyfi* í gögnum þeirra. Hér verður notast við orðið **hæli** yfir alla þessa flokka.
 
 # Um gögnin
 
@@ -315,11 +319,13 @@ d <- read_csv("data/raw_data.csv")
 Gögn þessarar úrvinnslu koma frá [Eurostat](https://ec.europa.eu/eurostat/en/), nánar tiltekið eru þetta eftirfarandi gagnasöfn:
 
 * Tímabundin vernd
-- [Einstaklingar sem njóta tímabundinnar verndar í lok mánaðar](https://ec.europa.eu/eurostat/databrowser/view/MIGR_ASYTPSM/default/table?lang=en&category=migr.migr_asy.migr_asytp)
-- [Mánaðarlegur fjöldi einstaklinga sem fá veitta tímabundna vernd](https://ec.europa.eu/eurostat/databrowser/view/MIGR_ASYTPFM/default/table?lang=en&category=migr.migr_asy.migr_asytp)
+  - [Einstaklingar sem njóta tímabundinnar verndar í lok mánaðar](https://ec.europa.eu/eurostat/databrowser/view/MIGR_ASYTPSM/default/table?lang=en&category=migr.migr_asy.migr_asytp)
+  - [Mánaðarlegur fjöldi einstaklinga sem fá veitta tímabundna vernd](https://ec.europa.eu/eurostat/databrowser/view/MIGR_ASYTPFM/default/table?lang=en&category=migr.migr_asy.migr_asytp)
 * Hæli
-- [Mánaðarlegur fjöldi umsækjenda um hæli](https://ec.europa.eu/eurostat/databrowser/view/migr_asyappctzm/default/table?lang=en)
-- [Umsækjendur í bið eftir niðurstöðu hælisumsóknar í lok mánaðar](https://ec.europa.eu/eurostat/databrowser/view/TPS00190/default/table?lang=en&category=migr.migr_asy.migr_asyapp)
+  - [Mánaðarlegur fjöldi umsækjenda um hæli](https://ec.europa.eu/eurostat/databrowser/view/migr_asyappctzm/default/table?lang=en)
+  - [Ákvarðanir teknar í málefnum umsækjenda um hæli](https://ec.europa.eu/eurostat/databrowser/view/migr_asydcfstq/default/table?lang=en&category=migr.migr_asy.migr_asydec)
+  - [Lokaákvarðanir teknar í málefnum umsækjenda um hæli eftir áfrýjun](https://ec.europa.eu/eurostat/databrowser/view/migr_asydcfina/default/table?lang=en&category=migr.migr_asy.migr_asydec)
+  - [Umsækjendur í bið eftir niðurstöðu hælisumsóknar í lok mánaðar](https://ec.europa.eu/eurostat/databrowser/view/TPS00190/default/table?lang=en&category=migr.migr_asy.migr_asyapp)
 
 Þessari upplýsingar eru svo tengdar við [gögn um mannfjölda hvers lands](https://ec.europa.eu/eurostat/databrowser/view/demo_pjan/default/table?lang=en).
 
