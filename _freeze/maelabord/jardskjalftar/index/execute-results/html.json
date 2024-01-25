@@ -1,9 +1,11 @@
 {
-  "hash": "2964c0fe12888fd0d2debc55e422b255",
+  "hash": "4c41fd488d9976d95ccbb57ebe2022a1",
   "result": {
     "engine": "knitr",
-    "markdown": "---\ntitle-block-style: none\npagetitle: \"Jarðskjálfar á Íslandi\"\npagesubtitle: \"Fjöldi og staðsetning jarðskjálfa á Íslandi\"\nimage: image.png\nhref: maelabord/jardskjalftar/index.qmd\npagedate: \"2023/11/15\"\n---\n\n::: {.cell}\n\n:::\n\n\n\n::: {.column-screen}\n<iframe \n  src=\"https://bggj.shinyapps.io/shiny_jardskjalftar/\" style=\"height:'100px!important';\">\n</iframe>\n:::",
-    "supporting": [],
+    "markdown": "---\ntitle-block-style: none\npagetitle: \"Jarðskjálftar á Íslandi\"\npagesubtitle: \"Gagnvirkt samantekt á fjölda og staðsetningu jarðskjálfta á Íslandi\"\nimage: image.png\nhref: maelabord/jardskjalftar/index.qmd\npagedate: \"2024/01/25\"\n---\n\n::: {.cell}\n\n:::\n\n\n\n::: {.column-screen}\n<iframe\n  src=\"https://bggj.shinyapps.io/shiny_jardskjalftar/\"\n  data-external=\"1\"\n  >\n</iframe>\n:::",
+    "supporting": [
+      "index_files"
+    ],
     "filters": [
       "rmarkdown/pagebreak.lua"
     ],

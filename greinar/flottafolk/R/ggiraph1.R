@@ -3,6 +3,8 @@ make_ggiraph1 <- function(
     height = 0.4 * 16
     ) {
   
+  n_countries <- length(unique(data_hist$land)) - 1
+  
   #### Plot 1 ####
   
   plot_dat <- data_hist |> 
@@ -74,6 +76,9 @@ make_ggiraph1 <- function(
       land != "Bretland",
       name == "total"
     ) |>
+    mutate(
+      per_pop = coalesce(per_pop, 0)
+    ) |> 
     arrange(time, per_pop) |> 
     mutate(
       placement = row_number(),
@@ -131,9 +136,9 @@ make_ggiraph1 <- function(
       )
     ) +
     scale_y_continuous(
-      breaks = 1:23,
-      labels = \(x) number(24 - x),
-      limits = c(1, 23),
+      breaks = seq_len(n_countries),
+      labels = \(x) number(n_countries + 1 - x),
+      limits = c(1, n_countries),
       expand = expansion(c(0.05, 0.05)),
       guide = guide_axis_truncated()
     )  +
@@ -227,6 +232,7 @@ make_ggiraph1 <- function(
       name == "total"
     ) |> 
     mutate(
+      per_pop = coalesce(per_pop, 0),
       per_pop = cumsum(per_pop),
       .by = land
     ) |> 
@@ -287,9 +293,9 @@ make_ggiraph1 <- function(
       )
     ) +
     scale_y_continuous(
-      breaks = 1:23,
-      labels = \(x) number(24 - x),
-      limits = c(1, 23),
+      breaks = seq_len(n_countries),
+      labels = \(x) number(n_countries + 1 - x),
+      limits = c(1, n_countries),
       expand = expansion(c(0.05, 0.05)),
       guide = guide_axis_truncated()
     )  +
@@ -313,7 +319,7 @@ make_ggiraph1 <- function(
     plot_annotation(
       title = "Áhrif innrásar Rússlands í Úkraínu á fjölda flóttafólks í Evrópu",
       subtitle = str_c(
-        "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
+        "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
         "Láttu músina yfir land til að einblina á gögn þess",
         " | ",
         "Myndir sýna bæði venjular hælisveitingar og tímabundna vernd vegna innrásarinnar"

@@ -3,6 +3,7 @@ make_ggiraph2 <- function(
     height = 0.4 * 16
     ) {
   
+  n_countries <- length(unique(data_hist$land)) - 1
   
   #### Plot 1 ####
   
@@ -133,9 +134,9 @@ make_ggiraph2 <- function(
       )
     ) +
     scale_y_continuous(
-      breaks = 1:23,
-      labels = \(x) number(24 - x),
-      limits = c(1, 23),
+      breaks = seq_len(n_countries),
+      labels = \(x) number(n_countries + 1 - x),
+      limits = c(1, n_countries),
       expand = expansion(c(0.05, 0.05)),
       guide = guide_axis_truncated()
     )  +
@@ -290,9 +291,9 @@ make_ggiraph2 <- function(
       )
     ) +
     scale_y_continuous(
-      breaks = 1:23,
-      labels = \(x) number(24 - x),
-      limits = c(1, 23),
+      breaks = seq_len(n_countries),
+      labels = \(x) number(n_countries + 1 - x),
+      limits = c(1, n_countries),
       expand = expansion(c(0.05, 0.05)),
       guide = guide_axis_truncated()
     )  +
@@ -344,4 +345,3 @@ make_ggiraph2 <- function(
   ) 
   
 }
-

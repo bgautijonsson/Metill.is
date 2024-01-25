@@ -74,6 +74,7 @@ data_hist <- decisions_hist |>
     metill::country_names(),
     by = join_by(geo == country)
   ) |> 
+  filter(land != "Kýpur") |> 
   select(-geo)
 
 data_hist_total <- data_hist |> 
@@ -94,6 +95,7 @@ data_hist <- data_hist |>
   pivot_longer(c(total, total_non_ukr)) |> 
   mutate(
     per_pop = value / pop * 1e5,
+    per_pop = coalesce(per_pop, 0),
     colour = case_when(
       land == "Ísland" ~ litur_island,
       land == "Danmörk" ~ litur_danmork,

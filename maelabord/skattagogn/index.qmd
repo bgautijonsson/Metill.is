@@ -10,6 +10,7 @@ pagedate: "2022/10/07"
 
 ::: {.column-screen}
 <iframe
-  src="https://bggj.shinyapps.io/skattagogn/">
+  src="https://bggj.shinyapps.io/skattagogn/"
+  >
 </iframe>
 :::

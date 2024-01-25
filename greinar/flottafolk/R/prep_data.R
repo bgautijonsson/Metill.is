@@ -210,6 +210,7 @@ d <- beneficiaries |>
     metill::country_names(),
     by = "country"
   ) |> 
+  filter(land != "Kýpur") |> 
   select(
     -year, -country
   ) |> 

@@ -12,6 +12,7 @@
   {
     "listing": "/maelabord.html",
     "items": [
+      "/maelabord/jardskjalftar/index.html",
       "/maelabord/sveitarfelog/index.html",
       "/maelabord/skattagogn/index.html",
       "/maelabord/verdbolga/index.html",
@@ -21,6 +22,7 @@
   {
     "listing": "/index.html",
     "items": [
+      "/greinar/flottafolk/index.html",
       "/greinar/vinnuafl/index.html",
       "/greinar/visitala_neysluverds/index.html",
       "/greinar/leigaogkaupverd/index.html",
@@ -31,6 +33,7 @@
       "/greinar/stjornmalaflokkar/index.html",
       "/greinar/loftgaedi/index.html",
       "/greinar/landspitali/index.html",
+      "/maelabord/jardskjalftar/index.html",
       "/maelabord/sveitarfelog/index.html",
       "/maelabord/skattagogn/index.html",
       "/maelabord/verdbolga/index.html",
@@ -40,6 +43,7 @@
   {
     "listing": "/greinar.html",
     "items": [
+      "/greinar/flottafolk/index.html",
       "/greinar/vinnuafl/index.html",
       "/greinar/visitala_neysluverds/index.html",
       "/greinar/leigaogkaupverd/index.html",

@@ -8,7 +8,7 @@ make_plot <- function(
     caption,
     y_upper = NA,
     number_labels = label_number(),
-    height = 0.9 * 11,
+    height = 1 * 11,
     width = 11
 ) {
   
@@ -154,7 +154,7 @@ make_plot <- function(
     rename(
       dags = time, 
       flottafjoldi = value,
-      per_pers = scaling_var
+      per_pers = all_of(scaling_var)
     ) |>  
     # filter(dags <= end_date) |> 
     drop_na(per_pers) |> 
@@ -205,7 +205,7 @@ make_plot <- function(
       guide = guide_axis_truncated()
     ) +
     scale_colour_identity() +
-    coord_cartesian(ylim = c(0, y_upper), clip = "off") +
+    coord_cartesian(ylim = c(0, y_upper), clip = "on") +
     theme(
       plot.margin = margin(t = 5, r = 35, b = 5, l = 5)
     ) +

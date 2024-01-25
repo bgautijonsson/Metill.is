@@ -3,8 +3,8 @@ title: "Tímabundin vernd og hælisleitendur"
 pagetitle: "Tímabundin vernd og hælisleitendur"
 subtitle: "Hvað segja gögnin um fjölda hælisleitenda og tímabundna vernd til Íslands?"
 description: "Hvar bíða flestir einstaklingar eftir niðurstöðu í hælisumsókn sinni? Hvaða land hefur tekið við flestum hælisleitendum? Hvernig tengist löggjöf skilgreiningu á gögnum? Hér eru gögn um fjölda einstaklinga sem njóta tímabundinnar verndar eða hælis, fjölda samþykktra verndar- og hælisumsókna og fjölda umsókna í bið tekin saman úr gögnum  Eurostat."
-date: "2024/01/18"
-draft: true
+date: "2024/01/25"
+draft: false
 categories:
     - stjórnmál
     - fólksflutningar
@@ -12,7 +12,9 @@ categories:
     - eurostat
     - evrópa
 href: greinar/flottafolk/index.qmd
-image: Figures/vernd_saman_2_page.png
+image: Figures/cover_fp.png
+twitter-card:
+    image: figures/cover.png
 execute: 
   eval: true
 toc: true
@@ -89,7 +91,7 @@ Hér er unnið með gögn frá Eurostat, hagstofu Evrópusambandsins. Þar sem �
 
 make_ggiraph1(
   width = 16,
-  height = 1.2 * 16
+  height = 1.5 * 16
 )
 ```
 
@@ -97,7 +99,7 @@ make_ggiraph1(
 
 ## Mánaðarlegar veitingar
 
-Yfir árið 2022 var mikið flæði flóttafólks frá Úkraínu til annarra Evrópulanda, þá sérstaklega til Póllands, en mikill fjöldi leitaði líka til Eistlands. Síðustu mánuði ársins 2023 jókst fjöldinn sem leitaði til Noregs og tóku norsk yfirvöld við flestum í nóvember síðastliðinn.
+Yfir árið 2022 var mikið flæði flóttafólks frá Úkraínu til annarra Evrópulanda, þá sérstaklega til Tékklands og Póllands, en mikill fjöldi leitaði líka til Slóvakíu og Eistlands. Síðustu mánuði ársins 2023 jókst fjöldinn sem leitaði til Noregs og tóku norsk yfirvöld við flestum í nóvember síðastliðinn.
 
 ```{r}
 #| eval: true
@@ -121,7 +123,7 @@ make_plot(
 
 ## Einstaklingar sem njóta verndar
 
-Ef við leggjum saman allan fjöldann sem hafa fengið tímabundna vernd í löndum *(og drögum frá einstaklinga sem leita til annarra landa eftir að hafa verið veitt tímabundin vernd)* sjáum við að langmestur fjöldi fólks nýtur tímabundinnar verndar í Estlandi, Póllandi, Búlgaríu og Latvíu. Noregur, Finnland og Ísland eru öll yfir meðaltali.
+Ef við leggjum saman allan fjöldann sem hafa fengið tímabundna vernd í löndum *(og drögum frá einstaklinga sem leita til annarra landa eftir að hafa verið veitt tímabundin vernd)* sjáum við að langmestur fjöldi fólks nýtur tímabundinnar verndar í Tékklandi. Noregur, Finnland og Ísland eru öll yfir meðaltali.
 
 ```{r}
 #| eval: true
@@ -156,13 +158,13 @@ make_plot(
 
 make_ggiraph2(
   width = 16,
-  height = 0.7 * 16
+  height = 0.85 * 16
 )
 ```
 
 ## Mánaðarlegur fjöldi umsókna
 
-Fyrst skoðum við hversu margar umsóknir um *hæli* þjóðir fá á hverjum mánuði. Frá september 2022 til júní 2023 var langur kafli þar sem Ísland fékk langflestar umsóknir um hæli. Frá og með júlí 2023 hefur þetta þó aðeins róast og erum við núna farin að fá svipað magn og Lúxemborg aftur.
+Fyrst skoðum við hversu margar umsóknir um *hæli* þjóðir fá á hverjum mánuði. Frá september 2022 til júní 2023 var langur kafli þar sem Ísland fékk óvenjulega margar umsóknir, mun meira en aðrar þjóðir. Frá og með júlí 2023 hefur þetta þó aðeins róast og erum við núna farin að fá svipað magn og Lúxemborg aftur.
 
 Uppsafnaður fjöldi hælisumsókna er mun hærri á Íslandi en í öðrum löndum. Næsta land á eftir Íslandi er Grikkland, en þar hefur mánaðarlegum umsóknum fjölgað og munurinn milli Íslands og Grikklands því að minnka.
 
@@ -250,7 +252,7 @@ make_plot(
   scaling_var = "per_pop_cumsum",
   start_date = clock::date_build(2022, 3, 1),
   end_date = clock::date_build(2023, 7, 1),
-  title = "Hvar hafa flestar ákvarðanir um stöðu hælisleitenda verið teknar? (Uppsafnaðar tölur frá mars 2022)",
+  title = "Hvar hafa flestar ákvarðanir verið teknar? (Uppsafnaðar tölur frá mars 2022)",
   subtitle = "Sýnt sem fjöldi á 100.000 íbúa hvers lands",
   caption = caption,
   # y_upper = 500,
@@ -350,6 +352,11 @@ Oft er talað um álag á innviði sem tengjast móttöku flóttafólks. Þar he
 Þetta hefur valdið því að frá september 2022 til mars 2023 jókst þessi fjöldi einstaklinga í bið á Íslandi hraðar en í öðrum löndum og í október 2023 var Lúxemborg eina landið þar sem fleiri biðu eftir niðurstöðu. Eins og var nefnt að ofan þurfa yfirvöld að vega kostnað vegna starfsfólks á móti kostnaði þess að veita hælisleitendum skjól og uppihald á meðan beðið er eftir niðurstöðu. Mögulega þurfa yfirvöld landa að halda betur utan um þessar tölur og bregðast skjótar við til að koma í veg fyrir að langir biðlistar myndist með því að fjölga starfsfólki. 
 
 ```{r}
+
+```
+
+
+```{r}
 #| eval: true
 #| column: page-left
 
@@ -375,8 +382,8 @@ make_plot(
 
 
 make_samantekt(
-  height = 0.9 * 15,
-  width = 15,
+  height = 0.9 * 16,
+  width = 16,
   end_date = clock::date_build(2023, c(10, 7, 10)),
   number_labels = label_number(big.mark = ".", decimal.mark = ",")
 )
@@ -448,7 +455,7 @@ Gögn þessarar úrvinnslu koma frá [Eurostat](https://ec.europa.eu/eurostat/en
 
 Þessari upplýsingar eru svo tengdar við [gögn um mannfjölda hvers lands](https://ec.europa.eu/eurostat/databrowser/view/demo_pjan/default/table?lang=en).
 
-Til að auðvelda samanburð milli landa eru allar tölur sýndar sem fjöldi á hverja 100.000 íbúa hvers lands.
+Til að auðvelda samanburð milli landa eru allar tölur sýndar sem fjöldi á hverja 100.000 íbúa hvers lands. Þar sem yfirvöldum á Kýpur berast mun fleiri umsóknir en annarra þjóða var ákveðið að hafa það land ekki með í þessari greiningu til að auðvelda skoðun á gögnum annarra þjóða.
 
 -----
 

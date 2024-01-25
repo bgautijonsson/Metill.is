@@ -1,0 +1,34 @@
+---
+title-block-style: none
+pagetitle: "Jarðskjálftar á Íslandi"
+pagesubtitle: "Gagnvirkt samantekt á fjölda og staðsetningu jarðskjálfta á Íslandi"
+image: image.png
+href: maelabord/jardskjalftar/index.qmd
+pagedate: "2024/01/25"
+---
+
+```{r}
+#| echo: false
+#| output: false
+
+# width <- 1500
+# height <- round(0.621 * width)
+# webshot2::webshot(
+#   "https://bggj.shinyapps.io/shiny_jardskjalftar/",
+#   delay = 3,
+#   cliprect = "viewport",
+#   vwidth = width,
+#   vheight = height,
+#   file = "image.png"
+# )
+
+```
+
+
+::: {.column-screen}
+<iframe
+  src="https://bggj.shinyapps.io/shiny_jardskjalftar/"
+  data-external="1"
+  >
+</iframe>
+:::
