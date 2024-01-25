@@ -7,6 +7,7 @@ language:
   title-block-affiliation-single: "Stofnun"
   title-block-affiliation-plural: "Stofnun"
   title-block-published: "Síðast uppfært"
+  toc-title-website: "Efnisyfirlit"
 author: 
     -   name: "Brynjólfur Gauti Guðrúnar Jónsson"
         url: "https://twitter.com/bggjonsson"

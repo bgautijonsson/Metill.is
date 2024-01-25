@@ -2,12 +2,15 @@
 title: "Tímabundin vernd og hælisleitendur"
 pagetitle: "Tímabundin vernd og hælisleitendur"
 subtitle: "Hvað segja gögnin um fjölda hælisleitenda og tímabundna vernd til Íslands?"
-description: "Hér eru gögn um fjölda einstaklinga sem njóta tímabundinnar verndar eða hælis, fjölda samþykktra verndar- og hælisumsókna og fjölda umsókna í bið tekin saman úr gögnum  Eurostat."
+description: "Hvar bíða flestir einstaklingar eftir niðurstöðu í hælisumsókn sinni? Hvaða land hefur tekið við flestum hælisleitendum? Hvernig tengist löggjöf skilgreiningu á gögnum? Hér eru gögn um fjölda einstaklinga sem njóta tímabundinnar verndar eða hælis, fjölda samþykktra verndar- og hælisumsókna og fjölda umsókna í bið tekin saman úr gögnum  Eurostat."
 date: "2024/01/18"
 draft: true
 categories:
     - stjórnmál
     - fólksflutningar
+    - flóttafólk
+    - eurostat
+    - evrópa
 href: greinar/flottafolk/index.qmd
 image: Figures/vernd_saman_2_page.png
 execute: 
@@ -18,36 +21,16 @@ toc: true
 
 ```{r setup}
 #| include: false
-library(cowplot)
 library(tidyverse)
-library(scales)
-library(ggthemes)
-library(kableExtra)
-library(gganimate)
-library(lubridate)
-library(geomtextpath)
-library(ggtext)
-library(readxl)
-library(janitor)
-library(plotly)
-library(tidyverse)
-library(lubridate)
-library(ggthemes)
-library(cowplot)
 library(scales)
 library(visitalaneysluverds)
-library(feather)
-library(gganimate)
 library(metill)
 library(patchwork)
-library(arrow)
 library(glue)
 library(eurostat)
-library(hagstofa)
-library(crosstalk)
-library(clock)
 library(ggh4x)
 library(ggiraph)
+library(gt)
 
 Sys.setlocale("LC_ALL", "is_IS.UTF-8")
 
@@ -75,364 +58,8 @@ litur_svithjod <- "#fd8d3c"
 
 litur_annad <- "#737373"
 
-```
-
-
-```{r data_beneficiaries}
-#| eval: false
-beneficiaries <- get_eurostat(
-  "migr_asytpsm", 
-  cache = TRUE,
-  update_cache = update_cache,
-  cache_dir = "data",
-  filters = list(
-    sex = "T",
-    age = "TOTAL",
-    citizen = "TOTAL"
-  )
-) |>
-  select(-unit, -sex, -age, -citizen) |> 
-  label_eurostat()
-```
-
-
-```{r data_pop}
-#| eval: false
-pop <- get_eurostat(
-  "demo_pjan",
-  cache = TRUE,
-  update_cache = update_cache,
-  cache_dir = "data",
-  filters = list(
-    age = "TOTAL",
-    sex = "T"
-  )
-) |> 
-  select(-unit, -age, -sex) |> 
-  label_eurostat()
-```
-
-```{r data_applicants}
-#| eval: false
-applicants <- get_eurostat(
-  "migr_asypenctzm",
-  cache = TRUE,
-  update_cache = update_cache,
-  cache_dir = "data",
-  filters = list(
-    age = "TOTAL",
-    sex = "T",
-    citizen = c("TOTAL", "UA")
-  )
-) |> 
-  select(-sex, -age) |> 
-  janitor::remove_constant() |> 
-  label_eurostat() |> 
-  pivot_wider(names_from = citizen, values_from = values) |> 
-  janitor::clean_names() |> 
-  mutate(
-    non_ukraine = total - ukraine
-  ) |> 
-  rename(
-    applicants_ukraine = ukraine,
-    applicants_total = total,
-    applicants_non_ukraine = non_ukraine
-  )
-```
-
-```{r data_grants}
-#| eval: false
-grants <- get_eurostat(
-  "migr_asytpfm",
-  cache = TRUE,
-  update_cache = update_cache,
-  cache_dir = "data",
-  filters = list(
-    sex = "T",
-    age = "TOTAL",
-    citizen = "TOTAL"
-  )
-) |> 
-  select(-unit, -citizen, -sex, -age) |> 
-  label_eurostat()
-```
-
-```{r data_decisions}
-#| eval: false
-decisions <- get_eurostat(
-  "migr_asydcfstq",
-  cache = TRUE,
-  update_cache = update_cache,
-  cache_dir = "data",
-  filters = list(
-    citizen = c("TOTAL", "UA"),
-    sex = "T",
-    age = "TOTAL",
-    decision = c("TOTAL", "TOTAL_POS")
-  )
-)  |> 
-  select(-sex, -age, -unit, -freq) |> 
-  label_eurostat() |> 
-  pivot_wider(names_from = citizen, values_from = values) |> 
-  mutate(values = Total - Ukraine) |> 
-  select(-Total, -Ukraine) |> 
-  pivot_wider(names_from = decision, values_from = values) |> 
-  janitor::clean_names() |> 
-  rename(total_decisions = total, positive_decisions = total_positive_decisions) |> 
-  mutate(
-    percent_positive_decisions = positive_decisions / total_decisions
-  )
-
-decisions <- crossing(
-  time = seq.Date(
-    from = min(decisions$time), 
-    to = max(decisions$time), 
-    by = "1 month"
-  ),
-  geo = unique(decisions$geo)
-) |> 
-  left_join(
-    decisions,
-    by = join_by(time, geo)
-  ) |> 
-  arrange(time)  |> 
-  group_by(geo) |> 
-  mutate_at(
-    vars(total_decisions, positive_decisions, percent_positive_decisions),
-    \(x) zoo::na.approx(x, na.rm = FALSE, maxgap = 5) / 3
-  ) |> 
-  ungroup()
-
-```
-
-
-```{r data_asylum_applicants}
-#| eval: false
-asylum_applicants <- get_eurostat(
-  "migr_asyappctzm",
-  cache = TRUE,
-  update_cache = update_cache,
-  cache_dir = "data",
-  filters = list(
-    sex = "T",
-    age = "TOTAL",
-    asyl_app = "ASY_APP",
-    citizen = c("TOTAL", "UA")
-  )
-) |> 
-  select(-sex, -age, -freq, -unit, -asyl_app) |> 
-  drop_na() |> 
-  label_eurostat() |> 
-  rename(asylum_applicants = values) |> 
-  pivot_wider(names_from = citizen, values_from = asylum_applicants) |> 
-  janitor::clean_names() |> 
-  mutate(
-    non_ukr = total - ukraine
-  ) |> 
-  rename(
-    asylum_applicants_total = total, 
-    asylum_applicants_ukraine = ukraine,
-    asylum_applicants_non_ukraine = non_ukr
-  )
-```
-
-```{r data_gdp}
-#| eval: false
-
-gdp <- get_eurostat(
-  "nama_10_gdp",
-  filters = list(
-    unit = "CP_MEUR",
-    na_item = "B1GQ"
-  )
-) |> 
-  select(-freq, -unit, -na_item) |>
-  label_eurostat() |> 
-  filter(year(time) == 2022) |> 
-  select(-time) |> 
-  rename(gdp = values)
-```
-
-```{r historical_data}
-decisions_hist <- get_eurostat(
-  "migr_asydcfsta",
-  filters = list(
-    citizen = list("TOTAL", "UA"),
-    sex = "T",
-    age = "TOTAL"
-  )
-)
-
-temporary_protection_hist <- get_eurostat(
-  "migr_asytpfa",
-  filters = list(
-    citizen = "TOTAL",
-    age = "TOTAL",
-    sex = "T"
-  )
-)  |> 
-  select(-citizen, -age, -sex, -freq, -unit) |> 
-  label_eurostat() |> 
-  rename(
-    granted_temporary_protection = values
-  )
-
-pop_hist <- get_eurostat(
-  "demo_pjan",
-  filters = list(
-    age = "TOTAL",
-    sex = "T"
-  )
-)
-
-decisions_hist <- decisions_hist |> 
-  janitor::remove_constant() |> 
-  label_eurostat()
-
-pop_hist <- pop_hist |> 
-  janitor::remove_constant() |> 
-  label_eurostat()
-
-data_hist <- decisions_hist |> 
-  rename(
-    decisions = values
-  ) |> 
-  inner_join(
-    pop_hist |> rename(pop = values),
-    by = join_by(geo, time)
-  ) |> 
-  pivot_wider(names_from = decision, values_from = decisions) |> 
-  janitor::clean_names() |> 
-  select(citizen:pop, total_positive_decisions) |> 
-  pivot_wider(names_from = citizen, values_from = total_positive_decisions) |> 
-  left_join(
-    temporary_protection_hist,
-    by = join_by(geo, time)
-  ) |> 
-  mutate(
-    granted_temporary_protection = coalesce(granted_temporary_protection, 0),
-    total = Total - Ukraine + granted_temporary_protection,
-    total_non_ukr = Total - Ukraine
-  ) |> 
-  select(geo, time, pop, total, total_non_ukr) |> 
-  pivot_longer(c(total, total_non_ukr)) |> 
-  mutate(
-    per_pop = value / pop * 1e5
-  ) |> 
-  inner_join(
-    metill::country_names(),
-    by = join_by(geo == country)
-  ) |> 
-  select(-geo)
-
-data_hist |> write_csv("data/data_hist.csv")
-```
-
-
-```{r data_merge}
-#| eval: false
-d <- beneficiaries |> 
-  mutate(
-    year = year(time)
-  ) |> 
-  rename(beneficiaries = values) |>
-  select(-freq) |> 
-  inner_join(
-    pop |> 
-      select(-freq) |> 
-      group_by(geo) |> 
-      filter(time == max(time)) |> 
-      ungroup() |> 
-      select(geo, pop = values),
-    by = c("geo")
-  ) |> 
-  inner_join(
-    gdp,
-    by = join_by(geo)
-  ) |> 
-  full_join(
-    applicants,
-    by = join_by(geo, time)
-  ) |> 
-  inner_join(
-    grants |> 
-      select(-freq) |> 
-      rename(grants = values),
-    by = join_by(geo, time)
-  ) |> 
-  left_join(
-    decisions ,
-    by = join_by(geo, time)
-  ) |> 
-  left_join(
-    asylum_applicants,
-    by = join_by(geo, time)
-  ) |> 
-  rename(country = geo) |> 
-  mutate(
-    country = ifelse(str_detect(country, "Germany"), "Germany", country)
-  ) |> 
-  inner_join(
-    metill::country_names(),
-    by = "country"
-  ) |> 
-  select(
-    -year, -country
-  ) |> 
-  mutate(
-    total_grants = grants + positive_decisions
-  ) |> 
-  pivot_longer(
-    c(-land, -time, -pop, -gdp)
-  ) |> 
-  group_by(land) |> 
-  mutate(pop = max(pop, na.rm = T)) |> 
-  ungroup() |> 
-  mutate(
-    per_pop = value / pop * 1e5,
-    per_gdp = value / gdp * 1e5
-  )
-
-d |> 
-  write_csv("data/raw_data.csv")
-
-d |>
-  mutate(
-    per_pop = if_else(name == "percent_positive_decisions", value, per_pop)
-  ) |> 
-  select(-value, -pop, -per_gdp) |>
-  pivot_wider(names_from = name, values_from = per_pop) |> 
-  select(
-    "Dagsetning" = time,
-    "Land" = land,
-    "Fjöldi sem nýtur tímabundinnar verndar" = beneficiaries,
-    "Nýjar veitingar á tímabundinni vernd" = grants,
-    "Nýir umsækjendur um hæli" = asylum_applicants_non_ukraine,
-    "Umsækjendur um hæli í bið eftir niðurstöðu" = applicants_non_ukraine,
-    "Ákvarðanir teknar um hæli" = total_decisions,
-    "Einstaklingum veitt hæli" = positive_decisions,
-    "Hlutfall jákvæðra ákvarðana" = percent_positive_decisions
-  ) |> 
-  write_csv("data/timabundin_vernd_perpop.csv")
-
-d |>
-  mutate(
-    per_gdp = if_else(name == "percent_positive_decisions", value, per_gdp)
-  ) |> 
-  select(-value, -pop, -per_pop) |>
-  pivot_wider(names_from = name, values_from = per_gdp) |> 
-  select(
-    "Dagsetning" = time,
-    "Land" = land,
-    "Fjöldi sem nýtur tímabundinnar verndar" = beneficiaries,
-    "Nýjar veitingar á tímabundinni vernd" = grants,
-    "Nýir umsækjendur um hæli" = asylum_applicants_non_ukraine,
-    "Umsækjendur um hæli í bið eftir niðurstöðu" = applicants_non_ukraine,
-    "Ákvarðanir teknar um hæli" = total_decisions,
-    "Einstaklingum veitt hæli" = positive_decisions,
-    "Hlutfall jákvæðra ákvarðana" = percent_positive_decisions
-  ) |> 
-  write_csv("data/timabundin_vernd_pergdp.csv")
+d <- read_csv("data/raw_data.csv")
+data_hist <- read_csv("data/data_hist.csv")
 ```
 
 
@@ -440,32 +67,9 @@ d |>
 
 Hér er unnið með gögn frá Eurostat, hagstofu Evrópusambandsins. Þar sem það er munur á löggjöf þar og á Íslandi er mikilvægt að hafa nokkrar skilgreiningar og þýðingar á hreinu. Hér verður notast við eftirfarandi skilgreiningar og þýðingar:
 
-* **Tímabundin vernd (e. temporary protection):** Þetta er kallað *sameiginleg vernd vegna fjöldaflótta* í 44. grein laga um útlendinga, en *temporary protection* hjá Evrópusambandinu. Dómsmálaráðherra virkjaði þessa grein vegna fjöldaflótta frá Úkraínu í mars 2022. Hér verður notast við orðatiltækið **tímabundin vernd**.
-* **Hæli (e. asylum):** Einstaklingur sem fær ekki tímabundna vernd heldur þarf að ganga í gegnum persónulegra ferli þar sem málsmeðferð þarf að skera út um hvort einstaklingur þurfi á hæli að halda. Í gögnum Útlendingastofnunar er þetta oftast kallað *efnisleg meðferð* og hefur verið ýmist verið skipt niður í flokkana *vernd*, *viðbótarvernd* og *mannúðarleyfi* í gögnum þeirra. Hér verður notast við orðið **hæli** yfir alla þessa flokka.
+* **Tímabundin vernd (e. temporary protection):** Þetta er kallað *sameiginleg vernd vegna fjöldaflótta* í 44. grein laga um útlendinga, en *temporary protection* hjá Evrópusambandinu og þar af leiðandi Eurostat. Dómsmálaráðherra virkjaði þessa grein vegna fjöldaflótta frá Úkraínu í mars 2022. Hér verður notast við orðatiltækið **tímabundin vernd**. Afgreiðsla umsókna um tímabundna vernd er fljótari en annarra umsókna þar sem ekki þarf að leggja jafnmikla vinnu í að rannsaka mál hvers og eins.
+* **Hæli (e. asylum):** Einstaklingur sem fær ekki tímabundna vernd þarf að ganga í gegnum persónulegra ferli þar sem málsmeðferð sker út um hvort einstaklingur þurfi á hæli að halda. Í gögnum Útlendingastofnunar virðist þetta oftast kallað *efnisleg meðferð* og hefur verið ýmist verið skipt niður í flokkana *vernd*, *viðbótarvernd* og *mannúðarleyfi* í gögnum þeirra. Hér verður notast við orðið **hæli** yfir alla þessa flokka. Afgreiðsla umsókna um hæli tekur lengri tíma og því er oftast fjallað um þennan málaflokk þegar rætt er um álag á innviði sem tengjast móttöku flóttafólks.
 
-# Um gögnin
-
-Gögn þessarar úrvinnslu koma frá [Eurostat](https://ec.europa.eu/eurostat/en/), nánar tiltekið eru þetta eftirfarandi gagnasöfn:
-
-* Tímabundin vernd
-  - [Einstaklingar sem njóta tímabundinnar verndar í lok mánaðar](https://ec.europa.eu/eurostat/databrowser/view/MIGR_ASYTPSM/default/table?lang=en&category=migr.migr_asy.migr_asytp)
-  - [Mánaðarlegur fjöldi einstaklinga sem fá veitta tímabundna vernd](https://ec.europa.eu/eurostat/databrowser/view/MIGR_ASYTPFM/default/table?lang=en&category=migr.migr_asy.migr_asytp)
-* Hæli
-  - [Mánaðarlegur fjöldi umsækjenda um hæli](https://ec.europa.eu/eurostat/databrowser/view/migr_asyappctzm/default/table?lang=en)
-  - [Ákvarðanir teknar í málefnum umsækjenda um hæli](https://ec.europa.eu/eurostat/databrowser/view/migr_asydcfstq/default/table?lang=en&category=migr.migr_asy.migr_asydec)
-  - [Lokaákvarðanir teknar í málefnum umsækjenda um hæli eftir áfrýjun](https://ec.europa.eu/eurostat/databrowser/view/migr_asydcfina/default/table?lang=en&category=migr.migr_asy.migr_asydec)
-  - [Umsækjendur í bið eftir niðurstöðu hælisumsóknar í lok mánaðar](https://ec.europa.eu/eurostat/databrowser/view/TPS00190/default/table?lang=en&category=migr.migr_asy.migr_asyapp)
-
-Þessari upplýsingar eru svo tengdar við [gögn um mannfjölda hvers lands](https://ec.europa.eu/eurostat/databrowser/view/demo_pjan/default/table?lang=en).
-
-Til að auðvelda samanburð milli landa eru allar tölur sýndar sem fjöldi á hverja 100.000 íbúa hvers lands.
-
-
-
-```{r}
-#| eval: true
-d <- read_csv("data/raw_data.csv")
-```
 
 # Tímabundin Vernd
 
@@ -652,7 +256,7 @@ make_plot(
 
 Oft er talað um álag á innviði sem tengjast móttöku flóttafólks. Þar hefur fjöldi einstaklinga sem eru í bið eftir niðurstöðu umsóknar mikil áhrif. Þeir einstaklingar hafa ekki atvinnuleyfi og þurfa því að reiða sig á stuðning yfirvalda á meðan beðið er eftir ákvörðun.
 
-Við sjáum á myndinni að neðan að hér bíða margir einstaklingar eftir niðurstöðu, en eingöngu voru fleiri í Lúxemborg *(miðað við síðustu gagnaskráningu þar í október 2023)*. 
+Við sjáum á myndinni að neðan að hér bíða margir einstaklingar eftir niðurstöðu, aðeins voru fleiri í Lúxemborg *(miðað við síðustu gagnaskráningu þar í október 2023)*. 
 
 Á eftir Íslandi og Lúxemborg er um það bil 20% - 25% stökk niður til Þýskalands, Belgíu, Írlands og Spánar. 
 
@@ -694,7 +298,9 @@ make_samantekt(
 
 # Tímabundin vernd og hæli
 
-Með því að leggja saman tölur um *tímabundna vernd* og *hæli* getum við skoðað heildarflæði flóttafólks inn í lönd. Tölurnar að neðan eiga því við um flóttafólk bæði frá Úkraínu og öðrum löndum.
+Þótt umsóknir um hæli valdi meiri álagi á innviði er líka lýsandi að skoða tölur um *"heildarinnflæði"* flóttafólks til landa. Það er, við viljum líka skoða hversu margir einstaklingar hafa fengið veitta annað hvort tímabundna vernd eða hæli.
+
+Með því að leggja saman tölur um *tímabundna vernd* og *hæli* getum við skoðað þetta *"heildarflæði"* flóttafólks inn í lönd. Tölurnar að neðan eiga því við um flóttafólk bæði frá Úkraínu og öðrum löndum.
 
 ## Mánaðarlegur fjöldi 
 
@@ -718,23 +324,39 @@ make_plot(
 ```
 
 
-
-
 # Gögn
 
+Gögn þessarar úrvinnslu koma frá [Eurostat](https://ec.europa.eu/eurostat/en/), nánar tiltekið eru þetta eftirfarandi gagnasöfn:
+
+* Tímabundin vernd
+  - [Einstaklingar sem njóta tímabundinnar verndar í lok mánaðar](https://ec.europa.eu/eurostat/databrowser/view/MIGR_ASYTPSM/default/table?lang=en&category=migr.migr_asy.migr_asytp)
+  - [Mánaðarlegur fjöldi einstaklinga sem fá veitta tímabundna vernd](https://ec.europa.eu/eurostat/databrowser/view/MIGR_ASYTPFM/default/table?lang=en&category=migr.migr_asy.migr_asytp)
+* Hæli
+  - [Mánaðarlegur fjöldi umsækjenda um hæli](https://ec.europa.eu/eurostat/databrowser/view/migr_asyappctzm/default/table?lang=en)
+  - [Ákvarðanir teknar í málefnum umsækjenda um hæli](https://ec.europa.eu/eurostat/databrowser/view/migr_asydcfstq/default/table?lang=en&category=migr.migr_asy.migr_asydec)
+  - [Umsækjendur í bið eftir niðurstöðu hælisumsóknar í lok mánaðar](https://ec.europa.eu/eurostat/databrowser/view/TPS00190/default/table?lang=en&category=migr.migr_asy.migr_asyapp)
+
+Þessari upplýsingar eru svo tengdar við [gögn um mannfjölda hvers lands](https://ec.europa.eu/eurostat/databrowser/view/demo_pjan/default/table?lang=en).
+
+Til að auðvelda samanburð milli landa eru allar tölur sýndar sem fjöldi á hverja 100.000 íbúa hvers lands.
+
+-----
+
 Hægt er að vafra gögnin á bak við þessa greiningu í töflunni eða sækja þau með því að smella á takkann að neðan.
+
+::: {.panel-tabset}
+
+## Á mannfjölda
 
 ```{r}
 #| column: page
 #| cache: true
-library(gt)
-library(readr)
-d <- read_csv("data/timabundin_vernd_perpop.csv")
-d |> 
+table_d <- read_csv("data/timabundin_vernd_perpop.csv")
+table_d |> 
   gt() |> 
   tab_header(
-    title = "Samantekt á gögnum um málefni flóttafólks",
-    subtitle = "Tölur eru sýndar sem fjöldi á 100.000 íbúa móttökulands"
+    title = md("**Samantekt á gögnum um málefni flóttafólks**"),
+    subtitle = md("Tölur eru sýndar sem *fjöldi á 100.000 íbúa móttökulands*")
   ) |> 
   tab_spanner(
     label = "Á 100.000 íbúa",
@@ -767,4 +389,49 @@ d |>
   ) 
 ```
 
-{{< downloadthis data/timabundin_vernd_perpop.csv dname="timebundin_vernd" label="Sækja gögn" type=primary class=downloadbutton >}}
+{{< downloadthis data/timabundin_vernd_perpop.csv dname="timabundin_vernd_a_mannfjolda" label="Sækja gögn" type=primary class=downloadbutton >}}
+
+## Hreinar fjöldatölur
+
+```{r}
+#| column: page
+#| cache: true
+table_d <- read_csv("data/timabundin_vernd_raw.csv")
+table_d |> 
+  gt() |> 
+  tab_header(
+    title = md("**Samantekt á gögnum um málefni flóttafólks**"),
+    subtitle = md("Tölur eru sýndar sem hreinn fjöldi *óháð mannfjölda*")
+  ) |> 
+  fmt_number(
+    3:8, 
+    decimals = 0, 
+    sep_mark = ".",
+    dec_mark = ","
+  ) |> 
+  fmt_percent(
+    9,
+    decimals = 2,
+    sep_mark = ".",
+    dec_mark = ","
+  ) |> 
+  fmt_date(
+    1,
+    date_style = "yMMM",
+    locale = "is" 
+  ) |> 
+  opt_interactive(
+    use_search = FALSE,
+    use_highlight = TRUE,
+    use_filters = TRUE
+  ) |> 
+  tab_options(
+    table.background.color = "#faf9f9"
+  ) 
+```
+
+{{< downloadthis data/timabundin_vernd_raw.csv dname="timebundin_vernd_hreinn_fjoldi" label="Sækja gögn" type=primary class=downloadbutton >}}
+
+:::
+
+
