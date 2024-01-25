@@ -205,7 +205,7 @@ make_plot <- function(
       guide = guide_axis_truncated()
     ) +
     scale_colour_identity() +
-    coord_cartesian(ylim = c(0, y_upper), clip = "on") +
+    coord_cartesian(ylim = c(0, y_upper), clip = "off") +
     theme(
       plot.margin = margin(t = 5, r = 35, b = 5, l = 5)
     ) +
@@ -240,7 +240,7 @@ make_plot <- function(
         use_stroke = FALSE, 
         css = "padding:5pt;font-family: Open Sans;font-size:1rem;color:white"
       ),
-      opts_hover(css = "", nearest_distance = 1000),
+      opts_hover(css = ""),
       opts_hover_inv(css = "opacity:0.05"), 
       opts_toolbar(saveaspng = TRUE),
       opts_zoom(max = 1)
