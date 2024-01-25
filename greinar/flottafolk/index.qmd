@@ -85,7 +85,7 @@ Hér er unnið með gögn frá Eurostat, hagstofu Evrópusambandsins. Þar sem �
 
 make_ggiraph1(
   width = 16,
-  height = 0.9 * 16
+  height = 1.2 * 16
 )
 ```
 
@@ -154,7 +154,7 @@ make_plot(
 
 make_ggiraph2(
   width = 16,
-  height = 0.4 * 16
+  height = 0.7 * 16
 )
 ```
 
