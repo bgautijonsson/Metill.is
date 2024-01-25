@@ -414,7 +414,7 @@ make_samantekt <- function(
   p <- p11 + p12 + p21 + p22 + p31 + p32 +
     plot_layout(ncol = 2) +
     plot_annotation(
-      title = "Samantekt á umsóknum um hæli",
+      title = "Samantekt á umsóknum um hæli frá mars 2022",
       subtitle = str_c(
         "Þrátt fyrir að íslensk yfirvöld afgreiði mörg mál þá vantar meira upp á til að halda í við ",
         " fjölda umsókna."

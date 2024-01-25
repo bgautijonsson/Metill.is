@@ -70,15 +70,43 @@ data_hist <- decisions_hist |>
     total_non_ukr = Total - Ukraine
   ) |> 
   select(geo, time, pop, total, total_non_ukr) |> 
-  pivot_longer(c(total, total_non_ukr)) |> 
-  mutate(
-    per_pop = value / pop * 1e5
-  ) |> 
   inner_join(
     metill::country_names(),
     by = join_by(geo == country)
   ) |> 
   select(-geo)
+
+data_hist_total <- data_hist |> 
+  drop_na() |> 
+  group_by(time) |> 
+  summarise_at(
+    vars(pop, total, total_non_ukr),
+    sum
+  ) |> 
+  mutate(
+    land = "Meðaltal"
+  )
+
+data_hist <- data_hist |> 
+  bind_rows(
+    data_hist_total
+  ) |> 
+  pivot_longer(c(total, total_non_ukr)) |> 
+  mutate(
+    per_pop = value / pop * 1e5,
+    colour = case_when(
+      land == "Ísland" ~ litur_island,
+      land == "Danmörk" ~ litur_danmork,
+      land == "Finnland" ~ litur_finnland,
+      land == "Noregur" ~ litur_noregur,
+      land == "Svíþjóð" ~ litur_svithjod,
+      land == "Lúxemborg" ~ litur_luxemborg,
+      land == "Meðaltal" ~ litur_total,
+      TRUE ~ litur_annad
+    ),
+    linewidth = 1 * (land == "Ísland"),
+    size = as_factor(linewidth)
+  ) 
 
 data_hist |> 
   write_csv(here(cache_dir, "data_hist.csv"))

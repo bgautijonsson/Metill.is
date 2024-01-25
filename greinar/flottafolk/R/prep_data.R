@@ -215,6 +215,26 @@ d <- beneficiaries |>
   ) |> 
   mutate(
     total_grants = grants + positive_decisions
+  ) 
+
+d_total <- d |> 
+  mutate(
+    pop = max(pop, na.rm = T),
+    .by = land
+    ) |> 
+  group_by(time) |> 
+  summarise_at(
+    vars(-land),
+    sum, na.rm = T
+  ) |> 
+  mutate(
+    percent_positive_decisions = positive_decisions / total_decisions,
+    land = "Meðaltal"
+  )
+
+d <- d |> 
+  bind_rows(
+    d_total
   ) |> 
   pivot_longer(
     c(-land, -time, -pop, -gdp)
@@ -225,6 +245,35 @@ d <- beneficiaries |>
   mutate(
     per_pop = value / pop * 1e5,
     per_gdp = value / gdp * 1e5
+  ) |> 
+  mutate(
+    per_pop_cumsum = cumsum(per_pop),
+    .by = c(land, name)
+  )  |> 
+  mutate(
+    per_pop_cumsum = if_else(
+      (name == "percent_positive_decisions"),
+      value[name == "positive_decisions"] / value[name == "total_decisions"],
+      per_pop_cumsum
+    ),
+    .by = c(land, time)
+  ) |> 
+  mutate(
+    per_pop_cumsum = if_else(
+      (name == "percent_positive_decisions") & (land == "Meðaltal"),
+      NA,
+      per_pop_cumsum
+    ),
+    per_pop = if_else(
+      (name == "percent_positive_decisions") & (land == "Meðaltal"),
+      NA,
+      per_pop
+    ),
+    value = if_else(
+      (name == "percent_positive_decisions") & (land == "Meðaltal"),
+      NA,
+      value
+    )
   )
 
 
@@ -236,7 +285,7 @@ d |>
   mutate(
     per_pop = if_else(name == "percent_positive_decisions", value, per_pop)
   ) |> 
-  select(-per_pop, -pop, -per_gdp) |>
+  select(-per_pop, -pop, -per_gdp, -per_pop_cumsum) |>
   pivot_wider(names_from = name, values_from = value) |> 
   select(
     "Dagsetning" = time,
@@ -255,7 +304,7 @@ d |>
   mutate(
     per_pop = if_else(name == "percent_positive_decisions", value, per_pop)
   ) |> 
-  select(-value, -pop, -per_gdp) |>
+  select(-value, -pop, -per_gdp, -per_pop_cumsum) |>
   pivot_wider(names_from = name, values_from = per_pop) |> 
   select(
     "Dagsetning" = time,
@@ -274,7 +323,7 @@ d |>
   mutate(
     per_gdp = if_else(name == "percent_positive_decisions", value, per_gdp)
   ) |> 
-  select(-value, -pop, -per_pop) |>
+  select(-value, -pop, -per_pop, -per_pop_cumsum) |>
   pivot_wider(names_from = name, values_from = per_gdp) |> 
   select(
     "Dagsetning" = time,

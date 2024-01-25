@@ -11,26 +11,7 @@ make_ggiraph2 <- function(
       land != "Bretland",
       name == "total_non_ukr"
     ) |> 
-    mutate(
-      colour = case_when(
-        land == "Ísland" ~ litur_island,
-        land == "Danmörk" ~ litur_danmork,
-        land == "Finnland" ~ litur_finnland,
-        land == "Noregur" ~ litur_noregur,
-        land == "Svíþjóð" ~ litur_svithjod,
-        TRUE ~ litur_annad
-      ),
-      linewidth = 1 * (land == "Ísland"),
-      size = as_factor(linewidth)
-    ) |> 
-    arrange(time, per_pop) |> 
-    mutate(
-      colour = if_else(
-        land == "Lúxemborg",
-        "black",
-        colour
-      )
-    ) 
+    arrange(time, per_pop) 
   
   p1 <- plot_dat |>  
     ggplot(aes(time, per_pop)) +
@@ -95,29 +76,10 @@ make_ggiraph2 <- function(
       land != "Bretland",
       name == "total_non_ukr"
     ) |> 
-    mutate(
-      colour = case_when(
-        land == "Ísland" ~ litur_island,
-        land == "Danmörk" ~ litur_danmork,
-        land == "Finnland" ~ litur_finnland,
-        land == "Noregur" ~ litur_noregur,
-        land == "Svíþjóð" ~ litur_svithjod,
-        TRUE ~ litur_annad
-      ),
-      linewidth = 1 * (land == "Ísland"),
-      size = as_factor(linewidth)
-    ) |> 
     arrange(time, per_pop) |> 
     mutate(
       placement = row_number(),
       .by = time
-    ) |> 
-    mutate(
-      colour = if_else(
-        land == "Lúxemborg",
-        "black",
-        colour
-      )
     ) 
   
   p2 <- plot_dat |>  
@@ -161,19 +123,19 @@ make_ggiraph2 <- function(
       size = 3
     ) +
     scale_x_date(
-      breaks = unique(plot_dat$time) + months(6),
+      breaks = clock::date_build(2008:2022, 7),
       limits = c(min(plot_dat$time), max(plot_dat$time) + years(2)),
       labels = label_date_short(format = "%Y"),
       expand = expansion(add = 50),
       guide = guide_axis_truncated(
-        trunc_lower = min(plot_dat$time) + months(6),
-        trunc_upper = max(plot_dat$time) + months(6)
+        trunc_lower = clock::date_build(2008, 7),
+        trunc_upper = clock::date_build(2022, 7)
       )
     ) +
     scale_y_continuous(
-      breaks = 1:22,
-      labels = \(x) number(23 - x),
-      limits = c(1, 22),
+      breaks = 1:23,
+      labels = \(x) number(24 - x),
+      limits = c(1, 23),
       expand = expansion(c(0.05, 0.05)),
       guide = guide_axis_truncated()
     )  +
@@ -198,26 +160,7 @@ make_ggiraph2 <- function(
       land != "Bretland",
       name == "total_non_ukr"
     ) |> 
-    mutate(
-      colour = case_when(
-        land == "Ísland" ~ litur_island,
-        land == "Danmörk" ~ litur_danmork,
-        land == "Finnland" ~ litur_finnland,
-        land == "Noregur" ~ litur_noregur,
-        land == "Svíþjóð" ~ litur_svithjod,
-        TRUE ~ litur_annad
-      ),
-      linewidth = 1 * (land == "Ísland"),
-      size = as_factor(linewidth)
-    ) |> 
     arrange(time, per_pop) |> 
-    mutate(
-      colour = if_else(
-        land == "Lúxemborg",
-        "black",
-        colour
-      )
-    ) |> 
     mutate(
       per_pop = cumsum(per_pop),
       .by = land
@@ -287,18 +230,6 @@ make_ggiraph2 <- function(
       name == "total_non_ukr"
     ) |> 
     mutate(
-      colour = case_when(
-        land == "Ísland" ~ litur_island,
-        land == "Danmörk" ~ litur_danmork,
-        land == "Finnland" ~ litur_finnland,
-        land == "Noregur" ~ litur_noregur,
-        land == "Svíþjóð" ~ litur_svithjod,
-        TRUE ~ litur_annad
-      ),
-      linewidth = 1 * (land == "Ísland"),
-      size = as_factor(linewidth)
-    ) |> 
-    mutate(
       per_pop = cumsum(per_pop),
       .by = land
     ) |> 
@@ -306,14 +237,7 @@ make_ggiraph2 <- function(
     mutate(
       placement = row_number(),
       .by = time
-    ) |> 
-    mutate(
-      colour = if_else(
-        land == "Lúxemborg",
-        "black",
-        colour
-      )
-    ) 
+    )
   
   p4 <- plot_dat |>  
     ggplot(aes(time, placement)) +
@@ -356,19 +280,19 @@ make_ggiraph2 <- function(
       size = 3
     ) +
     scale_x_date(
-      breaks = unique(plot_dat$time[year(plot_dat$time) != 2023]) + months(6),
+      breaks = clock::date_build(2008:2022, 7),
       limits = c(min(plot_dat$time), max(plot_dat$time) + years(2)),
       labels = label_date_short(format = "%Y"),
       expand = expansion(add = 50),
       guide = guide_axis_truncated(
-        trunc_lower = min(plot_dat$time) + months(6),
-        trunc_upper = max(plot_dat$time) + months(6)
+        trunc_lower = clock::date_build(2008, 7),
+        trunc_upper = clock::date_build(2022, 7)
       )
     ) +
     scale_y_continuous(
-      breaks = 1:22,
-      labels = \(x) number(23 - x),
-      limits = c(1, 22),
+      breaks = 1:23,
+      labels = \(x) number(24 - x),
+      limits = c(1, 23),
       expand = expansion(c(0.05, 0.05)),
       guide = guide_axis_truncated()
     )  +
@@ -420,3 +344,4 @@ make_ggiraph2 <- function(
   ) 
   
 }
+

@@ -18,11 +18,10 @@ make_plot <- function(
     ) |> 
     rename(
       dags = time, 
-      flottafjoldi = value,
-      per_pers = scaling_var
+      per_pers = all_of(scaling_var)
     ) |> 
     filter(dags == min(dags)) |> 
-    drop_na(flottafjoldi) |> 
+    drop_na(per_pers) |> 
     mutate(
       colour = case_when(
         land == "Ísland" ~ litur_island,
@@ -30,6 +29,7 @@ make_plot <- function(
         land == "Finnland" ~ litur_finnland,
         land == "Noregur" ~ litur_noregur,
         land == "Svíþjóð" ~ litur_svithjod,
+        land == "Meðaltal" ~ litur_total,
         TRUE ~ litur_annad
       ),
       linewidth = 1 * (land == "Ísland"),
@@ -53,7 +53,7 @@ make_plot <- function(
     ) +
     scale_x_continuous(
       expand = expansion(c(0.15, 0.05)),
-      breaks = breaks_extended(),
+      breaks = breaks_extended(6),
       limits = c(0, NA),
       labels = number_labels,
       guide = guide_axis_truncated(
@@ -86,7 +86,7 @@ make_plot <- function(
     rename(
       dags = time, 
       flottafjoldi = value,
-      per_pers = scaling_var
+      per_pers = all_of(scaling_var)
     ) |> 
     filter(dags == end_date) |> 
     drop_na(per_pers) |> 
@@ -97,6 +97,7 @@ make_plot <- function(
         land == "Finnland" ~ litur_finnland,
         land == "Noregur" ~ litur_noregur,
         land == "Svíþjóð" ~ litur_svithjod,
+        land == "Meðaltal" ~ litur_total,
         TRUE ~ litur_annad
       ),
       linewidth = 1 * (land == "Ísland"),
@@ -120,7 +121,7 @@ make_plot <- function(
     ) +
     scale_x_continuous(
       expand = expansion(c(0.15, 0.05)),
-      breaks = breaks_extended(),
+      breaks = breaks_extended(6),
       limits = c(0, NA),
       labels = number_labels,
       guide = guide_axis_truncated(
@@ -197,7 +198,7 @@ make_plot <- function(
       )
     ) +
     scale_y_continuous(
-      breaks = breaks_extended(),
+      breaks = breaks_extended(6),
       labels = number_labels,
       limits = c(0, NA),
       expand = expansion(c(0, 0.01)),
@@ -246,6 +247,3 @@ make_plot <- function(
     )
   )
 }
-
-
-

@@ -56,6 +56,10 @@ litur_noregur <- "#7f0000"
 
 litur_svithjod <- "#fd8d3c"
 
+litur_luxemborg <- "black"
+
+litur_total <- "#005824"
+
 litur_annad <- "#737373"
 
 d <- read_csv("data/raw_data.csv")
@@ -93,9 +97,7 @@ make_ggiraph1(
 
 ## Mánaðarlegar veitingar
 
-Hér sjáum við tölur um hversu mörgum einstaklingum var veitt tímabundin vernd í hverjum mánuði. 
-
-
+Yfir árið 2022 var mikið flæði flóttafólks frá Úkraínu til annarra Evrópulanda, þá sérstaklega til Póllands, en mikill fjöldi leitaði líka til Eistlands. Síðustu mánuði ársins 2023 jókst fjöldinn sem leitaði til Noregs og tóku norsk yfirvöld við flestum í nóvember síðastliðinn.
 
 ```{r}
 #| eval: true
@@ -105,7 +107,7 @@ make_plot(
   plot_var = "grants",
   scaling_var = "per_pop",
   start_date = clock::date_build(2022, 3, 1),
-  end_date = clock::date_build(2023, 10, 1),
+  end_date = clock::date_build(2023, 11, 1),
   title = "Hvað er mörgum veitt tímabundin vernd í hverjum mánuði?",
   subtitle = "Sýnt sem fjöldi á 100.000 íbúa hvers lands",
   caption = caption,
@@ -119,7 +121,7 @@ make_plot(
 
 ## Einstaklingar sem njóta verndar
 
-Hér sjaum við svo tölur um það hversu margir einstaklingar njóta tímabundinnar verndar hverju sinni. 
+Ef við leggjum saman allan fjöldann sem hafa fengið tímabundna vernd í löndum *(og drögum frá einstaklinga sem leita til annarra landa eftir að hafa verið veitt tímabundin vernd)* sjáum við að langmestur fjöldi fólks nýtur tímabundinnar verndar í Estlandi, Póllandi, Búlgaríu og Latvíu. Noregur, Finnland og Ísland eru öll yfir meðaltali.
 
 ```{r}
 #| eval: true
@@ -129,7 +131,7 @@ make_plot(
   plot_var = "beneficiaries",
   scaling_var = "per_pop",
   start_date = clock::date_build(2022, 3, 1),
-  end_date = clock::date_build(2023, 10, 1),
+  end_date = clock::date_build(2023, 11, 1),
   title = "Hvar njóta flestir einstaklingar tímabundinnar verndar?",
   subtitle = "Sýnt sem fjöldi á 100.000 íbúa hvers lands",
   caption = caption,
@@ -162,6 +164,12 @@ make_ggiraph2(
 
 Fyrst skoðum við hversu margar umsóknir um *hæli* þjóðir fá á hverjum mánuði. Frá september 2022 til júní 2023 var langur kafli þar sem Ísland fékk langflestar umsóknir um hæli. Frá og með júlí 2023 hefur þetta þó aðeins róast og erum við núna farin að fá svipað magn og Lúxemborg aftur.
 
+Uppsafnaður fjöldi hælisumsókna er mun hærri á Íslandi en í öðrum löndum. Næsta land á eftir Íslandi er Grikkland, en þar hefur mánaðarlegum umsóknum fjölgað og munurinn milli Íslands og Grikklands því að minnka.
+
+::: {.panel-tabset}
+
+### Mánaðarlegar tölur
+
 ```{r}
 #| eval: true
 #| column: page-left
@@ -177,15 +185,42 @@ make_plot(
 )
 ```
 
+### Uppsafnaðar tölur
+
+```{r}
+#| eval: true
+#| column: page-left
+
+make_plot(
+  plot_var = "asylum_applicants_non_ukraine",
+  scaling_var = "per_pop_cumsum",
+  start_date = clock::date_build(2022, 3, 1),
+  end_date = clock::date_build(2023, 7, 1),
+  title = "Hvar hafa flestir einstaklingar sótt um hæli? (Uppsafnaðar tölur frá mars 2022)",
+  subtitle = "Sýnt sem fjöldi á 100.000 íbúa hvers lands",
+  caption = caption,
+  # y_upper = 500,
+  number_labels = label_number(big.mark = ".", decimal.mark = ",")
+)
+```
+
+:::
+
 
 
 ## Ákvarðanir í málum hælisleitenda
 
-Þjóðir fá mismargar umsóknir í hverju mánuði og því gefur að skilja að sumar þjóðir þurfa að afgreiða mál fljótar en aðrar til að ná að afgreiða málin. Gögn um ákvarðanir sýna okkur bæði hversi mörg mál eru afgreidd og hversu margir hælisleitendur fá umsókn sýna samþykkta.
+Þjóðir fá mismargar umsóknir í hverju mánuði og því gefur að skilja að sumar þjóðir þurfa að afgreiða mál fljótar en aðrar til að forðast myndun biðraða. Gögn um ákvarðanir sýna okkur bæði hversi mörg mál eru afgreidd og hversu margir hælisleitendur fá umsókn sýna samþykkta.
 
 ### Samtals ákvarðanir
 
-Byrjum á að skoða hverju margar ákvarðanir eru teknar á hverjum mánuði. Íslenskum yfirvöldum hefur tekist ágætlega í að afgreiða mál umsækjenda þegar tekið er tillit til höfðatölu. Frá sumri 2022 höfum við verið á toppnum eða nálægt toppnum í fjölda afgreiddra mála á höfðatölu.
+Byrjum á að skoða hverju margar ákvarðanir eru teknar á hverjum mánuði. Íslenskum yfirvöldum hefur tekist ágætlega í að afgreiða mál umsækjenda þegar tekið er tillit til höfðatölu og miðað er við önnur lönd. Frá sumri 2022 höfum við verið á toppnum eða nálægt toppnum í fjölda afgreiddra mála á höfðatölu. 
+
+Hér er þó mikilvægt að bera saman stærðargráðu á fjölda umsókna og fjölda afgreiðslna. Yfirvöld þurfa að vega kostnað vegna starfsfólks á móti kostnaði við að veita hælisleitendum skjól á meðan beðið er eftir niðurstöðu umsóknar. 
+
+::: {.panel-tabset}
+
+#### Mánaðarlegar tölur
 
 ```{r}
 #| eval: true
@@ -204,12 +239,40 @@ make_plot(
 )
 ```
 
+#### Uppsafnaðar tölur
+
+```{r}
+#| eval: true
+#| column: page-left
+
+make_plot(
+  plot_var = "total_decisions",
+  scaling_var = "per_pop_cumsum",
+  start_date = clock::date_build(2022, 3, 1),
+  end_date = clock::date_build(2023, 7, 1),
+  title = "Hvar hafa flestar ákvarðanir um stöðu hælisleitenda verið teknar? (Uppsafnaðar tölur frá mars 2022)",
+  subtitle = "Sýnt sem fjöldi á 100.000 íbúa hvers lands",
+  caption = caption,
+  # y_upper = 500,
+  number_labels = label_number(big.mark = ".", decimal.mark = ",")
+)
+```
+
+:::
+
+
 
 
 
 ### Samþykktar umsóknir
 
-Í gögnum um ákvarðanir getum við séð hvort ákveðið var að veita einstakling hæli eða ekki. Í kringum sumarið 2022 samþykktu íslensk yfirvöld mun fleiri umsóknir um hæli en yfirvöld annarra þjóða. Frá ársbyrjun 2023 hefur þetta þó róast og eru íslensk yfirvöld nú nær hinum norðurlöndunum í samþykktum umsóknum á höfðatölu.
+Í gögnum um ákvarðanir getum við séð hvort ákveðið var að veita einstakling hæli eða ekki. Í kringum sumarið 2022 samþykktu íslensk yfirvöld mun fleiri umsóknir um hæli en yfirvöld annarra þjóða. Frá ársbyrjun 2023 hefur þetta þó róast og eru íslensk yfirvöld nú undir meðaltali og nær hinum norðurlöndunum í samþykktum umsóknum á höfðatölu. Ef við berum okkur saman við Lúxemborg, Þýskaland og Grikkland þá hefur þessi tala verið mun stöðugri þar en á Íslandi.
+
+Ef við skoðum uppsafnaðar tölur, sést að Ísland hefur veitt flestum hæli en að Þýskaland, Grikkland og Lúxemborg eru ekki langt frá því að ná okkur ef þróunin heldur áfram.
+
+::: {.panel-tabset}
+
+#### Mánaðarlegar tölur
 
 ```{r}
 #| eval: true
@@ -228,11 +291,36 @@ make_plot(
 )
 ```
 
+#### Uppsafnaðar tölur
+
+```{r}
+#| eval: true
+#| column: page-left
+
+make_plot(
+  plot_var = "positive_decisions",
+  scaling_var = "per_pop_cumsum",
+  start_date = clock::date_build(2022, 3, 1),
+  end_date = clock::date_build(2023, 7, 1),
+  title = "Hvar hefur flestum einstaklingum verið veitt hæli? (Uppsafnaðar tölur frá mars 2022)",
+  subtitle = "Sýnt sem fjöldi á 100.000 íbúa hvers lands",
+  caption = caption,
+  number_labels = label_number(big.mark = ".", decimal.mark = ",")
+)
+```
+
+:::
 
 
-## Hlutfall Jákvæðra
 
-Íslensk yfirvöld hafa samþykkt hátt hlutfall umsókna, en frá ársbyrjun 2023 hafa yfirvöld í Lúxemborg samþykkt hærra hlutfall umsókna og erum við nú mun nær norðurlöndum og öðrum Evrópuríkjum í hlutfalli samþykktra umsókna.
+
+
+
+### Samþykktarhlutfall
+
+Samþykktarhlutfall, hlutfall umsókna sem er samþykkt, hefur lækkað verulega á Íslandi frá sumri 2022 og í júlí 2023 samþykktum við lægsta hlutfall umsókna. Hér er þó gott að hafa í huga að íslenskum yfirvöldum hafa borist flestar umsóknir og því þarf að líta á allar tölurnar til að átta sig á samhenginu. Til dæmis má nefna að við samþykktum fleiri umsóknir *(á höfðatölu)* en hin Norðurlöndin þótt samþykktarhlutfallið hafi verið lægra hér.
+
+Þótt Ungverjaland hafi samþykkt hátt hlutfall umsókna í júlí 2023 er sömuleiðis mikilvægt að muna að yfirvöldum þar hafa varla borist neinar umsóknir eins og mátti sjá að ofan.
 
 ```{r}
 #| eval: true
@@ -240,7 +328,7 @@ make_plot(
 
 make_plot(
   plot_var = "percent_positive_decisions",
-  scaling_var = "per_pop",
+  scaling_var = "value",
   start_date = clock::date_build(2022, 3, 1),
   end_date = clock::date_build(2023, 7, 1),
   title = "Hvaða hlutfall umsókna um hæli er samþykkt?",
@@ -252,13 +340,14 @@ make_plot(
 ```
 
 
+
 ## Umsækjendur í bið
 
 Oft er talað um álag á innviði sem tengjast móttöku flóttafólks. Þar hefur fjöldi einstaklinga sem eru í bið eftir niðurstöðu umsóknar mikil áhrif. Þeir einstaklingar hafa ekki atvinnuleyfi og þurfa því að reiða sig á stuðning yfirvalda á meðan beðið er eftir ákvörðun.
 
-Við sjáum á myndinni að neðan að hér bíða margir einstaklingar eftir niðurstöðu, aðeins voru fleiri í Lúxemborg *(miðað við síðustu gagnaskráningu þar í október 2023)*. 
+Í byrjun árs 2022 var fjöldi í bið á Íslandi undir meðaltali. Þetta má mögulega rekja til þess að sögulega hafa íslensk yfirvöld ekki fengið margar umsóknir um hæli miðað við önnur lönd, eins og má sjá í sögulegri samantekt gagna frá 2008 til 2022 að ofan. Upp úr 2018 fór sá fjöldi að aukast hér á landi, en það er ekki fyrr en um sumar 2022 sem Ísland fór að skera sig verulega úr hvað varðar fjölda umsókna um hæli.
 
-Á eftir Íslandi og Lúxemborg er um það bil 20% - 25% stökk niður til Þýskalands, Belgíu, Írlands og Spánar. 
+Þetta hefur valdið því að frá september 2022 til mars 2023 jókst þessi fjöldi einstaklinga í bið á Íslandi hraðar en í öðrum löndum og í október 2023 var Lúxemborg eina landið þar sem fleiri biðu eftir niðurstöðu. Eins og var nefnt að ofan þurfa yfirvöld að vega kostnað vegna starfsfólks á móti kostnaði þess að veita hælisleitendum skjól og uppihald á meðan beðið er eftir niðurstöðu. Mögulega þurfa yfirvöld landa að halda betur utan um þessar tölur og bregðast skjótar við til að koma í veg fyrir að langir biðlistar myndist með því að fjölga starfsfólki. 
 
 ```{r}
 #| eval: true
@@ -268,7 +357,7 @@ make_plot(
   plot_var = "applicants_non_ukraine",
   scaling_var = "per_pop",
   start_date = clock::date_build(2022, 3, 1),
-  end_date = clock::date_build(2023, 7, 1),
+  end_date = clock::date_build(2023, 10, 1),
   title = "Hvar bíða flestir einstaklingar eftir niðurstöðu hælisumsóknar sinnar?",
   subtitle = "Sýnt sem fjöldi á 100.000 íbúa hvers lands",
   caption = caption,
@@ -286,7 +375,7 @@ make_plot(
 
 
 make_samantekt(
-  height = 0.87 * 15,
+  height = 0.9 * 15,
   width = 15,
   end_date = clock::date_build(2023, c(10, 7, 10)),
   number_labels = label_number(big.mark = ".", decimal.mark = ",")
@@ -296,11 +385,11 @@ make_samantekt(
 -----
 
 
-# Tímabundin vernd og hæli
+# Fjöldi flóttafólks alls
 
-Þótt umsóknir um hæli valdi meiri álagi á innviði er líka lýsandi að skoða tölur um *"heildarinnflæði"* flóttafólks til landa. Það er, við viljum líka skoða hversu margir einstaklingar hafa fengið veitta annað hvort tímabundna vernd eða hæli.
+Þótt umsóknir um hæli valdi meiri álagi á innviði er líka lýsandi að skoða tölur um *"heildarinnflæði"* flóttafólks til landa. Það er, við viljum líka skoða hversu margir einstaklingar hafa fengið veitta annað hvort tímabundna vernd eða hæli. Með því að leggja saman tölur um *tímabundna vernd* og *hæli* getum við skoðað þetta *"heildarflæði"* flóttafólks inn í lönd. Tölurnar að neðan eiga því við um flóttafólk bæði frá Úkraínu og öðrum löndum.
 
-Með því að leggja saman tölur um *tímabundna vernd* og *hæli* getum við skoðað þetta *"heildarflæði"* flóttafólks inn í lönd. Tölurnar að neðan eiga því við um flóttafólk bæði frá Úkraínu og öðrum löndum.
+::: {.panel-tabset}
 
 ## Mánaðarlegur fjöldi 
 
@@ -322,6 +411,27 @@ make_plot(
   width = 10
 )
 ```
+
+## Uppsafnaðar tölur
+
+```{r}
+#| eval: true
+#| column: page-left
+
+make_plot(
+  plot_var = "total_grants",
+  scaling_var = "per_pop_cumsum",
+  start_date = clock::date_build(2022, 3, 1),
+  end_date = clock::date_build(2023, 7, 1),
+  title = "Hvar hefur flestum verið veitt vernd og/eða hæli? (Uppsafnaðar tölur frá mars 2022)",
+  subtitle = "Sýnt sem fjöldi á 100.000 íbúa hvers lands",
+  caption = caption,
+  # y_upper = 500,
+  number_labels = label_number(big.mark = ".", decimal.mark = ",")
+)
+```
+
+:::
 
 
 # Gögn
