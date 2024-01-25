@@ -74,12 +74,12 @@ data_hist <- read_csv("data/data_hist.csv")
 Hér er unnið með gögn frá Eurostat, hagstofu Evrópusambandsins. Þar sem það er munur á löggjöf þar og á Íslandi er mikilvægt að hafa nokkrar skilgreiningar og þýðingar á hreinu. Hér verður notast við eftirfarandi skilgreiningar og þýðingar:
 
 * **Tímabundin vernd (e. temporary protection):** Þetta er kallað *sameiginleg vernd vegna fjöldaflótta* í 44. grein laga um útlendinga, en *temporary protection* hjá Evrópusambandinu og þar af leiðandi Eurostat. Dómsmálaráðherra virkjaði þessa grein vegna fjöldaflótta frá Úkraínu í mars 2022. Hér verður notast við orðatiltækið **tímabundin vernd**. Afgreiðsla umsókna um tímabundna vernd er fljótari en annarra umsókna þar sem ekki þarf að leggja jafnmikla vinnu í að rannsaka mál hvers og eins.
-* **Hæli (e. asylum):** Einstaklingur sem fær ekki tímabundna vernd þarf að ganga í gegnum persónulegra ferli þar sem málsmeðferð sker út um hvort einstaklingur þurfi á hæli að halda. Í gögnum Útlendingastofnunar virðist þetta oftast kallað *efnisleg meðferð* og hefur verið ýmist verið skipt niður í flokkana *vernd*, *viðbótarvernd* og *mannúðarleyfi* í gögnum þeirra. Hér verður notast við orðið **hæli** yfir alla þessa flokka. Afgreiðsla umsókna um hæli tekur lengri tíma og því er oftast fjallað um þennan málaflokk þegar rætt er um álag á innviði sem tengjast móttöku flóttafólks.
+* **Hæli (e. asylum):** Einstaklingur sem fær ekki tímabundna vernd þarf að ganga í gegnum persónulegra ferli þar sem málsmeðferð sker úr um hvort einstaklingur þurfi á hæli að halda. Í gögnum Útlendingastofnunar virðist þetta oftast kallað *efnisleg meðferð* og hefur ýmist verið skipt niður í flokkana *vernd*, *viðbótarvernd* og *mannúðarleyfi* í gögnum þeirra. Hér verður notast við orðið **hæli** yfir alla þessa flokka. Afgreiðsla umsókna um hæli tekur lengri tíma og því er oftast fjallað um þennan málaflokk þegar rætt er um álag á innviði sem tengjast móttöku flóttafólks.
 
 
 # Tímabundin Vernd
 
-Í þessum kafla verður aðallega fjallar um flóttafólk frá Úkraínu. Það getur verið eitthvað af flóttafólki frá öðrum löndum eftir löggjöfum hvers svæðis, en hlutdeild Úkraínsks flóttafólks er nær 100% í öllum fjöldatölum þessa flokks.
+Í þessum kafla verður aðallega fjallað um flóttafólk frá Úkraínu. Það getur verið eitthvað af flóttafólki frá öðrum löndum eftir löggjöfum hvers svæðis, en hlutdeild Úkraínsks flóttafólks er nær 100% í öllum fjöldatölum þessa flokks.
 
 Þessi flokkur er oftast tekinn út úr sviga þegar tölur um flóttafólk eru greindar þar sem flóttafólk frá Úkraínu fær fljótari meðferð og veldur því minna álagi á innviði sem tengjast móttöku flóttafólks.
 
@@ -212,11 +212,11 @@ make_plot(
 
 ## Ákvarðanir í málum hælisleitenda
 
-Þjóðir fá mismargar umsóknir í hverju mánuði og því gefur að skilja að sumar þjóðir þurfa að afgreiða mál fljótar en aðrar til að forðast myndun biðraða. Gögn um ákvarðanir sýna okkur bæði hversi mörg mál eru afgreidd og hversu margir hælisleitendur fá umsókn sýna samþykkta.
+Þjóðir fá mismargar umsóknir í hverju mánuði og því gefur að skilja að sumar þjóðir þurfa að afgreiða mál fljótar en aðrar til að forðast myndun biðraða. Gögn um ákvarðanir sýna okkur bæði hversu mörg mál eru afgreidd og hversu margir hælisleitendur fá umsókn sína samþykkta.
 
 ### Samtals ákvarðanir
 
-Byrjum á að skoða hverju margar ákvarðanir eru teknar á hverjum mánuði. Íslenskum yfirvöldum hefur tekist ágætlega í að afgreiða mál umsækjenda þegar tekið er tillit til höfðatölu og miðað er við önnur lönd. Frá sumri 2022 höfum við verið á toppnum eða nálægt toppnum í fjölda afgreiddra mála á höfðatölu. 
+Byrjum á að skoða hve margar ákvarðanir eru teknar í hverjum mánuði. Íslenskum yfirvöldum hefur tekist ágætlega í að afgreiða mál umsækjenda þegar tekið er tillit til höfðatölu og miðað er við önnur lönd. Frá sumri 2022 höfum við verið á toppnum eða nálægt toppnum í fjölda afgreiddra mála á höfðatölu. 
 
 Hér er þó mikilvægt að bera saman stærðargráðu á fjölda umsókna og fjölda afgreiðslna. Yfirvöld þurfa að vega kostnað vegna starfsfólks á móti kostnaði við að veita hælisleitendum skjól á meðan beðið er eftir niðurstöðu umsóknar. 
 
