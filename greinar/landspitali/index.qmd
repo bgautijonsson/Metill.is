@@ -36,31 +36,6 @@ library(metill)
 theme_set(theme_metill())
 ```
 
-```{r}
-read_csv2("data/landspitali_erlend.csv") |> 
-  pivot_longer(c(-ar)) |> 
-  mutate(
-    name = as.numeric(name),
-    date = clock::date_build(ar, name)
-  ) |> 
-  mutate(
-    diff = value - value[ar == 2019],
-    .by = name
-  ) |> 
-  ggplot(aes(date, diff)) +
-  geom_hline(
-    yintercept = 0,
-    lty = 2,
-    alpha = 0.5
-  ) +
-  stat_smooth(
-    geom = "area",
-    alpha = 0.3
-  ) +
-  stat_smooth(
-    geom = "line"
-  )
-```
 
 
 # Gögn
