@@ -41,6 +41,7 @@ theme_set(theme_metill())
 source("R/make_plot.R")
 source("R/ggiraph1.R")
 source("R/ggiraph2.R")
+source("R/ggiraph3.R")
 source("R/make_samantekt.R")
 
 update_cache <- TRUE
@@ -157,6 +158,17 @@ make_plot(
 #| classes: between-content
 
 make_ggiraph2(
+  width = 16,
+  height = 0.85 * 16
+)
+```
+
+```{r ggiraph3}
+#| layout-ncol: 1
+#| column: screen
+#| classes: between-content
+
+make_ggiraph3(
   width = 16,
   height = 0.85 * 16
 )
@@ -445,6 +457,8 @@ make_plot(
 
 Gögn þessarar úrvinnslu koma frá [Eurostat](https://ec.europa.eu/eurostat/en/), nánar tiltekið eru þetta eftirfarandi gagnasöfn:
 
+## Mánaðarleg gögn frá mars 2022
+
 * Tímabundin vernd
   - [Einstaklingar sem njóta tímabundinnar verndar í lok mánaðar](https://ec.europa.eu/eurostat/databrowser/view/MIGR_ASYTPSM/default/table?lang=en&category=migr.migr_asy.migr_asytp)
   - [Mánaðarlegur fjöldi einstaklinga sem fá veitta tímabundna vernd](https://ec.europa.eu/eurostat/databrowser/view/MIGR_ASYTPFM/default/table?lang=en&category=migr.migr_asy.migr_asytp)
@@ -452,6 +466,13 @@ Gögn þessarar úrvinnslu koma frá [Eurostat](https://ec.europa.eu/eurostat/en
   - [Mánaðarlegur fjöldi umsækjenda um hæli](https://ec.europa.eu/eurostat/databrowser/view/migr_asyappctzm/default/table?lang=en)
   - [Ákvarðanir teknar í málefnum umsækjenda um hæli](https://ec.europa.eu/eurostat/databrowser/view/migr_asydcfstq/default/table?lang=en&category=migr.migr_asy.migr_asydec)
   - [Umsækjendur í bið eftir niðurstöðu hælisumsóknar í lok mánaðar](https://ec.europa.eu/eurostat/databrowser/view/TPS00190/default/table?lang=en&category=migr.migr_asy.migr_asyapp)
+  
+## Árlegar samantektir frá 2008
+
+* Tímabundin vernd
+  - [Árlegur fjöldi einstaklinga sem fá veitta tímabundna vernd (2022)](https://ec.europa.eu/eurostat/databrowser/view/migr_asytpfa/default/table?lang=en&category=migr.migr_asy.migr_asytp)
+* Hæli
+  - [Ákvarðanir teknar í málefnum umsækjenda um hæli (2008 - 2022)](https://ec.europa.eu/eurostat/databrowser/view/migr_asydcfsta/default/table?lang=en&category=migr.migr_asy.migr_asydec)
 
 Þessari upplýsingar eru svo tengdar við [gögn um mannfjölda hvers lands](https://ec.europa.eu/eurostat/databrowser/view/demo_pjan/default/table?lang=en).
 

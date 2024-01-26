@@ -5,6 +5,17 @@ library(here)
 cache_dir <- here("greinar", "flottafolk", "data")
 update_cache <- TRUE
 
+#### Hælisleitendur ####
+asylum_applicants_hist <- get_eurostat(
+  "migr_asyappctza",
+  filters = list(
+    citizen = list("TOTAL", "UA"),
+    sex = "T",
+    age = "TOTAL",
+    asyl_app = "ASY_APP"
+  )
+)
+
 #### Ákvarðanir í hælisumsóknum ####
 decisions_hist <- get_eurostat(
   "migr_asydcfsta",
@@ -40,6 +51,16 @@ pop_hist <- get_eurostat(
 )
 
 #### Sameining gagna ####
+
+asylum_applicants_hist <- asylum_applicants_hist |> 
+  janitor::remove_constant() |> 
+  label_eurostat() |> 
+  pivot_wider(names_from = citizen, values_from = values) |> 
+  mutate(
+    asylum_applicants = Total - Ukraine
+  ) |> 
+  select(-Ukraine, -Total)
+
 decisions_hist <- decisions_hist |> 
   janitor::remove_constant() |> 
   label_eurostat()
@@ -71,6 +92,10 @@ data_hist <- decisions_hist |>
   ) |> 
   select(geo, time, pop, total, total_non_ukr) |> 
   inner_join(
+    asylum_applicants_hist,
+    by = join_by(geo, time)
+  ) |> 
+  inner_join(
     metill::country_names(),
     by = join_by(geo == country)
   ) |> 
@@ -81,7 +106,7 @@ data_hist_total <- data_hist |>
   drop_na() |> 
   group_by(time) |> 
   summarise_at(
-    vars(pop, total, total_non_ukr),
+    vars(pop, total, total_non_ukr, asylum_applicants),
     sum
   ) |> 
   mutate(
@@ -92,7 +117,7 @@ data_hist <- data_hist |>
   bind_rows(
     data_hist_total
   ) |> 
-  pivot_longer(c(total, total_non_ukr)) |> 
+  pivot_longer(c(total, total_non_ukr, asylum_applicants)) |> 
   mutate(
     per_pop = value / pop * 1e5,
     per_pop = coalesce(per_pop, 0),
