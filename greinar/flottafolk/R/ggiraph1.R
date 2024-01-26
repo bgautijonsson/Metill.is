@@ -152,7 +152,7 @@ make_ggiraph1 <- function(
       x = NULL,
       y = NULL,
       title = "Evrópulöndum raðað eftir fjölda flóttamanna á höfðatölu",
-      subtitle = "1: Flestir flóttamenn | 23: Fæstir flóttamenn"
+      subtitle = "1: Flestir flóttamenn | 30: Fæstir flóttamenn"
     )
   
   #### Plot 3 ####
@@ -309,7 +309,7 @@ make_ggiraph1 <- function(
       x = NULL,
       y = NULL,
       title = "Evrópulöndum raðað eftir uppsöfnuðum fjölda frá 2008",
-      subtitle = "1: Flestir flóttamenn | 23: Fæstir flóttamenn"
+      subtitle = "1: Flestir flóttamenn | 30: Fæstir flóttamenn"
     )
   
   

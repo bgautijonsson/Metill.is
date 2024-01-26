@@ -150,7 +150,7 @@ make_ggiraph2 <- function(
       x = NULL,
       y = NULL,
       title = "Evrópulöndum raðað eftir fjölda hælisveitinga á höfðatölu",
-      subtitle = "1: Flestar veitingar | 23: Fæstar veitingar"
+      subtitle = "1: Flestar veitingar | 30: Fæstar veitingar"
     )
   
   
@@ -307,7 +307,7 @@ make_ggiraph2 <- function(
       x = NULL,
       y = NULL,
       title = "Evrópulöndum raðað eftir uppsöfnuðum fjölda frá 2008",
-      subtitle = "1: Flestar veitingar | 23: Fæstar veitingar"
+      subtitle = "1: Flestar veitingar | 30: Fæstar veitingar"
     )
  
   p <- p1 + p2 + p3 + p4 +
