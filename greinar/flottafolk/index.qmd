@@ -163,6 +163,8 @@ make_ggiraph2(
 )
 ```
 
+<br> <br>
+
 ```{r ggiraph3}
 #| layout-ncol: 1
 #| column: screen
