@@ -162,7 +162,7 @@ make_plot(
 
 make_ggiraph2(
   width = 16,
-  height = 0.85 * 16
+  height = 0.85 * 16 
 )
 ```
 

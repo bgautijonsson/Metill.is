@@ -202,7 +202,7 @@ make_ggiraph2 <- function(
       guide = guide_axis_truncated()
     )  +
     scale_colour_identity() +
-    coord_cartesian(clip = "off", ylim = c(0, 4000)) +
+    coord_cartesian(clip = "off", ylim = c(0, 3000)) +
     theme(
       plot.margin = margin(t = 5, r = 35, b = 5, l = 5),
       legend.position = "none"
