@@ -551,4 +551,7 @@ table_d |>
 
 :::
 
+# Þakkir
+
+Sérfræðingar hjá Hagstofu Íslands fá kærar þakkir fyrir uppbyggilega rýni og aðstoð við val á frumgögnum í undirbúningi þessarar greiningar.
 
