@@ -151,6 +151,9 @@ make_plot(
 
 Þessi flokkur er helsta ágreiningsefnið í umræðum þar sem einstaklingar í þessum hóp fá ekki sömu flýtimeðferð og einstaklingar frá Úkraínu. Því er rétt að líta helst til þessa hóps þegar skoða á álag á innviði sem tengjast móttöku flóttafólks.
 
+::: {.panel-tabset}
+
+## Þróun fjölda hælisveitinga (2008 - 2022)
 
 ```{r ggiraph2}
 #| layout-ncol: 1
@@ -163,7 +166,7 @@ make_ggiraph2(
 )
 ```
 
-<br> <br>
+## Þróun fjölda umsókna um hæli (2008 - 2022)
 
 ```{r ggiraph3}
 #| layout-ncol: 1
@@ -175,6 +178,8 @@ make_ggiraph3(
   height = 0.85 * 16
 )
 ```
+
+:::
 
 ## Mánaðarlegur fjöldi umsókna
 
