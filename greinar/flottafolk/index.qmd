@@ -481,9 +481,9 @@ Gögn þessarar úrvinnslu koma frá [Eurostat](https://ec.europa.eu/eurostat/en
 * Hæli
   - [Ákvarðanir teknar í málefnum umsækjenda um hæli (2008 - 2022)](https://ec.europa.eu/eurostat/databrowser/view/migr_asydcfsta/default/table?lang=en&category=migr.migr_asy.migr_asydec)
 
-Þessari upplýsingar eru svo tengdar við [gögn um mannfjölda hvers lands](https://ec.europa.eu/eurostat/databrowser/view/demo_pjan/default/table?lang=en).
+Þessar upplýsingar eru svo tengdar við [gögn um mannfjölda hvers lands](https://ec.europa.eu/eurostat/databrowser/view/demo_pjan/default/table?lang=en).
 
-Til að auðvelda samanburð milli landa eru allar tölur sýndar sem fjöldi á hverja 100.000 íbúa hvers lands. Þar sem yfirvöldum á Kýpur berast mun fleiri umsóknir en annarra þjóða var ákveðið að hafa það land ekki með í þessari greiningu til að auðvelda skoðun á gögnum annarra þjóða.
+Til að auðvelda samanburð milli landa eru allar tölur sýndar sem fjöldi á hverja 100.000 íbúa hvers lands. Þar sem yfirvöldum á Kýpur berast mun fleiri umsóknir en yfirvöldum annarra þjóða var ákveðið að hafa það land ekki með í þessari greiningu til að auðvelda skoðun á gögnum annarra þjóða.
 
 -----
 
