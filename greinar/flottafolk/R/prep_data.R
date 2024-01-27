@@ -118,7 +118,10 @@ decisions <- crossing(
     vars(total_decisions, positive_decisions, percent_positive_decisions),
     \(x) zoo::na.approx(x, na.rm = FALSE, maxgap = 5) / 3
   ) |> 
-  ungroup()
+  ungroup() |> 
+  mutate(
+    percent_positive_decisions = percent_positive_decisions * 3
+  )
 
 #### Fjöldi hælisumsókna ####
 asylum_applicants <- get_eurostat(
