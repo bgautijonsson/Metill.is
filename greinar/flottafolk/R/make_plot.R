@@ -166,6 +166,7 @@ make_plot <- function(
         land == "Finnland" ~ litur_finnland,
         land == "Noregur" ~ litur_noregur,
         land == "Svíþjóð" ~ litur_svithjod,
+        land == "Meðaltal" ~ litur_total,
         TRUE ~ litur_annad
       ),
       linewidth = 1 * (land == "Ísland"),
