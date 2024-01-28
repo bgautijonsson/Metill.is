@@ -368,7 +368,7 @@ Oft er talað um álag á innviði sem tengjast móttöku flóttafólks. Þar he
 
 Í byrjun árs 2022 var fjöldi í bið á Íslandi undir meðaltali. Þetta má mögulega rekja til þess að sögulega hafa íslensk yfirvöld ekki fengið margar umsóknir um hæli miðað við önnur lönd, eins og má sjá í sögulegri samantekt gagna frá 2008 til 2022 að ofan. Upp úr 2018 fór sá fjöldi að aukast hér á landi, en það er ekki fyrr en um sumar 2022 sem Ísland fór að skera sig verulega úr hvað varðar fjölda umsókna um hæli.
 
-Þetta hefur valdið því að frá september 2022 til mars 2023 jókst þessi fjöldi einstaklinga í bið á Íslandi hraðar en í öðrum löndum og í október 2023 var Lúxemborg eina landið þar sem fleiri biðu eftir niðurstöðu. Eins og var nefnt að ofan þurfa yfirvöld að vega kostnað vegna starfsfólks á móti kostnaði þess að veita hælisleitendum skjól og uppihald á meðan beðið er eftir niðurstöðu. Mögulega þurfa yfirvöld landa að halda betur utan um þessar tölur og bregðast skjótar við til að koma í veg fyrir að langir biðlistar myndist með því að fjölga starfsfólki. 
+Þetta hefur valdið því að frá september 2022 til mars 2023 jókst þessi fjöldi einstaklinga í bið á Íslandi hraðar en í öðrum löndum og í október 2023 voru Lúxemborg og Austurríki einu löndin þar sem jafnmargir eða fleiri biðu eftir niðurstöðu. Eins og var nefnt að ofan þurfa yfirvöld að vega kostnað vegna starfsfólks á móti kostnaði þess að veita hælisleitendum skjól og uppihald á meðan beðið er eftir niðurstöðu. Mögulega þurfa yfirvöld landa að halda betur utan um þessar tölur og bregðast skjótar við til að koma í veg fyrir að langir biðlistar myndist með því að fjölga starfsfólki. 
 
 ```{r}
 
