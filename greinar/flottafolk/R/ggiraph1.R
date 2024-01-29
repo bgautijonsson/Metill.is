@@ -224,7 +224,8 @@ make_ggiraph1 <- function(
           year(time) == 2022
         ) |> 
         mutate(
-          time = time + years(1)
+          time = time + years(1),
+          per_pop = 0
         )
     ) |> 
     filter(

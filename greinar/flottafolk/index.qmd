@@ -27,6 +27,7 @@ library(tidyverse)
 library(scales)
 library(visitalaneysluverds)
 library(metill)
+library(ggbump)
 library(patchwork)
 library(glue)
 library(eurostat)
@@ -432,9 +433,7 @@ make_plot(
   subtitle = "Sýnt sem fjöldi á 100.000 íbúa hvers lands",
   caption = caption,
   y_upper = 250,
-  number_labels = label_number(big.mark = ".", decimal.mark = ","),
-  height = 10,
-  width = 10
+  number_labels = label_number(big.mark = ".", decimal.mark = ",")
 )
 ```
 

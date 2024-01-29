@@ -224,18 +224,20 @@ make_ggiraph3 <- function(
           year(time) == 2022
         ) |> 
         mutate(
-          time = time + years(1)
+          time = time + years(1),
+          per_pop = 0
         )
     ) |> 
     filter(
       land != "Bretland",
       name == plot_var
     ) |> 
+    arrange(time) |> 
     mutate(
       per_pop = cumsum(per_pop),
       .by = land
     ) |> 
-    arrange(time, per_pop) |> 
+    arrange(per_pop) |> 
     mutate(
       placement = row_number(),
       .by = time
@@ -346,5 +348,3 @@ make_ggiraph3 <- function(
   ) 
   
 }
-
-

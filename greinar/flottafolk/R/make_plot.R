@@ -8,7 +8,7 @@ make_plot <- function(
     caption,
     y_upper = NA,
     number_labels = label_number(),
-    height = 1 * 11,
+    height = 1.1 * 11,
     width = 11
 ) {
   
