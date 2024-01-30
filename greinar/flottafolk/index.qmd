@@ -154,7 +154,7 @@ make_plot(
 
 ::: {.panel-tabset}
 
-## Þróun fjölda hælisveitinga (2008 - 2022)
+## Þróun fjölda hælisveitinga (2008 - 2023)
 
 ```{r ggiraph2}
 #| layout-ncol: 1
@@ -167,7 +167,7 @@ make_ggiraph2(
 )
 ```
 
-## Þróun fjölda umsókna um hæli (2008 - 2022)
+## Þróun fjölda umsókna um hæli (2008 - 2023)
 
 ```{r ggiraph3}
 #| layout-ncol: 1

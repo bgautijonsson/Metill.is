@@ -121,7 +121,8 @@ decisions <- crossing(
   ungroup() |> 
   mutate(
     percent_positive_decisions = percent_positive_decisions * 3
-  )
+  ) |> 
+  drop_na()
 
 #### Fjöldi hælisumsókna ####
 asylum_applicants <- get_eurostat(
@@ -234,7 +235,8 @@ d_total <- d |>
   mutate(
     percent_positive_decisions = positive_decisions / total_decisions,
     land = "Meðaltal"
-  )
+  ) |> 
+  filter(total_decisions > 0)
 
 d <- d |> 
   bind_rows(
