@@ -3,13 +3,21 @@ make_ggiraph2 <- function(
     height = 0.4 * 16
     ) {
   
-  n_countries <- length(unique(data_hist$land)) - 1
+  n_countries <- length(unique(data_hist$land))
+  end_date <- max(data_hist$end_date, na.rm = T)
+  last_date_label <- glue("2023\ntil {month(end_date, label = TRUE, abbr = FALSE)}")
+  label_function <- function(x) {
+    if_else(
+      year(x) == 2023,
+      last_date_label,
+      label_date_short(format = "%Y")(x)
+    )
+  }
   
   #### Plot 1 ####
   
   plot_dat <- data_hist |> 
     filter(
-      land != "Bretland",
       name == "total_non_ukr"
     ) |> 
     arrange(time, per_pop) 
@@ -34,7 +42,7 @@ make_ggiraph2 <- function(
     scale_x_date(
       breaks = unique(plot_dat$time),
       limits = c(min(plot_dat$time), max(plot_dat$time) + years(2)),
-      labels = label_date_short(format = "%Y"),
+      labels = label_function,
       expand = expansion(add = 50),
       guide = guide_axis_truncated(
         trunc_lower = min(plot_dat$time),
@@ -67,14 +75,13 @@ make_ggiraph2 <- function(
     bind_rows(
       data_hist |> 
         filter(
-          year(time) == 2022
+          year(time) == 2023
         ) |> 
         mutate(
           time = time + years(1)
         )
     ) |> 
     filter(
-      land != "Bretland",
       name == "total_non_ukr"
     ) |> 
     arrange(time, per_pop) |> 
@@ -124,13 +131,13 @@ make_ggiraph2 <- function(
       size = 3
     ) +
     scale_x_date(
-      breaks = clock::date_build(2008:2022, 7),
+      breaks = clock::date_build(2008:2023, 7),
       limits = c(min(plot_dat$time), max(plot_dat$time) + years(2)),
-      labels = label_date_short(format = "%Y"),
+      labels = label_function,
       expand = expansion(add = 50),
       guide = guide_axis_truncated(
         trunc_lower = clock::date_build(2008, 7),
-        trunc_upper = clock::date_build(2022, 7)
+        trunc_upper = clock::date_build(2023, 7)
       )
     ) +
     scale_y_continuous(
@@ -187,7 +194,7 @@ make_ggiraph2 <- function(
     scale_x_date(
       breaks = unique(plot_dat$time),
       limits = c(min(plot_dat$time), max(plot_dat$time) + years(2)),
-      labels = label_date_short(format = "%Y"),
+      labels = label_function,
       expand = expansion(add = 50),
       guide = guide_axis_truncated(
         trunc_lower = min(plot_dat$time),
@@ -220,7 +227,7 @@ make_ggiraph2 <- function(
     bind_rows(
       data_hist |> 
         filter(
-          year(time) == 2022
+          year(time) == 2023
         ) |> 
         mutate(
           time = time + years(1),
@@ -228,7 +235,6 @@ make_ggiraph2 <- function(
         )
     ) |> 
     filter(
-      land != "Bretland",
       name == "total_non_ukr"
     ) |> 
     mutate(
@@ -282,13 +288,13 @@ make_ggiraph2 <- function(
       size = 3
     ) +
     scale_x_date(
-      breaks = clock::date_build(2008:2022, 7),
+      breaks = clock::date_build(2008:2023, 7),
       limits = c(min(plot_dat$time), max(plot_dat$time) + years(2)),
-      labels = label_date_short(format = "%Y"),
+      labels = label_function,
       expand = expansion(add = 50),
       guide = guide_axis_truncated(
         trunc_lower = clock::date_build(2008, 7),
-        trunc_upper = clock::date_build(2022, 7)
+        trunc_upper = clock::date_build(2023, 7)
       )
     ) +
     scale_y_continuous(
@@ -310,11 +316,12 @@ make_ggiraph2 <- function(
       title = "Evrópulöndum raðað eftir uppsöfnuðum fjölda frá 2008",
       subtitle = "1: Flestar veitingar | 30: Fæstar veitingar"
     )
+  
  
   p <- p1 + p2 + p3 + p4 +
     plot_layout(nrow = 2) +
     plot_annotation(
-      title = "Hælisveitingar í Evrópulöndum (2008 til 2022)",
+      title = glue("Hælisveitingar í Evrópulöndum (2008 til {year(end_date)} [gögn fram að {month(end_date, label = T, abbr = F)}])"),
       subtitle = str_c(
         "Láttu músina yfir land til að einblina á gögn þess",
         " | ",

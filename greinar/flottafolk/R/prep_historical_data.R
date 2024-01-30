@@ -134,7 +134,76 @@ data_hist <- data_hist |>
   bind_rows(
     data_hist_total
   ) |> 
-  pivot_longer(c(total, total_non_ukr, asylum_applicants)) |> 
+  pivot_longer(c(total, total_non_ukr, asylum_applicants)) 
+
+
+
+d <- here(cache_dir, "raw_data.csv") |> 
+  read_csv()
+
+
+d_2023 <- d |> 
+  filter(
+    year(time) == 2023,
+    name %in% c("grants", "asylum_applicants_non_ukraine", "positive_decisions")
+  ) |> 
+  mutate(
+    name = fct_recode(
+      name,
+      "total" = "grants",
+      "total_non_ukr" = "positive_decisions",
+      "asylum_applicants" = "asylum_applicants_non_ukraine"
+    )
+  ) |> 
+  select(-gdp, -per_pop_cumsum, -per_gdp)
+
+
+
+end_date <- d_2023 |> 
+  drop_na() |> 
+  summarise(
+    min_date = min(time),
+    max_date = max(time),
+    n_obs = n(),
+    .by = c(land, name, pop)
+  ) |> 
+  summarise(
+    start_date = max(min_date),
+    end_date = min(max_date),
+    n_obs = min(n_obs),
+    .by = c(land, pop)
+  ) |> 
+  pull(end_date) |> 
+  min()
+
+
+d_2023 <- d_2023 |> 
+  filter(
+    time <= end_date
+  ) |> 
+  group_by(land, name, pop) |> 
+  summarise_at(
+    vars(value, per_pop),
+    sum
+  ) |> 
+  ungroup() |> 
+  mutate(
+    time = clock::date_build(2023),
+    end_date = end_date
+  ) |> 
+  pivot_longer(c(value, per_pop), names_to = "type") |> 
+  pivot_wider() |> 
+  mutate(
+    total = total + total_non_ukr
+  ) |> 
+  pivot_longer(c(asylum_applicants:total_non_ukr)) |> 
+  pivot_wider(names_from = type)
+
+
+data_hist <- data_hist |> 
+  bind_rows(
+    d_2023
+  ) |> 
   mutate(
     per_pop = value / pop * 1e5,
     per_pop = coalesce(per_pop, 0),
@@ -150,8 +219,10 @@ data_hist <- data_hist |>
     ),
     linewidth = 1 * (land == "Ísland"),
     size = as_factor(linewidth)
-  ) 
+  ) |> 
+  filter(
+    land != "Bretland"
+  )
 
 data_hist |> 
   write_csv(here(cache_dir, "data_hist.csv"))
-
