@@ -2,6 +2,23 @@ library(eurostat)
 library(tidyverse)
 library(here)
 
+
+litur_island <- "#08306b"
+
+litur_danmork <- "#e41a1c"
+
+litur_finnland <- "#3690c0"
+
+litur_noregur <- "#7f0000"
+
+litur_svithjod <- "#fd8d3c"
+
+litur_luxemborg <- "black"
+
+litur_total <- "#005824"
+
+litur_annad <- "#737373"
+
 cache_dir <- here("greinar", "flottafolk", "data")
 update_cache <- TRUE
 
@@ -137,3 +154,4 @@ data_hist <- data_hist |>
 
 data_hist |> 
   write_csv(here(cache_dir, "data_hist.csv"))
+
