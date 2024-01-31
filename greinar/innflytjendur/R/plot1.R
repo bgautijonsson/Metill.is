@@ -1,27 +1,10 @@
-make_plot <- function(
-    plot_var,
-    scaling_var,
-    start_date,
-    end_date,
-    title,
-    subtitle,
-    caption,
-    y_upper = NA,
-    number_labels = label_number(),
-    height = 1.1 * 11,
-    width = 11
-) {
+make_plot1 <- function() {
   
-  p1 <- d |> 
-    filter(
-      name == plot_var
-    ) |> 
-    rename(
-      dags = time, 
-      per_pers = all_of(scaling_var)
-    ) |> 
-    filter(dags == min(dags)) |> 
-    drop_na(per_pers) |> 
+  start_date <- clock::date_build(2010)
+  end_date <- clock::date_build(2022)
+  
+  p1 <- d |>
+    filter(dags == start_date) |> 
     mutate(
       colour = case_when(
         land == "Ísland" ~ litur_island,
@@ -29,15 +12,15 @@ make_plot <- function(
         land == "Finnland" ~ litur_finnland,
         land == "Noregur" ~ litur_noregur,
         land == "Svíþjóð" ~ litur_svithjod,
-        land == "Samtals" ~ litur_total,
+        land == "Meðaltal" ~ litur_total,
         TRUE ~ litur_annad
       ),
       linewidth = 1 * (land == "Ísland"),
       size = as_factor(linewidth),
       land_ordered = glue("<i style='color:{colour}'>{land}</i>"),
-      land_ordered = fct_reorder(land_ordered, per_pers)
+      land_ordered = fct_reorder(land_ordered, perc_innfl)
     ) |> 
-    ggplot(aes(per_pers, land_ordered, col = colour, size = size)) +
+    ggplot(aes(perc_innfl, land_ordered, col = colour, size = size)) +
     geom_text_interactive(
       aes(x = 0, label = str_c(land, " "), data_id = land),
       hjust = 1,
@@ -52,10 +35,10 @@ make_plot <- function(
       alpha = 0.5
     ) +
     scale_x_continuous(
-      expand = expansion(c(0.15, 0.05)),
+      expand = expansion(c(0, 0.05)),
       breaks = breaks_extended(6),
-      limits = c(0, NA),
-      labels = number_labels,
+      limits = c(0, 0.3),
+      labels = label_hlutf(),
       guide = guide_axis_truncated(
         trunc_lower = 0
       )
@@ -65,7 +48,7 @@ make_plot <- function(
     scale_linewidth(
       range = c(0.2, 0.4)
     ) +
-    coord_cartesian(clip = "off") +
+    coord_cartesian(clip = "off", xlim = c(-0.15, NA)) +
     theme(
       plot.margin = margin(t = 5, r = 25, b = 5, l = 5),
       axis.line.y = element_blank(),
@@ -76,20 +59,13 @@ make_plot <- function(
     labs(
       x = NULL,
       y = NULL,
-      subtitle = glue("Fjöldi í {month(start_date, label = T, abbr = F)} {year(start_date)}"),
+      subtitle = glue("Hlutfall í {month(start_date, label = T, abbr = F)} {year(start_date)}"),
       caption = caption
     )
   
   
   p2 <- d |> 
-    filter(name == plot_var) |> 
-    rename(
-      dags = time, 
-      flottafjoldi = value,
-      per_pers = all_of(scaling_var)
-    ) |> 
     filter(dags == end_date) |> 
-    drop_na(per_pers) |> 
     mutate(
       colour = case_when(
         land == "Ísland" ~ litur_island,
@@ -97,15 +73,15 @@ make_plot <- function(
         land == "Finnland" ~ litur_finnland,
         land == "Noregur" ~ litur_noregur,
         land == "Svíþjóð" ~ litur_svithjod,
-        land == "Samtals" ~ litur_total,
+        land == "Meðaltal" ~ litur_total,
         TRUE ~ litur_annad
       ),
       linewidth = 1 * (land == "Ísland"),
       size = as_factor(linewidth),
       land_ordered = glue("<i style='color:{colour}'>{land}</i>"),
-      land_ordered = fct_reorder(land_ordered, per_pers)
+      land_ordered = fct_reorder(land_ordered, perc_innfl)
     ) |> 
-    ggplot(aes(per_pers, land_ordered, col = colour, size = size)) +
+    ggplot(aes(perc_innfl, land_ordered, col = colour, size = size)) +
     geom_text_interactive(
       aes(x = 0, label = str_c(land, " "), data_id = land),
       hjust = 1,
@@ -120,10 +96,10 @@ make_plot <- function(
       alpha = 0.5
     ) +
     scale_x_continuous(
-      expand = expansion(c(0.15, 0.05)),
+      expand = expansion(c(0, 0.05)),
       breaks = breaks_extended(6),
       limits = c(0, NA),
-      labels = number_labels,
+      labels = label_hlutf(),
       guide = guide_axis_truncated(
         trunc_lower = 0
       )
@@ -133,7 +109,7 @@ make_plot <- function(
     scale_linewidth(
       range = c(0.2, 0.4)
     ) +
-    coord_cartesian(clip = "off") +
+    coord_cartesian(clip = "off", xlim = c(-0.15, NA)) +
     theme(
       plot.margin = margin(t = 5, r = 25, b = 5, l = 5),
       axis.line.y = element_blank(),
@@ -144,21 +120,14 @@ make_plot <- function(
     labs(
       x = NULL,
       y = NULL,
-      subtitle = glue("Fjöldi í {month(end_date, label = T, abbr = F)} {year(end_date)}"),
+      subtitle = glue("Hlutfall í {month(end_date, label = T, abbr = F)} {year(end_date)}"),
       caption = caption
     )
   
   plot_dat <- d |> 
-    filter(name == plot_var) |> 
-    arrange(time) |> 
-    rename(
-      dags = time, 
-      flottafjoldi = value,
-      per_pers = all_of(scaling_var)
-    ) |>  
-    # filter(dags <= end_date) |> 
-    drop_na(per_pers) |> 
-    select(dags, land, value = per_pers) |> 
+    arrange(dags) |>  
+    filter(dags >= start_date) |>
+    select(dags, land, value = perc_innfl) |> 
     mutate(
       colour = case_when(
         land == "Ísland" ~ litur_island,
@@ -166,7 +135,7 @@ make_plot <- function(
         land == "Finnland" ~ litur_finnland,
         land == "Noregur" ~ litur_noregur,
         land == "Svíþjóð" ~ litur_svithjod,
-        land == "Samtals" ~ litur_total,
+        land == "Meðaltal" ~ litur_total,
         TRUE ~ litur_annad
       ),
       linewidth = 1 * (land == "Ísland"),
@@ -200,20 +169,20 @@ make_plot <- function(
     ) +
     scale_y_continuous(
       breaks = breaks_extended(6),
-      labels = number_labels,
+      labels = label_hlutf(),
       limits = c(0, NA),
       expand = expansion(c(0, 0.01)),
       guide = guide_axis_truncated()
     ) +
     scale_colour_identity() +
-    coord_cartesian(ylim = c(0, y_upper), clip = "on") +
+    coord_cartesian(clip = "on") +
     theme(
       plot.margin = margin(t = 5, r = 35, b = 5, l = 5)
     ) +
     labs(
       x = NULL,
       y = NULL,
-      subtitle = "Mánaðarleg þróun"
+      subtitle = "Þróun"
     )
   
   p <- (
@@ -222,9 +191,7 @@ make_plot <- function(
   ) / 
     p3 +
     plot_annotation(
-      title = title,
       subtitle = str_c(
-        subtitle, " | ",
         "Láttu músina yfir land til að einblína á það"
       ),
       caption = caption
@@ -232,8 +199,8 @@ make_plot <- function(
   
   girafe(
     ggobj = p,
-    width_svg = width,
-    height_svg = height,
+    width_svg = 11,
+    height_svg = 1.1 * 11,
     options = list(
       opts_tooltip(
         opacity = 0.8, 
@@ -248,3 +215,5 @@ make_plot <- function(
     )
   )
 }
+
+make_plot1()

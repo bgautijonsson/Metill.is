@@ -1,0 +1,63 @@
+---
+title: "Tímabundin vernd og hælisleitendur"
+pagetitle: "Tímabundin vernd og hælisleitendur"
+subtitle: "Hvað segja gögnin um fjölda hælisleitenda og umsækjendur um tímabundna vernd ás Íslandi?"
+description: "Hvar bíða flestir einstaklingar eftir niðurstöðu í hælisumsókn sinni? Hvaða land hefur tekið við flestum hælisleitendum? Hvernig tengist löggjöf skilgreiningu á gögnum? Hér eru gögn um fjölda einstaklinga sem njóta tímabundinnar verndar eða hælis, fjölda samþykktra verndar- og hælisumsókna og fjölda umsókna í bið tekin saman úr gögnum  Eurostat."
+date: "2024/01/31"
+draft: false
+categories:
+    - stjórnmál
+    - fólksflutningar
+    - flóttafólk
+    - eurostat
+    - evrópa
+href: greinar/flottafolk/index.qmd
+image: Figures/cover_fp.png
+twitter-card:
+    image: figures/cover.png
+execute: 
+  eval: true
+toc: true
+---
+
+
+```{r setup}
+#| include: false
+library(tidyverse)
+library(scales)
+library(visitalaneysluverds)
+library(metill)
+library(ggbump)
+library(patchwork)
+library(glue)
+library(eurostat)
+library(ggh4x)
+library(ggiraph)
+library(gt)
+
+Sys.setlocale("LC_ALL", "is_IS.UTF-8")
+
+theme_set(theme_metill())
+
+update_cache <- TRUE
+
+
+caption <- "Mynd eftir @bggjonsson hjá metill.is byggð á gögnum Eurostat um fólksflutninga: https://metill.is/greinar/innflytjendur\nGögn og kóði: https://github.com/bgautijonsson/Metill.is/tree/master/greinar/innflytjendur"
+
+litur_island <- "#08306b"
+
+litur_danmork <- "#e41a1c"
+
+litur_finnland <- "#3690c0"
+
+litur_noregur <- "#7f0000"
+
+litur_svithjod <- "#fd8d3c"
+
+litur_luxemborg <- "black"
+
+litur_total <- "#005824"
+
+litur_annad <- "#737373"
+```
+

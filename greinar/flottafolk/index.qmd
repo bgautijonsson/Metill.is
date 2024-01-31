@@ -14,7 +14,7 @@ categories:
 href: greinar/flottafolk/index.qmd
 image: Figures/cover_fp.png
 twitter-card:
-    image: figures/cover.png
+    image: Figures/cover.png
 execute: 
   eval: true
 toc: true
@@ -27,7 +27,6 @@ library(tidyverse)
 library(scales)
 library(visitalaneysluverds)
 library(metill)
-library(ggbump)
 library(patchwork)
 library(glue)
 library(eurostat)
@@ -490,6 +489,11 @@ Hægt er að vafra gögnin á bak við þessa greiningu í töflunni eða sækja
 
 ::: {.panel-tabset}
 
+
+# Mánaðarleg gögn
+
+::: {.panel-tabset}
+
 ## Á mannfjölda
 
 ```{r}
@@ -575,6 +579,92 @@ table_d |>
 ```
 
 {{< downloadthis data/timabundin_vernd_raw.csv dname="timebundin_vernd_hreinn_fjoldi" label="Sækja gögn" type=primary class=downloadbutton >}}
+
+:::
+
+## Árleg gögn (til júlí 2023)
+
+::: {.panel-tabset}
+
+## Á mannfjölda
+
+```{r}
+#| column: page
+#| cache: true
+table_d <- read_csv("data/data_hist_pretty_perpop.csv")
+table_d |> 
+  gt() |> 
+  tab_header(
+    title = md("**Samantekt á gögnum um málefni flóttafólks**"),
+    subtitle = md("Tölur eru sýndar sem *fjöldi á 100.000 íbúa móttökulands*")
+  ) |> 
+  tab_spanner(
+    label = "Á 100.000 íbúa",
+    columns = 3:5
+  ) |> 
+  fmt_number(
+    3:5, 
+    decimals = 0, 
+    sep_mark = ".",
+    dec_mark = ","
+  ) |> 
+  fmt_date(
+    1,
+    date_style = "yMMM",
+    locale = "is" 
+  ) |> 
+  opt_interactive(
+    use_search = FALSE,
+    use_highlight = TRUE,
+    use_filters = TRUE
+  ) |> 
+  tab_options(
+    table.background.color = "#faf9f9"
+  ) 
+```
+
+{{< downloadthis data/data_hist_pretty_perpop.csv dname="arleg_gogn_a_mannfjolda" label="Sækja gögn" type=primary class=downloadbutton >}}
+
+## Hreinar fjöldatölur
+
+```{r}
+#| column: page
+#| cache: true
+table_d <- read_csv("data/data_hist_pretty_rawcounts.csv")
+table_d |> 
+  gt() |> 
+  tab_header(
+    title = md("**Samantekt á gögnum um málefni flóttafólks**"),
+    subtitle = md("Tölur eru sýndar sem hreinn fjöldi *óháð mannfjölda*")
+  ) |> 
+  tab_spanner(
+    label = "Á 100.000 íbúa",
+    columns = 3:5
+  ) |> 
+  fmt_number(
+    3:5, 
+    decimals = 0, 
+    sep_mark = ".",
+    dec_mark = ","
+  ) |> 
+  fmt_date(
+    1,
+    date_style = "yMMM",
+    locale = "is" 
+  ) |> 
+  opt_interactive(
+    use_search = FALSE,
+    use_highlight = TRUE,
+    use_filters = TRUE
+  ) |> 
+  tab_options(
+    table.background.color = "#faf9f9"
+  ) 
+```
+
+{{< downloadthis data/data_hist_pretty_rawcounts.csv dname="arleg_gogn_hreinn_fjoldi" label="Sækja gögn" type=primary class=downloadbutton >}}
+
+:::
 
 :::
 

@@ -234,9 +234,12 @@ d_total <- d |>
   ) |> 
   mutate(
     percent_positive_decisions = positive_decisions / total_decisions,
-    land = "Meðaltal"
+    land = "Samtals"
   ) |> 
-  filter(total_decisions > 0)
+  mutate_at(
+    vars(beneficiaries:total_grants),
+    \(x) if_else(x == 0, NA, x)
+  )
 
 d <- d |> 
   bind_rows(
@@ -263,24 +266,7 @@ d <- d |>
       per_pop_cumsum
     ),
     .by = c(land, time)
-  ) |> 
-  mutate(
-    per_pop_cumsum = if_else(
-      (name == "percent_positive_decisions") & (land == "Meðaltal"),
-      NA,
-      per_pop_cumsum
-    ),
-    per_pop = if_else(
-      (name == "percent_positive_decisions") & (land == "Meðaltal"),
-      NA,
-      per_pop
-    ),
-    value = if_else(
-      (name == "percent_positive_decisions") & (land == "Meðaltal"),
-      NA,
-      value
-    )
-  )
+  ) 
 
 
 

@@ -1,7 +1,7 @@
 make_ggiraph2 <- function(
     width = 16,
     height = 0.4 * 16
-    ) {
+) {
   
   n_countries <- length(unique(data_hist$land))
   end_date <- max(data_hist$end_date, na.rm = T)
@@ -20,10 +20,39 @@ make_ggiraph2 <- function(
     filter(
       name == "total_non_ukr"
     ) |> 
-    arrange(time, per_pop) 
+    arrange(time, per_pop) |> 
+    mutate(
+      tooltip = glue(
+        str_c(
+          "Fjöldi (2022): {number(value[year(time)==2022], accuracy = 1, big.mark = '.', decimal.mark = ',')}\n",
+          "Á 100.000 íbúa (2022): {number(per_pop[year(time)==2022], accuracy = 1, big.mark = '.', decimal.mark = ',')}\n",
+          "Fjöldi (2023): {number(value[year(time)==2023], accuracy = 1, big.mark = '.', decimal.mark = ',')}\n",
+          "Á 100.000 íbúa (2023): {number(per_pop[year(time)==2023], accuracy = 1, big.mark = '.', decimal.mark = ',')}"
+        )
+      ),
+      tooltip = if_else(
+        time == max(time),
+        tooltip,
+        NA_character_
+      ),
+      .by = land
+    )
   
   p1 <- plot_dat |>  
     ggplot(aes(time, per_pop)) +
+    geom_text_interactive(
+      aes(
+        x = clock::date_build(2008, 3),
+        y = 600,
+        label = tooltip,
+        data_id = land,
+        colour = colour
+      ),
+      alpha = 0,
+      size = 4,
+      vjust = 1,
+      hjust = 0
+    ) +
     geom_line_interactive(
       data = ~ filter(.x, colour == litur_annad),
       aes(group = land, colour = colour, data_id = land),
@@ -171,11 +200,39 @@ make_ggiraph2 <- function(
     arrange(time, per_pop) |> 
     mutate(
       per_pop = cumsum(per_pop),
+      value = cumsum(value),
+      .by = land
+    ) |> 
+    mutate(
+      tooltip = glue(
+        str_c(
+          "Uppsafnaður fjöldi (2023): {number(value[year(time) == 2023], accuracy = 1, big.mark = '.', decimal.mark = ',')}\n",
+          "Á 100.000 íbúa (2023): {number(per_pop[year(time) == 2023], accuracy = 1, big.mark = '.', decimal.mark = ',')}"
+        )
+      ),
+      tooltip = if_else(
+        time == max(time),
+        tooltip,
+        NA_character_
+      ),
       .by = land
     )
   
   p3 <- plot_dat |>  
     ggplot(aes(time, per_pop)) +
+    geom_text_interactive(
+      aes(
+        x = clock::date_build(2008, 3),
+        y = 3000,
+        label = tooltip,
+        data_id = land,
+        colour = colour
+      ),
+      alpha = 0,
+      size = 4,
+      vjust = 1,
+      hjust = 0
+    ) +
     geom_line_interactive(
       data = ~ filter(.x, colour == litur_annad),
       aes(group = land, colour = colour, data_id = land),
@@ -317,7 +374,7 @@ make_ggiraph2 <- function(
       subtitle = "1: Flestar veitingar | 30: Fæstar veitingar"
     )
   
- 
+  
   p <- p1 + p2 + p3 + p4 +
     plot_layout(nrow = 2) +
     plot_annotation(
@@ -345,7 +402,13 @@ make_ggiraph2 <- function(
         use_fill = FALSE,
         use_stroke = TRUE, 
         css = "padding:5pt;font-family: Open Sans;font-size:1rem;color:white"),
-      opts_hover(css = "", nearest_distance = 50),
+      opts_hover(
+        css = girafe_css(
+          css = "",
+          text = "stroke:none;fill-opacity:1;"
+        ), 
+        nearest_distance = 50
+      ),
       opts_hover_inv(css = "opacity:0.05"), 
       opts_toolbar(saveaspng = TRUE),
       opts_zoom(max = 1)

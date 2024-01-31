@@ -1,0 +1,15 @@
+{
+  "hash": "e4a67e922abb98ac30d65be7e1672d87",
+  "result": {
+    "engine": "knitr",
+    "markdown": "---\ntitle: \"Tímabundin vernd og hælisleitendur\"\npagetitle: \"Tímabundin vernd og hælisleitendur\"\nsubtitle: \"Hvað segja gögnin um fjölda hælisleitenda og umsækjendur um tímabundna vernd ás Íslandi?\"\ndescription: \"Hvar bíða flestir einstaklingar eftir niðurstöðu í hælisumsókn sinni? Hvaða land hefur tekið við flestum hælisleitendum? Hvernig tengist löggjöf skilgreiningu á gögnum? Hér eru gögn um fjölda einstaklinga sem njóta tímabundinnar verndar eða hælis, fjölda samþykktra verndar- og hælisumsókna og fjölda umsókna í bið tekin saman úr gögnum  Eurostat.\"\ndate: \"2024/01/31\"\ndraft: false\ncategories:\n    - stjórnmál\n    - fólksflutningar\n    - flóttafólk\n    - eurostat\n    - evrópa\nhref: greinar/flottafolk/index.qmd\nimage: Figures/cover_fp.png\ntwitter-card:\n    image: figures/cover.png\nexecute: \n  eval: true\ntoc: true\n---\n\n\n",
+    "supporting": [],
+    "filters": [
+      "rmarkdown/pagebreak.lua"
+    ],
+    "includes": {},
+    "engineDependencies": {},
+    "preserve": {},
+    "postProcess": true
+  }
+}

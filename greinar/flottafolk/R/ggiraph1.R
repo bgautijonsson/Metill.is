@@ -19,10 +19,39 @@ make_ggiraph1 <- function(
   plot_dat <- data_hist |> 
     filter(
       name == "total"
-    ) 
+    ) |> 
+    mutate(
+      tooltip = glue(
+        str_c(
+          "Fjöldi (2022): {number(value[year(time)==2022], accuracy = 1, big.mark = '.', decimal.mark = ',')}\n",
+          "Á 100.000 íbúa (2022): {number(per_pop[year(time)==2022], accuracy = 1, big.mark = '.', decimal.mark = ',')}\n",
+          "Fjöldi (2023): {number(value[year(time)==2023], accuracy = 1, big.mark = '.', decimal.mark = ',')}\n",
+          "Á 100.000 íbúa (2023): {number(per_pop[year(time)==2023], accuracy = 1, big.mark = '.', decimal.mark = ',')}"
+        )
+      ),
+      tooltip = if_else(
+        time == max(time),
+        tooltip,
+        NA_character_
+      ),
+      .by = land
+    )
   
   p1 <- plot_dat |>  
     ggplot(aes(time, per_pop)) +
+    geom_text_interactive(
+      aes(
+        x = clock::date_build(2008, 3),
+        y = 800,
+        label = tooltip,
+        data_id = land,
+        colour = colour
+      ),
+      alpha = 0,
+      size = 4,
+      vjust = 1,
+      hjust = 0
+    ) + 
     geom_line_interactive(
       data = ~ filter(.x, colour == litur_annad),
       aes(group = land, colour = colour, data_id = land),
@@ -63,7 +92,7 @@ make_ggiraph1 <- function(
     labs(
       x = NULL,
       y = NULL,
-      title = "Fjöldi flóttamanna á höfðatölu",
+      title = "Fjöldi nýrra flóttamanna á höfðatölu",
       subtitle = "Sýnt sem fjöldi á 100.000 íbúa"
     )
   
@@ -157,7 +186,7 @@ make_ggiraph1 <- function(
     labs(
       x = NULL,
       y = NULL,
-      title = "Evrópulöndum raðað eftir fjölda flóttamanna á höfðatölu",
+      title = "Evrópulöndum raðað eftir fjölda nýrra flóttamanna á höfðatölu",
       subtitle = "1: Flestir flóttamenn | 30: Fæstir flóttamenn"
     )
   
@@ -167,14 +196,42 @@ make_ggiraph1 <- function(
     filter(
       name == "total"
     ) |> 
-    arrange(time, per_pop) |>
+    arrange(time, per_pop) |> 
     mutate(
       per_pop = cumsum(per_pop),
+      value = cumsum(value),
+      .by = land
+    ) |> 
+    mutate(
+      tooltip = glue(
+        str_c(
+          "Uppsafnaður fjöldi (2023): {number(value[year(time) == 2023], accuracy = 1, big.mark = '.', decimal.mark = ',')}\n",
+          "Á 100.000 íbúa (2023): {number(per_pop[year(time) == 2023], accuracy = 1, big.mark = '.', decimal.mark = ',')}"
+        )
+      ),
+      tooltip = if_else(
+        time == max(time),
+        tooltip,
+        NA_character_
+      ),
       .by = land
     )
   
   p3 <- plot_dat |>  
     ggplot(aes(time, per_pop)) +
+    geom_text_interactive(
+      aes(
+        x = clock::date_build(2008, 3),
+        y = 5000,
+        label = tooltip,
+        data_id = land,
+        colour = colour
+      ),
+      alpha = 0,
+      size = 4,
+      vjust = 1,
+      hjust = 0
+    ) +
     geom_line_interactive(
       data = ~ filter(.x, colour == litur_annad),
       aes(group = land, colour = colour, data_id = land),
@@ -215,7 +272,7 @@ make_ggiraph1 <- function(
     labs(
       x = NULL,
       y = NULL,
-      title = "Uppsafnaður fjöldi flóttamanna á höfðatölu",
+      title = "Uppsafnaður fjöldi nýrra flóttamanna á höfðatölu",
       subtitle = "Sýnt sem fjöldi á 100.000 íbúa"
     )
   
@@ -319,7 +376,7 @@ make_ggiraph1 <- function(
   p <- p1 + p2 + p3 + p4 +
     plot_layout(nrow = 2) +
     plot_annotation(
-      title = "Áhrif innrásar Rússlands í Úkraínu á fjölda flóttafólks í Evrópu",
+      title = "Áhrif innrásar Rússlands í Úkraínu á heildarfjölda flóttafólks sem leitar til Evrópulanda",
       subtitle = str_c(
         "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
         "Láttu músina yfir land til að einblina á gögn þess",
@@ -344,7 +401,13 @@ make_ggiraph1 <- function(
         use_fill = FALSE,
         use_stroke = TRUE, 
         css = "padding:5pt;font-family: Open Sans;font-size:1rem;color:white"),
-      opts_hover(css = "", nearest_distance = 50),
+      opts_hover(
+        css = girafe_css(
+          css = "",
+          text = "stroke:none;fill-opacity:1;"
+        ), 
+        nearest_distance = 50
+      ),
       opts_hover_inv(css = "opacity:0.05"), 
       opts_toolbar(saveaspng = TRUE),
       opts_zoom(max = 1)

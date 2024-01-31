@@ -127,7 +127,7 @@ data_hist_total <- data_hist |>
     sum
   ) |> 
   mutate(
-    land = "Meðaltal"
+    land = "Samtals"
   )
 
 data_hist <- data_hist |> 
@@ -214,7 +214,7 @@ data_hist <- data_hist |>
       land == "Noregur" ~ litur_noregur,
       land == "Svíþjóð" ~ litur_svithjod,
       land == "Lúxemborg" ~ litur_luxemborg,
-      land == "Meðaltal" ~ litur_total,
+      land == "Samtals" ~ litur_total,
       TRUE ~ litur_annad
     ),
     linewidth = 1 * (land == "Ísland"),
@@ -222,7 +222,41 @@ data_hist <- data_hist |>
   ) |> 
   filter(
     land != "Bretland"
-  )
+  ) |> 
+  arrange(land, time)
 
 data_hist |> 
   write_csv(here(cache_dir, "data_hist.csv"))
+
+#### Pretty data raw counts ####
+
+data_hist |> 
+  select(time, land, name, value) |> 
+  pivot_wider() |> 
+  rename(
+    "Fjöldi verndarveitinga(bæði hæli og tímabundin vernd)" = total,
+    "Fjöldi hælisveitinga" = total_non_ukr,
+    "Fjöldi umsókna um hæli" = asylum_applicants,
+    "Dagsetning" = time,
+    "Land" = land
+  ) |> 
+  write_csv(
+    here(cache_dir, "data_hist_pretty_rawcounts.csv")
+  )
+
+
+#### Pretty data per pop ####
+
+data_hist |> 
+  select(time, land, name, value = per_pop) |> 
+  pivot_wider() |> 
+  rename(
+    "Fjöldi verndarveitinga(bæði hæli og tímabundin vernd)" = total,
+    "Fjöldi hælisveitinga" = total_non_ukr,
+    "Fjöldi umsókna um hæli" = asylum_applicants,
+    "Dagsetning" = time,
+    "Land" = land
+  ) |> 
+  write_csv(
+    here(cache_dir, "data_hist_pretty_perpop.csv")
+  )
