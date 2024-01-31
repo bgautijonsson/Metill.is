@@ -8,7 +8,7 @@ listing:
       template: ejs/greinar.ejs
       sort: "date desc"
       contents: greinar
-      max-items: 5
+      max-items: 4
     - id: dashboards
       template: ejs/maelabord.ejs
       sort: "date desc"

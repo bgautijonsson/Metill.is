@@ -1,10 +1,10 @@
 ---
-title: "Tímabundin vernd og hælisleitendur"
-pagetitle: "Tímabundin vernd og hælisleitendur"
-subtitle: "Hvað segja gögnin um fjölda hælisleitenda og umsækjendur um tímabundna vernd ás Íslandi?"
-description: "Hvar bíða flestir einstaklingar eftir niðurstöðu í hælisumsókn sinni? Hvaða land hefur tekið við flestum hælisleitendum? Hvernig tengist löggjöf skilgreiningu á gögnum? Hér eru gögn um fjölda einstaklinga sem njóta tímabundinnar verndar eða hælis, fjölda samþykktra verndar- og hælisumsókna og fjölda umsókna í bið tekin saman úr gögnum  Eurostat."
+title: "Innflytjendur"
+pagetitle: "Innflytjendur"
+subtitle: "Hvernig hefur innflytjendum fjölgað á Íslandi og hver er staða þeirra á vinnumarkaði samanborið við önnur Evrópulönd?"
+description: "Description."
 date: "2024/01/31"
-draft: false
+draft: true
 categories:
     - stjórnmál
     - fólksflutningar
@@ -41,6 +41,11 @@ theme_set(theme_metill())
 
 update_cache <- TRUE
 
+source("R/plot1.R")
+source("R/plot2.R")
+source("R/plot3.R")
+source("R/plot4.R")
+
 
 caption <- "Mynd eftir @bggjonsson hjá metill.is byggð á gögnum Eurostat um fólksflutninga: https://metill.is/greinar/innflytjendur\nGögn og kóði: https://github.com/bgautijonsson/Metill.is/tree/master/greinar/innflytjendur"
 
@@ -59,5 +64,46 @@ litur_luxemborg <- "black"
 litur_total <- "#005824"
 
 litur_annad <- "#737373"
+
+d <- read_csv("data/cbirth_eurostat.csv")
+virkni <- read_csv("data/jobmarket_activity_citizen_eurostat.csv")
+atvinna <- read_csv("data/jobmarket_working_citizen_eurostat.csv")
+```
+
+# Fólksfjölgun
+
+```{r}
+#| eval: true
+#| column: page-left
+make_plot4()
+```
+
+
+# Fjöldi innflytjenda
+
+## Hlutfall af mannfjölda
+
+```{r}
+#| eval: true
+#| column: page-left
+make_plot1()
+```
+
+# Vinnumarkaður
+
+## Hlutfall vinnandi
+
+```{r}
+#| eval: true
+#| column: page-left
+make_plot3()
+```
+
+## Atvinnuþátttaka
+
+```{r}
+#| eval: true
+#| column: page-left
+make_plot2()
 ```
 

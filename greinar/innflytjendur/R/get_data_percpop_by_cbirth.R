@@ -35,7 +35,7 @@ d <- get_eurostat(
   ) |> 
   drop_na() |> 
   filter(
-    !land %in% c("Liechtenstein", "Lúxemborg"),
+    !land %in% c("Liechtenstein", "Lúxemborg", "England"),
     year(dags) >= 2011
   )
 

@@ -12,7 +12,6 @@
   {
     "listing": "/index.html",
     "items": [
-      "/greinar/innflytjendur/index.html",
       "/greinar/flottafolk/index.html",
       "/greinar/visitala_neysluverds/index.html",
       "/greinar/vinnuafl/index.html",
@@ -44,7 +43,6 @@
   {
     "listing": "/greinar.html",
     "items": [
-      "/greinar/innflytjendur/index.html",
       "/greinar/flottafolk/index.html",
       "/greinar/visitala_neysluverds/index.html",
       "/greinar/vinnuafl/index.html",

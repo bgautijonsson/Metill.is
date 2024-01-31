@@ -1,9 +1,11 @@
-make_plot1 <- function() {
+make_plot2 <- function() {
   
-  start_date <- clock::date_build(2011)
-  end_date <- clock::date_build(2022)
+  start_date <- min(virkni$dags)
+  end_date <- max(virkni$dags)
+  point_size <- 2.2
   
-  p1 <- d |>
+  p1 <- virkni |>
+    drop_na() |> 
     filter(dags == start_date) |> 
     mutate(
       colour = case_when(
@@ -18,29 +20,34 @@ make_plot1 <- function() {
       linewidth = 1 * (land == "Ísland"),
       size = as_factor(linewidth),
       land_ordered = glue("<i style='color:{colour}'>{land}</i>"),
-      land_ordered = fct_reorder(land_ordered, perc_innfl)
+      land_ordered = fct_reorder(land_ordered, erlent)
     ) |> 
-    ggplot(aes(perc_innfl, land_ordered, col = colour, size = size)) +
+    ggplot(aes(erlent, land_ordered, col = colour, size = size)) +
     geom_text_interactive(
-      aes(x = 0, label = str_c(land, " "), data_id = land),
+      aes(x = 0.5, label = str_c(land, " "), data_id = land),
       hjust = 1,
       size = 4
     ) +
     geom_point_interactive(
-      aes(data_id = land)
+      aes(data_id = land, shape = "Erlent"),
+      size = point_size
+    ) +
+    geom_point_interactive(
+      aes(x = innlent, data_id = land, shape = "Innlent"),
+      size = point_size
     ) +
     geom_segment_interactive(
-      aes(yend = land_ordered, xend = 0, linewidth = linewidth, data_id = land),
+      aes(yend = land_ordered, xend = innlent, linewidth = linewidth, data_id = land),
       lty = 2, 
       alpha = 0.5
     ) +
     scale_x_continuous(
       expand = expansion(c(0, 0.05)),
       breaks = breaks_extended(6),
-      limits = c(0, 0.3),
+      limits = c(0.5, 1),
       labels = label_hlutf(),
       guide = guide_axis_truncated(
-        trunc_lower = 0
+        trunc_lower = 0.5
       )
     ) +
     scale_colour_identity() +
@@ -48,23 +55,37 @@ make_plot1 <- function() {
     scale_linewidth(
       range = c(0.2, 0.4)
     ) +
-    coord_cartesian(clip = "off", xlim = c(-0.032, NA)) +
+    scale_shape_manual(
+      values = c(16, 15)
+    ) +
+    coord_cartesian(clip = "off", xlim = c(0.45, NA)) +
+    guides(
+      color = "none",
+      linewidth = "none",
+      size = "none",
+      shape = guide_legend(
+        keywidth = unit(1, "cm"),
+        override.aes = list(size = 4)
+        )
+    ) +
     theme(
       plot.margin = margin(t = 5, r = 25, b = 5, l = 5),
       axis.line.y = element_blank(),
       axis.text.y = element_blank(),
       axis.ticks.y = element_blank(),
-      legend.position = "none"
+      legend.position = c(0.23, 0.95)
     ) +
     labs(
       x = NULL,
       y = NULL,
+      shape = NULL,
       subtitle = glue("Hlutfall í {month(start_date, label = T, abbr = F)} {year(start_date)}"),
       caption = caption
     )
   
   
-  p2 <- d |> 
+  p2 <- virkni |>
+    drop_na() |> 
     filter(dags == end_date) |> 
     mutate(
       colour = case_when(
@@ -79,29 +100,34 @@ make_plot1 <- function() {
       linewidth = 1 * (land == "Ísland"),
       size = as_factor(linewidth),
       land_ordered = glue("<i style='color:{colour}'>{land}</i>"),
-      land_ordered = fct_reorder(land_ordered, perc_innfl)
+      land_ordered = fct_reorder(land_ordered, erlent)
     ) |> 
-    ggplot(aes(perc_innfl, land_ordered, col = colour, size = size)) +
+    ggplot(aes(erlent, land_ordered, col = colour, size = size)) +
     geom_text_interactive(
-      aes(x = 0, label = str_c(land, " "), data_id = land),
+      aes(x = 0.5, label = str_c(land, " "), data_id = land),
       hjust = 1,
       size = 4
     ) +
     geom_point_interactive(
-      aes(data_id = land)
+      aes(data_id = land, shape = "Erlent"),
+      size = point_size
+    ) +
+    geom_point_interactive(
+      aes(x = innlent, data_id = land, shape = "Innlent"),
+      size = point_size
     ) +
     geom_segment_interactive(
-      aes(yend = land_ordered, xend = 0, linewidth = linewidth, data_id = land),
+      aes(yend = land_ordered, xend = innlent, linewidth = linewidth, data_id = land),
       lty = 2, 
       alpha = 0.5
     ) +
     scale_x_continuous(
       expand = expansion(c(0, 0.05)),
       breaks = breaks_extended(6),
-      limits = c(0, NA),
+      limits = c(0.5, 1),
       labels = label_hlutf(),
       guide = guide_axis_truncated(
-        trunc_lower = 0
+        trunc_lower = 0.5
       )
     ) +
     scale_colour_identity() +
@@ -109,7 +135,10 @@ make_plot1 <- function() {
     scale_linewidth(
       range = c(0.2, 0.4)
     ) +
-    coord_cartesian(clip = "off", xlim = c(-0.03, NA)) +
+    scale_shape_manual(
+      values = c(16, 15)
+    ) +
+    coord_cartesian(clip = "off", xlim = c(0.45, NA)) +
     theme(
       plot.margin = margin(t = 5, r = 25, b = 5, l = 5),
       axis.line.y = element_blank(),
@@ -124,10 +153,10 @@ make_plot1 <- function() {
       caption = caption
     )
   
-  plot_dat <- d |> 
+  plot_dat <- virkni |> 
     arrange(dags) |>  
     filter(dags >= start_date) |>
-    select(dags, land, value = perc_innfl) |> 
+    select(dags, land, value = erlent) |> 
     mutate(
       colour = case_when(
         land == "Ísland" ~ litur_island,
@@ -140,6 +169,9 @@ make_plot1 <- function() {
       ),
       linewidth = 1 * (land == "Ísland"),
       size = as_factor(linewidth)
+    ) |> 
+    mutate(
+      value = slider::slide_dbl(value, mean, .before = 3)
     )
   
   p3 <- plot_dat |> 
@@ -158,7 +190,7 @@ make_plot1 <- function() {
       linewidth = 1
     ) +
     scale_x_date(
-      breaks = unique(plot_dat$dags),
+      breaks = breaks_width("year"),
       limits = c(min(plot_dat$dags), max(plot_dat$dags) + days(25)),
       labels = label_date_short(),
       expand = expansion(add = 15),
@@ -170,9 +202,11 @@ make_plot1 <- function() {
     scale_y_continuous(
       breaks = breaks_extended(6),
       labels = label_hlutf(),
-      limits = c(0, NA),
-      expand = expansion(c(0, 0.01)),
-      guide = guide_axis_truncated()
+      limits = c(0.6, 0.9),
+      guide = guide_axis_truncated(
+        trunc_lower = 0.6,
+        trunc_upper = 0.9
+      )
     ) +
     scale_colour_identity() +
     coord_cartesian(clip = "on") +
@@ -182,7 +216,7 @@ make_plot1 <- function() {
     labs(
       x = NULL,
       y = NULL,
-      subtitle = "Þróun"
+      subtitle = "Þróun í atvinnuþátttöku erlendra einstaklinga | Leiðrétt fyrir árstíðarsveiflum"
     )
   
   p <- (
@@ -191,8 +225,9 @@ make_plot1 <- function() {
   ) / 
     p3 +
     plot_annotation(
-      title = "Hlutfall einstaklinga sem fæddust erlendis af mannfjölda",
+      title = "Atvinnuþátttaka eftir fæðingarlandi",
       subtitle = str_c(
+        "Hlutfall eintaklinga 20 - 64 ára með vinnu eða í leit að vinnu | ",
         "Láttu músina yfir land til að einblína á það"
       ),
       caption = caption
@@ -216,3 +251,4 @@ make_plot1 <- function() {
     )
   )
 }
+
