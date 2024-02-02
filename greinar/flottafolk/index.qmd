@@ -3,7 +3,7 @@ title: "Tímabundin vernd og hælisleitendur"
 pagetitle: "Tímabundin vernd og hælisleitendur"
 subtitle: "Hvað segja gögnin um fjölda hælisleitenda og umsækjendur um tímabundna vernd ás Íslandi?"
 description: "Hvar bíða flestir einstaklingar eftir niðurstöðu í hælisumsókn sinni? Hvaða land hefur tekið við flestum hælisleitendum? Hvernig tengist löggjöf skilgreiningu á gögnum? Hér eru gögn um fjölda einstaklinga sem njóta tímabundinnar verndar eða hælis, fjölda samþykktra verndar- og hælisumsókna og fjölda umsókna í bið tekin saman úr gögnum  Eurostat."
-date: "2024/01/31"
+date: "2024/02/02"
 draft: false
 categories:
     - stjórnmál
@@ -401,7 +401,7 @@ make_plot(
 
 
 make_samantekt(
-  height = 0.9 * 16,
+  height = 1 * 16,
   width = 16,
   end_date = clock::date_build(2023, c(10, 7, 10)),
   number_labels = label_number(big.mark = ".", decimal.mark = ",")
