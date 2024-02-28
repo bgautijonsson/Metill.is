@@ -1,5 +1,5 @@
 {
-  "hash": "4c41fd488d9976d95ccbb57ebe2022a1",
+  "hash": "421d218f0f267213813a76dc058b216f",
   "result": {
     "engine": "knitr",
     "markdown": "---\ntitle-block-style: none\npagetitle: \"Jarðskjálftar á Íslandi\"\npagesubtitle: \"Gagnvirkt samantekt á fjölda og staðsetningu jarðskjálfta á Íslandi\"\nimage: image.png\nhref: maelabord/jardskjalftar/index.qmd\npagedate: \"2024/01/25\"\n---\n\n::: {.cell}\n\n:::\n\n\n\n::: {.column-screen}\n<iframe\n  src=\"https://bggj.shinyapps.io/shiny_jardskjalftar/\"\n  data-external=\"1\"\n  >\n</iframe>\n:::",

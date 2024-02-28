@@ -10,10 +10,20 @@
     ]
   },
   {
+    "listing": "/maelabord.html",
+    "items": [
+      "/maelabord/jardskjalftar/index.html",
+      "/maelabord/sveitarfelog/index.html",
+      "/maelabord/skattagogn/index.html",
+      "/maelabord/verdbolga/index.html",
+      "/maelabord/sveitarfelog/gogn/index.html"
+    ]
+  },
+  {
     "listing": "/index.html",
     "items": [
-      "/greinar/flottafolk/index.html",
       "/greinar/visitala_neysluverds/index.html",
+      "/greinar/flottafolk/index.html",
       "/greinar/vinnuafl/index.html",
       "/greinar/leigaogkaupverd/index.html",
       "/greinar/faedingartidni/index.html",
@@ -31,20 +41,10 @@
     ]
   },
   {
-    "listing": "/maelabord.html",
-    "items": [
-      "/maelabord/jardskjalftar/index.html",
-      "/maelabord/sveitarfelog/index.html",
-      "/maelabord/skattagogn/index.html",
-      "/maelabord/verdbolga/index.html",
-      "/maelabord/sveitarfelog/gogn/index.html"
-    ]
-  },
-  {
     "listing": "/greinar.html",
     "items": [
-      "/greinar/flottafolk/index.html",
       "/greinar/visitala_neysluverds/index.html",
+      "/greinar/flottafolk/index.html",
       "/greinar/vinnuafl/index.html",
       "/greinar/leigaogkaupverd/index.html",
       "/greinar/faedingartidni/index.html",

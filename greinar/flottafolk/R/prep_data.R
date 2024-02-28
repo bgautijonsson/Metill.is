@@ -178,9 +178,11 @@ d <- beneficiaries |>
   inner_join(
     pop |> 
       select(-freq) |> 
-      group_by(geo) |> 
-      filter(time == max(time)) |> 
-      ungroup() |> 
+      drop_na(values) |> 
+      filter(
+        time == max(time, na.rm = TRUE),
+        .by = geo
+      ) |> 
       select(geo, pop = values),
     by = c("geo")
   ) |> 
@@ -226,7 +228,7 @@ d_total <- d |>
   mutate(
     pop = max(pop, na.rm = T),
     .by = land
-    ) |> 
+  ) |> 
   group_by(time) |> 
   summarise_at(
     vars(-land),

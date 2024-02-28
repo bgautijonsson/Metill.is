@@ -91,7 +91,7 @@ data_hist <- decisions_hist |>
     decisions = values
   ) |> 
   inner_join(
-    pop_hist |> rename(pop = values),
+    pop_hist |> rename(pop = values) |> drop_na(),
     by = join_by(geo, time)
   ) |> 
   pivot_wider(names_from = decision, values_from = decisions) |> 
@@ -117,7 +117,8 @@ data_hist <- decisions_hist |>
     by = join_by(geo == country)
   ) |> 
   filter(land != "Kýpur") |> 
-  select(-geo)
+  select(-geo) |> 
+  filter(year(time) < 2023)
 
 data_hist_total <- data_hist |> 
   drop_na() |> 
@@ -197,8 +198,11 @@ d_2023 <- d_2023 |>
     total = total + total_non_ukr
   ) |> 
   pivot_longer(c(asylum_applicants:total_non_ukr)) |> 
-  pivot_wider(names_from = type)
-
+  pivot_wider(names_from = type) |> 
+  anti_join(
+    data_hist |> drop_na(),
+    by = join_by(land, time)
+  )
 
 data_hist <- data_hist |> 
   bind_rows(
