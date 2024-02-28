@@ -4,7 +4,7 @@ pagetitle: "Vinnumarkaður"
 subtitle: "Hver er fjöldi starfandi einstaklinga og hvernig skiptast þeir á vinnumarkaði?"
 description: |
     Reglulega sjást fyrirsagnir þar sem talað er um að opinbert starfsfólk sé allt of margt og að hlutfall þess af heildarfjölda vinnandi fólks sé of hátt. Hér kryf ég reglulega nýjustu gögnin til að geta vitað hvort slíkar fullyrðingar séu teknar úr samhengi eða endurspegli raunveruleikann.
-date: "2024/1/16"
+date: "2024/2/27"
 categories:
     - efnahagur
     - vinnumarkaður
