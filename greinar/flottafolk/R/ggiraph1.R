@@ -5,7 +5,6 @@ make_ggiraph1 <- function(
   
   n_countries <- length(unique(data_hist$land))
   end_date <- max(data_hist$end_date, na.rm = T)
-  last_date_label <- glue("2023\ntil {month(end_date, label = TRUE, abbr = FALSE)}")
   label_function <- function(x) {
     if_else(
       year(x) == 2023,
@@ -13,6 +12,14 @@ make_ggiraph1 <- function(
       label_date_short(format = "%Y")(x)
     )
   }
+  if (!is.finite(end_date)) {
+    end_date <- max(data_hist$time)
+    month(end_date) <- 12
+    label_function <- function(x) {
+      label_date_short(format = "%Y")(x)
+    }
+  }
+  last_date_label <- glue("2023\ntil {month(end_date, label = TRUE, abbr = FALSE)}")
   
   #### Plot 1 ####
   

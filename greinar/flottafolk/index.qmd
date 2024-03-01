@@ -3,7 +3,7 @@ title: "Tímabundin vernd og hælisleitendur"
 pagetitle: "Tímabundin vernd og hælisleitendur"
 subtitle: "Hvað segja gögnin um fjölda hælisleitenda og umsækjendur um tímabundna vernd ás Íslandi?"
 description: "Hvar bíða flestir einstaklingar eftir niðurstöðu í hælisumsókn sinni? Hvaða land hefur tekið við flestum hælisleitendum? Hvernig tengist löggjöf skilgreiningu á gögnum? Hér eru gögn um fjölda einstaklinga sem njóta tímabundinnar verndar eða hælis, fjölda samþykktra verndar- og hælisumsókna og fjölda umsókna í bið tekin saman úr gögnum  Eurostat."
-date: "2024/02/02"
+date: "2024/03/01"
 draft: false
 categories:
     - stjórnmál
@@ -110,7 +110,7 @@ make_plot(
   plot_var = "grants",
   scaling_var = "per_pop",
   start_date = clock::date_build(2022, 3, 1),
-  end_date = clock::date_build(2023, 11, 1),
+  end_date = clock::date_build(2023, 12, 1),
   title = "Hvað er mörgum veitt tímabundin vernd í hverjum mánuði?",
   subtitle = "Sýnt sem fjöldi á 100.000 íbúa hvers lands",
   caption = caption,
@@ -134,7 +134,7 @@ make_plot(
   plot_var = "beneficiaries",
   scaling_var = "per_pop",
   start_date = clock::date_build(2022, 3, 1),
-  end_date = clock::date_build(2023, 11, 1),
+  end_date = clock::date_build(2023, 12, 1),
   title = "Hvar njóta flestir einstaklingar tímabundinnar verndar?",
   subtitle = "Sýnt sem fjöldi á 100.000 íbúa hvers lands",
   caption = caption,
@@ -199,7 +199,7 @@ make_plot(
   plot_var = "asylum_applicants_non_ukraine",
   scaling_var = "per_pop",
   start_date = clock::date_build(2022, 3, 1),
-  end_date = clock::date_build(2023, 11, 1),
+  end_date = clock::date_build(2023, 12, 1),
   title = "Hvar sækja flestir einstaklingar um hæli?",
   subtitle = "Sýnt sem fjöldi á 100.000 íbúa hvers lands",
   caption = caption
@@ -216,7 +216,7 @@ make_plot(
   plot_var = "asylum_applicants_non_ukraine",
   scaling_var = "per_pop_cumsum",
   start_date = clock::date_build(2022, 3, 1),
-  end_date = clock::date_build(2023, 7, 1),
+  end_date = clock::date_build(2023, 12, 1),
   title = "Hvar hafa flestir einstaklingar sótt um hæli? (Uppsafnaðar tölur frá mars 2022)",
   subtitle = "Sýnt sem fjöldi á 100.000 íbúa hvers lands",
   caption = caption,
@@ -251,7 +251,7 @@ make_plot(
   plot_var = "total_decisions",
   scaling_var = "per_pop",
   start_date = clock::date_build(2022, 3, 1),
-  end_date = clock::date_build(2023, 7, 1),
+  end_date = clock::date_build(2023, 10, 1),
   title = "Hvar eru flestar ákvarðanir um stöðu hælisleitenda teknar á mánuði?",
   subtitle = "Sýnt sem fjöldi á 100.000 íbúa hvers lands",
   caption = caption,
@@ -270,7 +270,7 @@ make_plot(
   plot_var = "total_decisions",
   scaling_var = "per_pop_cumsum",
   start_date = clock::date_build(2022, 3, 1),
-  end_date = clock::date_build(2023, 7, 1),
+  end_date = clock::date_build(2023, 10, 1),
   title = "Hvar hafa flestar ákvarðanir verið teknar? (Uppsafnaðar tölur frá mars 2022)",
   subtitle = "Sýnt sem fjöldi á 100.000 íbúa hvers lands",
   caption = caption,
@@ -303,7 +303,7 @@ make_plot(
   plot_var = "positive_decisions",
   scaling_var = "per_pop",
   start_date = clock::date_build(2022, 3, 1),
-  end_date = clock::date_build(2023, 7, 1),
+  end_date = clock::date_build(2023, 10, 1),
   title = "Hvar er flestum einstaklingum veitt hæli á mánuði?",
   subtitle = "Sýnt sem fjöldi á 100.000 íbúa hvers lands",
   caption = caption,
@@ -322,7 +322,7 @@ make_plot(
   plot_var = "positive_decisions",
   scaling_var = "per_pop_cumsum",
   start_date = clock::date_build(2022, 3, 1),
-  end_date = clock::date_build(2023, 7, 1),
+  end_date = clock::date_build(2023, 10, 1),
   title = "Hvar hefur flestum einstaklingum verið veitt hæli? (Uppsafnaðar tölur frá mars 2022)",
   subtitle = "Sýnt sem fjöldi á 100.000 íbúa hvers lands",
   caption = caption,
@@ -351,7 +351,7 @@ make_plot(
   plot_var = "percent_positive_decisions",
   scaling_var = "value",
   start_date = clock::date_build(2022, 3, 1),
-  end_date = clock::date_build(2023, 7, 1),
+  end_date = clock::date_build(2023, 10, 1),
   title = "Hvaða hlutfall umsókna um hæli er samþykkt?",
   subtitle = "Sýnt sem hlutfall allra umsókna um hæli",
   caption = caption,
@@ -383,7 +383,7 @@ make_plot(
   plot_var = "applicants_non_ukraine",
   scaling_var = "per_pop",
   start_date = clock::date_build(2022, 3, 1),
-  end_date = clock::date_build(2023, 10, 1),
+  end_date = clock::date_build(2023, 12, 1),
   title = "Hvar bíða flestir einstaklingar eftir niðurstöðu hælisumsóknar sinnar?",
   subtitle = "Sýnt sem fjöldi á 100.000 íbúa hvers lands",
   caption = caption,
@@ -403,7 +403,7 @@ make_plot(
 make_samantekt(
   height = 1 * 16,
   width = 16,
-  end_date = clock::date_build(2023, c(10, 7, 10)),
+  end_date = clock::date_build(2023, c(12, 10, 12)),
   number_labels = label_number(big.mark = ".", decimal.mark = ",")
 )
 ```
@@ -427,7 +427,7 @@ make_plot(
   plot_var = "total_grants",
   scaling_var = "per_pop",
   start_date = clock::date_build(2022, 3, 1),
-  end_date = clock::date_build(2023, 7, 1),
+  end_date = clock::date_build(2023, 10, 1),
   title = "Samtals veitingar á hæli og tímabundinni vernd í hverjum mánuði",
   subtitle = "Sýnt sem fjöldi á 100.000 íbúa hvers lands",
   caption = caption,
@@ -446,7 +446,7 @@ make_plot(
   plot_var = "total_grants",
   scaling_var = "per_pop_cumsum",
   start_date = clock::date_build(2022, 3, 1),
-  end_date = clock::date_build(2023, 7, 1),
+  end_date = clock::date_build(2023, 10, 1),
   title = "Hvar hefur flestum verið veitt vernd og/eða hæli? (Uppsafnaðar tölur frá mars 2022)",
   subtitle = "Sýnt sem fjöldi á 100.000 íbúa hvers lands",
   caption = caption,

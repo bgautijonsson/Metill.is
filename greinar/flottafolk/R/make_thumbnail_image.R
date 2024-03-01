@@ -1,7 +1,7 @@
 plot_var <- "applicants_non_ukraine"
 scaling_var <- "per_pop"
 start_date <- clock::date_build(2022, 3, 1)
-end_date <- clock::date_build(2023, 10, 1)
+end_date <- clock::date_build(2023, 12, 1)
 title <- "Hvar bíða flestir einstaklingar eftir niðurstöðu hælisumsóknar sinnar?"
 subtitle <- "Sýnt sem fjöldi á 100.000 íbúa hvers lands"
 number_labels <- label_number(big.mark = ".", decimal.mark = ",")

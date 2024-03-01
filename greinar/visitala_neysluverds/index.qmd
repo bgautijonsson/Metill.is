@@ -513,6 +513,7 @@ plot_dat <- d_undir |>
   ) |> 
   summarise(
     hlutf_haekkun = mean(year_breyting > value),
+    fj_haekkun = sum(year_breyting > value),
     .by = c(date, value)
   ) |> 
   drop_na() |> 

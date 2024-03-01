@@ -1,12 +1,11 @@
 make_ggiraph3 <- function(
     width = 16,
     height = 0.4 * 16
-    ) {
+) {
   
   n_countries <- length(unique(data_hist$land))
   plot_var <- "asylum_applicants"
   end_date <- max(data_hist$end_date, na.rm = T)
-  last_date_label <- glue("2023\ntil {month(end_date, label = TRUE, abbr = FALSE)}")
   label_function <- function(x) {
     if_else(
       year(x) == 2023,
@@ -14,6 +13,20 @@ make_ggiraph3 <- function(
       label_date_short(format = "%Y")(x)
     )
   }
+  
+  if (!is.finite(end_date)) {
+    end_date <- max(data_hist$time)
+    month(end_date) <- 12
+    title_addon <- ""
+    
+    label_function <- function(x) {
+      label_date_short(format = "%Y")(x)
+    }
+  } else {
+    title_addon <- glue("[gögn fram að {month(end_date, label = T, abbr = F)}]")
+  }
+  last_date_label <- glue("2023\ntil {month(end_date, label = TRUE, abbr = FALSE)}")
+  
   
   #### Plot 1 ####
   
@@ -381,7 +394,7 @@ make_ggiraph3 <- function(
   p <- p1 + p2 + p3 + p4 +
     plot_layout(nrow = 2) +
     plot_annotation(
-      title = glue("Hælisumsóknir í Evrópulöndum (2008 til {year(end_date)} [gögn fram að {month(end_date, label = T, abbr = F)}])"),
+      title = glue("Hælisumsóknir í Evrópulöndum (2008 til {year(end_date)} {title_addon})"),
       subtitle = str_c(
         "Láttu músina yfir land til að einblina á gögn þess",
         " | ",
@@ -419,4 +432,5 @@ make_ggiraph3 <- function(
   ) 
   
 }
+
 
