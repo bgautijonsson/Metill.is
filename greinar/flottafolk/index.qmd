@@ -335,33 +335,6 @@ make_plot(
 
 
 
-
-
-### Samþykktarhlutfall
-
-Samþykktarhlutfall, hlutfall umsókna sem er samþykkt, hefur lækkað verulega á Íslandi frá sumri 2022 og í júlí 2023 samþykktum við lægsta hlutfall umsókna. Hér er þó gott að hafa í huga að íslenskum yfirvöldum hafa borist flestar umsóknir og því þarf að líta á allar tölurnar til að átta sig á samhenginu. Til dæmis má nefna að við samþykktum fleiri umsóknir *(á höfðatölu)* en hin Norðurlöndin þótt samþykktarhlutfallið hafi verið lægra hér.
-
-Þótt Ungverjaland hafi samþykkt hátt hlutfall umsókna í júlí 2023 er sömuleiðis mikilvægt að muna að yfirvöldum þar hafa varla borist neinar umsóknir eins og mátti sjá að ofan.
-
-```{r}
-#| eval: true
-#| column: page-left
-
-make_plot(
-  plot_var = "percent_positive_decisions",
-  scaling_var = "value",
-  start_date = clock::date_build(2022, 3, 1),
-  end_date = clock::date_build(2023, 10, 1),
-  title = "Hvaða hlutfall umsókna um hæli er samþykkt?",
-  subtitle = "Sýnt sem hlutfall allra umsókna um hæli",
-  caption = caption,
-  # y_upper = 200,
-  number_labels = label_hlutf()
-)
-```
-
-
-
 ## Umsækjendur í bið
 
 Oft er talað um álag á innviði sem tengjast móttöku flóttafólks. Þar hefur fjöldi einstaklinga sem eru í bið eftir niðurstöðu umsóknar mikil áhrif. Þeir einstaklingar hafa ekki atvinnuleyfi og þurfa því að reiða sig á stuðning yfirvalda á meðan beðið er eftir ákvörðun.
