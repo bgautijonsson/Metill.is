@@ -1,0 +1,24 @@
+---
+title: "Flóttafólk á Íslandi"
+pagetitle: "Flóttafólk á Íslandi"
+subtitle: "Hvaðan koma umsækjendur um hæli/alþjóðlega vernd til Íslands?"
+description: "Málefni flóttafólks og hælisleitenda hefur verið svo mikið til umræðu. Hvaðan koma umsækjendur um hæli/alþjóðlega vernd til Íslands? Hefur þeim fjölgað?"
+date: "2024/03/05"
+draft: false
+categories:
+    - stjórnmál
+    - fólksflutningar
+    - flóttafólk
+    - eurostat
+    - hagstofa
+    - evrópa
+href: greinar/flottafolk_a_islandi/index.qmd
+image: https://raw.githubusercontent.com/bgautijonsson/asylum/master/Figures/stream_plot_fp.png
+twitter-card:
+    image: https://raw.githubusercontent.com/bgautijonsson/asylum/master/Figures/stream_plot.png
+execute: 
+  eval: true
+---
+
+
+![](https://raw.githubusercontent.com/bgautijonsson/asylum/master/Figures/stream_plot.png){.column-screen-inset}
