@@ -46,7 +46,7 @@ p1 <- data_hist |>
   labs(
     x = NULL,
     y = NULL,
-    subtitle = "<b style='font-size:15pt;'>Verndarveitingar</b><br><i style='font-size:13pt;'>Flóttafólk frá Úkraínu og öðrum löndum</i>"
+    subtitle = "<b style='font-size:15pt;'>Verndarveitingar</b><br><i style='font-size:13pt;'>Samtals</i>"
   )
 
 
@@ -155,7 +155,7 @@ p3 <- data_hist |>
   labs(
     x = NULL,
     y = NULL,
-    subtitle = "<b style='font-size:15pt;'>Umsóknir</b><br><i style='font-size:13pt;'>Flóttafólk frá Úkraínu og öðrum löndum</i>"
+    subtitle = "<b style='font-size:15pt;'>Umsóknir</b><br><i style='font-size:13pt;'>Samtals</i>"
   )
 
 
