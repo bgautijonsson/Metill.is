@@ -91,18 +91,18 @@ Myndir og tafla hér að neðan sýna stutta samantekt á tölunum. Fyrir neðan
 
 ### 2022
 
-![](Figures/figure_vernd_2022.png)
+![](Figures/figure_vernd_2022.png){.column-page}
 
 ### 2023
 
-![](Figures/figure_vernd_2023.png)
+![](Figures/figure_vernd_2023.png){.column-page}
 
 ### Samtals
 
-![](Figures/figure_vernd_2022-2023.png)
+![](Figures/figure_vernd_2022-2023.png){.column-page}
 :::
 
-## Tafla
+## Töflur
 
 ::: {.panel-tabset}
 
