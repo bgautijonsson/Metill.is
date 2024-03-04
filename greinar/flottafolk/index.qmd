@@ -3,7 +3,7 @@ title: "Tímabundin vernd og hælisleitendur"
 pagetitle: "Tímabundin vernd og hælisleitendur"
 subtitle: "Hvað segja gögnin um fjölda hælisleitenda og umsækjendur um tímabundna vernd ás Íslandi?"
 description: "Hvar bíða flestir einstaklingar eftir niðurstöðu í hælisumsókn sinni? Hvaða land hefur tekið við flestum hælisleitendum? Hvernig tengist löggjöf skilgreiningu á gögnum? Hér eru gögn um fjölda einstaklinga sem njóta tímabundinnar verndar eða hælis, fjölda samþykktra verndar- og hælisumsókna og fjölda umsókna í bið tekin saman úr gögnum  Eurostat."
-date: "2024/03/01"
+date: "2024/03/04"
 draft: false
 categories:
     - stjórnmál
@@ -33,6 +33,7 @@ library(eurostat)
 library(ggh4x)
 library(ggiraph)
 library(gt)
+library(gtExtras)
 
 Sys.setlocale("LC_ALL", "is_IS.UTF-8")
 
@@ -76,6 +77,252 @@ Hér er unnið með gögn frá Eurostat, hagstofu Evrópusambandsins. Þar sem �
 
 * **Tímabundin vernd (e. temporary protection):** Þetta er kallað *sameiginleg vernd vegna fjöldaflótta* í 44. grein laga um útlendinga, en *temporary protection* hjá Evrópusambandinu og þar af leiðandi Eurostat. Dómsmálaráðherra virkjaði þessa grein vegna fjöldaflótta frá Úkraínu í mars 2022. Hér verður notast við orðatiltækið **tímabundin vernd**. Afgreiðsla umsókna um tímabundna vernd er fljótari en annarra umsókna þar sem ekki þarf að leggja jafnmikla vinnu í að rannsaka mál hvers og eins.
 * **Hæli (e. asylum):** Einstaklingur sem fær ekki tímabundna vernd þarf að ganga í gegnum persónulegra ferli þar sem málsmeðferð sker úr um hvort einstaklingur þurfi á hæli að halda. Í gögnum Útlendingastofnunar virðist þetta oftast kallað *efnisleg meðferð* og hefur ýmist verið skipt niður í flokkana *vernd*, *viðbótarvernd* og *mannúðarleyfi* í gögnum þeirra. Hér verður notast við orðið **hæli** yfir alla þessa flokka. Afgreiðsla umsókna um hæli tekur lengri tíma og því er oftast fjallað um þennan málaflokk þegar rætt er um álag á innviði sem tengjast móttöku flóttafólks.
+
+
+# Samantekt
+
+Myndir og tafla hér að neðan sýna stutta samantekt á tölunum. Fyrir neðan fylgir nánari greining.
+
+::: {.panel-tabset}
+
+## Myndir
+
+::: {.panel-tabset}
+
+### 2022
+
+![](Figures/figure_vernd_2022.png)
+
+### 2023
+
+![](Figures/figure_vernd_2023.png)
+
+### Samtals
+
+![](Figures/figure_vernd_2022-2023.png)
+:::
+
+## Tafla
+
+::: {.panel-tabset}
+
+### 2022
+
+```{r}
+data_hist |> 
+  filter(
+    land != "Samtals",
+    year(time) == 2022
+  ) |> 
+  select(time, land, name, per_pop) |>
+  pivot_wider(values_from = per_pop) |> 
+  mutate(
+    asylum_applicants_non_ukr = asylum_applicants,
+    asylum_applicants = asylum_applicants + (total - total_non_ukr)
+  ) |> 
+  group_by(land) |> 
+  summarise_at(
+    vars(-time),
+    mean
+  ) |> 
+  mutate(
+    l = janitor::make_clean_names(land),
+    colour = case_when(
+      land == "Ísland" ~ litur_island,
+      land == "Danmörk" ~ litur_danmork,
+      land == "Finnland" ~ litur_finnland,
+      land == "Noregur" ~ litur_noregur,
+      land == "Svíþjóð" ~ litur_svithjod,
+      land == "Samtals" ~ litur_total,
+      TRUE ~ litur_annad
+    ),
+    textsize = if_else(colour == litur_annad, 12, 12),
+    fontweight = if_else(colour == litur_annad, "normal", "bold"),
+    land = glue("<span style='color:{colour};font-size:{textsize}pt;font-weight:{fontweight};'>{land}</span>")
+  ) |> 
+  arrange(l) |> 
+  select(1:5) |> 
+  gt() |> 
+  tab_header(
+    title = "Samantekt á verndarkerfum Evrópulanda (2022)",
+    subtitle = "Tölur sýndar sem fjöldi á 100.000 íbúa móttökulands"
+  ) |> 
+  tab_source_note(
+    "Tafla eftir @bggjonsson hjá metill.is byggð á gögnum Eurostat um fólksflutninga: https://metill.is/greinar/flottafolk\nGögn og kóði: https://github.com/bgautijonsson/Metill.is/tree/master/greinar/flottafolk"
+  ) |> 
+  cols_label(
+    land = "",
+    total = "Samtals",
+    total_non_ukr = "Án Úkraínu",
+    asylum_applicants = "Samtals",
+    asylum_applicants_non_ukr = "Án Úkraínu"
+  ) |> 
+  tab_spanner(
+    label = md("**Verndarveitingar**"), columns = 2:3
+  ) |> 
+  tab_spanner(
+    label = md("**Umsóknir**"), columns = 4:5
+  ) |> 
+  fmt_number(decimals = 0) |> 
+  fmt_markdown(land) |> 
+  gt_color_rows(
+    columns = -land,
+    domain = NULL,
+    palette = "Greys"
+    ) |> 
+  opt_vertical_padding(0.7) |> 
+  tab_options(
+    table.background.color = "#faf9f9"
+  )
+```
+
+### 2023
+
+```{r}
+data_hist |> 
+  filter(
+    land != "Samtals",
+    year(time) >= 2023
+  ) |> 
+  select(time, land, name, per_pop) |>
+  pivot_wider(values_from = per_pop) |> 
+  mutate(
+    asylum_applicants_non_ukr = asylum_applicants,
+    asylum_applicants = asylum_applicants + (total - total_non_ukr)
+  ) |> 
+  group_by(land) |> 
+  summarise_at(
+    vars(-time),
+    mean
+  ) |> 
+  mutate(
+    l = janitor::make_clean_names(land),
+    colour = case_when(
+      land == "Ísland" ~ litur_island,
+      land == "Danmörk" ~ litur_danmork,
+      land == "Finnland" ~ litur_finnland,
+      land == "Noregur" ~ litur_noregur,
+      land == "Svíþjóð" ~ litur_svithjod,
+      land == "Samtals" ~ litur_total,
+      TRUE ~ litur_annad
+    ),
+    textsize = if_else(colour == litur_annad, 12, 12),
+    fontweight = if_else(colour == litur_annad, "normal", "bold"),
+    land = glue("<span style='color:{colour};font-size:{textsize}pt;font-weight:{fontweight};'>{land}</span>")
+  ) |> 
+  arrange(l) |> 
+  select(1:5) |> 
+  gt() |> 
+  tab_header(
+    title = "Samantekt á verndarkerfum Evrópulanda (2023)",
+    subtitle = "Tölur sýndar sem fjöldi á 100.000 íbúa móttökulands"
+  ) |> 
+  tab_source_note(
+    "Tafla eftir @bggjonsson hjá metill.is byggð á gögnum Eurostat um fólksflutninga: https://metill.is/greinar/flottafolk\nGögn og kóði: https://github.com/bgautijonsson/Metill.is/tree/master/greinar/flottafolk"
+  ) |> 
+  cols_label(
+    land = "",
+    total = "Samtals",
+    total_non_ukr = "Án Úkraínu",
+    asylum_applicants = "Samtals",
+    asylum_applicants_non_ukr = "Án Úkraínu"
+  ) |> 
+  tab_spanner(
+    label = md("**Verndarveitingar**"), columns = 2:3
+  ) |> 
+  tab_spanner(
+    label = md("**Umsóknir**"), columns = 4:5
+  ) |> 
+  fmt_number(decimals = 0) |> 
+  fmt_markdown(land) |> 
+  gt_color_rows(
+    columns = -land,
+    domain = NULL,
+    palette = "Greys"
+    ) |> 
+  opt_vertical_padding(0.7) |> 
+  tab_options(
+    table.background.color = "#faf9f9"
+  )
+```
+
+### Samtals
+
+```{r}
+data_hist |> 
+  filter(
+    land != "Samtals",
+    year(time) >= 2022
+  ) |> 
+  select(time, land, name, per_pop) |>
+  pivot_wider(values_from = per_pop) |> 
+  mutate(
+    asylum_applicants_non_ukr = asylum_applicants,
+    asylum_applicants = asylum_applicants + (total - total_non_ukr)
+  ) |> 
+  group_by(land) |> 
+  summarise_at(
+    vars(-time),
+    mean
+  ) |> 
+  mutate(
+    l = janitor::make_clean_names(land),
+    colour = case_when(
+      land == "Ísland" ~ litur_island,
+      land == "Danmörk" ~ litur_danmork,
+      land == "Finnland" ~ litur_finnland,
+      land == "Noregur" ~ litur_noregur,
+      land == "Svíþjóð" ~ litur_svithjod,
+      land == "Samtals" ~ litur_total,
+      TRUE ~ litur_annad
+    ),
+    textsize = if_else(colour == litur_annad, 12, 12),
+    fontweight = if_else(colour == litur_annad, "normal", "bold"),
+    land = glue("<span style='color:{colour};font-size:{textsize}pt;font-weight:{fontweight};'>{land}</span>")
+  ) |> 
+  arrange(l) |> 
+  select(1:5) |> 
+  gt() |> 
+  tab_header(
+    title = "Samantekt á verndarkerfum Evrópulanda (2022 - 2023)",
+    subtitle = "Tölur sýndar sem fjöldi á 100.000 íbúa móttökulands"
+  ) |> 
+  tab_source_note(
+    "Tafla eftir @bggjonsson hjá metill.is byggð á gögnum Eurostat um fólksflutninga: https://metill.is/greinar/flottafolk\nGögn og kóði: https://github.com/bgautijonsson/Metill.is/tree/master/greinar/flottafolk"
+  ) |> 
+  cols_label(
+    land = "",
+    total = "Samtals",
+    total_non_ukr = "Án Úkraínu",
+    asylum_applicants = "Samtals",
+    asylum_applicants_non_ukr = "Án Úkraínu"
+  ) |> 
+  tab_spanner(
+    label = md("**Verndarveitingar**"), columns = 2:3
+  ) |> 
+  tab_spanner(
+    label = md("**Umsóknir**"), columns = 4:5
+  ) |> 
+  fmt_number(decimals = 0) |> 
+  fmt_markdown(land) |> 
+  gt_color_rows(
+    columns = -land,
+    domain = NULL,
+    palette = "Greys"
+    ) |> 
+  opt_vertical_padding(0.7) |> 
+  tab_options(
+    table.background.color = "#faf9f9"
+  )
+```
+
+:::
+
+
+
+
+:::
+
 
 
 # Tímabundin Vernd

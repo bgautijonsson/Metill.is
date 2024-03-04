@@ -1,5 +1,5 @@
 p1 <- data_hist |> 
-  filter(year(time) >= 2023) |> 
+  filter(year(time) >= 2022) |> 
   summarise(
     value = sum(value),
     per_pop = sum(per_pop),
@@ -214,13 +214,13 @@ p4 <- data_hist |>
 
 p <- p1 + p2 + p3 + p4 +
   plot_annotation(
-    title = "Verndarkerfin í Evrópulöndum árið 2023",
+    title = "Verndarkerfin í Evrópulöndum (2022 - 2023)",
     subtitle = "Sýnt sem fjöldi á 100.000 íbúa móttökulands",
     caption = caption
   )
 
 ggsave(
   plot = p,
-  filename = "Greinar/flottafolk/Figures/vernd_2023.png",
+  filename = "Greinar/flottafolk/Figures/figure_vernd_2022-2023.png",
   width = 8, height = 1 * 8, scale = 1.3
 )
