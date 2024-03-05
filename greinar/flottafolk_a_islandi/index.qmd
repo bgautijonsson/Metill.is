@@ -13,12 +13,12 @@ categories:
     - hagstofa
     - evrópa
 href: greinar/flottafolk_a_islandi/index.qmd
-image: https://raw.githubusercontent.com/bgautijonsson/asylum/master/Figures/stream_plot_fp.png
+image: https://raw.githubusercontent.com/bgautijonsson/asylum/master/Figures/stream_plot_applicants_fp.png
 twitter-card:
-    image: https://raw.githubusercontent.com/bgautijonsson/asylum/master/Figures/stream_plot.png
+    image: https://raw.githubusercontent.com/bgautijonsson/asylum/master/Figures/stream_plot_applicants.png
 execute: 
   eval: true
 ---
 
 
-![](https://raw.githubusercontent.com/bgautijonsson/asylum/master/Figures/stream_plot.png){.column-screen-inset}
+![](https://raw.githubusercontent.com/bgautijonsson/asylum/master/Figures/stream_plot_applicants.png){.column-screen-inset}
