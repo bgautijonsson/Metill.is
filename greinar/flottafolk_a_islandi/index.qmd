@@ -20,5 +20,10 @@ execute:
   eval: true
 ---
 
+# Umsækjendur frá Venesúela
+
+![](https://raw.githubusercontent.com/bgautijonsson/asylum/master/Figures/stream_plot_applicants_monthly.png){.column-screen-inset}
+
+# Aðrir umsækjendur
 
 ![](https://raw.githubusercontent.com/bgautijonsson/asylum/master/Figures/stream_plot_applicants.png){.column-screen-inset}
