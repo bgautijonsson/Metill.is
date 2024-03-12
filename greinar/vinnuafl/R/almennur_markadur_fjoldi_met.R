@@ -70,7 +70,7 @@ p <- d |>
     subtitle = "Að öllu óbreyttu verður minnsti fjöldi starfandi árið 2024 jafnhár og metfjöldinn fyrir COVID-19 faraldur",
     caption = str_c(
       "Mynd eftir @bggjonsson hjá metill.is byggð á gögnum Hagstofu um starfandi samkvæmt skrám\n",
-      "Kóði: https://github.com/bgautijonsson/Metill.is/tree/master/greinar/vinnuafl"
+      "Kóði: https://github.com/bgautijonsson/Metill.is/blob/master/greinar/vinnuafl/R/almennur_markadur_fjoldi_met.R"
     )
   )
 
