@@ -139,43 +139,43 @@ data_hist <- data_hist |>
 
 
 
-# d <- here(cache_dir, "raw_data.csv") |> 
-#   read_csv()
-# 
-# 
-# d_2023 <- d |> 
-#   filter(
-#     year(time) == 2023,
-#     name %in% c("grants", "asylum_applicants_non_ukraine", "positive_decisions")
-#   ) |> 
-#   mutate(
-#     name = fct_recode(
-#       name,
-#       "total" = "grants",
-#       "total_non_ukr" = "positive_decisions",
-#       "asylum_applicants" = "asylum_applicants_non_ukraine"
-#     )
-#   ) |> 
-#   select(-gdp, -per_pop_cumsum, -per_gdp)
-# 
-# 
-# 
-# end_date <- d_2023 |> 
-#   drop_na() |> 
-#   summarise(
-#     min_date = min(time),
-#     max_date = max(time),
-#     n_obs = n(),
-#     .by = c(land, name, pop)
-#   ) |> 
-#   summarise(
-#     start_date = max(min_date),
-#     end_date = min(max_date),
-#     n_obs = min(n_obs),
-#     .by = c(land, pop)
-#   ) |> 
-#   pull(end_date) |> 
-#   min()
+d <- here(cache_dir, "raw_data.csv") |>
+  read_csv()
+
+
+d_2023 <- d |>
+  filter(
+    year(time) == 2023,
+    name %in% c("grants", "asylum_applicants_non_ukraine", "positive_decisions")
+  ) |>
+  mutate(
+    name = fct_recode(
+      name,
+      "total" = "grants",
+      "total_non_ukr" = "positive_decisions",
+      "asylum_applicants" = "asylum_applicants_non_ukraine"
+    )
+  ) |>
+  select(-gdp, -per_pop_cumsum, -per_gdp)
+
+
+
+end_date <- d_2023 |>
+  drop_na() |>
+  summarise(
+    min_date = min(time),
+    max_date = max(time),
+    n_obs = n(),
+    .by = c(land, name, pop)
+  ) |>
+  summarise(
+    start_date = max(min_date),
+    end_date = min(max_date),
+    n_obs = min(n_obs),
+    .by = c(land, pop)
+  ) |>
+  pull(end_date) |>
+  min()
 # 
 # 
 # d_2023 <- d_2023 |> 
