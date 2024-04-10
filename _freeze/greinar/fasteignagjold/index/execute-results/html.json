@@ -1,0 +1,15 @@
+{
+  "hash": "6a93b5f66e22e272bbd9e1e66c62fc99",
+  "result": {
+    "engine": "knitr",
+    "markdown": "---\ntitle: \"Fasteignir á Höfuðborgarsvæðinu\"\npagetitle: \"Fasteignir á Höfuðborgarsvæðinu\"\nsubtitle: \"Í vinnslu\"\ndate: \"2023/12/04\"\ndraft: true\nexecute:\n  eval: true\ncategories:\n    - efnahagur\n    - sveitarfélög\n    - fasteignaverð\nhref: greinar/fasteignir/index.qmd\nimage: map.png\ntwitter-card:\n    image: map.png\n---\n\n\n",
+    "supporting": [],
+    "filters": [
+      "rmarkdown/pagebreak.lua"
+    ],
+    "includes": {},
+    "engineDependencies": {},
+    "preserve": {},
+    "postProcess": true
+  }
+}

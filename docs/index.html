@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.4.548">
+<meta name="generator" content="quarto-1.4.551">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -222,6 +222,21 @@ window.Quarto = {
 
       <div class="col-md-4 p-0 d-flex">
         <div class="card listing-card shadow-sm border-2 rounded-3 g-col-12 g-col-sm-6 g-col-md-4 mb-2">
+          <img src="./greinar/visitala_neysluverds/undirtolur_fp.png" class="card-img-top mb-0 pb-0">
+
+          <div class="card-body">
+            <h3 class="text-primary m-0 p-0 anchored"> Vísitala neysluverðs </h3>
+            <div class="mb-1 text-muted"> Apr 9, 2024 </div>
+            <p class="card-text mb-auto text-muted"> Vísitalan og áhrif undirtalna á heildina unnið úr nýjustu gögnum Hagstofu hverju sinni </p>
+            <a href="./greinar/visitala_neysluverds/index.html" class="stretched-link" style="text-decoration:none;"></a>
+          </div>
+        </div>  
+      </div>
+      
+    
+
+      <div class="col-md-4 p-0 d-flex">
+        <div class="card listing-card shadow-sm border-2 rounded-3 g-col-12 g-col-sm-6 g-col-md-4 mb-2">
           <img src="https://raw.githubusercontent.com/bgautijonsson/asylum/master/Figures/stream_plot_applicants_fp.png" class="card-img-top mb-0 pb-0">
 
           <div class="card-body">
@@ -244,21 +259,6 @@ window.Quarto = {
             <div class="mb-1 text-muted"> Mar 4, 2024 </div>
             <p class="card-text mb-auto text-muted"> Hvað segja gögnin um fjölda hælisleitenda og umsækjendur um tímabundna vernd ás Íslandi? </p>
             <a href="./greinar/flottafolk/index.html" class="stretched-link" style="text-decoration:none;"></a>
-          </div>
-        </div>  
-      </div>
-      
-    
-
-      <div class="col-md-4 p-0 d-flex">
-        <div class="card listing-card shadow-sm border-2 rounded-3 g-col-12 g-col-sm-6 g-col-md-4 mb-2">
-          <img src="./greinar/visitala_neysluverds/undirtolur_fp.png" class="card-img-top mb-0 pb-0">
-
-          <div class="card-body">
-            <h3 class="text-primary m-0 p-0 anchored"> Vísitala neysluverðs </h3>
-            <div class="mb-1 text-muted"> Feb 28, 2024 </div>
-            <p class="card-text mb-auto text-muted"> Vísitalan og áhrif undirtalna á heildina unnið úr nýjustu gögnum Hagstofu hverju sinni </p>
-            <a href="./greinar/visitala_neysluverds/index.html" class="stretched-link" style="text-decoration:none;"></a>
           </div>
         </div>  
       </div>
@@ -460,6 +460,24 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     // clear code selection
     e.clearSelection();
   });
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp("https:\/\/metill\.is");
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
   function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
     const config = {
       allowHTML: true,
@@ -494,7 +512,11 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       try { href = new URL(href).hash; } catch {}
       const id = href.replace(/^#\/?/, "");
       const note = window.document.getElementById(id);
-      return note.innerHTML;
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
     });
   }
   const xrefs = window.document.querySelectorAll('a.quarto-xref');

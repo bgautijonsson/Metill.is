@@ -446,7 +446,7 @@ make_plot(
   plot_var = "asylum_applicants_non_ukraine",
   scaling_var = "per_pop",
   start_date = clock::date_build(2022, 3, 1),
-  end_date = clock::date_build(2023, 12, 1),
+  end_date = clock::date_build(2024, 1, 1),
   title = "Hvar sækja flestir einstaklingar um hæli?",
   subtitle = "Sýnt sem fjöldi á 100.000 íbúa hvers lands",
   caption = caption
@@ -463,7 +463,7 @@ make_plot(
   plot_var = "asylum_applicants_non_ukraine",
   scaling_var = "per_pop_cumsum",
   start_date = clock::date_build(2022, 3, 1),
-  end_date = clock::date_build(2023, 12, 1),
+  end_date = clock::date_build(2024, 1, 1),
   title = "Hvar hafa flestir einstaklingar sótt um hæli? (Uppsafnaðar tölur frá mars 2022)",
   subtitle = "Sýnt sem fjöldi á 100.000 íbúa hvers lands",
   caption = caption,
@@ -590,9 +590,6 @@ Oft er talað um álag á innviði sem tengjast móttöku flóttafólks. Þar he
 
 Þetta hefur valdið því að frá september 2022 til mars 2023 jókst þessi fjöldi einstaklinga í bið á Íslandi hraðar en í öðrum löndum og í október 2023 voru Lúxemborg og Austurríki einu löndin þar sem jafnmargir eða fleiri biðu eftir niðurstöðu. Eins og var nefnt að ofan þurfa yfirvöld að vega kostnað vegna starfsfólks á móti kostnaði þess að veita hælisleitendum skjól og uppihald á meðan beðið er eftir niðurstöðu. Mögulega þurfa yfirvöld landa að halda betur utan um þessar tölur og bregðast skjótar við til að koma í veg fyrir að langir biðlistar myndist með því að fjölga starfsfólki. 
 
-```{r}
-
-```
 
 
 ```{r}
@@ -603,7 +600,7 @@ make_plot(
   plot_var = "applicants_non_ukraine",
   scaling_var = "per_pop",
   start_date = clock::date_build(2022, 3, 1),
-  end_date = clock::date_build(2023, 12, 1),
+  end_date = clock::date_build(2024, 1, 1),
   title = "Hvar bíða flestir einstaklingar eftir niðurstöðu hælisumsóknar sinnar?",
   subtitle = "Sýnt sem fjöldi á 100.000 íbúa hvers lands",
   caption = caption,
@@ -623,7 +620,7 @@ make_plot(
 make_samantekt(
   height = 1 * 16,
   width = 16,
-  end_date = clock::date_build(2023, c(12, 10, 12)),
+  end_date = clock::date_build(c(2024, 2023, 2024), c(1, 10, 1)),
   number_labels = label_number(big.mark = ".", decimal.mark = ",")
 )
 ```

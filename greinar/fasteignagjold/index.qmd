@@ -1,0 +1,32 @@
+---
+title: "Fasteignir á Höfuðborgarsvæðinu"
+pagetitle: "Fasteignir á Höfuðborgarsvæðinu"
+subtitle: "Í vinnslu"
+date: "2023/12/04"
+draft: true
+execute:
+  eval: true
+categories:
+    - efnahagur
+    - sveitarfélög
+    - fasteignaverð
+href: greinar/fasteignir/index.qmd
+image: map.png
+twitter-card:
+    image: map.png
+---
+
+
+```{r setup}
+#| include: false
+
+
+library(tidyverse)
+library(visitalaneysluverds)
+library(metill)
+library(geomtextpath)
+library(glue)
+
+theme_set(theme_metill())
+
+```

@@ -3,8 +3,8 @@ title: "Vinnumarkaður"
 pagetitle: "Vinnumarkaður"
 subtitle: "Hver er fjöldi starfandi einstaklinga og hvernig skiptast þeir á vinnumarkaði?"
 description: |
-    Reglulega sjást fyrirsagnir þar sem talað er um að opinbert starfsfólk sé allt of margt og að hlutfall þess af heildarfjölda vinnandi fólks sé of hátt. Hér kryf ég reglulega nýjustu gögnin til að geta vitað hvort slíkar fullyrðingar séu teknar úr samhengi eða endurspegli raunveruleikann.
-date: "2024/3/10"
+  Reglulega sjást fyrirsagnir þar sem talað er um að opinbert starfsfólk sé allt of margt og að hlutfall þess af heildarfjölda vinnandi fólks sé of hátt. Hér kryf ég reglulega nýjustu gögnin til að geta vitað hvort slíkar fullyrðingar séu teknar úr samhengi eða endurspegli raunveruleikann.
+date: "2024/4/10"
 categories:
     - efnahagur
     - vinnumarkaður
@@ -44,6 +44,7 @@ library(gtExtras)
 library(plotly)
 library(hagstofa)
 library(clock)
+library(ggh4x)
 
 theme_set(theme_metill(type = "standalone"))
 caption <- "Mynd frá metill.is byggð á gögnum Hagstofu um vinnuafl frá skráargögnum"
@@ -128,6 +129,7 @@ Gagnasafnið á bak við þessa skýrslu er gagnasafn Hagstofu:
 
 ## Samantekt
 
+
 ```{r}
 heimild <- md("Heimild: [Gögn Hagstofu um fjölda starfandi samkvæmt skrám](https://px.hagstofa.is/pxis/pxweb/is/Samfelag/Samfelag__vinnumarkadur__vinnuaflskraargogn/VIN10052.px)")
 
@@ -158,8 +160,55 @@ table_dat <- d |>
   select(
     dags, tegund, rekstrarform, starfandi, starfandi_gogn, hlutf, hlutf_gogn
   )
+```
 
+```{r}
+tegund_table_dat <- d |> 
+  filter(
+    bakgrunnur == "Alls",
+    rekstrarform != "Alls starfandi"
+  ) |> 
+  select(tegund, rekstrarform, dags, starfandi) |> 
+  arrange(desc(tegund), rekstrarform) |> 
+  mutate(
+    tegund = case_match(
+      tegund,
+      "Opinbert" ~ "**Opinbert starfsfólk**",
+      "Annad" ~ "**Almennur vinnumarkaður**"
+    ),
+    hlutf = starfandi / sum(starfandi),
+    .by = c(dags)
+  ) |> 
+  summarise(
+    starfandi = sum(starfandi),
+    .by = c(tegund, dags)
+  ) |> 
+  mutate(
+    hlutf = starfandi / sum(starfandi),
+    .by = dags
+  ) |> 
+  summarise(
+    starfandi_gogn = list(starfandi[dags >= (max(dags) - years(1))]),
+    hlutf_gogn = list(100 * hlutf[dags >= (max(dags) - years(1))]),
+    hlutf = hlutf[dags == max(dags)],
+    starfandi = starfandi[dags == max(dags)],
+    dags = max(dags),
+    .by = c(tegund)
+  ) |> 
+  mutate(
+    rekstrarform = "Samtals"
+  ) |> 
+  select(
+    dags, tegund, rekstrarform, starfandi, starfandi_gogn, hlutf, hlutf_gogn
+  )
+```
+
+```{r}
 table_dat |> 
+  bind_rows(
+    tegund_table_dat
+  ) |> 
+  arrange(desc(tegund), rekstrarform) |> 
   group_by(tegund) |> 
   gt(
     rowname_col = "rekstrarform",
@@ -190,20 +239,6 @@ table_dat |>
   fmt_date(columns = dags, date_style = "day_m_year") |> 
   fmt_number(columns = starfandi, decimals = 0) |> 
   fmt_percent(columns = hlutf, decimals = 1) |> 
-  summary_rows(
-    columns = starfandi,
-    fns = list(
-      "Heildarfjöldi" = ~ sum(.)
-    ),
-    fmt = ~ fmt_number(., decimals = 0)
-  ) |> 
-  summary_rows(
-    columns = hlutf,
-    fns = list(
-      "Heildarfjöldi" = ~ sum(.)
-    ),
-    fmt = ~ fmt_percent(., decimals = 1)
-  ) |> 
   gt_plt_sparkline(
     column = starfandi_gogn, type = "ref_mean",
     same_limit = F
@@ -215,14 +250,14 @@ table_dat |>
   grand_summary_rows(
     columns = starfandi,
     fns = list(
-      "Samtals" = ~ sum(.)
+      "Heildarfjöldi" = ~ sum(.) / 2
     ),
     fmt = ~ fmt_number(., decimals = 0)
   ) |> 
   grand_summary_rows(
     columns = hlutf,
     fns = list(
-      "Samtals" = ~ sum(.)
+      "Heildarfjöldi" = ~ sum(.) / 2
     ),
     fmt = ~ fmt_percent(., decimals = 1)
   ) |> 
@@ -823,20 +858,26 @@ p1 <- plot_dat |>
   geom_vline(xintercept = ymd(dates), lty = 2, alpha = 0.5) +
   geom_line(aes(y = hlutf), alpha = 0.1) +
   geom_line(aes(y = response)) +  
-  scale_x_date(breaks = seq.Date(from = min(plot_dat$dags), to = ymd("2022-01-01"), by = "year"), 
-               date_labels = "%Y",  
-               guide = guide_axis(n.dodge = 1),  
-               expand = expansion(),
-               limits = c(min(plot_dat$dags), max(plot_dat$dags) + 20)) +
-  scale_y_tufte(breaks = tufte_breaks(plot_dat$hlutf),
-                labels = label_percent(accuracy = 0.01)) +  
+  scale_x_date(
+    breaks = seq.Date(from = min(plot_dat$dags), to = ymd("2022-01-01"), by = "year"), 
+    date_labels = "%Y",  
+    guide = guide_axis(n.dodge = 1),  
+    expand = expansion(),
+    limits = c(min(plot_dat$dags), max(plot_dat$dags) + 20)
+  ) +
+  scale_y_tufte(
+    breaks = tufte_breaks(plot_dat$hlutf),
+    labels = label_percent(accuracy = 0.01)
+  ) +  
   labs(x = NULL, y = NULL,  
        title = "Breytist hlutfall opinbers starfsfólks vegna opinbers eða almenns markaðar?",
        subtitle = "Hlutfall opinbers starfsfólks af vinnumarkaði") +  
-  theme(plot.margin = margin(t = 5, r = 60, b = 5, l = 5),
-        axis.line.x = element_blank(),
-        axis.text.x = element_blank(),
-        axis.ticks.x = element_blank())
+  theme(
+    plot.margin = margin(t = 5, r = 60, b = 5, l = 5),
+    axis.line.x = element_blank(),
+    axis.text.x = element_blank(),
+    axis.ticks.x = element_blank()
+  )
 
 p2 <- plot_dat2 |> 
   ggplot(aes(dags, perc_change)) +
@@ -855,17 +896,23 @@ p2 <- plot_dat2 |>
     aes(y = y, label = tegund, col = tegund),
     hjust = 0, nudge_x = 20
   ) +
-  scale_x_date(date_breaks = "year", date_labels = "%Y", 
-               expand = expansion(),
-               limits = c(min(plot_dat$dags), max(plot_dat$dags) + 20)) +
-  scale_y_tufte(labels = function(x) percent(x - 1, prefix = " "),
-                breaks = c(1, range(plot_dat2$perc_change), 1.005, 0.995),
-                trans = "log10") +
+  scale_x_date(
+    date_breaks = "year", date_labels = "%Y", 
+    expand = expansion(),
+    limits = c(min(plot_dat$dags), max(plot_dat$dags) + 20)
+  ) +
+  scale_y_tufte(
+    labels = function(x) percent(x - 1, prefix = ""),
+    breaks = c(1, range(plot_dat2$perc_change), 1.005, 0.995),
+    trans = "log10"
+  ) +
   scale_colour_brewer(type = "qual", palette = "Set1") +
   coord_cartesian(clip = "off") +
-  theme(plot.margin = margin(t = 0, r = 60, b = 5, l = 5),
-        legend.position = "none",
-        plot.subtitle = element_text(margin = margin(t = 0, r = 0, b = 10, l = 0))) +
+  theme(
+    plot.margin = margin(t = 0, r = 60, b = 5, l = 5),
+    legend.position = "none",
+    plot.subtitle = element_text(margin = margin(t = 0, r = 0, b = 10, l = 0))
+  ) +
   labs(x = NULL,
        y = NULL,
        subtitle = "Mánaðarleg hlutfallsleg breyting fjölda starfsfólks")
