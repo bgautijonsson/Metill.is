@@ -3,7 +3,7 @@ title: "Flóttafólk á Íslandi"
 pagetitle: "Flóttafólk á Íslandi"
 subtitle: "Hvaðan koma umsækjendur um hæli/alþjóðlega vernd til Íslands?"
 description: "Málefni flóttafólks og hælisleitenda hefur verið svo mikið til umræðu. Hvaðan koma umsækjendur um hæli/alþjóðlega vernd til Íslands? Hefur þeim fjölgað?"
-date: "2024/03/05"
+date: "2024/4/15"
 draft: false
 categories:
     - stjórnmál
@@ -13,17 +13,33 @@ categories:
     - hagstofa
     - evrópa
 href: greinar/flottafolk_a_islandi/index.qmd
-image: https://raw.githubusercontent.com/bgautijonsson/asylum/master/Figures/stream_plot_applicants_fp.png
+image: https://raw.githubusercontent.com/bgautijonsson/asylum/master/Figures/monthly_applicants_lineplot_fp.png
 twitter-card:
-    image: https://raw.githubusercontent.com/bgautijonsson/asylum/master/Figures/stream_plot_applicants.png
+    image: https://raw.githubusercontent.com/bgautijonsson/asylum/master/Figures/monthly_applicants_lineplot.png
 execute: 
   eval: true
 ---
 
+# Þróun á heildarfjölda umsækjenda
+
+Skoðum fyrst þróun fjölda mánaðarlegra umsókna um hæli. Myndin sýnir þrjár línur. Ein línan sýnir fjölda umsókna **samtals**, önnur sýnir fjölda umsókna að **úkraínskum undanskildum** og sú þriðja sýnir fjölda umsókna að bæði **úkraínskum og venesúelskum undanskildum**.
+
+![](https://raw.githubusercontent.com/bgautijonsson/asylum/master/Figures/monthly_applicants_lineplot.png){.column-page}
+
 # Umsækjendur frá Venesúela
 
-![](https://raw.githubusercontent.com/bgautijonsson/asylum/master/Figures/stream_plot_applicants_monthly.png){.column-screen-inset}
+Umsækjendum frá Venesúela fjölgaði mikið frá upphafi árs 2022 og náði hann hápunkti um áramót 2023. Síðan þá hefur þeim fækkað. 
+
+::: {.column-margin}
+  Ragnhildur Þrastardóttir hjá Heimildinni hefur skrifað um ákvörðina að veita öllum Venesúelabúum hæli hér: [https://heimildin.is/grein/21054/](Ragnhildur Þrastardóttir hjá Heimildinni hefur skrifað um ákvörðina að veita öllum Venesúelabúum hæli [hér](https://heimildin.is/grein/21054/).)
+:::
+
+<br>
+
+![](https://raw.githubusercontent.com/bgautijonsson/asylum/master/Figures/stream_plot_applicants_monthly_venezuela.png){.column-page}
 
 # Aðrir umsækjendur
 
-![](https://raw.githubusercontent.com/bgautijonsson/asylum/master/Figures/stream_plot_applicants.png){.column-screen-inset}
+Þegar við tökum umsækjendur frá Úkraínu og frá Venesúela út getum við betur skoðað hvaðan allir aðrir umsækjendur koma.
+
+![](https://raw.githubusercontent.com/bgautijonsson/asylum/master/Figures/stream_plot_applicants_monthly.png){.column-page}
