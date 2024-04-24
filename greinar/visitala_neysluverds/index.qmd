@@ -3,7 +3,7 @@ title: "Vísitala neysluverðs"
 pagetitle: "Vísitala neysluverðs"
 subtitle: "Vísitalan og áhrif undirtalna á heildina unnið úr nýjustu gögnum Hagstofu hverju sinni"
 description: "Verðbólga er ekki alltaf það sama og verðbólga. Stundum er stór hluti af henni hækkun á húsnæðisverði, stundum ferðir og flutningar. Það er því gott að skoða undirvísitölurnar og áhrif þeirra á heildina."
-date: "2024/04/09"
+date: "2024/04/24"
 categories:
     - efnahagur
     - verðlag
@@ -27,6 +27,7 @@ library(lubridate)
 library(plotly)
 library(metill)
 library(glue)
+library(ggh4x)
 theme_set(theme_metill())
 Sys.setlocale(locale = "is_IS.UTF-8")
 ```
@@ -590,6 +591,91 @@ ggplotly(
   config(displayModeBar = FALSE)
 ```
 
+# Skammtímaverðbólga
+
+Vísitala neysluverðs er mæld mánaðarlega af Hagstofu Íslands. Það sem við köllum verðbólgu er hlutfallsleg hækkun vísitölunnar undanfarna 12 mánuði.  Við getum til dæmis líka skoðað hversu mikið vísitalan hefur hækkað undanfarið hálft ár eða síðasta ársfjórðung til að sjá betur skammtímabreytingar á vísitölunni. Á myndinni að neðan er þessi breyting reiknuð fyrir þriggja, sex og níu mánaða tímabil og borið saman við venjulega ársverðbólgu. Allar mælingarnar eru líka settar á ársgrundvöll til að auðvelda samanburð.
+
+```{r}
+#| fig.asp: 1
+#| column: page
+#| layout-align: left
+
+
+p <- d |> 
+  filter(
+    undirvisitala == "Vísitala neysluverðs"
+  ) |> 
+  select(date, breyting) |> 
+  crossing(
+    window_size = c(3, 6, 9, 12)
+  ) |> 
+  mutate(
+    sliding_breyting = slider::slide_dbl(
+      breyting,
+      \(x) exp(mean(log(1 + x)) * 12) - 1, 
+      .before = unique(window_size) - 1
+    ),
+    .by = window_size
+  ) |> 
+  mutate(
+    label = glue("{window_size} mánaða verðbólga (á árs grundvelli)") |> 
+      fct_reorder(window_size),
+    text = glue(
+      str_c(
+        "<b>{label}</b> <br>",
+        "Dagsetning: {date} <br>",
+        "Gildi: {hlutf(sliding_breyting)}"
+      )
+    )
+  ) |> 
+  ggplot(aes(date, sliding_breyting, text = text)) +
+  geom_hline(
+    yintercept = 0.02,
+    lty = 2,
+    alpha = 0.3,
+    linewidth = 0.5,
+    label = "Markmið",
+    hjust = 0.8,
+    inherit.aes = FALSE
+  ) +
+  geom_line(
+    data = ~ rename(.x, wz = label),
+    aes(group = wz),
+    alpha = 0.2,
+    linewidth = 0.3
+  ) +
+  geom_line(
+    aes(group = label),
+    linewidth = 1
+  ) +
+  scale_x_date(
+    guide = guide_axis_truncated(),
+    breaks = breaks_width("1 year"),
+    labels = label_date_short()
+  ) +
+  scale_y_continuous(
+    breaks = c(0, 0.02, 0.05, 0.1, 0.15),
+    labels = label_hlutf(),
+    guide = guide_axis_truncated()
+  ) +
+  facet_wrap("label") +
+  coord_cartesian(
+    xlim = clock::date_build(c(2018, NA)),
+    ylim = c(0, 0.15)
+  ) +
+  labs(
+    x = NULL,
+    y = NULL,
+    title = "Samanburður á skammtíma- og ársverðbólgu"
+  )
+
+ggplotly(
+  p,
+  tooltip = "text"
+) |> 
+  layout(hoverlabel = list(align = "left")) |> 
+  config(displayModeBar = FALSE)
+```
 
 # Undirvísitölur
 
@@ -890,6 +976,7 @@ ggplotly(
   layout(hoverlabel = list(align = "left")) |> 
   config(displayModeBar = FALSE)
 ```
+
 
 
 
