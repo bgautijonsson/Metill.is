@@ -704,14 +704,16 @@ Til að auðvelda samanburð milli landa eru allar tölur sýndar sem fjöldi á
 
 Hægt er að vafra gögnin á bak við þessa greiningu í töflunni eða sækja þau með því að smella á takkann að neðan.
 
-::: {.panel-tabset}
-
-
-# Mánaðarleg gögn
+# Gagnvirk gagnaskoðun
 
 ::: {.panel-tabset}
 
-## Á mannfjölda
+
+## Mánaðarleg gögn
+
+::: {.panel-tabset}
+
+### Á mannfjölda
 
 ```{r}
 #| column: page
@@ -756,7 +758,7 @@ table_d |>
 
 {{< downloadthis data/timabundin_vernd_perpop.csv dname="timabundin_vernd_a_mannfjolda" label="Sækja gögn" type=primary class=downloadbutton >}}
 
-## Hreinar fjöldatölur
+### Hreinar fjöldatölur
 
 ```{r}
 #| column: page
@@ -799,11 +801,11 @@ table_d |>
 
 :::
 
-## Árleg gögn (til júlí 2023)
+## Árleg gögn
 
 ::: {.panel-tabset}
 
-## Á mannfjölda
+### Á mannfjölda
 
 ```{r}
 #| column: page
@@ -842,7 +844,7 @@ table_d |>
 
 {{< downloadthis data/data_hist_pretty_perpop.csv dname="arleg_gogn_a_mannfjolda" label="Sækja gögn" type=primary class=downloadbutton >}}
 
-## Hreinar fjöldatölur
+### Hreinar fjöldatölur
 
 ```{r}
 #| column: page
