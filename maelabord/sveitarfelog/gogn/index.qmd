@@ -293,7 +293,13 @@ d <- d |>
 
 
 ```{r}
+d_2023 <- read_sheet("https://docs.google.com/spreadsheets/d/12qSHYKTItgUnU5NRnmmbaCjjdh_ZaYckIwk9UOmbcs0/edit#gid=0")
+```
+
+
+```{r}
 d <- d |> 
+  bind_rows(d_2023) |> 
   inner_join(
     mannfjoldi,
     by = join_by(ar, sveitarfelag)

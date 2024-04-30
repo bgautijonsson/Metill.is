@@ -708,7 +708,7 @@ Hægt er að vafra gögnin á bak við þessa greiningu í töflunni eða sækja
 
 ::: {.panel-tabset}
 
-
+c
 ## Mánaðarleg gögn
 
 ::: {.panel-tabset}
