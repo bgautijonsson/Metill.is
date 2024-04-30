@@ -293,7 +293,8 @@ d <- d |>
 
 
 ```{r}
-d_2023 <- read_sheet("https://docs.google.com/spreadsheets/d/12qSHYKTItgUnU5NRnmmbaCjjdh_ZaYckIwk9UOmbcs0/edit#gid=0")
+d_2023 <- read_sheet("https://docs.google.com/spreadsheets/d/12qSHYKTItgUnU5NRnmmbaCjjdh_ZaYckIwk9UOmbcs0/edit#gid=0") |> 
+  mutate_at(vars(-ar, -sveitarfelag, -hluti), \(x) x * 1000)
 ```
 
 
