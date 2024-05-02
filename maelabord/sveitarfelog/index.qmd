@@ -4,7 +4,7 @@ pagetitle: "Fjármál sveitarfélaga"
 pagesubtitle: "Gagnvirk samantekt á ársreikningum sveitarfélaga úr gögnum Sambands Íslenskra Sveitarfélaga"
 image: image.png
 href: maelabord/sveitarfelog/index.qmd
-pagedate: "2022/09/18"
+pagedate: "2024/05/02"
 ---
 
 ```{r}

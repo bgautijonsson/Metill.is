@@ -1,3 +1,18 @@
+library(tidyverse)
+library(scales)
+library(visitalaneysluverds)
+library(metill)
+library(patchwork)
+library(glue)
+library(eurostat)
+library(ggh4x)
+library(ggiraph)
+library(gt)
+library(gtExtras)
+
+Sys.setlocale("LC_ALL", "is_IS.UTF-8")
+
+theme_set(theme_metill())
 plot_var <- "applicants_non_ukraine"
 scaling_var <- "per_pop"
 start_date <- clock::date_build(2022, 3, 1)
