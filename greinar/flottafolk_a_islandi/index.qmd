@@ -13,9 +13,9 @@ categories:
     - hagstofa
     - evrópa
 href: greinar/flottafolk_a_islandi/index.qmd
-image: https://raw.githubusercontent.com/bgautijonsson/asylum/master/Figures/monthly_applicants_lineplot_fp.png
+image: https://raw.githubusercontent.com/bgautijonsson/asylum/master/Figures/stream_plot_applicants_monthly_fp.png
 twitter-card:
-    image: https://raw.githubusercontent.com/bgautijonsson/asylum/master/Figures/monthly_applicants_lineplot.png
+    image: https://raw.githubusercontent.com/bgautijonsson/asylum/master/Figures/stream_plot_applicants_monthly.png
 execute: 
   eval: true
 ---

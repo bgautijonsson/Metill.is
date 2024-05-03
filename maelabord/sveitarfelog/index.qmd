@@ -5,6 +5,7 @@ pagesubtitle: "Gagnvirk samantekt á ársreikningum sveitarfélaga úr gögnum S
 image: image.png
 href: maelabord/sveitarfelog/index.qmd
 pagedate: "2024/05/02"
+date: "2024/05/02"
 ---
 
 ```{r}

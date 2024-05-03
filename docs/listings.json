@@ -12,11 +12,10 @@
   {
     "listing": "/maelabord.html",
     "items": [
-      "/maelabord/jardskjalftar/index.html",
       "/maelabord/sveitarfelog/index.html",
+      "/maelabord/jardskjalftar/index.html",
       "/maelabord/skattagogn/index.html",
-      "/maelabord/verdbolga/index.html",
-      "/maelabord/sveitarfelog/gogn/index.html"
+      "/maelabord/verdbolga/index.html"
     ]
   },
   {
@@ -34,11 +33,10 @@
       "/greinar/stjornmalaflokkar/index.html",
       "/greinar/loftgaedi/index.html",
       "/greinar/landspitali/index.html",
-      "/maelabord/jardskjalftar/index.html",
       "/maelabord/sveitarfelog/index.html",
+      "/maelabord/jardskjalftar/index.html",
       "/maelabord/skattagogn/index.html",
-      "/maelabord/verdbolga/index.html",
-      "/maelabord/sveitarfelog/gogn/index.html"
+      "/maelabord/verdbolga/index.html"
     ]
   },
   {

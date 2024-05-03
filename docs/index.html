@@ -90,10 +90,9 @@ ul.task-list li input[type="checkbox"] {
     }
 
     const options = {
-      valueNames: ['listing-project','listing-website','listing-format','listing-editor','listing-language','listing-title-block-banner','listing-css','listing-title-block-style','listing-pagetitle','listing-pagesubtitle','listing-image','listing-href','listing-pagedate','listing-path','listing-outputHref','listing-title','listing-author','listing-description','listing-filename','listing-file-modified','listing-reading-time','listing-word-count','listing-subtitle','listing-date','listing-draft','listing-categories','listing-execute','listing-date-modified',{ data: ['index'] },{ data: ['categories'] },{ data: ['listing-file-modified-sort'] },{ data: ['listing-reading-time-sort'] },{ data: ['listing-word-count-sort'] },{ data: ['listing-date-sort'] },{ data: ['listing-date-modified-sort'] }],
-      page: 3,
-    pagination: { item: "<li class='page-item'><a class='page page-link' href='#'></a></li>" },
-      searchColumns: ["listing-project","listing-website","listing-format","listing-editor","listing-language","listing-title-block-banner","listing-css","listing-title-block-style","listing-pagetitle","listing-pagesubtitle","listing-image","listing-href","listing-pagedate","listing-path","listing-outputHref","listing-title","listing-author","listing-description","listing-filename","listing-file-modified","listing-reading-time","listing-word-count","listing-subtitle","listing-date","listing-draft","listing-categories","listing-execute","listing-date-modified"],
+      valueNames: ['listing-project','listing-website','listing-format','listing-editor','listing-language','listing-title-block-banner','listing-css','listing-title-block-style','listing-pagetitle','listing-pagesubtitle','listing-image','listing-href','listing-pagedate','listing-date','listing-path','listing-outputHref','listing-title','listing-date-modified','listing-author','listing-description','listing-filename','listing-file-modified','listing-reading-time','listing-word-count',{ data: ['index'] },{ data: ['categories'] },{ data: ['listing-date-sort'] },{ data: ['listing-date-modified-sort'] },{ data: ['listing-file-modified-sort'] },{ data: ['listing-reading-time-sort'] },{ data: ['listing-word-count-sort'] }],
+      
+      searchColumns: ["listing-project","listing-website","listing-format","listing-editor","listing-language","listing-title-block-banner","listing-css","listing-title-block-style","listing-pagetitle","listing-pagesubtitle","listing-image","listing-href","listing-pagedate","listing-date","listing-path","listing-outputHref","listing-title","listing-date-modified","listing-author","listing-description","listing-filename","listing-file-modified","listing-reading-time","listing-word-count"],
     };
 
     window['quarto-listings'] = window['quarto-listings'] || {};
@@ -225,7 +224,7 @@ window.Quarto = {
 
           <div class="card-body">
             <h3 class="text-primary m-0 p-0 anchored"> Vísitala neysluverðs </h3>
-            <div class="mb-1 text-muted"> Apr 24, 2024 </div>
+            <div class="mb-1 text-muted"> 2024-04-24 </div>
             <p class="card-text mb-auto text-muted"> Vísitalan og áhrif undirtalna á heildina unnið úr nýjustu gögnum Hagstofu hverju sinni </p>
             <a href="./greinar/visitala_neysluverds/index.html" class="stretched-link" style="text-decoration:none;"></a>
           </div>
@@ -236,11 +235,11 @@ window.Quarto = {
 
       <div class="col-md-4 p-0 d-flex">
         <div class="card listing-card shadow-sm border-2 rounded-3 g-col-12 g-col-sm-6 g-col-md-4 mb-2">
-          <img src="https://raw.githubusercontent.com/bgautijonsson/asylum/master/Figures/monthly_applicants_lineplot_fp.png" class="card-img-top mb-0 pb-0">
+          <img src="https://raw.githubusercontent.com/bgautijonsson/asylum/master/Figures/stream_plot_applicants_monthly_fp.png" class="card-img-top mb-0 pb-0">
 
           <div class="card-body">
             <h3 class="text-primary m-0 p-0 anchored"> Flóttafólk á Íslandi </h3>
-            <div class="mb-1 text-muted"> Apr 15, 2024 </div>
+            <div class="mb-1 text-muted"> 2024-04-15 </div>
             <p class="card-text mb-auto text-muted"> Hvaðan koma umsækjendur um hæli/alþjóðlega vernd til Íslands? </p>
             <a href="./greinar/flottafolk_a_islandi/index.html" class="stretched-link" style="text-decoration:none;"></a>
           </div>
@@ -255,7 +254,7 @@ window.Quarto = {
 
           <div class="card-body">
             <h3 class="text-primary m-0 p-0 anchored"> Vinnumarkaður </h3>
-            <div class="mb-1 text-muted"> Apr 10, 2024 </div>
+            <div class="mb-1 text-muted"> 2024-04-10 </div>
             <p class="card-text mb-auto text-muted"> Hver er fjöldi starfandi einstaklinga og hvernig skiptast þeir á vinnumarkaði? </p>
             <a href="./greinar/vinnuafl/index.html" class="stretched-link" style="text-decoration:none;"></a>
           </div>
@@ -272,114 +271,65 @@ No matching items
 <h2 id="mælaborð" class="anchored">Mælaborð</h2>
 <div id="listing-dashboards" class="column-screen quarto-listing quarto-listing-container-custom">
 <div class="container-md">
+  
   <div class="row">
-    <div id="dashboard-carousel" class="carousel slide px-0" data-bs-ride="false">
-        <div class="carousel-indicators">
-          <button type="button" data-bs-target="#dashboard-carousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
-          <button type="button" data-bs-target="#dashboard-carousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
-          <button type="button" data-bs-target="#dashboard-carousel" data-bs-slide-to="2" aria-label="Slide 3"></button>
-        </div>
-        <div class="carousel-inner"></div>
+    
 
-          
-            <div class="carousel-item active">
-              <a href="./maelabord/jardskjalftar/index.html">
-                <img src="./maelabord/jardskjalftar/image.png" class="d-block w-100 pb-5" alt="Jarðskjálftar á Íslandi">
-              </a>
-              <div class="carousel-caption d-none d-md-block">
-                <h5 class="anchored"> Jarðskjálftar á Íslandi </h5>
-                <p> Gagnvirkt samantekt á fjölda og staðsetningu jarðskjálfta á Íslandi </p>
-              </div>
-            </div>
-          
-          
-          
+      <div class="col-md-4 p-0 d-flex">
+        <div class="card listing-card shadow-sm border-2 rounded-3 g-col-12 g-col-sm-6 g-col-md-4 mb-2">
+          <img src="./maelabord/sveitarfelog/image.png" class="card-img-top mb-0 pb-0">
 
-        
-          
-              
-              <div class="carousel-item">
-                <a href="./maelabord/sveitarfelog/index.html">
-                  <img src="./maelabord/sveitarfelog/image.png" class="d-block w-100 pb-5" alt="Fjármál sveitarfélaga">
-                </a>
-                <div class="carousel-caption d-none d-md-block">
-                  <h5 class="anchored"> Fjármál sveitarfélaga </h5>
-                  <p> Gagnvirk samantekt á ársreikningum sveitarfélaga úr gögnum Sambands Íslenskra Sveitarfélaga </p>
-                </div>
-              </div>
-            
-        
-        
-          
-
-        
-          
-              
-              <div class="carousel-item">
-                <a href="./maelabord/skattagogn/index.html">
-                  <img src="./maelabord/skattagogn/image.png" class="d-block w-100 pb-5" alt="Eignir, skuldir og skattar">
-                </a>
-                <div class="carousel-caption d-none d-md-block">
-                  <h5 class="anchored"> Eignir, skuldir og skattar </h5>
-                  <p> Gagnvirkt tól til að skoða eignir, tekjur og skuldir Íslendinga í skattframtalsgögnum Hagstofunnar </p>
-                </div>
-              </div>
-            
-        
-        
-          
-
-        
-          
-              
-              <div class="carousel-item">
-                <a href="./maelabord/verdbolga/index.html">
-                  <img src="./maelabord/verdbolga/image.png" class="d-block w-100 pb-5" alt="Verðbólga (í vinnslu)">
-                </a>
-                <div class="carousel-caption d-none d-md-block">
-                  <h5 class="anchored"> Verðbólga (í vinnslu) </h5>
-                  <p> Reiknaðu þína persónulega verðbólgu með þessari gagnvirku framsetningu á vísitölu neysluverðs </p>
-                </div>
-              </div>
-            
-        
-        
-          
-
-        
-          
-              
-              <div class="carousel-item">
-                <a href="">
-                  <img src="" class="d-block w-100 pb-5" alt="">
-                </a>
-                <div class="carousel-caption d-none d-md-block">
-                  <h5 class="anchored">  </h5>
-                  <p>  </p>
-                </div>
-              </div>
-            
-        
-        
-          
+          <div class="card-body">
+            <h3 class="text-primary m-0 p-0 anchored"> Fjármál sveitarfélaga </h3>
+            <div class="mb-1 text-muted"> 2024-05-02 </div>
+            <p class="card-text mb-auto text-muted"> Gagnvirk samantekt á ársreikningum sveitarfélaga úr gögnum Sambands Íslenskra Sveitarfélaga </p>
+            <a href="./maelabord/sveitarfelog/index.html" class="stretched-link" style="text-decoration:none;"></a>
+          </div>
+        </div>  
       </div>
-    </div>
-          <button class="carousel-control-prev" type="button" data-bs-target="#dashboard-carousel" data-bs-slide="prev">
-            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Previous</span>
-          </button>
-          <button class="carousel-control-next" type="button" data-bs-target="#dashboard-carousel" data-bs-slide="next">
-            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Next</span>
-          </button>
+      
+    
+
+      <div class="col-md-4 p-0 d-flex">
+        <div class="card listing-card shadow-sm border-2 rounded-3 g-col-12 g-col-sm-6 g-col-md-4 mb-2">
+          <img src="./maelabord/jardskjalftar/image.png" class="card-img-top mb-0 pb-0">
+
+          <div class="card-body">
+            <h3 class="text-primary m-0 p-0 anchored"> Jarðskjálftar á Íslandi </h3>
+            <div class="mb-1 text-muted"> 2024-01-25 </div>
+            <p class="card-text mb-auto text-muted"> Gagnvirkt samantekt á fjölda og staðsetningu jarðskjálfta á Íslandi </p>
+            <a href="./maelabord/jardskjalftar/index.html" class="stretched-link" style="text-decoration:none;"></a>
+          </div>
+        </div>  
+      </div>
+      
+    
+
+      <div class="col-md-4 p-0 d-flex">
+        <div class="card listing-card shadow-sm border-2 rounded-3 g-col-12 g-col-sm-6 g-col-md-4 mb-2">
+          <img src="./maelabord/skattagogn/image.png" class="card-img-top mb-0 pb-0">
+
+          <div class="card-body">
+            <h3 class="text-primary m-0 p-0 anchored"> Eignir, skuldir og skattar </h3>
+            <div class="mb-1 text-muted"> 2022-10-07 </div>
+            <p class="card-text mb-auto text-muted"> Gagnvirkt tól til að skoða eignir, tekjur og skuldir Íslendinga í skattframtalsgögnum Hagstofunnar </p>
+            <a href="./maelabord/skattagogn/index.html" class="stretched-link" style="text-decoration:none;"></a>
+          </div>
+        </div>  
+      </div>
+      
+    
   </div>
+</div>
+<div class="listing-no-matching d-none">
+No matching items
+</div>
 </div>
 
 
-</main></div>
 
 
- <!-- /main -->
+</main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {
   const toggleBodyColorMode = (bsSheetEl) => {
@@ -789,7 +739,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   }
 });
 </script>
- <!-- /content -->
+</div> <!-- /content -->
 <footer class="footer">
   <div class="nav-footer">
     <div class="nav-footer-left">

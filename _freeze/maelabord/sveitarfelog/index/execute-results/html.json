@@ -1,9 +1,11 @@
 {
-  "hash": "e66ec332b64cca856e9ce206d662bbab",
+  "hash": "7e7df5104d767b80048c8ae92d2bff1b",
   "result": {
     "engine": "knitr",
-    "markdown": "---\ntitle-block-style: none\npagetitle: \"Fjármál sveitarfélaga\"\npagesubtitle: \"Gagnvirk samantekt á ársreikningum sveitarfélaga úr gögnum Sambands Íslenskra Sveitarfélaga\"\nimage: image.png\nhref: maelabord/sveitarfelog/index.qmd\npagedate: \"2024/05/02\"\n---\n\n::: {.cell}\n\n:::\n\n\n\n::: {.column-screen}\n<iframe\n  src=\"https://bggj.shinyapps.io/shiny_sveitarfelog/\">\n</iframe>\n:::",
-    "supporting": [],
+    "markdown": "---\ntitle-block-style: none\npagetitle: \"Fjármál sveitarfélaga\"\npagesubtitle: \"Gagnvirk samantekt á ársreikningum sveitarfélaga úr gögnum Sambands Íslenskra Sveitarfélaga\"\nimage: image.png\nhref: maelabord/sveitarfelog/index.qmd\npagedate: \"2024/05/02\"\ndate: \"2024/05/02\"\n---\n\n::: {.cell}\n\n:::\n\n\n\n::: {.column-screen}\n<iframe\n  src=\"https://bggj.shinyapps.io/shiny_sveitarfelog/\">\n</iframe>\n:::",
+    "supporting": [
+      "index_files"
+    ],
     "filters": [
       "rmarkdown/pagebreak.lua"
     ],

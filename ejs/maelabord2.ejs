@@ -1,0 +1,23 @@
+```{=html}
+<div class="container-md">
+  
+  <div class="row">
+    <% for (let i = 0; i < items.length; i++) { %>
+
+      <div class="col-md-4 p-0 d-flex">
+        <div class="card listing-card shadow-sm border-2 rounded-3 g-col-12 g-col-sm-6 g-col-md-4 mb-2">
+          <img src="<%=items[i].image%>" class="card-img-top mb-0 pb-0">
+
+          <div class="card-body">
+            <h3 class="text-primary m-0 p-0"> <%=items[i].pagetitle%> </h3>
+            <div class="mb-1 text-muted"> <%=items[i].date%> </div>
+            <p class="card-text mb-auto text-muted"> <%=items[i].pagesubtitle%> </p>
+            <a href="<%=items[i].href%>" class="stretched-link" style="text-decoration:none;"></a>
+          </div>
+        </div>  
+      </div>
+      
+    <% } %>
+  </div>
+</div>
+```

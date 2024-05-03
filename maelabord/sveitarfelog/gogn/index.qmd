@@ -15,7 +15,7 @@ format:
         toc: true
         toc-location: right
 editor: source
-draft: false
+draft: true
 title-block-banner: true
 categories:
     - stjórnmál

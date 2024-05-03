@@ -9,12 +9,13 @@ listing:
       sort: "date desc"
       contents: greinar
       max-items: 4
+      date-format: iso
     - id: dashboards
-      template: ejs/maelabord.ejs
+      template: ejs/maelabord2.ejs
       sort: "date desc"
       contents: maelabord
-      page-size: 3
-        
+      max-items: 3
+      date-format: iso
 ---
 
 
