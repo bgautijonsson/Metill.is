@@ -312,8 +312,11 @@ d <- d |>
 d <- d |>
   mutate(
     eiginfjarhlutfall = eigid_fe / eignir,
+    fjarf_nylan = tekin_ny_langtimalan - ny_fjarfesting,
+    fjarfesting_hlutf_skuldir = fjarf_nylan / heildarskuldir,
     framlegd = tekjur - gjold + afskriftir,
     framlegd_hlutf = framlegd / tekjur,
+    gjold_a_ibua = gjold / mannfjoldi,
     handbaert_fe_per_ibui = handbaert_fe / mannfjoldi,
     heildarskuldir = heildarskuldir,
     launagjold_per_ibui = launagjold / mannfjoldi,
@@ -321,6 +324,7 @@ d <- d |>
     nettoskuldir = heildarskuldir - veltufjarmunir + skammtimakrofur_eigin_fyrirtaeki,
     nettoskuldir_hlutf_tekjur = nettoskuldir / tekjur,
     rekstrarnidurstada_hlutf = rekstrarnidurstada / tekjur,
+    rekstrarnidurstada_a_ibua = rekstrarnidurstada / mannfjoldi,
     rekstur_3_ar = rekstrarnidurstada + lag(rekstrarnidurstada, 1) + lag(rekstrarnidurstada, 2),
     tekjur_3_ar = tekjur + lag(tekjur, 1) + lag(tekjur, 2),
     rekstur_3_ar_hlutf_tekjur = rekstur_3_ar / tekjur_3_ar,
@@ -328,11 +332,10 @@ d <- d |>
     skuldahlutfall = 1 - eiginfjarhlutfall,
     skuldir_hlutf_tekjur = heildarskuldir / tekjur,
     skuldir_per_ibui = heildarskuldir / mannfjoldi,
+    tekjur_a_ibua = tekjur / mannfjoldi,
     veltufe_hlutf_tekjur = veltufe / tekjur,
     veltufjarhlutfall = veltufjarmunir / skammtimaskuldir,
     veltufe_hlutf_afborganir = veltufe / afborganir_langtimalana,
-    fjarf_nylan = tekin_ny_langtimalan - ny_fjarfesting,
-    fjarfesting_hlutf_skuldir = fjarf_nylan / heildarskuldir,
     .by = c(sveitarfelag, hluti)
   )
 
@@ -350,12 +353,10 @@ names(d)
 percent_vars <- c(
   "Eiginfjárhlutfall",
   "Framlegð sem hlutfall af tekjum",
-  "Handbært fé á íbúa",
   "Launa- og launatengd gjöld sem hlutfall af útgjöldum",
   "Nettóskuldir sem hlutfall af tekjum",
   "Rekstrarniðurstaða sem hlutfall af tekjum",
   "Rekstrarniðurstaða undanfarinna 3 ára sem hlutfall af tekjum",
-  "Skuldahlutfall",
   "Skuldir sem hlutfall af tekjum",
   "Veltufé frá rekstri sem hlutfall af tekjum",
   "Veltufjárhlutfall"
@@ -376,12 +377,14 @@ throun_data <- d |>
     "Launa- og launatengd gjöld á íbúa" = launagjold_per_ibui,
     "Launa- og launatengd gjöld sem hlutfall af útgjöldum" = launagjold_hlutf_gjold,
     "Nettóskuldir sem hlutfall af tekjum" = nettoskuldir_hlutf_tekjur,
+    "Rekstrarniðurstaða á íbúa" = rekstrarnidurstada_a_ibua,
     "Rekstrarniðurstaða sem hlutfall af tekjum" = rekstrarnidurstada_hlutf,
     "Rekstrarniðurstaða undanfarinna 3 ára sem hlutfall af tekjum" = rekstur_3_ar_hlutf_tekjur,
     "Útsvar og fasteignaskattur á íbúa" = skattur_a_ibua,
-    "Skuldahlutfall" = skuldahlutfall,
     "Skuldir sem hlutfall af tekjum" = skuldir_hlutf_tekjur,
     "Skuldir á íbúa" = skuldir_per_ibui,
+    "Tekjur á íbúa" = tekjur_a_ibua,
+    "Útgjöld á íbúa" = gjold_a_ibua,
     "Veltufé frá rekstri sem hlutfall af tekjum" = veltufe_hlutf_tekjur,
     "Veltufjárhlutfall" = veltufjarhlutfall
   ) |> 
@@ -416,7 +419,6 @@ percent_vars <- c(
   "Nettóskuldir sem hlutfall af tekjum",
   "Rekstrarniðurstaða sem hlutfall af tekjum",
   "Rekstrarniðurstaða undanfarinna 3 ára sem hlutfall af tekjum",
-  "Skuldahlutfall",
   "Skuldir sem hlutfall af tekjum",
   "Veltufé frá rekstri sem hlutfall af tekjum",
   "Veltufjárhlutfall"
@@ -440,7 +442,6 @@ dreifing_data <- d |>
     "Rekstrarniðurstaða sem hlutfall af tekjum" = rekstrarnidurstada_hlutf,
     "Rekstrarniðurstaða undanfarinna 3 ára sem hlutfall af tekjum" = rekstur_3_ar_hlutf_tekjur,
     "Útsvar og fasteignaskattur á íbúa" = skattur_a_ibua,
-    "Skuldahlutfall" = skuldahlutfall,
     "Skuldir sem hlutfall af tekjum" = skuldir_hlutf_tekjur,
     "Skuldir á íbúa" = skuldir_per_ibui,
     "Veltufé frá rekstri sem hlutfall af tekjum" = veltufe_hlutf_tekjur,
