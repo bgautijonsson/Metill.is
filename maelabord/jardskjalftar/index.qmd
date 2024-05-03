@@ -5,7 +5,6 @@ pagesubtitle: "Gagnvirkt samantekt á fjölda og staðsetningu jarðskjálfta á
 image: image.png
 href: maelabord/jardskjalftar/index.qmd
 pagedate: "2024/01/25"
-date: "2024/01/25"
 ---
 
 ```{r}

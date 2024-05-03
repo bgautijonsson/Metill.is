@@ -5,7 +5,6 @@ pagesubtitle: "Reiknaðu þína persónulega verðbólgu með þessari gagnvirku
 image: image.png
 href: maelabord/verdbolga/index.qmd
 pagedate: "2022/09/22"
-date: "2022/09/22"
 ---
 
 ::: {.column-screen}

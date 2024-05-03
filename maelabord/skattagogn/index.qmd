@@ -5,7 +5,6 @@ pagesubtitle: "Gagnvirkt tól til að skoða eignir, tekjur og skuldir Íslendin
 image: image.png
 href: maelabord/skattagogn/index.qmd
 pagedate: "2022/10/07"
-date: "2022/10/07"
 ---
 
 
