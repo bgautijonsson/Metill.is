@@ -373,7 +373,7 @@ throun_data <- d |>
     # "Tekjur" = tekjur,
     # "Rekstrarniðurstaða" = rekstrarnidurstada,
     "Eiginfjárhlutfall" = eiginfjarhlutfall,
-    "Fjármagnskostnaður á íbúa" = fjarmagnslidir_a_ibua,
+    "Fjármagnsliðir á íbúa" = fjarmagnslidir_a_ibua,
     "Framlegð sem hlutfall af tekjum" = framlegd_hlutf,
     "Handbært fé á íbúa" = handbaert_fe_per_ibui,
     "Launa- og launatengd gjöld á íbúa" = launagjold_per_ibui,
