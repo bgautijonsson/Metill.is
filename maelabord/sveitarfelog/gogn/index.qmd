@@ -370,7 +370,7 @@ throun_data <- d |>
     hluti,
     "Heildarskuldir" = heildarskuldir,
     # "Eignir" = eignir,
-    # "Tekjur" = tekjur,
+    # "Tekjur" = tekijur,
     # "Rekstrarniðurstaða" = rekstrarnidurstada,
     "Eiginfjárhlutfall" = eiginfjarhlutfall,
     "Fjármagnsliðir á íbúa" = fjarmagnslidir_a_ibua,
