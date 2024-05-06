@@ -334,6 +334,7 @@ d <- d |>
     skuldir_hlutf_tekjur = heildarskuldir / tekjur,
     skuldir_per_ibui = heildarskuldir / mannfjoldi,
     tekjur_a_ibua = tekjur / mannfjoldi,
+    ny_langtimalan_a_ibua = tekin_ny_langtimalan / mannfjoldi,
     veltufe_hlutf_tekjur = veltufe / tekjur,
     veltufjarhlutfall = veltufjarmunir / skammtimaskuldir,
     veltufe_hlutf_afborganir = veltufe / afborganir_langtimalana,
