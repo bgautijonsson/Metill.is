@@ -361,7 +361,7 @@ percent_vars <- c(
   "Rekstrarniðurstaða sem hlutfall af tekjum",
   "Rekstrarniðurstaða undanfarinna 3 ára sem hlutfall af tekjum",
   "Skuldir sem hlutfall af tekjum",
-  "Veltufé frá rekstri sem hlutfall af nettóskuldum",
+  # "Veltufé frá rekstri sem hlutfall af nettóskuldum",
   "Veltufé frá rekstri sem hlutfall af tekjum",
   "Veltufjárhlutfall"
 )
@@ -390,7 +390,7 @@ throun_data <- d |>
     "Skuldir á íbúa" = skuldir_per_ibui,
     "Tekjur á íbúa" = tekjur_a_ibua,
     "Útgjöld á íbúa" = gjold_a_ibua,
-    "Veltufé frá rekstri sem hlutfall af nettóskuldum" = veltufe_hlutf_skuldir,
+    # "Veltufé frá rekstri sem hlutfall af nettóskuldum" = veltufe_hlutf_skuldir,
     "Veltufé frá rekstri sem hlutfall af tekjum" = veltufe_hlutf_tekjur,
     "Veltufjárhlutfall" = veltufjarhlutfall
   ) |> 
