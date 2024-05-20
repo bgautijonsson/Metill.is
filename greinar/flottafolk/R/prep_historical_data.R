@@ -139,74 +139,74 @@ data_hist <- data_hist |>
 
 
 
-d <- here(cache_dir, "raw_data.csv") |>
-  read_csv()
-
-
-d_2023 <- d |>
-  filter(
-    year(time) == 2023,
-    name %in% c("grants", "asylum_applicants_non_ukraine", "positive_decisions")
-  ) |>
-  mutate(
-    name = fct_recode(
-      name,
-      "total" = "grants",
-      "total_non_ukr" = "positive_decisions",
-      "asylum_applicants" = "asylum_applicants_non_ukraine"
-    )
-  ) |>
-  select(-gdp, -per_pop_cumsum, -per_gdp)
-
-
-
-end_date <- d_2023 |>
-  drop_na() |>
-  summarise(
-    min_date = min(time),
-    max_date = max(time),
-    n_obs = n(),
-    .by = c(land, name, pop)
-  ) |>
-  summarise(
-    start_date = max(min_date),
-    end_date = min(max_date),
-    n_obs = min(n_obs),
-    .by = c(land, pop)
-  ) |>
-  pull(end_date) |>
-  min()
+# d <- here(cache_dir, "raw_data.csv") |>
+#   read_csv()
 # 
 # 
-# d_2023 <- d_2023 |> 
+# d_2024 <- d |>
+#   filter(
+#     year(time) == 2024,
+#     name %in% c("grants", "asylum_applicants_non_ukraine", "positive_decisions")
+#   ) |>
+#   mutate(
+#     name = fct_recode(
+#       name,
+#       "total" = "grants",
+#       "total_non_ukr" = "positive_decisions",
+#       "asylum_applicants" = "asylum_applicants_non_ukraine"
+#     )
+#   ) |>
+#   select(-gdp, -per_pop_cumsum, -per_gdp)
+# 
+# 
+# 
+# end_date <- d_2024 |>
+#   drop_na() |>
+#   summarise(
+#     min_date = min(time),
+#     max_date = max(time),
+#     n_obs = n(),
+#     .by = c(land, name, pop)
+#   ) |>
+#   summarise(
+#     start_date = max(min_date),
+#     end_date = min(max_date),
+#     n_obs = min(n_obs),
+#     .by = c(land, pop)
+#   ) |>
+#   pull(end_date) |>
+#   min()
+# 
+# 
+# d_2024 <- d_2024 |>
 #   filter(
 #     time <= end_date
-#   ) |> 
-#   group_by(land, name, pop) |> 
+#   ) |>
+#   group_by(land, name, pop) |>
 #   summarise_at(
 #     vars(value, per_pop),
 #     sum
-#   ) |> 
-#   ungroup() |> 
+#   ) |>
+#   ungroup() |>
 #   mutate(
-#     time = clock::date_build(2023),
+#     time = clock::date_build(2024),
 #     end_date = end_date
-#   ) |> 
-#   pivot_longer(c(value, per_pop), names_to = "type") |> 
-#   pivot_wider() |> 
+#   ) |>
+#   pivot_longer(c(value, per_pop), names_to = "type") |>
+#   pivot_wider() |>
 #   mutate(
 #     total = total + total_non_ukr
-#   ) |> 
-#   pivot_longer(c(asylum_applicants:total_non_ukr)) |> 
-#   pivot_wider(names_from = type) |> 
+#   ) |>
+#   pivot_longer(c(asylum_applicants:total_non_ukr)) |>
+#   pivot_wider(names_from = type) |>
 #   anti_join(
 #     data_hist |> drop_na(),
 #     by = join_by(land, time)
 #   )
-# 
+
 data_hist <- data_hist |>
 #   bind_rows(
-#     d_2023
+#     d_2024
 #   ) |> 
   mutate(
     per_pop = value / pop * 1e5,

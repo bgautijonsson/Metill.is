@@ -1,0 +1,828 @@
+---
+title: "Fasteignauppbygging Sveitarfélaga"
+pagetitle: "Fasteignauppbygging Sveitarfélaga"
+subtitle: "Hvaða sveitarfélögum gengur vel að byggja nóg af fasteignum?"
+description: |
+  Oft er talað um uppbyggingu fasteigna í sveitarfélögum landsins. Sum eru sögð standa sig sífellt illa í uppbyggingu og öðrum er hrósað. Hvað segja gögnin um frammistöðu þeirra? Hvaða sveitarfélög byggja mest og hvernig ber það saman við mannfjöldann þar?
+date: "2023/01/26"
+draft: true
+categories:
+    - stjórnmál
+    - efnahagur
+    - fasteignir
+    - sveitarfélög
+href: greinar/fasteignafjoldi_svf/index.qmd
+image: Figures/throun_fast_per_einst_fp.png
+execute:
+  eval: true
+---
+
+
+```{r setup}
+#| include: false
+
+library(tidyverse)
+library(metill)
+library(geomtextpath)
+library(ggtext)
+library(plotly)
+library(scales)
+library(arrow)
+library(patchwork)
+library(slider)
+library(crosstalk)
+library(glue)
+library(rjson)
+library(pxweb)
+library(ggtext)
+library(ggh4x)
+theme_set(theme_metill())
+
+get_tables <- function(data, years) {
+  tibble(
+    ar = years,
+    svfn = data$svfn,
+    sveitarfelag = data$name,
+    fjolbyli_fjoldi = data$fjolbyli_fjoldi,
+    fjolbyli_medaltal = data$fjolbyli_medaltal,
+    fjolbyli_midgildi = data$fjolbyli_midgildi,
+    serbyli_fjoldi = data$serbyli_fjoldi,
+    serbyli_medaltal = data$serbyli_medaltal,
+    serbyli_midgildi = data$serbyli_midgildi,
+  ) |> 
+    pivot_longer(c(-svfn, -sveitarfelag, -ar), names_to = c("tegund", "breyta"), names_sep = "_") |> 
+    mutate(value = ifelse(value == "None", "0", value)) |> 
+    pivot_wider(names_from = breyta, values_from = value)
+}
+
+
+
+```
+
+
+```{r data}
+if (!file.exists("data/data.parquet")) {
+  
+  init_db()
+  d <- fromJSON(file = "https://talnaefni.fasteignaskra.is/talnaefni/v1/staerdibudasveitarfelog")
+  
+  d <- d$sveitarfélög |> 
+    map(get_tables, years = d$date) |> 
+    reduce(bind_rows) |> 
+    mutate_at(vars(ar, svfn, fjoldi, medaltal, midgildi), parse_number) |> 
+    select(ar, sveitarfelag, tegund, fjoldi)
+  
+  d <- d |>
+    count(ar, sveitarfelag, wt = fjoldi, name = "fjoldi") |>
+    arrange(ar, sveitarfelag) |>
+    group_by(sveitarfelag) |>
+    mutate(cum_fjoldi = cumsum(fjoldi)) |>
+    ungroup()
+  
+  mannfjoldi <- mtl_mannfjoldi_svf() |> 
+    collect() |> 
+    mutate(
+      vinnualdur = ifelse((aldur >= 20) & (aldur <= 64), 1, 0),
+      heild = 1,
+      fullordin = ifelse(aldur >= 20, 1, 0)
+    ) |>
+    group_by(sveitarfelag, ar) |>
+    summarise(
+      mannfjoldi_vinnualdur = sum(mannfjoldi * vinnualdur),
+      mannfjoldi_fullordin = sum(mannfjoldi * fullordin),
+      mannfjoldi = sum(mannfjoldi * heild)
+    )
+  
+  
+  d <- d |>
+    left_join(
+      mannfjoldi,
+      by = c("ar", "sveitarfelag")
+    ) |> 
+    group_by(sveitarfelag) |> 
+    fill(mannfjoldi_vinnualdur, mannfjoldi_fullordin, mannfjoldi, .direction = "down") |> 
+    ungroup() |> 
+    drop_na()
+  
+  d |> write_parquet(("data/data.parquet"))
+  
+} else {
+  d <- read_parquet("data/data.parquet")
+}
+```
+
+
+# Eftir sveitarfélögum
+
+```{r}
+ar_fyrir <- 2010
+col_fyrir <- "#d73027"
+
+ar_eftir <- 2023
+col_eftir <- "#4575b4"
+
+plot_dat <- d |> 
+  filter(
+    ar %in% c(ar_fyrir, ar_eftir),
+    str_detect(
+      str_to_lower(sveitarfelag),
+      "reykjaví|garðab|kópav|hafnarf|mosf|seltjar|akrane|akureyr|fjarðab|árbo|múlaþ|vestman|borgarbygg|ísafjarð|suðurnes|grindaví|norðurþ|hverag|ölfus|hornafj"
+    )
+  ) |> 
+  mutate(
+    full_per_fast = mannfjoldi_fullordin / cum_fjoldi
+  ) |> 
+  select(ar, sveitarfelag, full_per_fast) |> 
+  pivot_wider(names_from = ar, values_from = full_per_fast) |> 
+  rename(
+    fyrir = as.character(ar_fyrir),
+    eftir = "2023"
+  ) |> 
+  mutate(
+    sveitarfelag = fct_reorder(sveitarfelag, eftir)
+  )
+
+
+upper_lim <- max(plot_dat$eftir)
+lower_lim <- min(plot_dat$fyrir)
+
+p <- plot_dat |> 
+  ggplot(aes(x = eftir, y = sveitarfelag)) + 
+  geom_segment(
+    aes(x = fyrir, xend = eftir, yend = sveitarfelag),
+    alpha = 0.5,
+    col = "grey50",
+    linewidth = 0.3
+  ) +
+  geom_point(aes(x = eftir, colour = "2023"), size = 2.5) +
+  geom_point(aes(x = fyrir, colour = "2010"), size = 2.5) +
+  geom_richtext(
+    data = tibble(x = 1),
+    inherit.aes = FALSE,
+    x = 1.392,
+    y = -0.9,
+    label.colour = NA,
+    fill = NA,
+    label = "&larr; Færri fullorðin / fleiri fasteignir",
+    hjust = 0,
+    size = 3.5,
+    colour = "grey40"
+  ) +
+  geom_richtext(
+    data = tibble(x = 1),
+    inherit.aes = FALSE,
+    x = 2.408, 
+    y = -0.9, 
+    label.colour = NA,
+    fill = NA,
+    label = "Fleiri fullorðin / færri fasteignir &rarr;", 
+    hjust = 1,
+    size = 3.5,
+    colour = "grey40"
+  ) +
+  annotate(
+    x = 1.96,
+    y = 20.3,
+    geom = "text",
+    label = str_c(
+      "Hækkun í Grindavíkurbæ þýðir að\n",
+      "fullorðnum fjölgaði meira en fasteignum"
+    ),
+    vjust = 0,
+    hjust = 0,
+    color = "grey40",
+    size = 2.5
+  ) +
+  scale_x_continuous(
+    limits = c(1.4, 2.4001),
+    expand = expansion()
+  ) +
+  scale_colour_manual(
+    values = c(col_fyrir, col_eftir)
+  ) +
+  coord_cartesian(clip = "off") +
+  theme(
+    legend.position = "none",
+    plot.subtitle = element_markdown(size = 12, margin = margin(b = 10)),
+    plot.margin = margin(t = 5, r = 15, b = 25, l = 5)
+  ) +
+  labs(
+    x = NULL,
+    y = NULL,
+    title = "Fasteignum fjölgar almennt hægar en fullorðnum íbúum",
+    subtitle = glue(str_c(
+      "Fjöldi fullorðinna á hverja fasteign sveitarfélags árin ",
+      "<b style=color:{col_fyrir}>{ar_fyrir}</b>",
+      " og ",
+      "<b style=color:{col_eftir}>{ar_eftir}</b>"
+    ))
+  )
+
+ggsave(
+  plot = p,
+  file = "Figures/full_per_fast_dumbbell.png",
+  width = 8, height = 0.5 * 8, scale = 1.5
+)
+```
+
+
+# Samanburður á stöðu og þróun
+
+```{r}
+read_parquet("data/data.parquet") |> 
+  select(ar, sveitarfelag, fasteignir = fjoldi, mannfjoldi) |> 
+  mutate(
+    fasteignir_per_pop = fasteignir / mannfjoldi * 1000,
+    fpp_rolling = slider::slide_dbl(fasteignir_per_pop, sum, .before = 9),
+    .by = sveitarfelag
+  ) |> 
+  filter(ar == 2023) |> 
+  mutate(
+    sveitarfelag = fct_reorder(sveitarfelag, fpp_rolling)
+  ) |> 
+  ggplot(aes(fpp_rolling, sveitarfelag)) +
+  geom_labelvline(
+    xintercept = 70.8,
+    lty = 2,
+    alpha = 0.4,
+    linewidth = 0.4,
+    size = 5,
+    label = "Ísland í heild",
+    inherit.aes = FALSE
+  ) +
+  geom_segment(
+    aes(yend = sveitarfelag, xend = 0),
+    linewidth = 0.3,
+    alpha = 0.3
+  ) +
+  geom_point(
+    size = 2
+  ) +
+  scale_x_continuous(
+    limits = c(0, NA),
+    expand = expansion(c(0, 0.1)),
+    breaks = breaks_extended(14),
+    guide = guide_axis_truncated()
+  ) +
+  labs(
+    x = "Fjöldi nýbyggðra fasteigna á 1.000 íbúa (2014 til 2023)",
+    y = NULL,
+    title = "Fjöldi nýbyggðra fasteigna á 1.000 íbúa í sveitarfélögum landsins",
+    subtitle = "Sýnt sem heildarfjöldi frá 2014 til 2023"
+  )
+```
+
+
+```{r}
+
+plotly_color <- "#b30000"
+
+start_year <- 2010
+
+plot_dat <- d |> 
+  filter(
+    str_detect(
+      str_to_lower(sveitarfelag),
+      "reykjaví|garðab|kópav|hafnarf|mosf|seltjar|akrane|akureyr|fjarðab|árbo|múlaþ|vestman|borgarbygg|ísafjarð|suðurnes|grindaví|norðurþ|hverag|ölfus|hornafj"
+    ),
+    ar >= start_year - 5
+  ) |> 
+  mutate(
+    bygg_per_pers = fjoldi / mannfjoldi_fullordin * 1e3,
+    fullordin_per_bygg = mannfjoldi_fullordin / cum_fjoldi
+  ) |> 
+  mutate(
+    bygg_index = cum_fjoldi / cum_fjoldi[ar == start_year] - 1,
+    mannf_index = mannfjoldi_fullordin / mannfjoldi_fullordin[ar == start_year] - 1,
+    mism = mannf_index / bygg_index - 1,
+    .by = sveitarfelag
+  ) |> 
+  select(
+    ar, 
+    sveitarfelag, 
+    mannfjoldi_fullordin, 
+    fjoldi,
+    cum_fjoldi,
+    bygg_per_pers, 
+    fullordin_per_bygg, 
+    contains("index"),
+    mism
+  ) |> 
+  mutate(
+    order_var = fullordin_per_bygg[ar == max(ar)],
+    bygg_per_pers = slide_dbl(bygg_per_pers, mean, .before = 5, .complete = T),
+    .by = sveitarfelag
+  ) |> 
+  mutate(
+    sveitarfelag = fct_reorder(sveitarfelag, order_var)
+  ) |> 
+  drop_na(bygg_per_pers) |> 
+  mutate(
+    bygg_index = cum_fjoldi / cum_fjoldi[ar == min(ar)] - 1,
+    mannf_index = mannfjoldi_fullordin / mannfjoldi_fullordin[ar == min(ar)] - 1,
+    mism = mannf_index / bygg_index - 1,
+    .by = sveitarfelag
+  ) |> 
+  mutate(
+    fullordin_per_bygg = ifelse(ar == 2023, fullordin_per_bygg, NA_real_),
+    text1 = str_c(
+      "<b>", sveitarfelag, "</b>", "\n",
+      "Fullorðnir íbúar: ", number(mannfjoldi_fullordin, big.mark = ".", decimal.mark = ","), "\n",
+      "Fasteignir: ", number(cum_fjoldi, big.mark = ".", decimal.mark = ","), "\n",
+      "Fullorðnir á hverja fasteign: ", number(fullordin_per_bygg, big.mark = ".", decimal.mark = ",", accuracy = 0.1)
+    ),
+    text2 = str_c(
+      "<b>", sveitarfelag, "</b>", "\n",
+      "Nýjar fasteignir: ", number(fjoldi, big.mark = ".", decimal.mark = ","), "\n",
+      "Fullorðnir íbúar: ", number(mannfjoldi_fullordin, big.mark = ".", decimal.mark = ","), "\n",
+      "Nýjar fasteignir á 1.000 fullorðna: ", number(bygg_per_pers, big.mark = ".", decimal.mark = ",", accuracy = 1)
+    ),
+    text3 = str_c(
+      "<b>", sveitarfelag, "</b>", "\n",
+      "Ár: ", ar, "\n",
+      "Fjölgun fullorðinna: ", hlutf(mannf_index), "\n",
+      "Fjölgun fasteigna: ", hlutf(bygg_index), "\n",
+      "Fullorðnum hefur fjölgað<b>", 
+      ifelse(mism > 0, " hraðar ", " hægar "),
+      "</b>en fasteignum"
+    ),
+    var1 = "Fullorðnir á hverja íbúð",
+    var2 = "Nýjar fasteignir á 1.000 fullorðna (5 ára hlaupandi meðaltal)",
+    var3 = "Samanburður á fólksfjölgun og íbúðabyggingu"
+  )
+
+pd <- highlight_key(
+  plot_dat, 
+  ~sveitarfelag, 
+  "Veldu sveitarfélag með nafni eða smelltu á myndirnar <i>(Haltu inni SHIFT til að velja fleiri)</i>"
+)
+```
+
+```{r}
+p1 <- pd |>
+  ggplot(aes(fullordin_per_bygg, sveitarfelag, text = text1)) +
+  geom_point(
+    size = 2
+  ) +
+  geom_segment(
+    aes(yend = sveitarfelag, xend = 0),
+    alpha = 1,
+    size = 0.1
+  ) +
+  scale_x_continuous(
+    labels = label_number(),
+    limits = c(0, 2.45),
+    expand = expansion()
+  ) +
+  theme(
+    strip.text = element_text(margin = margin(3, 3, 3, 3))
+  ) +
+  labs(
+    x = NULL,
+    y = NULL
+  ) +
+  facet_wrap("var1")
+```
+
+```{r}
+p2 <- pd |> 
+  ggplot(aes(ar, bygg_per_pers, text = text2)) +
+  geom_line(aes(group = sveitarfelag)) +
+  scale_x_continuous(
+    expand = expansion(),
+    breaks = breaks_pretty()
+  ) +
+  scale_y_continuous(
+    expand = expansion()
+  ) +
+  theme(
+    strip.text = element_text(margin = margin(3, 3, 3, 3))
+  ) +
+  labs(
+    x =  "",
+    y = NULL
+  ) +
+  facet_wrap("var2")
+```
+
+```{r}
+p3 <- pd |> 
+  ggplot(aes(mannf_index, bygg_index, text = text3)) +
+  geom_abline(intercept = 0, slope = 1, lty = 2, linewidth = 0.5, colour = "grey50") +
+  geom_path(aes(group = sveitarfelag)) +
+  scale_x_continuous(
+    labels = label_hlutf(),
+    breaks = breaks_width(0.2)
+  ) +
+  scale_y_continuous(
+    labels = label_hlutf(),
+    breaks = breaks_width(0.2)
+  ) +
+  coord_cartesian(
+    xlim = c(0, 0.7),
+    ylim = c(0, 0.7)
+  ) +
+  labs(
+    x = glue::glue("Mannfjöldabreyting síðan {start_year}"),
+    y = glue::glue("Fjölgun fasteigna síðan {start_year}")
+  )
+```
+
+
+
+<div class='column-screen-inset' style='position:relative;left:10%;width:80%;'>
+
+```{r}
+#| fig-asp: 1.2
+
+subplot(
+  subplot(
+    metill_ggplotly(p1, tooltip = "text"),
+    metill_ggplotly(p2, tooltip = "text"),
+    widths = c(0.25, 0.75),
+    nrows = 1,
+    shareX = F,
+    shareY = F,
+    titleX = T,
+    titleY = T
+  ) |>
+    layout(
+      margin = list(
+        b = 5000
+      )
+    ),
+  metill_ggplotly(p3, tooltip = "text"),
+  nrows = 2,
+  heights = c(0.5, 0.5),
+  shareX = T,
+  shareY = T,
+  titleX = T,
+  titleY = T
+) |>
+  layout(
+    margin = list(
+      l = 100
+    )
+  ) |> 
+  highlight(
+    on = "plotly_click",
+    defaultValues = "Reykjavíkurborg",
+    persistent = FALSE,
+    color = plotly_color,
+    selectize = TRUE
+  )
+```
+
+</div>
+
+```{r dreifing_fast_per_einst}
+#| eval: false
+
+plot_dat <- d |>
+  filter(ar == max(ar)) |>
+  # slice_max(order_by = mannfjoldi, n = 40) |>
+  mutate(
+    p = mannfjoldi_fullordin / cum_fjoldi,
+    sveitarfelag = fct_reorder(sveitarfelag, -p),
+    text = str_c(
+      "<b>", sveitarfelag, "</b>", "\n",
+      "Fasteignir: ", cum_fjoldi, "\n",
+      "Íbúar: ", mannfjoldi, "\n",
+      "Fasteignir per íbúi: ", number(p)
+    )
+  )
+
+heild <-  d |>
+  filter(ar == max(ar)) |>
+  summarise_at(
+    vars(mannfjoldi_fullordin, cum_fjoldi),
+    sum
+  ) |> 
+  mutate(p = mannfjoldi_fullordin / cum_fjoldi) |> 
+  pull(p)
+
+lower_x <- min(plot_dat$p) - 0.015
+
+p <- plot_dat |>
+  ggplot(aes(p, sveitarfelag, text = text)) +
+  geom_vline(
+    xintercept = heild,
+    lty = 2,
+    alpha = 1,
+    linewidth = 0.2,
+    colour = "grey40"
+  ) +
+  geom_point(
+    size = 2
+  ) +
+  geom_segment(
+    aes(yend = sveitarfelag, xend = lower_x),
+    alpha = 1,
+    size = 0.1
+  ) +
+  geom_text(
+    data = tibble(
+      x = 1.93,
+      y = 50,
+      label = "Á landsvísu"
+    ),
+    aes(x = x, y = y, label = label),
+    inherit.aes = FALSE,
+    size = 4,
+    hjust = 0,
+    colour = "grey40"
+  ) +
+  metR::geom_arrow(
+    data = tibble(
+      x = 1.9, 
+      y = 50,
+      dx = -0.55,
+      dy = 0
+    ),
+    aes(x = x, y = y, dx = dx, dy = dy),
+    size = 0.4,
+    inherit.aes = FALSE,
+    colour = "grey40"
+  ) +
+  scale_x_tufte(
+    labels = label_number(),
+    breaks = tufte_breaks(plot_dat$p),
+    limits = c(lower_x, 2.45),
+    expand = expansion()
+  ) +
+  coord_cartesian(clip = "off") +
+  theme(
+    axis.line.y = element_blank(),
+    axis.ticks.y = element_blank()
+  ) +
+  labs(
+    x = NULL,
+    y = NULL,
+    title = "Fjöldi fullorðinna einstaklinga á hverja íbúð eftir sveitarfélagi",
+    subtitle = "Reiknað sem fjöldi 20 ára og eldri deilt með fjölda fasteigna í sama sveitarfélagi",
+    caption = "Mynd eftir @bggjonsson byggð á gögnum Þjóðskrár um fasteignafjölda eftir byggingarári og mannfjöldagögnum Hagstofu"
+  )
+
+ggsave(
+  plot = p,
+  filename = "Figures/dreifing_fast_per_einst.png",
+  width = 8, height = 1 * 8, scale = 1.3
+)
+
+ggsave(
+  plot = p +
+    theme_metill(type = "blog"),
+  filename = "Figures/dreifing_fast_per_einst_page.png",
+  width = 8, height = 1 * 8, scale = 1.3
+)
+```
+
+
+
+```{r throun_fast_per_einst}
+#| eval: false
+plot_dat <- d |>
+  mutate(p = mannfjoldi_fullordin / cum_fjoldi) |>
+  filter(
+    str_detect(
+      str_to_lower(sveitarfelag),
+      "reykjaví|kópav|hafnarf|reykjan|akureyr|garðab|mosf|árbo|akrane|fjarðab|múlaþ|seltjar|vestman|skagafj|borgarbygg|ísafjarð|suðurnes|grindaví|norðurþ|hverage"
+    )
+  )
+
+samtals <- d |>
+  group_by(ar) |>
+  summarise(
+    cum_fjoldi = sum(cum_fjoldi),
+    mannfjoldi = sum(mannfjoldi_fullordin),
+    p = mannfjoldi / cum_fjoldi
+  )
+
+
+p <- plot_dat |>
+  ggplot(aes(ar, p)) +
+  geom_line(
+    data = plot_dat |> rename(svf = sveitarfelag),
+    aes(group = svf),
+    alpha = 0.07
+  ) +
+  geom_line(
+    data = samtals,
+    aes(x = ar, y = p, col = "Á landsvísu", lty = "Á landsvísu"),
+    size = 0.8
+  ) +
+  geom_line(
+    aes(group = sveitarfelag, col = "Í sveitarfélaginu", lty = "Í sveitarfélaginu"),
+    size = 0.9
+  ) +
+  # geom_point(
+  #   aes(group = sveitarfelag, col = "Sveitarfélag"),
+  #   size = 1.3
+  # ) +
+  geom_text(
+    data = tibble(
+      x = 2001.3,
+      y = 1.54,
+      label = "Á landsvísu",
+      sveitarfelag = "Akraneskaupstaður"
+    ),
+    aes(x = x, y = y, label = label, colour = "Á landsvísu"),
+    inherit.aes = FALSE,
+    size = 4,
+    angle = -10
+  ) +
+  metR::geom_arrow(
+    data = tibble(
+      sveitarfelag = "Akraneskaupstaður",
+      x = 2002, y = 1.65,
+      dx = 0.25,
+      dy = 0.4
+    ),
+    aes(x = x, y = y, dx = dx, dy = dy, col = "Á landsvísu"),
+    size = 0.4,
+    inherit.aes = FALSE
+  ) +
+  geom_text(
+    data = tibble(
+      x = 2002,
+      y = 2.15,
+      label = "Í sveitarfélaginu",
+      sveitarfelag = "Akraneskaupstaður"
+    ),
+    aes(x = x, y = y, label = label, colour = "Í sveitarfélaginu"),
+    inherit.aes = FALSE,
+    size = 4,
+    angle = 10
+  ) +
+  metR::geom_arrow(
+    data = tibble(
+      sveitarfelag = "Akraneskaupstaður",
+      x = 2002, y = 2,
+      dx = 0.25,
+      dy = -0.4
+    ),
+    aes(x = x, y = y, dx = dx, dy = dy, col = "Í sveitarfélaginu"),
+    size = 0.4,
+    inherit.aes = FALSE
+  ) +
+  scale_x_continuous(
+    # breaks = seq(2011, 2021, by = 2)
+  ) +
+  scale_colour_brewer(
+    type = "qual",
+    palette = "Set1",
+    guide = guide_legend(
+      label.position = "top", label.vjust = 0, direction = "horizontal"
+    )
+  ) +
+  scale_linetype_manual(
+    values = c(2, 1),
+    guide = guide_legend(
+      label.position = "top", label.vjust = 0, direction = "horizontal"
+    )
+  ) +
+  facet_wrap("sveitarfelag") +
+  theme(
+    legend.position = "none"
+  ) +
+  labs(
+    x = NULL,
+    y = NULL,
+    colour = NULL,
+    lty = NULL,
+    title = "Þróun fjölda fullorðinna einstaklinga á íbúð fyrir nokkur stærstu sveitarfélögin",
+    subtitle = "Reiknað sem fjöldi 20 ára og eldri deilt með fjölda fasteigna eftir ári og sveitarfélagi",
+    caption = "Mynd frá Metill.is byggð á gögnum Þjóðskrár um fasteignafjölda eftir byggingarári og mannfjöldagögnum Hagstofu"
+  )
+
+ggsave(
+  plot = p,
+  filename = "Figures/throun_fast_per_einst.png",
+  width = 8, height = 0.621 * 8, scale = 1.6
+)
+
+
+ggsave(
+  plot = p +
+    theme_metill(type = "blog") +
+    theme(legend.position = "none"),
+  filename = "Figures/throun_fast_per_einst_page.png",
+  width = 8, height = 0.621 * 8, scale = 1.6
+)
+```
+
+![](Figures/full_per_fast_dumbbell.png){.column-page}
+
+![](Figures/throun_fast_per_einst_page.png){.column-screen .between-content .p-5}
+
+
+
+
+
+```{r dreifing_nyjar_per_einst}
+#| eval: true
+
+fyrir_year <- 2010
+
+plot_dat <- d |>
+  ungroup() |>
+  filter(
+    ar >= fyrir_year
+  ) |>
+  mutate(bygg_per_mannfj = fjoldi / mannfjoldi_fullordin * 1000) |> 
+  summarise(
+    bygg_per_mannfj = sum(bygg_per_mannfj),
+    .by = sveitarfelag
+  ) |> 
+  mutate(
+    sveitarfelag = fct_reorder(sveitarfelag, bygg_per_mannfj),
+    text = str_c(
+      "<b>", sveitarfelag, "</b>", "\n",
+      "Byggðar fasteignir per íbúi: ", number(bygg_per_mannfj)
+    )
+  )
+
+heild <-  d |>
+  ungroup() |>
+  filter(
+    ar >= fyrir_year
+  ) |>
+  group_by(ar) |> 
+  summarise_at(
+    vars(fjoldi, mannfjoldi_fullordin),
+    sum
+  ) |> 
+  ungroup() |> 
+  mutate(bygg_per_mannfj = fjoldi / mannfjoldi_fullordin * 1000) |>
+  summarise(
+    bygg_per_mannfj = sum(bygg_per_mannfj)
+  ) |> 
+  pull(bygg_per_mannfj)
+
+lower_x <- min(plot_dat$bygg_per_mannfj) * 0.9
+upper_x <- max(plot_dat$bygg_per_mannfj) * 1.05
+
+p <- plot_dat |>
+  ggplot(aes(bygg_per_mannfj, sveitarfelag, text = text)) +
+  geom_vline(
+    xintercept = heild,
+    lty = 2,
+    alpha = 1,
+    linewidth = 0.2,
+    colour = "grey40"
+  ) +
+  geom_point(
+    size = 2
+  ) +
+  geom_segment(
+    aes(yend = sveitarfelag, xend = lower_x),
+    alpha = 1,
+    size = 0.1
+  ) +
+  geom_richtext(
+    data = tibble(
+      x = heild,
+      y = 20,
+      label = "&larr;Á landsvísu"
+    ),
+    aes(x = x, y = y, label = label),
+    inherit.aes = FALSE,
+    size = 5,
+    hjust = 0,
+    # nudge_x = 5,
+    fill = NA,
+    colour = NA,
+    text.colour = "grey40"
+  ) +
+  scale_x_tufte(
+    labels = label_number(),
+    breaks = tufte_breaks(plot_dat$bygg_per_mannfj),
+    limits = c(lower_x, upper_x),
+    expand = expansion()
+  ) +
+  coord_cartesian(clip = "off") +
+  theme(
+    axis.line.y = element_blank(),
+    axis.ticks.y = element_blank()
+  ) +
+  labs(
+    x = NULL,
+    y = NULL,
+    title = glue("Fjöldi nýrra fasteigna á hvern fullorðinn einstakling frá {fyrir_year}"),
+    subtitle = "Reiknað fyrir hvert ár sem fjöldi nýrra fasteigna deilt með fjölda 20 ára og eldri og summað upp",
+    caption = "Mynd eftir @bggjonsson byggð á gögnum Þjóðskrár um fasteignafjölda eftir byggingarári og mannfjöldagögnum Hagstofu"
+  )
+
+ggsave(
+  plot = p,
+  filename = "Figures/dreifing_nyjar_fast_per_einst.png",
+  width = 8, height = 1 * 8, scale = 1.3
+)
+
+ggsave(
+  plot = p,
+  filename = "Figures/dreifing_nyjar_fast_per_einst_page.png",
+  width = 8, height = 1 * 8, scale = 1.3
+)
+```
+
