@@ -204,7 +204,7 @@ make_samantekt <- function(
       x = NULL,
       y = NULL,
       title = "Fjöldi afgreiddra umsókna",
-      subtitle = glue("Fjöldi í {month(end_date[2], label = T, abbr = F)} {year(end_date)}")
+      subtitle = glue("Fjöldi í {month(end_date[2], label = T, abbr = F)} {year(end_date[2])}")
     )
   
   plot_dat <- d |> 
@@ -416,8 +416,8 @@ make_samantekt <- function(
     plot_annotation(
       title = "Samantekt á umsóknum um hæli frá mars 2022",
       subtitle = str_c(
-        "Þrátt fyrir að íslensk yfirvöld afgreiði mörg mál þá vantar meira upp á til að halda í við ",
-        " fjölda umsókna."
+        "Síðustu mánuði hefur umsóknum um hæli fækkað og", 
+        " yfirvöldum tekist að fækka þeim sem bíða niðurstöðu umsóknar sinnar."
       ),
       caption = caption
     ) &

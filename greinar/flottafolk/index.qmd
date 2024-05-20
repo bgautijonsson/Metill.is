@@ -446,7 +446,7 @@ make_plot(
   plot_var = "asylum_applicants_non_ukraine",
   scaling_var = "per_pop",
   start_date = clock::date_build(2022, 3, 1),
-  end_date = clock::date_build(2024, 1, 1),
+  end_date = clock::date_build(2024, 2, 1),
   title = "Hvar sækja flestir einstaklingar um hæli?",
   subtitle = "Sýnt sem fjöldi á 100.000 íbúa hvers lands",
   caption = caption
@@ -498,7 +498,7 @@ make_plot(
   plot_var = "total_decisions",
   scaling_var = "per_pop",
   start_date = clock::date_build(2022, 3, 1),
-  end_date = clock::date_build(2023, 10, 1),
+  end_date = clock::date_build(2024, 1, 1),
   title = "Hvar eru flestar ákvarðanir um stöðu hælisleitenda teknar á mánuði?",
   subtitle = "Sýnt sem fjöldi á 100.000 íbúa hvers lands",
   caption = caption,
@@ -517,7 +517,7 @@ make_plot(
   plot_var = "total_decisions",
   scaling_var = "per_pop_cumsum",
   start_date = clock::date_build(2022, 3, 1),
-  end_date = clock::date_build(2023, 10, 1),
+  end_date = clock::date_build(2024, 1, 1),
   title = "Hvar hafa flestar ákvarðanir verið teknar? (Uppsafnaðar tölur frá mars 2022)",
   subtitle = "Sýnt sem fjöldi á 100.000 íbúa hvers lands",
   caption = caption,
@@ -550,7 +550,7 @@ make_plot(
   plot_var = "positive_decisions",
   scaling_var = "per_pop",
   start_date = clock::date_build(2022, 3, 1),
-  end_date = clock::date_build(2023, 10, 1),
+  end_date = clock::date_build(2024, 1, 1),
   title = "Hvar er flestum einstaklingum veitt hæli á mánuði?",
   subtitle = "Sýnt sem fjöldi á 100.000 íbúa hvers lands",
   caption = caption,
@@ -569,7 +569,7 @@ make_plot(
   plot_var = "positive_decisions",
   scaling_var = "per_pop_cumsum",
   start_date = clock::date_build(2022, 3, 1),
-  end_date = clock::date_build(2023, 10, 1),
+  end_date = clock::date_build(2024, 1, 1),
   title = "Hvar hefur flestum einstaklingum verið veitt hæli? (Uppsafnaðar tölur frá mars 2022)",
   subtitle = "Sýnt sem fjöldi á 100.000 íbúa hvers lands",
   caption = caption,
@@ -600,7 +600,7 @@ make_plot(
   plot_var = "applicants_non_ukraine",
   scaling_var = "per_pop",
   start_date = clock::date_build(2022, 3, 1),
-  end_date = clock::date_build(2024, 1, 1),
+  end_date = clock::date_build(2024, 2, 1),
   title = "Hvar bíða flestir einstaklingar eftir niðurstöðu hælisumsóknar sinnar?",
   subtitle = "Sýnt sem fjöldi á 100.000 íbúa hvers lands",
   caption = caption,
@@ -620,7 +620,7 @@ make_plot(
 make_samantekt(
   height = 1 * 16,
   width = 16,
-  end_date = clock::date_build(c(2024, 2023, 2024), c(1, 10, 1)),
+  end_date = clock::date_build(c(2024, 2023, 2024), c(2, 10, 2)),
   number_labels = label_number(big.mark = ".", decimal.mark = ",")
 )
 ```
