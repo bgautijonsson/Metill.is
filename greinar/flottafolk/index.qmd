@@ -34,6 +34,7 @@ library(ggh4x)
 library(ggiraph)
 library(gt)
 library(gtExtras)
+library(ggtext)
 
 Sys.setlocale("LC_ALL", "is_IS.UTF-8")
 

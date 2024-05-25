@@ -105,7 +105,7 @@ make_plot <- function(
       land_ordered = glue("<i style='color:{colour}'>{land}</i>"),
       land_ordered = fct_reorder(land_ordered, per_pers)
     ) |> 
-    ggplot(aes(per_pers, land_ordered, col = colour, size = size)) +
+    ggplot(aes(per_pers, land_ordered, col = colour, size = size, group = land)) +
     geom_text_interactive(
       aes(x = 0, label = str_c(land, " "), data_id = land),
       hjust = 1,
@@ -176,15 +176,17 @@ make_plot <- function(
   p3 <- plot_dat |> 
     ggplot(aes(dags, value)) +
     geom_line_interactive(
-      data = plot_dat |> 
-        filter(colour == litur_annad),
-      aes(group = land, colour = litur_annad, data_id = land),
-      alpha = 0.3,
-      col = litur_annad
+      data = ~filter(.x, colour == litur_annad, land != "Þýskaland"),
+      aes(group = land, data_id = land),
+      alpha = 0.3
     ) +
     geom_line_interactive(
-      data = plot_dat |> 
-        filter(colour != litur_annad),
+      data = ~filter(.x, land == "Þýskaland"),
+      aes(group = land, data_id = land),
+      alpha = 0.3
+    ) +
+    geom_line_interactive(
+      data = ~filter(.x, colour != litur_annad),
       aes(group = land, colour = colour, data_id = land),
       linewidth = 1
     ) +
