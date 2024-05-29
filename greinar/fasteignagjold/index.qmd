@@ -91,11 +91,13 @@ Fasteignaskattar eru reiknaðir sem prósenta af fasteignamati. Lægstir eru þe
 
 [^fskattar2023]: Samkvæmt álagningum árið 2023.
 
+![Mynd 1. Áhrif fermetraverðs á fasteignaskatta í nokkrum sveitarfélögum höfuðborgarsvæðis](Figures/compare_fasteignaskattar_rvk_kop.png){.column-margin}
 
 ```{r}
 #| column: page-left
 make_fasteignaskattur()
 ```
+
 
 
 ## Vatns- og fráveitugjöld 
@@ -126,7 +128,7 @@ tribble(
   gt_theme_metill()
 ```
 
-![Mynd 1. Áhrif fermetraverðs á vatns- og fráveitugjöld í nokkrum sveitarfélögum höfuðborgarsvæðis](Figures/compare_vatnsfraveitugjold_rvk_kop.png){.column-margin}
+![Mynd 2. Áhrif fermetraverðs á vatns- og fráveitugjöld í nokkrum sveitarfélögum höfuðborgarsvæðis](Figures/compare_vatnsfraveitugjold_rvk_kop.png){.column-margin}
 
 Það fer eftir fermetraverði og stærð fasteignar hvort fyrirkomulagið skili sér í hærri útgjöldum fyrir eigandann. Myndin hér á hægri hönd sýnir þetta skýrt. Vatns- og fráveitugjöld í Reykjavíkurborg eru óháð fasteignamati og því hækka þau hvorki né lækka í takt við fermetraverð fasteignar. Því er öfugt farið í hinum sveitarfélögunum og hækka þessi gjöld samhliða fasteignamati eignarinnar. Ef fasteignamat hækkar um 10% hækka vatn- og fráveitugjöldin um sömu prósentu. Taflan að neðan ber saman hver vatns- og fráveitugjöldin yrðu í nokkrum fasteignum samkvæmt álagningu sveitarfélaganna.
 
@@ -203,7 +205,7 @@ tribble(
   gt_theme_metill()
 ```
 
-![Mynd 1. Áhrif fermetraverðs á fasteignagjöld í nokkrum sveitarfélögum höfuðborgarsvæðis](Figures/compare_fasteignagjold_rvk_kop.png){.column-margin}
+![Mynd 3. Áhrif fermetraverðs á fasteignagjöld í nokkrum sveitarfélögum höfuðborgarsvæðis](Figures/compare_fasteignagjold_rvk_kop.png){.column-margin}
 
 ```{r}
 tibble(
