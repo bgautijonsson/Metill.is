@@ -17,6 +17,7 @@ twitter-card:
     image: Figures/fasteignagjold.png
 footnotes-hover: true
 reference-location: margin
+lightbox: auto
 ---
 
 
@@ -180,15 +181,15 @@ tibble(
 
 ```{r}
 tribble(
-  ~Sveitarfélag, ~Fráveitugjald, ~Vatnsgjald, ~Samtals,
-  "Reykjavíkurborg", "12.262kr + 473,29kr á hvern fermeter", "5.085kr + 197,32kr á hvern fermeter", "17.347kr + 670.61kr á hvern fermeter",
-  "Kópavogsbær", "0,065% af fasteignamati",  "0.06% af fasteignamati", "0.125% af fasteignamati",
-  "Garðabær", "0.085% af fasteignamati", "0.08% af fasteignamati", "0.165% af fasteignamati",
-  "Seltjarnarnesbær", "0.14% af fasteignamati", "0.086% af fasteignamati", "0.226% af fasteignamati"
+  ~Sveitarfélag, ~Fasteignaskattur, ~Fráveitugjald, ~Vatnsgjald, ~Samtals,
+  "Reykjavíkurborg", "0,18% af fasteignamati", "12.262kr + 473,29kr á hvern fermeter", "5.085kr + 197,32kr á hvern fermeter", "17.347kr + 0,18% af fasteignamati + 670,61kr á hvern fermeter",
+  "Kópavogsbær", "0,17% af fasteignamati","0,065% af fasteignamati",  "0,06% af fasteignamati", "0,295% af fasteignamati",
+  "Garðabær", "0,17% af fasteignamati", "0,085% af fasteignamati", "0,08% af fasteignamati", "0.335% af fasteignamati",
+  "Seltjarnarnesbær", "0,17% af fasteignamati", "0.14% af fasteignamati", "0.086% af fasteignamati", "0.396% af fasteignamati"
 ) |> 
   gt() |> 
   tab_header(
-    title = "Samantekt á vatns- og fráveitugjöldum í nokkrum sveitarfélögum höfuðborgarsvæðis"
+    title = "Samantekt á fasteignaskatti og vatns- og fráveitugjöldum í nokkrum sveitarfélögum höfuðborgarsvæðis"
   ) |> 
   tab_source_note(
     md(
@@ -203,6 +204,52 @@ tribble(
 ```
 
 ![Mynd 1. Áhrif fermetraverðs á fasteignagjöld í nokkrum sveitarfélögum höfuðborgarsvæðis](Figures/compare_fasteignagjold_rvk_kop.png){.column-margin}
+
+```{r}
+tibble(
+  eign = c("Fasteign 1", "Fasteign 2", "Fasteign 3", "Fasteign 4"),
+  fm = c(70.9, 199, 187.6, 137.8),
+  fasteignamat = c(50250000, 149250000, 128750000, 78150000)
+) |> 
+  mutate(
+    fermetraverd = fasteignamat / fm,
+    rvk = 0.0018 * fasteignamat + 17347 + 670.61 * fm,
+    kop = 0.00295 * fasteignamat,
+    gbr = 0.00335 * fasteignamat,
+    selt = 0.00396 * fasteignamat
+  ) |> 
+  gt() |> 
+  cols_label(
+    eign = "",
+    fm = md("m<sup>2</sup>"),
+    fasteignamat = "Fasteignamat",
+    fermetraverd = "Fermetraverð",
+    rvk = "Reykjavíkurborg",
+    kop = "Kópavogsbær",
+    gbr = "Garðabær",
+    selt = "Seltjarnarnes"
+  ) |> 
+  tab_spanner(
+    columns = 5:8,
+    label = "Fasteignagjöld (án sorpgjalda)"
+  ) |> 
+  fmt_currency(
+    columns = 3:8, 
+    currency = "ISK", 
+    placement = "right",
+    sep_mark = ".",
+    dec_mark = ","
+  ) |> 
+  fmt_number(
+    columns = fm, 
+    dec_mark = ",", 
+    sep_mark = "."
+  ) |> 
+  tab_header(
+    title = "Samanburður á fasteignaskatti og vatns- og fráveitugjöldum nokkurra fasteigna"
+  ) |> 
+  gt_theme_metill()
+```
 
 # Fasteignamat og fasteignagjöld
 
