@@ -63,6 +63,27 @@ d |>
   )
 
 d |> 
+  filter(
+    atvinnugrein_balkar != "Alls - Starfandi"
+  ) |> 
+  count(dags, bakgrunnur, wt = starfandi) |> 
+  mutate(
+    man = month(dags),
+    ar = year(dags)
+  ) |> 
+  filter(
+    ar == 2023
+  ) |> 
+  mutate(
+    diff = n / mean(n),
+    .by = c(bakgrunnur, ar)
+  ) |> 
+  ggplot(aes(man, diff)) +
+  geom_line(aes(col = ar, group = ar)) +
+  facet_wrap("bakgrunnur")
+
+
+d |> 
   rename(
     atv = atvinnugrein_balkar
   ) |> 

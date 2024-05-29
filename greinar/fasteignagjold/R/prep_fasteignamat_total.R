@@ -3,6 +3,7 @@ library(readxl)
 library(purrr)
 library(here)
 library(ggh4x)
+library(glue)
 
 read_fasteignagjold <- function(year) {
   
@@ -52,45 +53,18 @@ d <- map_df(2018:2024, read_fasteignagjold) |>
       str_detect(sveitarfelag, "Reykjav") ~ "Reykjavíkurborg",
       TRUE ~ sveitarfelag
     )
-  )
-
-d |> 
-  distinct(sveitarfelag) |> View()
-
-d |> 
-  count(sveitarfelag) |> 
-  arrange(n)
-
-d |> 
+  ) |> 
   mutate(
-    sd = sd(fasteignamat),
     n = n(),
     .by = sveitarfelag
   ) |> 
-  filter(n == max(n)) |> 
-  ggplot(aes(year, fasteignamat)) +
-  geom_line(
-    data = ~filter(.x, sveitarfelag == "Ísafjarðarbær"),
-    aes(group = sveitarfelag),
-    alpha = 0.3
-  ) +
-  geom_line(
-    data = ~filter(.x, sveitarfelag == "Reykjavíkurborg"),
-    linewidth = 1
-  ) +
-  scale_x_continuous(
-    guide = guide_axis_truncated()
-  ) +
-  scale_y_continuous(
-    # limits = c(0, NA),
-    # expand = expansion(c(0, 0.05)),
-    breaks = breaks_extended(n = 12),
-    labels = label_hlutf(),
-    guide = guide_axis_truncated()
-  ) +
-  labs(
-    x = NULL,
-    y = NULL,
-    title = "Heildarmagn fasteignamats sem vega inn í fasteignagjöld",
-    subtitle = "Sýnt eftir mismunandi sveitarfélögum"
+  filter(n == max(n)) 
+
+d |> 
+  # semi_join(
+  #   here("greinar", "fasteignagjold", "data", "svf_pop.csv") |>
+  #     read_csv()
+  # ) |>
+  write_csv(
+    here("greinar", "fasteignagjold", "data", "fasteignamat_total_clean.csv")
   )

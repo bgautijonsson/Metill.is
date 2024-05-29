@@ -3184,5 +3184,21 @@
     "keepFlags": [false],
     "source": ["json"],
     "download_date": ["2024-05-25"]
+  },
+  "9b0431c903834698821f58aff01017cf": {
+    "id": ["migr_asyappctzm"],
+    "time_format": ["date"],
+    "filters": {
+      "age": ["TOTAL"],
+      "asyl_app": ["ASY_APP"],
+      "citizen": ["TOTAL", "UA"],
+      "sex": ["T"]
+    },
+    "type": ["code"],
+    "select_time": null,
+    "stringsAsFactors": [false],
+    "keepFlags": [false],
+    "source": ["json"],
+    "download_date": ["2024-05-26"]
   }
 }

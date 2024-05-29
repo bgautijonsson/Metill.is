@@ -1,8 +1,9 @@
 ---
-title: "Fasteignir á Höfuðborgarsvæðinu"
-pagetitle: "Fasteignir á Höfuðborgarsvæðinu"
-subtitle: "Í vinnslu"
-date: "2023/12/04"
+title: "Fasteignaskattar, fasteignamat og fasteignagjöld"
+pagetitle: "Fasteignaskattar, fasteignamat og fasteignagjöld"
+subtitle: "Hver er munurinn á fasteignaskatti og fasteignagjöldum og hvernig hefur fasteignamat áhrif á þetta tvennt?"
+description: "Samhliða fasteignaskatti innheimta sveitarfélög ýmis gjöld svo sem fráveitu- og vatnsgjöld, lóðaleigu og sorpgjald. Saman kallast þessi gjöld gjarnan fasteignagjöld. Sum þessara gjalda eru reiknuð hlutfallslega út frá fasteignamati fasteignar, en þetta getur verið mismunandi eftir sveitarfélagi."
+date: "2024/05/29"
 draft: true
 execute:
   eval: true
@@ -10,23 +11,320 @@ categories:
     - efnahagur
     - sveitarfélög
     - fasteignaverð
-href: greinar/fasteignir/index.qmd
-image: map.png
+href: greinar/fasteignagjold/index.qmd
+image: Figures/fasteignagjold.png
 twitter-card:
-    image: map.png
+    image: Figures/fasteignagjold.png
+footnotes-hover: true
+reference-location: margin
 ---
 
 
 ```{r setup}
 #| include: false
 
-
 library(tidyverse)
-library(visitalaneysluverds)
 library(metill)
 library(geomtextpath)
 library(glue)
+library(gt)
+library(gtExtras)
+library(readxl)
+library(here)
 
 theme_set(theme_metill())
 
+source("R/fasteignamat_total_mynd.R")
+source("R/fasteignaskattur_mynd.R")
+
+gt_theme_metill <- function(gtable) {
+  gtable |> 
+    tab_style(
+      locations = cells_title("title"),
+      style = cell_text(font = "Lato", weight = 900, color = "#484D6D", size = px(18))
+    ) |>
+    tab_style(
+      locations = cells_title("subtitle"),
+      style = cell_text(font = "Lato", weight = 400, color = "#525252", size = px(14))
+    ) |> 
+    tab_style(
+      locations = cells_column_spanners(),
+      style = cell_text(weight = 600)
+    ) |> 
+    tab_style(
+      locations = cells_column_labels(columns = everything()),
+      style = cell_text(
+        font = google_font("Lato"), 
+        weight = 400,
+        color = "#525252"
+      )
+    ) |> 
+    opt_table_font(font = "Lato", weight = 400) |> 
+    opt_vertical_padding(scale = 0.6) |> 
+    tab_options(
+      heading.align = "left",
+      table.margin.left = px(0),
+      table.margin.right = px(0),
+      table.background.color = "#faf9f9",
+      stub.background.color = "#faf9f9", 
+      column_labels.background.color = "#faf9f9",
+      column_labels.font.weight = "normal", 
+      column_labels.border.top.style = "none", column_labels.border.bottom.width = px(2), 
+      column_labels.border.bottom.color = "#525252",
+      source_notes.font.size = 12,
+      table.font.size = 14
+    ) 
+}
+
 ```
+
+# Fasteignagjöld
+
+Samhliða fasteignaskatti innheimta sveitarfélög ýmis gjöld svo sem fráveitu- og vatnsgjöld, lóðaleigu og sorphreinsigjald og sorpeyðingargjald. Saman kallast þessi gjöld gjarnan fasteignagjöld. Sum þessara gjalda eru reiknuð hlutfallslega út frá fasteignamati fasteignar, en þetta getur verið mismunandi eftir sveitarfélagi. 
+
+Í þessari grein verður farið yfir þrjá undirliðina sem taka *(sum staðar)* mið af fasteignamati. Það eru *fasteignaskattur*, *vatnsgjald* og *fráveitugjald*.
+
+## Fasteignaskattur
+
+Fasteignaskattar eru reiknaðir sem prósenta af fasteignamati. Lægstir eru þeir 0.17% í Kópavogsbæ, Garðabæ og Seltjarnarnesbæ, en hæstir 0.62% í Skaftárhreppi, Þingeyjarsveit, Bolungarvíkurkaupstað, Strandabyggð og Vopnafjarðarhreppi[^fskattar2023]. Þetta jafnast út að einhverju leyti því fasteignamat er hærra á höfuðborgarsvæðinu, en þó getur þessi mismunur haft áhrif á upphæð fasteignagjalda.
+
+[^fskattar2023]: Samkvæmt álagningum árið 2023.
+
+
+```{r}
+#| column: page-left
+make_fasteignaskattur()
+```
+
+
+## Vatns- og fráveitugjöld 
+
+Til að átta sig á muninum á þessum tveimur álagningaraðferðum getur borgað sig að skoða dæmi. Samkvæmt álagningum ársins 2023 var fráveitugjald í Kópavogsbæ reiknað sem 0,065%  af fasteignamati en í Reykjavíkurborg reiknast það sem fast 12.262kr gjald auk 473,29 kr á hvern fermeter fasteignar. Sömuleiðis er vatnsgjald í Kópavogsbæ 0,06% af fasteignamati en í Reykjavíkurborg er það fast 5.084kr gjald auk 197,32kr á hvern fermeter. 
+
+```{r}
+tribble(
+  ~Sveitarfélag, ~Fráveitugjald, ~Vatnsgjald, ~Samtals,
+  "Reykjavíkurborg", "12.262kr + 473,29kr á hvern fermeter", "5.085kr + 197,32kr á hvern fermeter", "17.347kr + 670.61kr á hvern fermeter",
+  "Kópavogsbær", "0,065% af fasteignamati",  "0.06% af fasteignamati", "0.125% af fasteignamati",
+  "Garðabær", "0.085% af fasteignamati", "0.08% af fasteignamati", "0.165% af fasteignamati",
+  "Seltjarnarnesbær", "0.14% af fasteignamati", "0.086% af fasteignamati", "0.226% af fasteignamati"
+) |> 
+  gt() |> 
+  tab_header(
+    title = "Samantekt á vatns- og fráveitugjöldum í nokkrum sveitarfélögum höfuðborgarsvæðis"
+  ) |> 
+  tab_source_note(
+    md(
+      str_c(
+        "Reiknað út frá álögðum fasteignaskatti árið 2023 samkvæmt Sambandi íslenskra sveitarfélaga",
+        "<br>",
+        "https://samband.is/verkefnin/fjarmal/tekjustofnar-sveitarfelaga/fasteignaskattur/"
+      )
+    )
+  ) |> 
+  gt_theme_metill()
+```
+
+![Mynd 1. Áhrif fermetraverðs á vatns- og fráveitugjöld í nokkrum sveitarfélögum höfuðborgarsvæðis](Figures/compare_vatnsfraveitugjold_rvk_kop.png){.column-margin}
+
+Það fer eftir fermetraverði og stærð fasteignar hvort fyrirkomulagið skili sér í hærri útgjöldum fyrir eigandann. Myndin hér á hægri hönd sýnir þetta skýrt. Vatns- og fráveitugjöld í Reykjavíkurborg eru óháð fasteignamati og því hækka þau hvorki né lækka í takt við fermetraverð fasteignar. Því er öfugt farið í hinum sveitarfélögunum og hækka þessi gjöld samhliða fasteignamati eignarinnar. Ef fasteignamat hækkar um 10% hækka vatn- og fráveitugjöldin um sömu prósentu. Taflan að neðan ber saman hver vatns- og fráveitugjöldin yrðu í nokkrum fasteignum samkvæmt álagningu sveitarfélaganna.
+
+```{r}
+tibble(
+  eign = c("Fasteign 1", "Fasteign 2", "Fasteign 3", "Fasteign 4"),
+  fm = c(70.9, 199, 187.6, 137.8),
+  fasteignamat = c(50250000, 149250000, 128750000, 78150000)
+) |> 
+  mutate(
+    fermetraverd = fasteignamat / fm,
+    rvk = 17347 + 670.61 * fm,
+    kop = 0.0012 * fasteignamat,
+    gbr = 0.00165 * fasteignamat,
+    selt = 0.00226 * fasteignamat
+  ) |> 
+  gt() |> 
+  cols_label(
+    eign = "",
+    fm = md("m<sup>2</sup>"),
+    fasteignamat = "Fasteignamat",
+    fermetraverd = "Fermetraverð",
+    rvk = "Reykjavíkurborg",
+    kop = "Kópavogsbær",
+    gbr = "Garðabær",
+    selt = "Seltjarnarnes"
+  ) |> 
+  tab_spanner(
+    columns = 5:8,
+    label = "Vatns- og fráveitugjöld"
+  ) |> 
+  fmt_currency(
+    columns = 3:8, 
+    currency = "ISK", 
+    placement = "right",
+    sep_mark = ".",
+    dec_mark = ","
+  ) |> 
+  fmt_number(
+    columns = fm, 
+    dec_mark = ",", 
+    sep_mark = "."
+  ) |> 
+  tab_header(
+    title = "Samanburður á vatns- og fráveitugjöldum nokkurra fasteigna"
+  ) |> 
+  gt_theme_metill()
+```
+
+
+## Samanlagt
+
+```{r}
+tribble(
+  ~Sveitarfélag, ~Fráveitugjald, ~Vatnsgjald, ~Samtals,
+  "Reykjavíkurborg", "12.262kr + 473,29kr á hvern fermeter", "5.085kr + 197,32kr á hvern fermeter", "17.347kr + 670.61kr á hvern fermeter",
+  "Kópavogsbær", "0,065% af fasteignamati",  "0.06% af fasteignamati", "0.125% af fasteignamati",
+  "Garðabær", "0.085% af fasteignamati", "0.08% af fasteignamati", "0.165% af fasteignamati",
+  "Seltjarnarnesbær", "0.14% af fasteignamati", "0.086% af fasteignamati", "0.226% af fasteignamati"
+) |> 
+  gt() |> 
+  tab_header(
+    title = "Samantekt á vatns- og fráveitugjöldum í nokkrum sveitarfélögum höfuðborgarsvæðis"
+  ) |> 
+  tab_source_note(
+    md(
+      str_c(
+        "Reiknað út frá álögðum fasteignaskatti árið 2023 samkvæmt Sambandi íslenskra sveitarfélaga",
+        "<br>",
+        "https://samband.is/verkefnin/fjarmal/tekjustofnar-sveitarfelaga/fasteignaskattur/"
+      )
+    )
+  ) |> 
+  gt_theme_metill()
+```
+
+![Mynd 1. Áhrif fermetraverðs á fasteignagjöld í nokkrum sveitarfélögum höfuðborgarsvæðis](Figures/compare_fasteignagjold_rvk_kop.png){.column-margin}
+
+# Fasteignamat og fasteignagjöld
+
+Á hverju ári eru birtar uppfærslur á fasteignamati fasteigna. Einstaklingar í leit að sinni fyrstu íbúð fyllast angist yfir hækkandi fasteignaverði, en sömuleiðis getur hærra fasteignamat reynst eigendum bjarnagreiði þar sem hærra fasteignamat leiðir til hærri fasteignagjalda. Oft lítur fólk bara á fasteignaskattinn sjálfan þegar það skoðar hvaða áhrif hærri fasteignamat hefur á gjöldin, en réttast er að skoða vatns- og fráveitugjöldin sömuleiðis.
+
+Fasteignaskattur er til dæmis hærri í Reykjavíkurborg *(0,18%)* en í Kópavogsbæ *(0,17%)*. Því gætum við hugsað að hækkun fasteignamats hefur meiri áhrif á íbúann í Reykjavíkurborg. Ef við tökum þó vatns- og fráveitugjöld Kópavogsbæjar með í reikninginn sjáum við að fasteignagjöld Kópavogsbæjar byggja samtals á 0,295% af fasteignamati þar. E
+
+Ef fasteignamat tveggja fasteigna, önnur í Reykjavíkurborg og hin í Kópavogsbæ, hækka um sömu krónutöluna munu því fasteignagjöld eignarinnar í Kópavogsbæ hækka meira, að því gefnu að allar álögur haldist fastar.  Taflan að neðan sýnir hversu há prósenta af fasteigmati reiknast inn í fasteignagjöld hvers sveitarfélags fyrir sig. Hæsta prósentan er í Vesturbyggð, en þar byggja gjöldin samtals á 1,31% af fasteigmati, og lægsta prósentan er í Reykjavíkurborg, en þar byggja gjöldin samtals á 0,18% af fasteignamati[^vatnsgjoldrvk].
+
+[^vatnsgjoldrvk]: Á móti kemur að Reykjavíkurborg rukkar byggt á grunngjaldi og fermetrafjölda eignar. Slík uppsetning getur bitnað á fasteignum sem eru stórar og ódýrar líkt og sást á Mynd 1 að ofan.
+
+```{r}
+read_excel(
+  here("greinar", "fasteignagjold", "data", "fasteignagjold.xlsx"),
+  skip = 8,
+  col_names = c(
+    "svfn",
+    "sveitarfelag",
+    "utsvar",
+    "fskattur_a",
+    "fskattur_b",
+    "fskattur_c",
+    "fraveitugjald",
+    "vatnsgjald",
+    "sorphreinsun_tunnugjald",
+    "sorphreinsun_eydingargjald",
+    "lodarleiga_ibudir",
+    "lodarleiga_fyrirtaeki",
+    "fjoldi_gjalda"
+  ),
+  col_types = rep("text", 13)
+) |>
+  mutate(
+    sveitarfelag = str_replace_all(sveitarfelag, "[0-9]+\\)", "") |>
+      str_replace_all("1 \\)", "") |>
+      str_squish()
+  ) |>
+  drop_na(svfn) |>
+  select(sveitarfelag, fskattur_a, fraveitugjald, vatnsgjald) |>
+  mutate_at(
+    vars(fskattur_a, fraveitugjald, vatnsgjald),
+    ~ ifelse(str_detect(., "kr") | is.na(.), "0", as.character(.)) |>
+      str_replace(",", "\\.") |>
+      parse_number()
+  ) |> 
+  mutate_if(is.numeric, \(x) x / 100) |> 
+  mutate(fasteignagjold = (fskattur_a + fraveitugjald + vatnsgjald)) |> 
+  arrange(fasteignagjold) |> 
+  gt() |> 
+  cols_label(
+    sveitarfelag = "",
+    fskattur_a = "Fasteignaskattur",
+    fraveitugjald = "Fráveitugjöld",
+    vatnsgjald = "Vatnsgjöld",
+    fasteignagjold = "Fasteignagjöld"
+  ) |> 
+  cols_align(
+    align = "center", 
+    columns = -1
+  ) |> 
+  cols_width(
+    sveitarfelag ~ px(250)
+  ) |> 
+  tab_spanner(
+    columns = 2:4,
+    label = "Undirliðir"
+  ) |> 
+  fmt_percent() |> 
+  gt_color_rows(
+    columns = 2:5,
+    palette = "Greys"
+  ) |> 
+  tab_header(
+    "Sveitarfélögum landsins raðað eftir heildarhlutfalli fasteignamats sem skilar sér í fasteignagjöld", 
+    subtitle = md(
+      str_c(
+        '<div style="text-align: left"> ',
+        "Samhliða fasteignaskatti innheimta sveitarfélög ýmis gjöld svo sem <b>fráveitu- og vatnsgjöld</b>, ",
+        "<b>lóðaleigu</b> og <b>sorpgjald</b>. Saman kallast þessi gjöld gjarnan <b>fasteignagjöld</b>. ",
+        "Sum þessara gjalda eru reiknuð hlutfallslega út frá fasteignamati fasteignar eða út frá stærð hennar í fermetrum, ",
+        "og þetta getur verið mismunandi eftir sveitarfélagi",
+        '</div>'
+      )
+    )
+    
+  ) |> 
+  tab_footnote(
+    footnote = ""
+  ) |> 
+  tab_source_note(
+    md(
+      str_c(
+        "Gögn og kóði: https://github.com/bgautijonsson/fasteignagjold", "<br>",
+        "Nánar um fasteignaskatta og fasteignagjöld: https://samband.is/verkefnin/fjarmal/tekjustofnar-sveitarfelaga/fasteignaskattur/"
+      )
+    )
+  ) |> 
+  tab_style(
+    locations = cells_body(columns = fasteignagjold),
+    style = cell_borders(
+      sides = "left", 
+      weight = px(2) 
+    )
+  ) |> 
+  gt_theme_metill()
+
+```
+
+```{r}
+#| column: page-left
+make_fasteignamat_total()
+```
+
+# Fasteignamat
+
+Fasteignamat hækkar hins vegar ekki um sömu krónutölu yfir allt landið, heldur er það breytilegt frá ári til árs. Fasteignaskrá hefur birt sundurliðun á hækkun fasteignamats eftir sveitarfélagi og tegund fasteignar. Á mynd A eru þessar tölur teknar saman fyrir íbúðareignir, það er bæði fjölbýli og einbýli. Þar sjáum við að fasteignamat hækkaði að meðaltali mest í Seltjarnarnesbæ eða um 16,6 milljónir króna[^fastskra2024], en minnst í Grundarfjarðarbæ þar sem það lækkaði að meðaltali um 275 þúsund krónur. 
+
+Við getum svo notað ofangreindar tölur um meðaltal hækkunar fasteignamats og hlutfall fasteignamats í fasteignagjöldum til að reikna vænta hækkun fasteignagjalda út frá hækkun fasteignamats. Það er við getum svarað spurningunni: „Hvað munu fasteignagjöld hækka mikið að meðaltali í sveitarfélögum landsins að því gefnu að álögur haldist fastar?“ Á mynd C sjáum við samantekt á þessum tölum. Samkvæmt þessum forsendum munu fasteignagjöld hækka mest að meðaltali í Vesturbyggð eða um 85 þúsund krónur, en minnst í Grundarfjarðarbæ þar sem þau munu lækka um 1.900kr. Við sjáum líka að þótt fasteignamat hækkaði langmest í Seltjarnarnesbæ vegur fasteignamatið svo lítið í gjöldunum þar að vænt hækkun fasteignagjalda verður 65 þúsund krónur, ekki jafnmikil og í Vesturbyggð.
+
+Höfum þó í huga að mörg sveitarfélög eru nú þegar farin að tilkynna lækkanir á fasteignasköttum og því munu fasteignagjöld væntanlega hækka minna en þessi greining gefur til kynna. Munu sveitarfélögin sömuleiðis lækka vogir fasteignamats í vatns- og fráveitugjöldum?
+
+
+[^fastskra2024]: [Umfjöllun Fasteignaskrár um fasteignamat 2024](https://www.fasteignaskra.is/fasteignir/fasteignamat/2024/)
+
+
