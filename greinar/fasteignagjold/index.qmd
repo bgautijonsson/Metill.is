@@ -87,9 +87,9 @@ Samhliða fasteignaskatti innheimta sveitarfélög ýmis gjöld svo sem fráveit
 
 ## Fasteignaskattur
 
-Fasteignaskattar eru reiknaðir sem prósenta af fasteignamati. Lægstir eru þeir 0.17% í Kópavogsbæ, Garðabæ og Seltjarnarnesbæ, en hæstir 0.62% í Skaftárhreppi, Þingeyjarsveit, Bolungarvíkurkaupstað, Strandabyggð og Vopnafjarðarhreppi[^fskattar2023]. Þetta jafnast út að einhverju leyti því fasteignamat er hærra á höfuðborgarsvæðinu, en þó getur þessi mismunur haft áhrif á upphæð fasteignagjalda.
+Fasteignaskattar eru reiknaðir sem prósenta af fasteignamati. Lægstir eru þeir í Garðabæ *(0,163%)*, Kópavogsbæ *(0,165%)* og Seltjarnarnesbæ *(0,166%)*, en hæstir 0.625% í Þingeyjarsveit og Vopnafjarðarhreppi[^fskattar2024]. Þetta jafnast út að einhverju leyti því fasteignamat er hærra á höfuðborgarsvæðinu, en þó getur þessi mismunur haft áhrif á upphæð fasteignagjalda.
 
-[^fskattar2023]: Samkvæmt álagningum árið 2023.
+[^fskattar2023]: Samkvæmt álagningum ársins 2024
 
 ![Mynd 1. Áhrif fermetraverðs á fasteignaskatta í nokkrum sveitarfélögum höfuðborgarsvæðis](Figures/compare_fasteignaskattar_rvk_kop.png){.column-margin}
 
@@ -107,10 +107,10 @@ Til að átta sig á muninum á þessum tveimur álagningaraðferðum getur borg
 ```{r}
 tribble(
   ~Sveitarfélag, ~Fráveitugjald, ~Vatnsgjald, ~Samtals,
-  "Reykjavíkurborg", "12.262kr + 473,29kr á hvern fermeter", "5.085kr + 197,32kr á hvern fermeter", "17.347kr + 670.61kr á hvern fermeter",
-  "Kópavogsbær", "0,065% af fasteignamati",  "0.06% af fasteignamati", "0.125% af fasteignamati",
-  "Garðabær", "0.085% af fasteignamati", "0.08% af fasteignamati", "0.165% af fasteignamati",
-  "Seltjarnarnesbær", "0.14% af fasteignamati", "0.086% af fasteignamati", "0.226% af fasteignamati"
+  "Reykjavíkurborg", "12.952kr + 499,99kr á hvern fermeter", "5.370kr + 208,42kr á hvern fermeter", "18.322kr + 798,31kr á hvern fermeter",
+  "Kópavogsbær", "0,059% af fasteignamati",  "0.058% af fasteignamati", "0.117% af fasteignamati",
+  "Garðabær", "0.078% af fasteignamati", "0.074% af fasteignamati", "0.152% af fasteignamati",
+  "Seltjarnarnesbær", "0.1425% af fasteignamati", "0.0855% af fasteignamati", "0.228% af fasteignamati"
 ) |> 
   gt() |> 
   tab_header(
@@ -119,7 +119,7 @@ tribble(
   tab_source_note(
     md(
       str_c(
-        "Reiknað út frá álögðum fasteignaskatti árið 2023 samkvæmt Sambandi íslenskra sveitarfélaga",
+        "Reiknað út frá álögðum fasteignaskatti árið 2024 samkvæmt Sambandi íslenskra sveitarfélaga",
         "<br>",
         "https://samband.is/verkefnin/fjarmal/tekjustofnar-sveitarfelaga/fasteignaskattur/"
       )
@@ -140,10 +140,10 @@ tibble(
 ) |> 
   mutate(
     fermetraverd = fasteignamat / fm,
-    rvk = 17347 + 670.61 * fm,
-    kop = 0.0012 * fasteignamat,
-    gbr = 0.00165 * fasteignamat,
-    selt = 0.00226 * fasteignamat
+    rvk = 18322 + 798.31 * fm,
+    kop = 0.00117 * fasteignamat,
+    gbr = 0.00152 * fasteignamat,
+    selt = 0.00228 * fasteignamat
   ) |> 
   gt() |> 
   cols_label(
@@ -184,10 +184,10 @@ tibble(
 ```{r}
 tribble(
   ~Sveitarfélag, ~Fasteignaskattur, ~Fráveitugjald, ~Vatnsgjald, ~Samtals,
-  "Reykjavíkurborg", "0,18% af fasteignamati", "12.262kr + 473,29kr á hvern fermeter", "5.085kr + 197,32kr á hvern fermeter", "17.347kr + 0,18% af fasteignamati + 670,61kr á hvern fermeter",
-  "Kópavogsbær", "0,17% af fasteignamati","0,065% af fasteignamati",  "0,06% af fasteignamati", "0,295% af fasteignamati",
-  "Garðabær", "0,17% af fasteignamati", "0,085% af fasteignamati", "0,08% af fasteignamati", "0.335% af fasteignamati",
-  "Seltjarnarnesbær", "0,17% af fasteignamati", "0.14% af fasteignamati", "0.086% af fasteignamati", "0.396% af fasteignamati"
+  "Reykjavíkurborg", "0,18% af fasteignamati", "12.952kr + 499,99kr á hvern fermeter", "5.370kr + 208,42kr á hvern fermeter", "18.322kr + 0,18% af fasteignamati + 798,31kr á hvern fermeter",
+  "Kópavogsbær", "0,165% af fasteignamati", "0,059% af fasteignamati",  "0.058% af fasteignamati", "0.282% af fasteignamati",
+  "Garðabær", "0,163% af fasteignamati", "0.078% af fasteignamati", "0.074% af fasteignamati", "0.315% af fasteignamati",
+  "Seltjarnarnesbær", "0,166% af fasteignamati", "0.1425% af fasteignamati", "0.0855% af fasteignamati", "0.394% af fasteignamati"
 ) |> 
   gt() |> 
   tab_header(
@@ -196,7 +196,7 @@ tribble(
   tab_source_note(
     md(
       str_c(
-        "Reiknað út frá álögðum fasteignaskatti árið 2023 samkvæmt Sambandi íslenskra sveitarfélaga",
+        "Reiknað út frá álögðum fasteignaskatti árið 2024 samkvæmt Sambandi íslenskra sveitarfélaga",
         "<br>",
         "https://samband.is/verkefnin/fjarmal/tekjustofnar-sveitarfelaga/fasteignaskattur/"
       )
@@ -265,7 +265,8 @@ Ef fasteignamat tveggja fasteigna, önnur í Reykjavíkurborg og hin í Kópavog
 
 ```{r}
 read_excel(
-  here("greinar", "fasteignagjold", "data", "fasteignagjold.xlsx"),
+  here("greinar", "fasteignagjold", "data", "arbok", "rbok-2024-toflur.xlsx"),
+  sheet = "Tafla 14",
   skip = 8,
   col_names = c(
     "svfn",
@@ -319,7 +320,7 @@ read_excel(
     columns = 2:4,
     label = "Undirliðir"
   ) |> 
-  fmt_percent() |> 
+  fmt_percent(decimals = 3) |> 
   gt_color_rows(
     columns = 2:5,
     palette = "Greys"

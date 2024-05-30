@@ -9,7 +9,7 @@ theme_set(theme_metill())
 
 
 read_excel(
-  here("data-raw", "fasteignagjold.xlsx"),
+  here("greinar", "fasteignagjold", "data", "arbok", "rbok-2024-toflur.xlsx"),
   skip = 8,
   col_names = c(
     "svfn",
@@ -44,13 +44,34 @@ read_excel(
   mutate_if(is.numeric, \(x) x / 100) |> 
   mutate(fasteignagjold = (fskattur_a + fraveitugjald + vatnsgjald)) |> 
   arrange(fasteignagjold) |> 
+  inner_join(
+    read_excel(
+      here("greinar", "fasteignagjold", "data", "Sveitarfélög eftir tegundum eigna 2025.xlsx")
+    ) |>
+      janitor::clean_names() |>
+      filter(
+        tegund_eigna == "Íbúðareignir"
+      ) |>
+      mutate(
+        haekkun_verd = (fasteignamat_2025 - fasteignamat_2024) / fjoldi
+      ) |>
+      select(
+        sveitarfelag, haekkun_verd
+      )
+  ) |> 
+  mutate(
+    haekkun_mat = fasteignagjold * haekkun_verd
+  ) |> 
+  arrange(haekkun_mat) |> 
   gt() |> 
   cols_label(
     sveitarfelag = "",
     fskattur_a = "Fasteignaskattur",
     fraveitugjald = "Fráveitugjöld",
     vatnsgjald = "Vatnsgjöld",
-    fasteignagjold = "Fasteignagjöld"
+    fasteignagjold = "Fasteignagjöld",
+    haekkun_verd = "Fasteignamat",
+    haekkun_mat = "Fasteignagjöld"
   ) |> 
   cols_align(
     align = "center", 
@@ -63,13 +84,26 @@ read_excel(
     columns = 2:4,
     label = "Undirliðir"
   ) |> 
-  fmt_percent() |> 
+  tab_spanner(
+    2:5,
+    label = "% af fasteignamati í álögðum gjöldum"
+    ) |> 
+  tab_spanner(
+    columns = 6:7,
+    label = "Meðalhækkun"
+  ) |> 
+  fmt_percent(
+    2:5
+  ) |> 
+  fmt_currency(
+    6:7, currency = "ISK", placement = "right"
+  ) |> 
   gt_color_rows(
-    columns = 2:5,
+    columns = 2:7,
     palette = "Greys"
   ) |> 
   tab_header(
-    "Sveitarfélögum landsins raðað eftir heildarhlutfalli fasteignamats sem skilar sér í fasteignagjöld", 
+    "Sveitarfélögum landsins raðað eftir heildaráhrifum hærra fasteignamats á fasteignagjöld", 
     subtitle = md(
       str_c(
         '<div style="text-align: left"> ',
@@ -88,9 +122,11 @@ read_excel(
   tab_source_note(
     md(
       str_c(
-      "Gögn og kóði: github.com/bgautijonsson/fasteignagjold", "<br>",
-      "Nánar um fasteignaskatta og fasteignagjöld: samband.is/verkefnin/fjarmal/tekjustofnar-sveitarfelaga/fasteignaskattur/"
-    )
+        "Fasteignagjöld: https://www.samband.is/verkefnin/fjarmal/tekjustofnar-sveitarfelaga/fasteignaskattur/",
+        "<br>",
+        "Fasteignamat: https://www.fasteignaskra.is/library/Skrar/fasteignamat/2025/Sveitarfélög%20eftir%20tegundum%20eigna.xlsx"
+        
+      )
     )
   ) |> 
   # gt_theme_538() |> 
@@ -115,7 +151,7 @@ read_excel(
     )
   ) |> 
   tab_style(
-    locations = cells_body(columns = fasteignagjold),
+    locations = cells_body(columns = c(fasteignagjold, haekkun_verd)),
     style = cell_borders(
       sides = "left", 
       weight = px(2) 
@@ -137,15 +173,15 @@ read_excel(
     table.font.size = 14
   ) |> 
   gtsave(
-    filename = here("Figures", "table.png"),
+    filename = here("greinar", "fasteignagjold", "Figures", "table.png"),
     expand = 4,
     zoom = 7,
     vwidth = 1100
   )
 
-theme_metill
+# theme_metill
 
 
 
-gt_theme_538
+# gt_theme_538
 

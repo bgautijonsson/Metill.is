@@ -12,10 +12,10 @@ p <- crossing(
 ) |> 
   mutate(
     fasteignamat = fmverd * fm,
-    Kópavogsbær = 0.00125 * fasteignamat,
-    Reykjavíkurborg = 17347 + 670.61 * fm,
-    Garðabær = 0.00165 * fasteignamat,
-    Seltjarnarnesbær = 0.00226 * fasteignamat,
+    Kópavogsbær = 0.00117 * fasteignamat,
+    Reykjavíkurborg = 18322 + 798.31 * fm,
+    Garðabær = 0.00152 * fasteignamat,
+    Seltjarnarnesbær = 0.00228 * fasteignamat,
     fm2 = glue("{fm}~m^2") |> 
       fct_reorder(fm)
   ) |> 
