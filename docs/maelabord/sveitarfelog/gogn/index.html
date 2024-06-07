@@ -1092,36 +1092,37 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb18-27"><a href="#cb18-27" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Launa- og launatengd gjöld á íbúa"</span> <span class="ot">=</span> launagjold_per_ibui,</span>
 <span id="cb18-28"><a href="#cb18-28" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Launa- og launatengd gjöld sem hlutfall af útgjöldum"</span> <span class="ot">=</span> launagjold_hlutf_gjold,</span>
 <span id="cb18-29"><a href="#cb18-29" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Nettóskuldir sem hlutfall af tekjum"</span> <span class="ot">=</span> nettoskuldir_hlutf_tekjur,</span>
-<span id="cb18-30"><a href="#cb18-30" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Rekstrarniðurstaða á íbúa"</span> <span class="ot">=</span> rekstrarnidurstada_a_ibua,</span>
-<span id="cb18-31"><a href="#cb18-31" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Rekstrarniðurstaða sem hlutfall af tekjum"</span> <span class="ot">=</span> rekstrarnidurstada_hlutf,</span>
-<span id="cb18-32"><a href="#cb18-32" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Rekstrarniðurstaða undanfarinna 3 ára sem hlutfall af tekjum"</span> <span class="ot">=</span> rekstur_3_ar_hlutf_tekjur,</span>
-<span id="cb18-33"><a href="#cb18-33" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Útsvar og fasteignaskattur á íbúa"</span> <span class="ot">=</span> skattur_a_ibua,</span>
-<span id="cb18-34"><a href="#cb18-34" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Skuldir sem hlutfall af tekjum"</span> <span class="ot">=</span> skuldir_hlutf_tekjur,</span>
-<span id="cb18-35"><a href="#cb18-35" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Skuldir á íbúa"</span> <span class="ot">=</span> skuldir_per_ibui,</span>
-<span id="cb18-36"><a href="#cb18-36" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Tekjur á íbúa"</span> <span class="ot">=</span> tekjur_a_ibua,</span>
-<span id="cb18-37"><a href="#cb18-37" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Útgjöld á íbúa"</span> <span class="ot">=</span> gjold_a_ibua,</span>
-<span id="cb18-38"><a href="#cb18-38" aria-hidden="true" tabindex="-1"></a>    <span class="co"># "Veltufé frá rekstri sem hlutfall af nettóskuldum" = veltufe_hlutf_skuldir,</span></span>
-<span id="cb18-39"><a href="#cb18-39" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Veltufé frá rekstri sem hlutfall af tekjum"</span> <span class="ot">=</span> veltufe_hlutf_tekjur,</span>
-<span id="cb18-40"><a href="#cb18-40" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Veltufjárhlutfall"</span> <span class="ot">=</span> veltufjarhlutfall</span>
-<span id="cb18-41"><a href="#cb18-41" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span> </span>
-<span id="cb18-42"><a href="#cb18-42" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(</span>
-<span id="cb18-43"><a href="#cb18-43" aria-hidden="true" tabindex="-1"></a>    <span class="fu">c</span>(<span class="sc">-</span>sveitarfelag, <span class="sc">-</span>ar, <span class="sc">-</span>hluti),</span>
-<span id="cb18-44"><a href="#cb18-44" aria-hidden="true" tabindex="-1"></a>    <span class="at">names_to =</span> <span class="st">"name"</span>,</span>
-<span id="cb18-45"><a href="#cb18-45" aria-hidden="true" tabindex="-1"></a>    <span class="at">values_to =</span> <span class="st">"y"</span></span>
-<span id="cb18-46"><a href="#cb18-46" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span> </span>
-<span id="cb18-47"><a href="#cb18-47" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(ar, hluti, sveitarfelag, name) <span class="sc">|&gt;</span> </span>
-<span id="cb18-48"><a href="#cb18-48" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
-<span id="cb18-49"><a href="#cb18-49" aria-hidden="true" tabindex="-1"></a>    <span class="at">is_percent =</span> <span class="fu">ifelse</span>(</span>
-<span id="cb18-50"><a href="#cb18-50" aria-hidden="true" tabindex="-1"></a>      name <span class="sc">%in%</span> percent_vars,</span>
-<span id="cb18-51"><a href="#cb18-51" aria-hidden="true" tabindex="-1"></a>      <span class="cn">TRUE</span>,</span>
-<span id="cb18-52"><a href="#cb18-52" aria-hidden="true" tabindex="-1"></a>      <span class="cn">FALSE</span></span>
-<span id="cb18-53"><a href="#cb18-53" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb18-54"><a href="#cb18-54" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb18-55"><a href="#cb18-55" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb18-56"><a href="#cb18-56" aria-hidden="true" tabindex="-1"></a>throun_data <span class="sc">|&gt;</span> </span>
-<span id="cb18-57"><a href="#cb18-57" aria-hidden="true" tabindex="-1"></a>  <span class="fu">write_parquet</span>(</span>
-<span id="cb18-58"><a href="#cb18-58" aria-hidden="true" tabindex="-1"></a>    <span class="st">"throun_data.parquet"</span></span>
-<span id="cb18-59"><a href="#cb18-59" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb18-30"><a href="#cb18-30" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Ný langtímalán á íbúa"</span> <span class="ot">=</span> ny_langtimalan_a_ibua,</span>
+<span id="cb18-31"><a href="#cb18-31" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Rekstrarniðurstaða á íbúa"</span> <span class="ot">=</span> rekstrarnidurstada_a_ibua,</span>
+<span id="cb18-32"><a href="#cb18-32" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Rekstrarniðurstaða sem hlutfall af tekjum"</span> <span class="ot">=</span> rekstrarnidurstada_hlutf,</span>
+<span id="cb18-33"><a href="#cb18-33" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Rekstrarniðurstaða undanfarinna 3 ára sem hlutfall af tekjum"</span> <span class="ot">=</span> rekstur_3_ar_hlutf_tekjur,</span>
+<span id="cb18-34"><a href="#cb18-34" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Útsvar og fasteignaskattur á íbúa"</span> <span class="ot">=</span> skattur_a_ibua,</span>
+<span id="cb18-35"><a href="#cb18-35" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Skuldir sem hlutfall af tekjum"</span> <span class="ot">=</span> skuldir_hlutf_tekjur,</span>
+<span id="cb18-36"><a href="#cb18-36" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Skuldir á íbúa"</span> <span class="ot">=</span> skuldir_per_ibui,</span>
+<span id="cb18-37"><a href="#cb18-37" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Tekjur á íbúa"</span> <span class="ot">=</span> tekjur_a_ibua,</span>
+<span id="cb18-38"><a href="#cb18-38" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Útgjöld á íbúa"</span> <span class="ot">=</span> gjold_a_ibua,</span>
+<span id="cb18-39"><a href="#cb18-39" aria-hidden="true" tabindex="-1"></a>    <span class="co"># "Veltufé frá rekstri sem hlutfall af nettóskuldum" = veltufe_hlutf_skuldir,</span></span>
+<span id="cb18-40"><a href="#cb18-40" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Veltufé frá rekstri sem hlutfall af tekjum"</span> <span class="ot">=</span> veltufe_hlutf_tekjur,</span>
+<span id="cb18-41"><a href="#cb18-41" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Veltufjárhlutfall"</span> <span class="ot">=</span> veltufjarhlutfall</span>
+<span id="cb18-42"><a href="#cb18-42" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span> </span>
+<span id="cb18-43"><a href="#cb18-43" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(</span>
+<span id="cb18-44"><a href="#cb18-44" aria-hidden="true" tabindex="-1"></a>    <span class="fu">c</span>(<span class="sc">-</span>sveitarfelag, <span class="sc">-</span>ar, <span class="sc">-</span>hluti),</span>
+<span id="cb18-45"><a href="#cb18-45" aria-hidden="true" tabindex="-1"></a>    <span class="at">names_to =</span> <span class="st">"name"</span>,</span>
+<span id="cb18-46"><a href="#cb18-46" aria-hidden="true" tabindex="-1"></a>    <span class="at">values_to =</span> <span class="st">"y"</span></span>
+<span id="cb18-47"><a href="#cb18-47" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span> </span>
+<span id="cb18-48"><a href="#cb18-48" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(ar, hluti, sveitarfelag, name) <span class="sc">|&gt;</span> </span>
+<span id="cb18-49"><a href="#cb18-49" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb18-50"><a href="#cb18-50" aria-hidden="true" tabindex="-1"></a>    <span class="at">is_percent =</span> <span class="fu">ifelse</span>(</span>
+<span id="cb18-51"><a href="#cb18-51" aria-hidden="true" tabindex="-1"></a>      name <span class="sc">%in%</span> percent_vars,</span>
+<span id="cb18-52"><a href="#cb18-52" aria-hidden="true" tabindex="-1"></a>      <span class="cn">TRUE</span>,</span>
+<span id="cb18-53"><a href="#cb18-53" aria-hidden="true" tabindex="-1"></a>      <span class="cn">FALSE</span></span>
+<span id="cb18-54"><a href="#cb18-54" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb18-55"><a href="#cb18-55" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb18-56"><a href="#cb18-56" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-57"><a href="#cb18-57" aria-hidden="true" tabindex="-1"></a>throun_data <span class="sc">|&gt;</span> </span>
+<span id="cb18-58"><a href="#cb18-58" aria-hidden="true" tabindex="-1"></a>  <span class="fu">write_parquet</span>(</span>
+<span id="cb18-59"><a href="#cb18-59" aria-hidden="true" tabindex="-1"></a>    <span class="st">"throun_data.parquet"</span></span>
+<span id="cb18-60"><a href="#cb18-60" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 </section>

@@ -1,8 +1,8 @@
 {
-  "hash": "ce7daf4097f9d7c1b47c9816ff767645",
+  "hash": "ca9793b8886d13c8b4dbd54bf4bdd7e1",
   "result": {
     "engine": "knitr",
-    "markdown": "---\ntitle: \"Fyrirtæki\"\npagetitle: \"Fyrirtæki\"\nsubtitle: \"Hver er afkoma íslenskra fyrirtækja?\"\ndescription: |\n  Oft er talað um uppbyggingu fasteigna í sveitarfélögum landsins. Hvað segja gögnin um frammistöðu þeirra? Hvaða sveitarfélög byggja mest og hvernig ber það saman við mannfjöldann þar?\ndate: \"2022/10/31\"\ndraft: true\ncategories:\n    - stjórnmál\n    - efnahagur\n    - fasteignir\n    - sveitarfélög\nhref: greinar/fasteignafjoldi/index.qmd\nimage: Figures/throun_fast_per_einst_fp.png\nexecute:\n  eval: false\n---\n\n\n\n::: {.cell}\n\n:::\n\n::: {.cell}\n\n:::\n\n\n![](Figures/laun_hlutf_tekjur_page.png){.column-screen .between-content}\n\n\n\n::: {.cell}\n\n:::\n\n\n![](Figures/laun_per_starfs_page.png){.column-screen .between-content}\n\n\n\n\n::: {.cell}\n\n:::\n\n\n![](Figures/afgangur_hlutf_vinnsluvirdi_page.png){.column-screen .between-content}",
+    "markdown": "---\ntitle: \"Fyrirtæki\"\npagetitle: \"Fyrirtæki\"\nsubtitle: \"Hver er afkoma íslenskra fyrirtækja?\"\ndescription: \"Oft er talað um uppbyggingu fasteigna í sveitarfélögum landsins. Hvað segja gögnin um frammistöðu þeirra? Hvaða sveitarfélög byggja mest og hvernig ber það saman við mannfjöldann þar?\"\ndate: \"2022/10/31\"\ndraft: true\ncategories:\n    - stjórnmál\n    - efnahagur\n    - fasteignir\n    - sveitarfélög\nhref: greinar/fasteignafjoldi/index.qmd\nimage: Figures/throun_fast_per_einst_fp.png\nexecute:\n  eval: false\n---\n\n\n\n::: {.cell}\n\n:::\n\n::: {.cell}\n\n:::\n\n\n![](Figures/laun_hlutf_tekjur_page.png){.column-screen .between-content}\n\n\n\n::: {.cell}\n\n:::\n\n\n![](Figures/laun_per_starfs_page.png){.column-screen .between-content}\n\n\n\n\n::: {.cell}\n\n:::\n\n\n![](Figures/afgangur_hlutf_vinnsluvirdi_page.png){.column-screen .between-content}",
     "supporting": [
       "index_files"
     ],

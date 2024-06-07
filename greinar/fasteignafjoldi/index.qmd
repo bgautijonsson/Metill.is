@@ -21,14 +21,23 @@ library(tidyverse)
 library(metill)
 library(arrow)
 library(ggh4x)
+library(geomtextpath)
+library(ggtext)
+library(ggforce)
+library(patchwork)
 theme_set(theme_metill())
+
+pop <- read_parquet("data/data_pop.parquet") 
 
 d <- read_parquet("data/data_gleeson.parquet") |> 
   bind_rows(
     read_parquet("data/data_iceland.parquet")
   ) |> 
+  mutate(
+    year = year + 1
+  ) |> 
   inner_join(
-    read_parquet("data/data_pop.parquet")
+    read_parquet("data/data_pop.parquet") 
   ) |> 
   mutate(
     new_by_adult = new_dwellings / population_adult * 1000,
@@ -177,6 +186,42 @@ ggsave(
 )
 ```
 
+
+```{r}
+p <- d |> 
+  ggplot(aes(year, population_adult / dwellings)) +
+  geom_line(
+    aes(group = country),
+    alpha = 0.3,
+    linewidth = 0.4
+  ) +
+  geom_line(
+    data = ~filter(.x, country == "Ísland"),
+    linewidth = 1.5
+  ) +
+  scale_x_continuous(
+    breaks = seq(2007, 2023, by = 2),
+    guide = guide_axis_truncated()
+  ) +
+  scale_y_continuous(
+    breaks = breaks_extended(10),
+    guide = guide_axis_truncated()
+  ) +
+  labs(
+    x = NULL,
+    y = NULL,
+    title = "Heildarfjöldi fullorðna á hverja fasteign á Íslandi og í öðrum viðmiðunarlöndum",
+    subtitle = "Ísland sýnt með svartri línu og viðmiðunarlönd með gráum | íbúar eldri en 18 ára flokkaðir sem fullorðnir"
+  )
+
+ggsave(
+  plot = p,
+  filename = "Figures/adults_per_dwelling.png",
+  width = 8, height = 0.5 * 8,
+  scale = 1.8
+)
+```
+
 ```{r}
 p <- d |> 
   filter(
@@ -283,6 +328,211 @@ ggsave(
   plot = p,
   filename = "Figures/perc_increase_adults_dwellings.png",
   width = 8, height = 0.4 * 8,
+  scale = 1.8
+)
+```
+
+```{r}
+p1 <- d |> 
+  pivot_longer(c(dwellings, population_adult)) |> 
+  mutate(
+    name = fct_recode(
+      name,
+      "Fasteignir" = "dwellings",
+      "Fullorðnir" = "population_adult"
+    )
+  ) |> 
+  mutate(
+    idx = value / value[year == min(year)],
+    .by = c(country, name)
+  ) |> 
+  filter(
+    any(year == 2007),
+    .by = country
+  ) |> 
+  ggplot(aes(year, idx)) +
+  geom_line(
+    aes(
+      group = country, 
+      linewidth = (country == "Ísland"),
+      alpha = (country == "Ísland")
+    )
+  ) +
+  scale_x_continuous(
+    breaks = seq(2007, 2023, by = 2),
+    guide = guide_axis_truncated()
+  ) +
+  scale_y_continuous(
+    breaks = breaks_extended(10),
+    labels = function(x) hlutf(x - 1),
+    guide = guide_axis_truncated()
+  ) +
+  scale_linewidth_manual(
+    values = c(0.2, 1.4)
+  ) +
+  scale_alpha_manual(
+    values = c(0.3, 1)
+  ) +
+  facet_wrap("name") +
+  theme(
+    legend.position = "none"
+  ) +
+  labs(
+    x = NULL,
+    y = NULL,
+    subtitle = "Hlutfallsleg breyting á fjölda fasteigna og fullorðinna frá 2007 á Íslandi og í viðmiðunarlöndum"
+  )
+
+p2 <- d |> 
+  ggplot(aes(year, population_adult / dwellings)) +
+  geom_line(
+    aes(group = country),
+    alpha = 0.3,
+    linewidth = 0.4
+  ) +
+  geom_line(
+    data = ~filter(.x, country == "Ísland"),
+    linewidth = 1.5
+  ) +
+  geom_textsmooth(
+    data = ~filter(.x, country == "Pólland"),
+    linewidth = 1.5,
+    text_only = TRUE,
+    vjust = -0.4,
+    span = 0.5,
+    alpha = 0.3,
+    size = 3,
+    aes(
+      label = "Í mörgum löndum fækkaði fullorðnum á hverja fasteign"
+    )
+  ) +
+  geom_textsmooth(
+    data = ~filter(.x, country == "Ísland"),
+    linewidth = 1.5,
+    text_only = TRUE,
+    vjust = -0.4,
+    span = 0.4,
+    aes(
+      label = "Á Íslandi fjölgaði fullorðnum á hverja fasteign úr 1.83 í 1.88"
+    )
+  ) +
+  scale_x_continuous(
+    breaks = seq(2007, 2023, by = 2),
+    guide = guide_axis_truncated()
+  ) +
+  scale_y_continuous(
+    breaks = breaks_extended(10),
+    guide = guide_axis_truncated()
+  ) +
+  labs(
+    x = NULL,
+    y = NULL,
+    subtitle = "Fullorðnir á hverja fasteign"
+  )
+
+p3 <- d |> 
+  select(
+    year, country, dwellings, population_adult
+  ) |> 
+  filter(
+    country == "Ísland"
+  ) |> 
+  mutate(
+    adults_per_dwelling = population_adult / dwellings,
+    change_adults = population_adult / population_adult[1],
+    needed_total_dwellings = population_adult / adults_per_dwelling[1],
+    needed_new_dwellings = pmax(0, c(0, diff(needed_total_dwellings))),
+    obs_new_dwellings = c(0, diff(dwellings))
+  ) |>
+  crossing(month = 1:12) |> 
+  mutate(
+    date = clock::date_build(year, month),
+    needed_new_dwellings = if_else(
+      month == 1,
+      needed_new_dwellings,
+      NA
+    ),
+    obs_new_dwellings = if_else(
+      month == 1,
+      obs_new_dwellings,
+      NA
+    )
+  ) |> 
+  arrange(date) |> 
+  mutate(
+    obs_new_dwellings = zoo::na.approx(obs_new_dwellings, na.rm = FALSE),
+    needed_new_dwellings = zoo::na.approx(needed_new_dwellings, na.rm = FALSE),
+    ymax = pmax(obs_new_dwellings, needed_new_dwellings),
+    ymin = pmin(obs_new_dwellings, needed_new_dwellings),
+    group = (1 * (obs_new_dwellings > needed_new_dwellings)),
+    group2 = cumsum(group != lag(group, default = 0))
+  ) |> 
+  drop_na() |> 
+  ggplot(aes(x = date)) +
+  geom_ribbon(
+    aes(
+      ymax = ymax,
+      ymin = ymin,
+      group = group2,
+      fill = factor(group)
+    ),
+    alpha = 0.1
+  ) +
+  geom_textline(
+    aes(y = obs_new_dwellings, label = "Raunverulegur fjöldi"),
+    col = "black",
+    linewidth = 1,
+    size = 5,
+    hjust = 0.75,
+    vjust = 1.3,
+    text_smoothing = 1
+  ) +
+  geom_textline(
+    aes(y = needed_new_dwellings, label = "Fjöldi m.v. 1.83 fullorðna á hverja fasteign"),
+    col = "#e41a1c",
+    linewidth = 1,
+    hjust = 0.45,
+    size = 5,
+    vjust = -0.3
+  ) +
+  scale_x_date(
+    guide = guide_axis_truncated(),
+    breaks = breaks_width("2 year", offset = "year"),
+    labels = label_date_short()
+  ) +
+  scale_y_continuous(
+    guide = guide_axis_truncated(),
+    labels = label_number(big.mark = ".", decimal.mark = ",")
+  ) +
+  scale_fill_manual(
+    values = c("#e41a1c", "black")
+  ) +
+  theme(
+    legend.position = "none"
+  ) +
+  labs(
+    x = NULL,
+    y = NULL,
+    subtitle = "Hvað hefði þurft að byggja mikið á hverju ári til að halda fjölda fullorðinna á hverja fasteign föstum?"
+  )
+
+design = "
+AAABB
+CCCCC
+"
+
+p <- wrap_plots(list(p1, p2, p3)) +
+  plot_layout(design = design) +
+  plot_annotation(
+    title = "Þrátt fyrir mikla fasteignauppbyggingu á Íslandi hefur ekki tekist að halda í við fólksfjölgun",
+    subtitle = "Til að halda fjölda fullorðinna á hverja fasteign föstum hefði þurft að byggja samtals 4 þúsund fasteignir í viðbót"
+  )
+
+
+ggsave(
+  plot = p,
+  filename = "Figures/dwellings_needed_adult_increase.png",
+  width = 8, height = 0.55 * 8,
   scale = 1.8
 )
 ```

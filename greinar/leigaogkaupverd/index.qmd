@@ -2,8 +2,7 @@
 title: "Leiga og kaupverð"
 pagetitle: "Leiga og kaupverð"
 subtitle: "Hvernig ber leiguverði saman við kaupverð?"
-description: |
-  Stundum er talað um að leiga vaxi of hratt, eða að hún vaxi hægar en húsnæðisverð. Hérna nota ég kaupskrá, leiguskrá og vaxtatöflu Landsbanka til að bera leigu saman við afborganir á óverðtryggðu láni með jöfnum greiðslum og breytilegum vöxtum að því gefnu að kaupandi fær lán fyrir 80% af kaupverði fasteignarinnar.
+description: "Stundum er talað um að leiga vaxi of hratt, eða að hún vaxi hægar en húsnæðisverð. Hérna nota ég kaupskrá, leiguskrá og vaxtatöflu Landsbanka til að bera leigu saman við afborganir á óverðtryggðu láni með jöfnum greiðslum og breytilegum vöxtum að því gefnu að kaupandi fær lán fyrir 80% af kaupverði fasteignarinnar."
 date: "2023/11/01"
 categories:
     - stjórnmál
@@ -19,8 +18,7 @@ execute:
 ---
 
 
-```{r}
-#| include: false
+```{r setup}
 
 library(cowplot)
 library(tidyverse)
@@ -45,6 +43,7 @@ library(arrow)
 library(patchwork)
 library(geomtextpath)
 library(gt)
+library(ggh4x)
 theme_set(theme_metill())
 
 loess_span <- 0.3
@@ -219,7 +218,7 @@ leiguskra |> write_parquet("data/leiguskra_data.parquet")
 
 # Myndir
 
-::: {.panel-tabset}
+
 
 ## Kaupverð
 
@@ -368,25 +367,26 @@ p <- kaupskra |>
       )
   ) |> 
   filter(
-    year(dags) >= 2013
+    year(dags) >= 2012
   ) |> 
   ggplot(aes(dags, y = y + 1, ymin = lower + 1, ymax = upper + 1)) +
-  geom_ribbon(aes(group = group, fill = group, alpha = group), col = "grey70", size = 0.02) +
-  scale_x_date(
-    date_breaks = "year",
-    date_labels = "%Y",
-    expand = expansion()
-  ) +
+  geom_ribbon(
+    aes(group = group, fill = group, alpha = group), 
+    col = "grey70", 
+    size = 0.02
+    ) +
   geom_hline(yintercept = 1, lty = 2, alpha = 1) +
   facet_wrap("type") +
   scale_x_date(
     breaks = breaks_width("2 year", offset = "1 year"),
-    labels = label_date_short()
+    labels = label_date_short(),
+    guide = guide_axis_truncated()
   ) +
-  scale_y_tufte(
+  scale_y_continuous(
     labels = function(x) hlutf(x - 1),
-    breaks = tufte_breaks(leiguskra$y + 1),
-    trans = "log10"
+    breaks = breaks_extended(8),
+    trans = "log10",
+    guide = guide_axis_truncated()
   ) +
   scale_fill_brewer(type = "seq", palette = "PuBu") +
   scale_alpha_discrete(
@@ -396,22 +396,20 @@ p <- kaupskra |>
     fill = guide_legend(reverse = T, title.hjust = 0.5),
     alpha = "none"
   ) +
-  coord_cartesian(
-    
-  ) +
   theme(
     legend.position = "top",
     legend.title = element_text(colour = "#525252", family = "Lato"),
     legend.text = element_text(colour = "#525252", family = "Lato"),
-    plot.margin = margin(t = 5, r = 15, b = 5, l = 5)
+    plot.margin = margin(t = 5, r = 15, b = 5, l = 5),
+    legend.key.height = unit(0.2, "cm"),
+    legend.box.margin = margin(t = -5, b = -5)
   ) +
   labs(
     x = NULL,
     y = NULL,
-    title = "Hækkun kaup- og leiguverðs á ársgrundvelli",
+    title = "Hækkun endursölu- og leiguverðs fasteigna á ársgrundvelli",
     subtitle = "Reiknuð sem munur á núverandi og síðasta kaup/leiguverði fasteignar\nLeiðrétt fyrir tíma milli kaup/leigusamninga og vísitölu neysluverðs án fasteignaverðs",
-    fill = "Hlutfall samninga\nsem lenda innan hvers bils",
-    caption = "www.metill.is"
+    fill = "Hlutfall samninga\nsem lenda innan hvers bils"
   )
 
 
@@ -438,7 +436,7 @@ ggsave(
 
 ![](Figures/saman_breyting.png){.column-page}
 
-:::
+
 
 # Nánari samanburður
 
@@ -502,25 +500,28 @@ p <- kaupskra |>
     size = 5
   ) +
   scale_x_continuous(
-    labels = label_hlutf(),
+    labels = label_hlutf(accuracy = 1),
     expand = expansion(),
-    limits = c(0, 1)
+    limits = c(0, 1),
+    guide = guide_axis_truncated()
   ) +
   scale_y_continuous(
     labels = function(x) hlutf(x - 1),
     expand = expansion(),
     breaks = seq(0.4, 1.6, by = 0.2),
     trans = "log10",
-    limits = c(1 / 1.45, 1.45)
+    limits = c(1 / 1.45, 1.45),
+    guide = guide_axis_truncated()
   ) +
   scale_color_brewer(palette = "Set1") +
   scale_fill_brewer(palette = "Set1") +
   theme(
     legend.position = "none",
-    plot.margin = margin(t = 5, r = 25, b = 5, l = 25)
+    plot.margin = margin(t = 5, r = 25, b = 5, l = 25),
+    plot.title = element_text(margin = margin(t = 5, r = 5, b = 15, l = 5))
   ) +
   labs(
-    title = "Dreifing á verðbreytingu kaup- og leigusamninga",
+    title = "Dreifing á verðbreytingu kaup- og leigusamninga\n",
     subtitle = str_c(
       "Dagsetning: {next_state}\n",
       "Leiðrétt fyrir vísitölu neysluverðs án húsnæðis"
@@ -540,18 +541,18 @@ p <- kaupskra |>
   ease_aes("cubic-in-out")
 
 p_anim <- animate(
-  p, 
+  p,
   duration = 10,
   fps = 10,
   renderer = ffmpeg_renderer(format = "mp4"),
-  width = 1200, 
+  width = 1200,
   height = 746,
-  res = 110
+  res = 100
 )
 
 anim_save(
   animation = p_anim,
-  filename = "kaup_leiga_anim.mp4"
+  filename = "Figures/kaup_leiga_anim.mp4"
 )
 
 
