@@ -101,7 +101,8 @@ d |>
   mutate(
     man = month(dags),
     ar = year(dags),
-    atv = str_wrap(atv, 40)
+    atv = str_wrap(atv, 40),
+    atv = fct_reorder(atv, -hlutf)
   ) |> 
   mutate(
     mean = mean(starfandi),
@@ -112,7 +113,8 @@ d |>
   geom_line() +
   scale_y_continuous(
     breaks = breaks_pretty(),
-    labels = label_hlutf()
+    labels = label_hlutf(),
+    limits = c(0, 1)
   ) +
   scale_colour_distiller(palette = "RdBu") +
   facet_wrap("atv", scales = "free")

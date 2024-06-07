@@ -358,7 +358,7 @@ make_plot(
   plot_var = "grants",
   scaling_var = "per_pop",
   start_date = clock::date_build(2022, 3, 1),
-  end_date = clock::date_build(2024, 3, 1),
+  end_date = clock::date_build(2024, 4, 1),
   title = "Hvað er mörgum veitt tímabundin vernd í hverjum mánuði?",
   subtitle = "Sýnt sem fjöldi á 100.000 íbúa hvers lands",
   caption = caption,
@@ -382,7 +382,7 @@ make_plot(
   plot_var = "beneficiaries",
   scaling_var = "per_pop",
   start_date = clock::date_build(2022, 3, 1),
-  end_date = clock::date_build(2024, 3, 1),
+  end_date = clock::date_build(2024, 4, 1),
   title = "Hvar njóta flestir einstaklingar tímabundinnar verndar?",
   subtitle = "Sýnt sem fjöldi á 100.000 íbúa hvers lands",
   caption = caption,
@@ -447,7 +447,7 @@ make_plot(
   plot_var = "asylum_applicants_non_ukraine",
   scaling_var = "per_pop",
   start_date = clock::date_build(2022, 3, 1),
-  end_date = clock::date_build(2024, 2, 1),
+  end_date = clock::date_build(2024, 3, 1),
   title = "Hvar sækja flestir einstaklingar um hæli?",
   subtitle = "Sýnt sem fjöldi á 100.000 íbúa hvers lands",
   caption = caption
@@ -464,7 +464,7 @@ make_plot(
   plot_var = "asylum_applicants_non_ukraine",
   scaling_var = "per_pop_cumsum",
   start_date = clock::date_build(2022, 3, 1),
-  end_date = clock::date_build(2024, 1, 1),
+  end_date = clock::date_build(2024, 3, 1),
   title = "Hvar hafa flestir einstaklingar sótt um hæli? (Uppsafnaðar tölur frá mars 2022)",
   subtitle = "Sýnt sem fjöldi á 100.000 íbúa hvers lands",
   caption = caption,
@@ -601,7 +601,7 @@ make_plot(
   plot_var = "applicants_non_ukraine",
   scaling_var = "per_pop",
   start_date = clock::date_build(2022, 3, 1),
-  end_date = clock::date_build(2024, 2, 1),
+  end_date = clock::date_build(2024, 3, 1),
   title = "Hvar bíða flestir einstaklingar eftir niðurstöðu hælisumsóknar sinnar?",
   subtitle = "Sýnt sem fjöldi á 100.000 íbúa hvers lands",
   caption = caption,
@@ -621,7 +621,7 @@ make_plot(
 make_samantekt(
   height = 1 * 16,
   width = 16,
-  end_date = clock::date_build(c(2024, 2023, 2024), c(2, 10, 2)),
+  end_date = clock::date_build(c(2024, 2024, 2024), c(3, 1, 3)),
   number_labels = label_number(big.mark = ".", decimal.mark = ",")
 )
 ```
@@ -645,7 +645,7 @@ make_plot(
   plot_var = "total_grants",
   scaling_var = "per_pop",
   start_date = clock::date_build(2022, 3, 1),
-  end_date = clock::date_build(2023, 10, 1),
+  end_date = clock::date_build(2024, 1, 1),
   title = "Samtals veitingar á hæli og tímabundinni vernd í hverjum mánuði",
   subtitle = "Sýnt sem fjöldi á 100.000 íbúa hvers lands",
   caption = caption,

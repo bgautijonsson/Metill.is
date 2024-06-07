@@ -51,7 +51,7 @@ p1 <- data_hist |>
 
 
 p2 <- data_hist |> 
-  filter(year(time) >= 2023) |> 
+  filter(year(time) >= 2022) |> 
   summarise(
     value = sum(value),
     per_pop = sum(per_pop),
@@ -108,7 +108,7 @@ p2 <- data_hist |>
 
 
 p3 <- data_hist |> 
-  filter(year(time) >= 2023) |> 
+  filter(year(time) >= 2022) |> 
   summarise(
     value = sum(value),
     per_pop = sum(per_pop),
@@ -160,7 +160,7 @@ p3 <- data_hist |>
 
 
 p4 <- data_hist |> 
-  filter(year(time) >= 2023) |> 
+  filter(year(time) >= 2022) |> 
   summarise(
     value = sum(value),
     per_pop = sum(per_pop),
