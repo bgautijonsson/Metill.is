@@ -57,7 +57,6 @@ url <- "https://px.hagstofa.is:443/pxis/api/v1/is/Samfelag/vinnumarkadur/vinnuaf
 hg_dat <- hg_data(url) |> 
   filter(
     Aldur == "Alls",
-    Kyn == "Alls",
     Lögheimili == "Alls"
   )
 
@@ -88,8 +87,7 @@ if (!file.exists("data/vinnuafl.csv") | new_data) {
         str_detect(rekstrarform, "^K") ~ "Opinbert",  
         TRUE ~ "Annad"
       )
-    ) |> 
-    select(-kyn)
+    )
   
   d |> 
     write_csv("data/vinnuafl.csv")
@@ -135,7 +133,8 @@ heimild <- md("Heimild: [Gögn Hagstofu um fjölda starfandi samkvæmt skrám](h
 table_dat <- d |> 
   filter(
     bakgrunnur == "Alls",
-    rekstrarform != "Alls starfandi"
+    rekstrarform != "Alls starfandi",
+    kyn == "Alls"
   ) |> 
   select(tegund, rekstrarform, dags, starfandi) |> 
   arrange(desc(tegund), rekstrarform) |> 
@@ -165,7 +164,8 @@ table_dat <- d |>
 tegund_table_dat <- d |> 
   filter(
     bakgrunnur == "Alls",
-    rekstrarform != "Alls starfandi"
+    rekstrarform != "Alls starfandi",
+    kyn == "Alls"
   ) |> 
   select(tegund, rekstrarform, dags, starfandi) |> 
   arrange(desc(tegund), rekstrarform) |> 
@@ -276,7 +276,11 @@ table_dat |>
 
 
 plot_dat <-  d |>  
-  filter(rekstrarform != "Alls starfandi", bakgrunnur == "Alls") |>  
+  filter(
+    rekstrarform != "Alls starfandi", 
+    bakgrunnur == "Alls",
+    kyn == "Alls"
+    ) |>  
   count(dags, tegund, wt = starfandi) |>  
   pivot_wider(names_from = tegund, values_from = n) |>  
   filter(year(dags) >= 2008)
@@ -414,7 +418,8 @@ year_from <- 2015
 plot_dat <- d |>  
   filter(
     rekstrarform != "Alls starfandi",
-    bakgrunnur == "Alls"
+    bakgrunnur == "Alls",
+    kyn == "Alls"
   ) |>  
   count(dags, tegund, wt = starfandi) |>  
   pivot_wider(names_from = tegund, values_from = n) |>  
@@ -494,7 +499,8 @@ p2 <- plot_dat |>
 plot_dat <- d |>  
   filter(
     rekstrarform != "Alls starfandi",
-    bakgrunnur == "Alls"
+    bakgrunnur == "Alls",
+    kyn == "Alls"
   ) |>  
   count(dags, tegund, wt = starfandi) |>  
   filter(year(dags) >= year_from) |>  
@@ -598,7 +604,8 @@ year_from <- 2018
 plot_dat <- d |>  
   filter(
     rekstrarform != "Alls starfandi",
-    bakgrunnur == "Alls"
+    bakgrunnur == "Alls",
+    kyn == "Alls"
   ) |>  
   count(dags, tegund, wt = starfandi) |>  
   pivot_wider(names_from = tegund, values_from = n) |>  
@@ -674,7 +681,8 @@ p2 <- plot_dat |>
 plot_dat <- d |>  
   filter(
     rekstrarform != "Alls starfandi",
-    bakgrunnur == "Alls"
+    bakgrunnur == "Alls",
+    kyn == "Alls"
   ) |>  
   count(dags, tegund, wt = starfandi) |>  
   filter(year(dags) >= year_from) |>  
@@ -781,7 +789,11 @@ ggsave(
 theme_set(theme_metill(type = "standalone"))
 
 model_dat <- d |>  
-  filter(rekstrarform != "Alls starfandi", bakgrunnur == "Alls") |>  
+  filter(
+    rekstrarform != "Alls starfandi", 
+    bakgrunnur == "Alls",
+    kyn == "Alls"
+  ) |>  
   count(dags, tegund, wt = starfandi) |>  
   pivot_wider(names_from = tegund, values_from = n) |>  
   mutate(Heild = Opinbert + Annad) |> 
@@ -794,8 +806,14 @@ model_dat <- d |>
 m <- gam(Opinbert ~ s(manudur, bs = "cc") + s(timi, bs = "ad"), 
          data = model_dat, offset = log(Heild), family = nb(), method = "REML")
 
-plot_dat <- emmeans(m, ~ timi + manudur, at = list(timi = model_dat$timi,
-                                                   manudur = 1:12), offset = 0) |> 
+plot_dat <- emmeans(
+  m, 
+  ~ timi + manudur, 
+  at = list(
+    timi = model_dat$timi,
+    manudur = 1:12), 
+  offset = 0
+  ) |> 
   tidy(type = "response") |> 
   group_by(timi) |> 
   mutate(wt = 1 / std.error,
@@ -1077,7 +1095,10 @@ Hér nota ég *GAM* til að smootha gögnin og nota svo árstíðaleiðrétt smo
 
 
 plot_dat <- d |>  
-  filter(rekstrarform != "Alls starfandi") |>  
+  filter(
+    rekstrarform != "Alls starfandi",
+    kyn == "Alls"
+  ) |>  
   count(dags, tegund, bakgrunnur, wt = starfandi) |>  
   pivot_wider(names_from = tegund, values_from = n) |> 
   mutate(Heild = Annad + Opinbert) |> 
@@ -1161,7 +1182,10 @@ ggsave(
 xlims <- c(min(plot_dat$dags), max(plot_dat$dags) + years(1) + months(4))
 
 plot_dat <- d |>  
-  filter(rekstrarform != "Alls starfandi") |>  
+  filter(
+    rekstrarform != "Alls starfandi",
+    kyn == "Alls"
+  ) |>  
   count(dags, tegund, bakgrunnur, wt = starfandi) |>  
   pivot_wider(names_from = tegund, values_from = n) |> 
   mutate(Heild = Annad + Opinbert) |> 
@@ -1270,7 +1294,9 @@ p2 <- plot_dat |>
   )
 
 p3 <- plot_dat |> 
-  filter(bakgrunnur == "Alls") |> 
+  filter(
+    bakgrunnur == "Alls"
+  ) |> 
   ggplot(aes(dags, breyting)) +  
   geom_line(
     data = tibble(x = range(plot_dat$dags), y = c(0, 0)),
@@ -1336,7 +1362,11 @@ ggsave(
 
 
 plot_dat <- d |>  
-  filter(rekstrarform != "Alls starfandi", bakgrunnur == "Alls") |>  
+  filter(
+    rekstrarform != "Alls starfandi", 
+    bakgrunnur == "Alls",
+    kyn == "Alls"
+  ) |>  
   count(dags, tegund, wt = starfandi) |>  
   pivot_wider(names_from = tegund, values_from = n) |> 
   mutate(Heild = Annad + Opinbert) |> 
@@ -1403,7 +1433,10 @@ ggsave(
 
 
 plot_dat <- d |>  
-  filter(rekstrarform != "Alls starfandi") |>  
+  filter(
+    rekstrarform != "Alls starfandi",
+    kyn == "Alls"
+  ) |>  
   count(dags, tegund, bakgrunnur, wt = starfandi) |>  
   pivot_wider(names_from = tegund, values_from = n) |> 
   mutate(Heild = Annad + Opinbert) |> 
@@ -1570,7 +1603,8 @@ ggsave(
 ```{r}
 plot_dat <- d |> 
   filter(
-    bakgrunnur != "Alls"
+    bakgrunnur != "Alls",
+    kyn == "Alls"
   ) |> 
   count(dags, bakgrunnur, tegund, wt = starfandi) |> 
   mutate(
@@ -1645,7 +1679,8 @@ ggsave(
 
 plot_dat <- d |> 
   filter(
-    rekstrarform != "Alls starfandi"
+    rekstrarform != "Alls starfandi",
+    kyn == "Alls"
   ) |> 
   select(dags, rekstrarform, bakgrunnur, starfandi) |> 
   pivot_wider(names_from = bakgrunnur, values_from = starfandi, values_fill = 0) |> 
@@ -1712,7 +1747,8 @@ highlight(
 ```{r}
 plot_dat <- d |> 
   filter(
-    rekstrarform != "Alls starfandi"
+    rekstrarform != "Alls starfandi",
+    kyn == "Alls"
   ) |> 
   select(dags, rekstrarform, bakgrunnur, starfandi) |> 
   pivot_wider(names_from = bakgrunnur, values_from = starfandi, values_fill = 0) |> 
