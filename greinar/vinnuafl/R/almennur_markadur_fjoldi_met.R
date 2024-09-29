@@ -9,7 +9,7 @@ theme_set(theme_metill(type = "standalone"))
 d <- vroom::vroom("greinar/vinnuafl/data/vinnuafl.csv")
 
 prev_record <- d |> 
-  filter(bakgrunnur == "Alls",
+  filter(bakgrunnur == "Alls", kyn == "Alls",
          rekstrarform != "Alls starfandi") |> 
   count(dags, tegund, wt = starfandi) |> 
   filter(
@@ -19,7 +19,7 @@ prev_record <- d |>
   pull(n)
 
 min_2024 <- d |> 
-  filter(bakgrunnur == "Alls",
+  filter(bakgrunnur == "Alls", kyn == "Alls",
          rekstrarform != "Alls starfandi") |> 
   count(dags, tegund, wt = starfandi) |> 
   filter(
@@ -29,7 +29,7 @@ min_2024 <- d |>
   pull(n)
 
 d |> 
-  filter(bakgrunnur == "Alls",
+  filter(bakgrunnur == "Alls", kyn == "Alls",
          rekstrarform != "Alls starfandi") |> 
   count(dags, tegund, wt = starfandi) |> 
   filter(
@@ -39,7 +39,7 @@ d |>
   pull(n)
 
  p <- d |> 
-  filter(bakgrunnur == "Alls",
+  filter(bakgrunnur == "Alls", kyn == "Alls",
          rekstrarform != "Alls starfandi") |> 
   count(dags, tegund, wt = starfandi) |> 
   filter(tegund == "Annad") |>

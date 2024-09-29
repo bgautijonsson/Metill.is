@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.4.555">
+<meta name="generator" content="quarto-1.5.57">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -10,7 +10,7 @@
 <meta name="dcterms.date" content="2022-10-14">
 <meta name="description" content="Alþingi, ríkisstjórn og ríkið á helst að endurspegla þjóðina í öllum sínum kostum og göllum. Eitt málefni sem er okkur öllum mikilvægt er matur. Hvað finnst okkur gott að borða? Hvar finnst okkur gott að borða? Er ríkið sammála okkur í þessum málum? Hér skoða ég útgjöld ríkisins til veitingastaða, veisluþjónusta og mötuneyta.">
 
-<title>Opinberar veitingar</title>
+<title>Opinberar veitingar – Metill</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -145,7 +145,7 @@ ul.task-list li input[type="checkbox"] {
   </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
 <!-- sidebar -->
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
         
     </div>
 <!-- main -->
@@ -155,9 +155,6 @@ ul.task-list li input[type="checkbox"] {
 
 
 
-<div class="cell">
-
-</div>
 <p>Á <a href="www.opnirreikningar.is" target="_blank">opnirreikningar.is</a> stendur:</p>
 <blockquote class="blockquote">
 <p>Opnirreikningar.is var opnaður í september 2017 með það að markmiði að auka gagnsæi og aðgengi almennings að fjárhagsupplýsingum ríkisins. Á vefnum er unnt að skoða upplýsingar um greidda reikninga ráðuneyta og stofnana úr bókhaldi ríkisins.</p>
@@ -233,9 +230,6 @@ ul.task-list li input[type="checkbox"] {
 <p>Þetta er hringrás. Þegar öllu er á botninn hvolft erum við sponsaðir af ríkinu.</p>
 <p>Arnar Þór Ólafsson</p>
 </blockquote>
-<div class="cell">
-
-</div>
 <p class="page-columns page-full"><img src="Figures/veitingastadir_page.png" class="between-content column-screen img-fluid"></p>
 </section>
 <section id="heildarútgjöld-eftir-stofnun" class="level2 page-columns page-full">
@@ -258,18 +252,12 @@ Frumkvöðlaráðgjöf Pyngjunnar og Metils
 </div>
 </div>
 </div>
-<div class="cell">
-
-</div>
 <p class="page-columns page-full"><img src="Figures/stofnanir_saman.png" class="column-screen img-fluid"></p>
 </section>
 </section>
 <section id="veisluþjónustur-og-mötuneyti" class="level1 page-columns page-full">
 <h1>Veisluþjónustur og mötuneyti</h1>
 <p>Veitingastaðir blikna þó í samanburði við veisluþjónustur og mötuneyti. Til að setja þau útgjöld í smá samhengi voru <strong>útgjöld ríkisins til Múlakaffi ehf 431 m.kr</strong> á tímabilinu, samanborið við <strong>426 m.kr til Krabbameinsfélags Íslands</strong>, og það er bara eitt fyrirtækið! Það er nóg til að kaupa 360.669,5 skammta af 15 kjötbollum úr Ikea, eða gefa þúsund manns einn skammt á dag í heilt ár.</p>
-<div class="cell">
-
-</div>
 <p class="page-columns page-full"><img src="Figures/mulakaffi_krabbamein.png" class="column-page img-fluid"></p>
 
 
@@ -314,18 +302,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }
     return false;
   }
-  const clipboard = new window.ClipboardJS('.code-copy-button', {
-    text: function(trigger) {
-      const codeEl = trigger.previousElementSibling.cloneNode(true);
-      for (const childEl of codeEl.children) {
-        if (isCodeAnnotation(childEl)) {
-          childEl.remove();
-        }
-      }
-      return codeEl.innerText;
-    }
-  });
-  clipboard.on('success', function(e) {
+  const onCopySuccess = function(e) {
     // button target
     const button = e.trigger;
     // don't keep focus
@@ -357,7 +334,29 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }, 1000);
     // clear code selection
     e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
   });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
     var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
     var mailtoRegex = new RegExp(/^mailto:/);
       var filterRegex = new RegExp("https:\/\/metill\.is");
@@ -365,7 +364,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
         return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
     }
     // Inspect non-navigation links and adorn them if external
- 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool)');
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
     for (var i=0; i<links.length; i++) {
       const link = links[i];
       if (!isInternal(link.href)) {

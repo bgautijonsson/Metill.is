@@ -12,6 +12,7 @@ atvinna <- get_eurostat(
     age = "Y20-64"
   ),
   cache = TRUE,
+  update_cache = TRUE,
   cache_dir = "data"
 ) 
 

@@ -14,7 +14,7 @@ categories:
 href: greinar/fasteignafjoldi_svf/index.qmd
 image: Figures/throun_fast_per_einst_fp.png
 execute:
-  eval: true
+  eval: false
 ---
 
 
@@ -220,7 +220,7 @@ p <- plot_dat |>
 
 ggsave(
   plot = p,
-  file = "Figures/full_per_fast_dumbbell.png",
+  file = "Greinar/fasteignafjoldi_svf/Figures/full_per_fast_dumbbell.png",
   width = 8, height = 0.5 * 8, scale = 1.5
 )
 ```
@@ -720,7 +720,7 @@ ggsave(
 
 
 ```{r dreifing_nyjar_per_einst}
-#| eval: true
+#| eval: false
 
 fyrir_year <- 2010
 

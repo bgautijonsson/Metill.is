@@ -66,13 +66,16 @@ hg_date <- hg_dat |>
   as.Date(format = "%YM%mD%d") |> 
   max()
 
-data_date <- read_csv("data/vinnuafl.csv") |> 
+file_path <- here::here("greinar", "vinnuafl", "data", "vinnuafl.csv")
+
+data_date <- file_path |> 
+  read_csv() |> 
   pull(dags) |> 
   max()
 
 new_data <- hg_date > data_date
 
-if (!file.exists("data/vinnuafl.csv") | new_data) {
+if (!file.exists(file_path) | new_data) {
   
   d <- hg_dat |>  
     collect() |> 
@@ -90,9 +93,9 @@ if (!file.exists("data/vinnuafl.csv") | new_data) {
     )
   
   d |> 
-    write_csv("data/vinnuafl.csv")
+    write_csv(file_path)
 } else {
-  d <- vroom::vroom("data/vinnuafl.csv")
+  d <- vroom::vroom(file_path)
 }
 ```
 

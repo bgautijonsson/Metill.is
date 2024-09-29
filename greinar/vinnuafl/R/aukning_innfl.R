@@ -1,7 +1,8 @@
 p <- d |> 
   filter(
     bakgrunnur == "Innflytjendur",
-    rekstrarform == "Alls starfandi"
+    rekstrarform == "Alls starfandi",
+    kyn == "Alls"
   ) |> 
   mutate(
     breyting = c(diff(starfandi), 0),
