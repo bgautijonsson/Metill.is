@@ -51,9 +51,9 @@ temporary_protection_hist <- get_eurostat(
     age = "TOTAL",
     sex = "T"
   )
-)  |> 
-  select(-citizen, -age, -sex, -freq, -unit) |> 
-  label_eurostat() |> 
+) |>
+  select(-citizen, -age, -sex, -freq, -unit) |>
+  label_eurostat() |>
   rename(
     granted_temporary_protection = values
   )
@@ -69,80 +69,80 @@ pop_hist <- get_eurostat(
 
 #### Sameining gagna ####
 
-asylum_applicants_hist <- asylum_applicants_hist |> 
-  janitor::remove_constant() |> 
-  label_eurostat() |> 
-  pivot_wider(names_from = citizen, values_from = values) |> 
+asylum_applicants_hist <- asylum_applicants_hist |>
+  janitor::remove_constant() |>
+  label_eurostat() |>
+  pivot_wider(names_from = citizen, values_from = values) |>
   mutate(
     asylum_applicants = Total - Ukraine
-  ) |> 
+  ) |>
   select(-Ukraine, -Total)
 
-decisions_hist <- decisions_hist |> 
-  janitor::remove_constant() |> 
+decisions_hist <- decisions_hist |>
+  janitor::remove_constant() |>
   label_eurostat()
 
-pop_hist <- pop_hist |> 
-  janitor::remove_constant() |> 
+pop_hist <- pop_hist |>
+  janitor::remove_constant() |>
   label_eurostat()
 
-data_hist <- decisions_hist |> 
+data_hist <- decisions_hist |>
   rename(
     decisions = values
-  ) |> 
+  ) |>
   inner_join(
     pop_hist |> rename(pop = values) |> drop_na(),
     by = join_by(geo, time)
-  ) |> 
-  pivot_wider(names_from = decision, values_from = decisions) |> 
-  janitor::clean_names() |> 
-  select(citizen:pop, total_positive_decisions) |> 
-  pivot_wider(names_from = citizen, values_from = total_positive_decisions) |> 
+  ) |>
+  pivot_wider(names_from = decision, values_from = decisions) |>
+  janitor::clean_names() |>
+  select(citizen:pop, total_positive_decisions) |>
+  pivot_wider(names_from = citizen, values_from = total_positive_decisions) |>
   left_join(
     temporary_protection_hist,
     by = join_by(geo, time)
-  ) |> 
+  ) |>
   mutate(
     granted_temporary_protection = coalesce(granted_temporary_protection, 0),
     total = Total - Ukraine + granted_temporary_protection,
     total_non_ukr = Total - Ukraine
-  ) |> 
-  select(geo, time, pop, total, total_non_ukr) |> 
+  ) |>
+  select(geo, time, pop, total, total_non_ukr) |>
   inner_join(
     asylum_applicants_hist,
     by = join_by(geo, time)
-  ) |> 
+  ) |>
   inner_join(
     metill::country_names(),
     by = join_by(geo == country)
-  ) |> 
-  filter(land != "Kýpur") |> 
-  select(-geo)  
-  # filter(year(time) < 2023)
+  ) |>
+  filter(land != "Kýpur") |>
+  select(-geo)
+# filter(year(time) < 2023)
 
-data_hist_total <- data_hist |> 
-  drop_na() |> 
-  group_by(time) |> 
+data_hist_total <- data_hist |>
+  drop_na() |>
+  group_by(time) |>
   summarise_at(
     vars(pop, total, total_non_ukr, asylum_applicants),
     sum
-  ) |> 
+  ) |>
   mutate(
     land = "Samtals"
   )
 
-data_hist <- data_hist |> 
+data_hist <- data_hist |>
   bind_rows(
     data_hist_total
-  ) |> 
-  pivot_longer(c(total, total_non_ukr, asylum_applicants)) 
+  ) |>
+  pivot_longer(c(total, total_non_ukr, asylum_applicants))
 
 
 
 # d <- here(cache_dir, "raw_data.csv") |>
 #   read_csv()
-# 
-# 
+
+
 # d_2024 <- d |>
 #   filter(
 #     year(time) == 2024,
@@ -157,9 +157,9 @@ data_hist <- data_hist |>
 #     )
 #   ) |>
 #   select(-gdp, -per_pop_cumsum, -per_gdp)
-# 
-# 
-# 
+
+
+
 # end_date <- d_2024 |>
 #   drop_na() |>
 #   summarise(
@@ -176,8 +176,8 @@ data_hist <- data_hist |>
 #   ) |>
 #   pull(end_date) |>
 #   min()
-# 
-# 
+
+
 # d_2024 <- d_2024 |>
 #   filter(
 #     time <= end_date
@@ -205,9 +205,9 @@ data_hist <- data_hist |>
 #   )
 
 data_hist <- data_hist |>
-#   bind_rows(
-#     d_2024
-#   ) |> 
+  #   bind_rows(
+  #     d_2024
+  #   ) |>
   mutate(
     per_pop = value / pop * 1e5,
     per_pop = coalesce(per_pop, 0),
@@ -229,21 +229,21 @@ data_hist <- data_hist |>
   ) |>
   arrange(land, time)
 
-data_hist |> 
+data_hist |>
   write_csv(here(cache_dir, "data_hist.csv"))
 
 #### Pretty data raw counts ####
 
-data_hist |> 
-  select(time, land, name, value) |> 
-  pivot_wider() |> 
+data_hist |>
+  select(time, land, name, value) |>
+  pivot_wider() |>
   rename(
     "Fjöldi verndarveitinga(bæði hæli og tímabundin vernd)" = total,
     "Fjöldi hælisveitinga" = total_non_ukr,
     "Fjöldi umsókna um hæli" = asylum_applicants,
     "Dagsetning" = time,
     "Land" = land
-  ) |> 
+  ) |>
   write_csv(
     here(cache_dir, "data_hist_pretty_rawcounts.csv")
   )
@@ -251,16 +251,16 @@ data_hist |>
 
 #### Pretty data per pop ####
 
-data_hist |> 
-  select(time, land, name, value = per_pop) |> 
-  pivot_wider() |> 
+data_hist |>
+  select(time, land, name, value = per_pop) |>
+  pivot_wider() |>
   rename(
     "Fjöldi verndarveitinga(bæði hæli og tímabundin vernd)" = total,
     "Fjöldi hælisveitinga" = total_non_ukr,
     "Fjöldi umsókna um hæli" = asylum_applicants,
     "Dagsetning" = time,
     "Land" = land
-  ) |> 
+  ) |>
   write_csv(
     here(cache_dir, "data_hist_pretty_perpop.csv")
   )

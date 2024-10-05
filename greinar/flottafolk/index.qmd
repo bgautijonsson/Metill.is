@@ -35,6 +35,7 @@ library(ggiraph)
 library(gt)
 library(gtExtras)
 library(ggtext)
+library(here)
 
 Sys.setlocale("LC_ALL", "is_IS.UTF-8")
 
@@ -67,8 +68,14 @@ litur_total <- "#005824"
 
 litur_annad <- "#737373"
 
-d <- read_csv("data/raw_data.csv")
-data_hist <- read_csv("data/data_hist.csv")
+d <- here("greinar", "flottafolk", "data", "raw_data.csv") |> 
+  read_csv()
+
+d <- here("greinar", "flottafolk", "data", "raw_data.csv") |> 
+  read_csv()
+
+data_hist <- here("greinar", "flottafolk", "data", "data_hist.csv") |> 
+  read_csv()
 ```
 
 
