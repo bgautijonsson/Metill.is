@@ -2,8 +2,7 @@
 title: "Fyrstu kaupendur"
 pagetitle: "Fyrstu kaupendur"
 subtitle: "Hvernig standa fyrstu kaupendur á fasteignamarkaðinum?"
-description: | 
-    Skoðum gögn fasteignaskrár, sem flutti nýlega frá Þjóðskrá til HMS, um fyrstu kaupendur og komumst að því hvort meðalaldur þeirra hafi breyst, hversu stór hluti kaupenda eru fyrstu kaupendur, og hvernig kaupverði ber saman við ráðstöfunartekur ungs fólks.
+description: "Skoðum gögn fasteignaskrár, sem flutti nýlega frá Þjóðskrá til HMS, um fyrstu kaupendur og komumst að því hvort meðalaldur þeirra hafi breyst, hversu stór hluti kaupenda eru fyrstu kaupendur, og hvernig kaupverði ber saman við ráðstöfunartekur ungs fólks."
 author: 
     -   name: "Brynjólfur Gauti Guðrúnar Jónsson"
         url: "https://twitter.com/bggjonsson"
@@ -21,7 +20,8 @@ image: Figures/kaupmattur.png
 twitter-card:
     image: Figures/kaupmattur.png
 execute:
-  eval: true
+  eval: false
+draft: true
 ---
 
 Nýlega var [umsjón fasteignaskrár flutt frá Þjóðskrá til Húsnæðis- og mannvirkjastofnunar (HMS)](https://hms.is/frettir/flutningur-kerfa-fasteignaskrar-fra-%C3%BEjo%C3%B0skra-til-hmsloki%C3%B0){target="_blank"}. Núna er því hægt að nálgast öll gögn sem tengjast henni á [fasteignaskra.is](https://fasteignaskra.is/){target="_blank"}. Hér ætlum við að skoða [gögnin um fyrstu kaupendur](https://fasteignaskra.is/gogn/fasteignagattin/fasteignavidskipti/fyrstu-kaupendur/){target="_blank"}. Með því að skoða "page source" getum við púslað saman hlekki á JSON skrárnar á bak við myndirnar á síðunni.
@@ -145,16 +145,47 @@ if (!file.exists("data/data.csv")) {
   
   url <- "https://talnaefni.fasteignaskra.is/talnaefni/v1/ibudavisitala"
   
-  vst <- tibble(
+  vst1 <- tibble(
     data = rjson::fromJSON(file = url)
   ) |> 
     unnest_wider(data) |> 
     select(dags = date, vst = Vst_heild) |> 
     mutate(
       dags = as_date(dags),
-      vst = parse_number(vst),
-      vst = vst / vst[dags == max(dags)]
+      vst = parse_number(vst)
     )
+  
+  vst2 <- read_csv("https://frs3o1zldvgn.objectstorage.eu-frankfurt-1.oci.customer-oci.com/n/frs3o1zldvgn/b/public_data_for_download/o/kaupvisitala.csv") |> 
+    mutate(
+      dags = clock::date_build(AR, parse_number(MANUDUR))
+    ) |> 
+    select(dags, 4) |> 
+    rename(dags = 1, vst = 2)  
+  
+  vst <- vst1 |> 
+    mutate(
+      type = "old"
+    ) |> 
+    bind_rows(
+      vst2 |> 
+        mutate(
+          type = "new"
+        )
+    ) |> 
+    mutate(
+      diff = log(vst) - log(lag(vst)),
+      .by = type
+    ) |> 
+    filter(
+      (type == "old") | (dags > clock::date_build(2024, 1))
+    ) |> 
+    drop_na() |> 
+    mutate(
+      vst = exp(cumsum(diff))
+    ) |> 
+    select(-type, -diff) |> 
+    mutate(vst = vst / vst[dags == max(dags)])
+  
   
   url <- "https://px.hagstofa.is:443/pxis/api/v1/is/Samfelag/launogtekjur/3_tekjur/1_tekjur_skattframtol/TEK01001.px"
   
@@ -293,6 +324,9 @@ p1 <- plot_dat |>
     subtitle = "Sýnt fyrir landið í heild sinni (svart) og stærri sveitarfélög (grátt)",
     labels = label_hlutf(),
     limits = c(0, 0.4)
+  ) +
+  theme(
+    plot.margin = margin(5, 15, 5, 15)
   )
 
 ggsave(
@@ -320,6 +354,9 @@ p2 <- plot_dat |>
   ) +
   coord_cartesian(
     ylim = c(25, 35)
+  ) +
+  theme(
+    plot.margin = margin(5, 15, 5, 15)
   )
 
 ggsave(
@@ -377,7 +414,10 @@ p3 <- plot_dat |>
     span = 0.2
   ) +
   coord_cartesian(
-    ylim = c(90, 140)
+    ylim = c(0, 140)
+  ) +
+  theme(
+    plot.margin = margin(5, 15, 5, 15)
   )
 
 ggsave(
@@ -404,7 +444,10 @@ p4 <- plot_dat |>
     span = 0.2
   ) +
   coord_cartesian(
-    ylim = c(30, 90) * 1e6
+    ylim = c(00, 90) * 1e6
+  ) +
+  theme(
+    plot.margin = margin(5, 15, 5, 15)
   )
 
 ggsave(
@@ -433,6 +476,9 @@ p5 <- plot_dat |>
   ) +
   coord_cartesian(
     ylim = c(300, 800) * 1e3
+  ) +
+  theme(
+    plot.margin = margin(5, 15, 5, 15)
   )
 
 ggsave(
@@ -504,6 +550,9 @@ p6 <- plot_dat |>
   ) +
   coord_cartesian(
     # ylim = c(20, 90)
+  ) +
+  theme(
+    plot.margin = margin(5, 15, 5, 15)
   )
 
 ggsave(

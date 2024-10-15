@@ -2,15 +2,16 @@
 title: "Fjármál stjórnmálaflokkanna"
 pagetitle: "Fjármál stjórnmálaflokkanna"
 subtitle: "Greining á ársreikningum stjórnmálaflokka úr gögnum Ríkisendurskoðunar"
-description: |
-  Hversu miklar tekjur hafa stjórnmálaflokkarnir og hvaðan koma þær? Hækka útgjöld þeirra sjáanlega í kringum kosningar og eiga þeir einhverjar eignir? Hér köfum við ofan í ársreikninga stjórnmálaflokkanna.
-date: "2023/06/21"
+description: "Hversu miklar tekjur hafa stjórnmálaflokkarnir og hvaðan koma þær? Hækka útgjöld þeirra sjáanlega í kringum kosningar og eiga þeir einhverjar eignir? Hér köfum við ofan í ársreikninga stjórnmálaflokkanna."
+date: "2024/10/15"
 categories:
     - stjórnmál
     - efnahagur
     - ársreikningar
 href: greinar/stjornmalaflokkar/index.qmd
 image: Figures/eigidfe_page.png
+execute: 
+  freeze: false
 ---
 
 
@@ -88,17 +89,17 @@ if (!file.exists("data/data.csv")) {
     )
   
   d |> 
-    write_csv("data/data.csv")
+    write_csv(here::here("greinar/stjornmalaflokkar/data/data.csv"))
   
 } else {
-  d <- read_csv("data/data.csv")
+  d <- read_csv(here::here("greinar/stjornmalaflokkar/data/data.csv"))
 }
 ```
 
 
 ```{r}
 
-dreifing_plot <- function(data, title, breaks = 2007:2021, labels = 2007:2021) {
+dreifing_plot <- function(data, title, breaks = 2007:2023, labels = 2007:2023) {
   plot_dat <- data |> 
     select(ar, flokkur, value, litur) |> 
     group_by(ar) |> 
@@ -160,7 +161,7 @@ dreifing_plot <- function(data, title, breaks = 2007:2021, labels = 2007:2021) {
   
 }
 
-magn_plot <- function(data, title, breaks = 2007:2021, labels = 2007:2021) {
+magn_plot <- function(data, title, breaks = 2007:2023, labels = 2007:2023) {
   plot_dat <- data |> 
     select(ar, flokkur, value, litur) |> 
     group_by(ar) |> 
@@ -272,7 +273,7 @@ p <- plot_dat |>
   geom_col(aes(fill = flokkur), width = 1, colour = "grey95", position = "stack") +
   scale_x_continuous(
     expand = expansion(),
-    breaks = 2007:2021
+    breaks = 2007:2022
   ) +
   scale_y_continuous(
     expand = expansion(),
@@ -304,7 +305,7 @@ p <- plot_dat |>
   geom_col(aes(fill = flokkur), width = 1, colour = "grey95", position = "fill") +
   scale_x_continuous(
     expand = expansion(),
-    breaks = 2007:2021
+    breaks = 2007:2022
   ) +
   scale_y_continuous(
     expand = expansion(),
@@ -350,22 +351,22 @@ Með því að færa músina yfir y-ás er hægt að þysja inn og sjá betur þ
 #| layout-nrow: 1
 #| column: screen-inset
 
-breaks <- seq(2007, 2021, by = 2)
+breaks <- seq(2007, 2022, by = 3)
 labels <- breaks
 
 d |> 
   mutate(value = framlog_fyrirtaekja,
          value = value / cpi) |> 
   magn_plot(title = "Framlög fyrirtækja",
-            breaks =  seq(2007, 2021, by = 2),
-            labels =  seq(2007, 2021, by = 2))
+            breaks =  seq(2007, 2022, by = 3),
+            labels =  seq(2007, 2022, by = 3))
 
 d |> 
   mutate(value = framlog_einstaklinga,
          value = value / cpi) |> 
   magn_plot(title = "Framlög einstaklinga",
-            breaks =  seq(2007, 2021, by = 2),
-            labels =  seq(2007, 2021, by = 2))
+            breaks =  seq(2007, 2022, by = 3),
+            labels =  seq(2007, 2022, by = 3))
 ```
 
 ### Dreifing
@@ -379,15 +380,15 @@ d |>
   mutate(value = framlog_fyrirtaekja,
          value = value / cpi) |> 
   dreifing_plot(title = "Dreifing framlaga fyrirtækja/lögaðila",
-                breaks =  seq(2007, 2021, by = 2),
-                labels =  seq(2007, 2021, by = 2))
+                breaks =  seq(2007, 2022, by = 3),
+                labels =  seq(2007, 2022, by = 3))
 
 d |> 
   mutate(value = framlog_einstaklinga,
          value = value / cpi) |> 
   dreifing_plot(title = "Dreifing framlaga einstaklinga",
-                breaks =  seq(2007, 2021, by = 2),
-                labels =  seq(2007, 2021, by = 2))
+                breaks =  seq(2007, 2022, by = 3),
+                labels =  seq(2007, 2022, by = 3))
 
 ```
 
@@ -411,7 +412,7 @@ p <- plot_dat |>
   geom_col(aes(fill = flokkur), width = 1, colour = "grey95", position = "fill") +
   scale_x_continuous(
     expand = expansion(),
-    breaks = 2007:2021
+    breaks = 2007:2022
   ) +
   scale_y_continuous(
     expand = expansion(),
@@ -451,15 +452,15 @@ d |>
   mutate(value = adrar_tekjur,
          value = value / cpi) |> 
   dreifing_plot(title = "Dreifing annarra tekna",
-                breaks = seq(2007, 2021, by = 2),
-                labels = seq(2007, 2021, by = 2))
+                breaks = seq(2007, 2022, by = 3),
+                labels = seq(2007, 2022, by = 3))
 
 d |> 
   mutate(value = adrar_tekjur,
          value = value / cpi) |> 
   magn_plot(title = "Aðrar tekjur",
-            breaks = seq(2007, 2021, by = 2),
-            labels = seq(2007, 2021, by = 2))
+            breaks = seq(2007, 2022, by = 3),
+            labels = seq(2007, 2022, by = 3))
 
 
 ```
@@ -475,6 +476,7 @@ d |>
 ::: {.column width="50%"}
 
 ```{r}
+#| eval: false
 plot_dat <- d |> 
   mutate(
     value = ifelse(
@@ -508,9 +510,9 @@ p <- plot_dat |>
     aes(label = flokkur, hjust = flokkur)
   ) +
   scale_x_continuous(
-    limits = c(2014.8, 2021.2),
+    limits = c(2014.8, 2022.2),
     expand = expansion(),
-    breaks = c(2015:2021)
+    breaks = c(2015:2022)
   ) +
   scale_y_continuous(
     labels = label_isk(scale = 1e-6),
@@ -522,7 +524,7 @@ p <- plot_dat |>
     values = flokkar_palette() |> slice(8, 1, 5) |> pull(litur)
   ) +
   scale_hjust_manual(
-    values = c(0.1, 0.4, 0.8)
+    values = c(0.1, 0.55, 0.9)
   ) +
   theme(legend.position = "none") +
   labs(
@@ -541,7 +543,7 @@ ggsave(
       panel.background = element_rect(fill = "#f0efef"),
       panel.grid = element_blank()
     ), 
-  filename = "Figures/samanburdur_page.png",
+  filename = "greinar/stjornmalaflokkar/Figures/samanburdur_page.png",
   width = 8, 
   height = 0.56 * 8, 
   scale = 1.1, 
@@ -550,7 +552,7 @@ ggsave(
 
 ggsave(
   plot = p, 
-  filename = "Figures/samanburdur.png",
+  filename = "greinar/stjornmalaflokkar/Figures/samanburdur.png",
   width = 8, 
   height = 0.5 * 8, 
   scale = 1.3, 
@@ -566,6 +568,7 @@ ggsave(
 ::: {.column width="50%"}
 
 ```{r}
+#| eval: false
 plot_dat <- d |> 
   mutate(
     value = ifelse(
@@ -601,9 +604,9 @@ p <- plot_dat |>
     text_smoothing = 0.6
   ) +
   scale_x_continuous(
-    limits = c(2014.8, 2021.3),
+    limits = c(2014.8, 2022.3),
     expand = expansion(),
-    breaks = c(2015:2021)
+    breaks = c(2015:2022)
   ) +
   scale_y_continuous(
     labels = label_isk(scale = 1e-6),
@@ -615,7 +618,7 @@ p <- plot_dat |>
     values = flokkar_palette() |> slice(8, 6, 1, 5) |> pull(litur)
   ) +
   scale_hjust_manual(
-    values = c(0.1, 0.55, 0.15, 0.4)
+    values = c(0.1, 0.55, 0.15, 0.43)
   ) +
   theme(legend.position = "none") +
   labs(
@@ -634,7 +637,7 @@ ggsave(
       panel.background = element_rect(fill = "#f0efef"),
       panel.grid = element_blank()
     ), 
-  filename = "Figures/samanburdur2_page.png",
+  filename = "greinar/stjornmalaflokkar/Figures/samanburdur2_page.png",
   width = 8, 
   height = 0.56 * 8, 
   scale = 1.1, 
@@ -643,7 +646,7 @@ ggsave(
 
 ggsave(
   plot = p, 
-  filename = "Figures/samanburdur2.png",
+  filename = "greinar/stjornmalaflokkar/Figures/samanburdur2.png",
   width = 8, 
   height = 0.5 * 8, 
   scale = 1.3, 
@@ -667,7 +670,7 @@ Við sjáum að útgjöld flokkanna aukast á árum sem kosningar fara fram. Var
 ```{r}
 #| fig-asp: 0.8
 #| column: page
-breaks <- 2007:2021
+breaks <- 2007:2022
 labels <- c(
   "2007\nKosningar",
   "2008",
@@ -678,7 +681,8 @@ labels <- c(
   "2016\nKosningar",
   "2017\nKosningar",
   2018:2020,
-  "2021\nKosningar"
+  "2021\nKosningar",
+  2022
 )
 
 
@@ -715,8 +719,8 @@ d |>
   mutate(value = eignir,
          value = value / cpi) |> 
   magn_plot(title = "Eignir",
-            breaks = seq(2007, 2021, by = 2),
-            labels = seq(2007, 2021, by = 2))
+            breaks = seq(2007, 2022, by = 1),
+            labels = seq(2007, 2022, by = 1))
 
 
 
@@ -736,15 +740,15 @@ d |>
   mutate(value = veltufjarmunir,
          value = value / cpi) |> 
   magn_plot(title = "Veltufjármunir",
-            breaks = seq(2007, 2021, by = 2),
-            labels = seq(2007, 2021, by = 2))
+            breaks = seq(2007, 2022, by = 3),
+            labels = seq(2007, 2022, by = 3))
 
 d |> 
   mutate(value = eignir - veltufjarmunir,
          value = value / cpi) |> 
   magn_plot(title = "Fastafjármunir",
-            breaks = seq(2007, 2021, by = 2),
-            labels = seq(2007, 2021, by = 2))
+            breaks = seq(2007, 2022, by = 3),
+            labels = seq(2007, 2022, by = 3))
 ```
 
 ```{r}
@@ -785,8 +789,8 @@ p <- plot_dat |>
   labs(
     x = "Samanlagðar fasteignir stjórnmálaflokks",
     y = NULL,
-    title = "Fasteignir stjórnmálaflokka í ársreikningum 2020",
-    subtitle = "Fjórir flokkar eiga fasteignir fyrir meira en 80 m.kr",
+    title = "Fasteignir stjórnmálaflokka í ársreikningum 2022",
+    subtitle = "Fjórir flokkar eiga fasteignir fyrir 80 m.kr eða meira",
     caption = "Metill.is"
   )
 
@@ -864,8 +868,8 @@ d |>
   mutate(value = eignir - skuldir,
          value = value / cpi) |>
   magn_plot(title = "Eigið fé íslenskra stjórnmálaflokka",
-            breaks = seq(2007, 2021, by = 2),
-            labels = seq(2007, 2021, by = 2))
+            breaks = seq(2007, 2022, by = 1),
+            labels = seq(2007, 2022, by = 1))
 
 ```
 
@@ -886,8 +890,8 @@ d |>
          value = value / cpi) |>
   mutate(value = value * (value >= 0)) |>
   dreifing_plot(title = "Dreifing eigin fjár íslenskra stjórnmálaflokka",
-                breaks = seq(2007, 2021, by = 2),
-                labels = seq(2007, 2021, by = 2)) 
+                breaks = seq(2007, 2022, by = 1),
+                labels = seq(2007, 2022, by = 1)) 
 
 ```
 
@@ -911,7 +915,7 @@ plot_dat <- d |>
 p <- plot_dat |> 
   ggplot(aes(ar, value)) +
   geom_col(aes(fill = flokkur), position = "stack", colour = "grey95", width = 1) +
-  scale_x_continuous(breaks = 2007:2021) +
+  scale_x_continuous(breaks = 2007:2022) +
   scale_y_continuous(labels = isk) +
   scale_fill_manual(
     values = c(

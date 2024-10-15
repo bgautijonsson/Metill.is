@@ -15,7 +15,7 @@ twitter-card:
   image: image.png
 ---
 
-```{r setu}
+```{r setup}
 #| include: false
 
 library(cowplot)
@@ -55,7 +55,15 @@ download_fun <- function(url) {
 
 
 ```{r data}
-if (!file.exists("data/data.csv")) {
+file_path <- here::here("greinar", "tekjurskattar", "data", "data.csv")
+if (!file.exists(file_path)) {
+
+  eignir <- download_fun("https://px.hagstofa.is:443/pxis/api/v1/is/Samfelag/lifskjor/5_skuldastada_heimili/1_skuldir_eignir/THJ09004.px")
+  skuldir <- download_fun("https://px.hagstofa.is:443/pxis/api/v1/is/Samfelag/lifskjor/5_skuldastada_heimili/1_skuldir_eignir/THJ09003.px")
+  eigid_fe <- download_fun("https://px.hagstofa.is:443/pxis/api/v1/is/Samfelag/lifskjor/5_skuldastada_heimili/1_skuldir_eignir/THJ09005.px")
+  heildartekjur <- download_fun("https://px.hagstofa.is:443/pxis/api/v1/is/Samfelag/lifskjor/5_skuldastada_heimili/1_skuldir_eignir/THJ09002.px")
+  radstofunartekjur <- download_fun("https://px.hagstofa.is:443/pxis/api/v1/is/Samfelag/lifskjor/5_skuldastada_heimili/1_skuldir_eignir/THJ09006.px")
+
   
   d <- tribble(
     ~tiundarbreyta, ~url, 
@@ -66,7 +74,7 @@ if (!file.exists("data/data.csv")) {
     "Ráðstöfunartekjur", "https://px.hagstofa.is:443/pxis/api/v1/is/Samfelag/lifskjor/5_skuldastada_heimili/1_skuldir_eignir/THJ09006.px"
   ) |> 
     mutate(
-      data = map(url, download_fun)
+      data = list(eignir, skuldir, eigid_fe, heildartekjur, radstofunartekjur)
     )
   
   d <- d |> 
@@ -109,10 +117,10 @@ if (!file.exists("data/data.csv")) {
     )
   
   d |> 
-    write_csv("data/data.csv")
+    write_csv(file_path)
   
 } else {
-  d <- read_csv("data/data.csv")
+  d <- read_csv(file_path)
 }
 ```
 
@@ -298,7 +306,7 @@ p <- plot_dat |>
   )
 
 
-metill_ggplotly(
+ggplotly(
   p,
   tooltip = "text"
 ) |> 

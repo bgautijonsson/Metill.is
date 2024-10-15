@@ -2,7 +2,6 @@
   {
     "listing": "/pyngjan.html",
     "items": [
-      "/pyngjan/fyrstukaupendur/index.html",
       "/pyngjan/haskolar/index.html",
       "/pyngjan/fasteignafjoldi/index.html",
       "/pyngjan/opinberar_veitingar/index.html",
@@ -12,16 +11,16 @@
   {
     "listing": "/index.html",
     "items": [
+      "/greinar/stjornmalaflokkar/index.html",
+      "/greinar/vinnuafl/index.html",
       "/greinar/flottafolk/index.html",
       "/greinar/visitala_neysluverds/index.html",
-      "/greinar/vinnuafl/index.html",
       "/greinar/flottafolk_a_islandi/index.html",
       "/greinar/leigaogkaupverd/index.html",
       "/greinar/faedingartidni/index.html",
       "/greinar/launagognfjarsyslu/index.html",
       "/greinar/tekjurskattar/index.html",
       "/greinar/leikskolar/index.html",
-      "/greinar/stjornmalaflokkar/index.html",
       "/greinar/loftgaedi/index.html",
       "/greinar/landspitali/index.html",
       "/maelabord/jardskjalftar/index.html",
@@ -42,16 +41,16 @@
   {
     "listing": "/greinar.html",
     "items": [
+      "/greinar/stjornmalaflokkar/index.html",
+      "/greinar/vinnuafl/index.html",
       "/greinar/flottafolk/index.html",
       "/greinar/visitala_neysluverds/index.html",
-      "/greinar/vinnuafl/index.html",
       "/greinar/flottafolk_a_islandi/index.html",
       "/greinar/leigaogkaupverd/index.html",
       "/greinar/faedingartidni/index.html",
       "/greinar/launagognfjarsyslu/index.html",
       "/greinar/tekjurskattar/index.html",
       "/greinar/leikskolar/index.html",
-      "/greinar/stjornmalaflokkar/index.html",
       "/greinar/loftgaedi/index.html",
       "/greinar/landspitali/index.html"
     ]
