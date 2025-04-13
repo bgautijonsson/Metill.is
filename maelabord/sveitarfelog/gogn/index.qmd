@@ -58,6 +58,37 @@ mannfjoldi <- hg_data(url) |>
 ## Efnahagur
 
 ```{r}
+read_excel("Efnahagsreikningar 2023.xlsx", skip = 4) |> 
+  clean_names() |> 
+  fill(ar, sveitarfelag, hluti) |> 
+  filter(
+    flokkur_1 %in% c(
+      "Veltufjármunir Total", 
+      "Varanlegir rekstrarfjármunir", 
+      "Áhættufjármunir og langtímakröfur",
+      "Skuldbindingar", 
+      "Langtímaskuldir",
+      "Skammtímaskuldir", 
+      "Eigið fé"
+    ) | tegund %in% c(
+      "Skammtímakröfur á eigin fyrirtæki",
+      "Aðrar skammtímakröfur"
+    )
+  ) |> 
+  mutate(
+    flokkur_1 = ifelse(is.na(flokkur_1), tegund, flokkur_1) |>
+      str_replace(" Total", "")
+  ) |> 
+  select(-tegund) |> 
+  mutate(
+    ar = parse_number(ar),
+    sveitarfelag = str_sub(sveitarfelag, start = 6)
+  ) |> 
+  distinct(flokkur_1)
+```
+
+
+```{r}
 efnahagur <- read_excel("net-efnahagsreikningar.xlsx", skip = 4) |> 
   clean_names() |> 
   fill(ar, sveitarfelag, hluti) |> 
@@ -243,6 +274,7 @@ d <- d |>
     hluti,
     heildarskuldir,
     eignir,
+    langtimaskuldir = "Langtímaskuldir",
     tekjur = "Tekjur", 
     skatttekjur_an_jofnundarsjods = "Skatttekjur án Jöfnunarsjóðs",
     framlag_jofnunarsjods = "Framlag Jöfnunarsjóðs",
@@ -295,12 +327,15 @@ d <- d |>
 ```{r}
 d_2023 <- read_sheet("https://docs.google.com/spreadsheets/d/12qSHYKTItgUnU5NRnmmbaCjjdh_ZaYckIwk9UOmbcs0/edit#gid=0") |> 
   mutate_at(vars(-ar, -sveitarfelag, -hluti), \(x) x * 1000)
+
+d_2024 <- read_sheet("https://docs.google.com/spreadsheets/d/1SU7wVG_H38G5uzhdUc8mpOvwIW6aAj7PKYnmUB7IwgM/edit#gid=0") |> 
+  mutate_at(vars(-ar, -sveitarfelag, -hluti), \(x) x * 1000)
 ```
 
 
 ```{r}
 d <- d |> 
-  bind_rows(d_2023) |> 
+  bind_rows(d_2023, d_2024) |> 
   inner_join(
     mannfjoldi,
     by = join_by(ar, sveitarfelag)
@@ -320,6 +355,7 @@ d <- d |>
     gjold_a_ibua = gjold / mannfjoldi,
     handbaert_fe_per_ibui = handbaert_fe / mannfjoldi,
     heildarskuldir = heildarskuldir,
+    jofnunarsjodur_a_ibua = framlag_jofnunarsjods / mannfjoldi,
     launagjold_per_ibui = launagjold / mannfjoldi,
     launagjold_hlutf_gjold = launagjold / gjold,
     nettoskuldir = heildarskuldir - veltufjarmunir + skammtimakrofur_eigin_fyrirtaeki,
@@ -377,6 +413,7 @@ throun_data <- d |>
     # "Rekstrarniðurstaða" = rekstrarnidurstada,
     "Eiginfjárhlutfall" = eiginfjarhlutfall,
     "Fjármagnsliðir á íbúa" = fjarmagnslidir_a_ibua,
+    "Framlag jöfnunarsjóðs á íbúa" = jofnunarsjodur_a_ibua,
     "Framlegð sem hlutfall af tekjum" = framlegd_hlutf,
     "Handbært fé á íbúa" = handbaert_fe_per_ibui,
     "Launa- og launatengd gjöld á íbúa" = launagjold_per_ibui,
